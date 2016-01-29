@@ -1,9 +1,10 @@
 # repository.xvbmc
-XvBMC Nederland
-
-Xbmc Voor Beginners (wij zijn géén helpdesk van/voor boxverkopers)
-
-
+XvBMC Nederland 
+ 
+NOTE: XBMC Voor Beginners (wij zijn géén helpdesk van/voor boxverkopers)
+ 
+ 
+ 
 #XvBMC_Beginners:
 https://www.fb.com/groups/Xbmcvoorbeginners 
 
@@ -21,7 +22,9 @@ https://www.fb.com/groups/XbmcVoorBeginnersSportChat/
 
 #XvBMC_Marktplaats:
 https://www.fb.com/groups/xbmckoopenverkoop/ 
-
-
-With kind regards,
+ 
+ 
+ 
+With kind regards, 
+ 
 Team X(v)BMC voor beginners
