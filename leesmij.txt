@@ -1,7 +1,7 @@
 # repository.xvbmc
 XvBMC Nederland
 
-Xbmc Voor Beginners (wij zijn gÃ©Ã©n helpdesk van/voor boxverkopers)
+Xbmc Voor Beginners (wij zijn géén helpdesk van/voor boxverkopers)
 
 
 #XvBMC_Beginners:
