@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
+<!--suppress ALL -->
+<addon id="plugin.video.g-movies" version="2.0.109" name="G-Movies" provider-name="tknorris">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+        <import addon="script.module.urlresolver" version="2.2.0"/>
+        <import addon="script.module.myconnpy" version="1.1.6" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+     <extension point="xbmc.service" library="service.py" start="startup"/>
+    <extension point="xbmc.addon.metadata">
+        <summary>Stream HD Movies from many difference sources</summary>
+        <description>This is a mod. version of the Salts addon by Scott Marten (update: Trakt fix)</description>
+        <platform>all</platform>
+        <website>http://tvaddons.ag/</website>
+		<forum>http://forums.tvaddons.ag/forums/180-TKNORRIS-RELEASE-REPOSITORY</forum>
+	</extension>
+</addon>
+
 <addon id="plugin.video.kmediatorrent" name="KMediaTorrent" version="24.3.9" provider-name="jmarth, [COLOR FF8ABEE2]Open[/COLOR][COLOR FF757677]ELEQ[/COLOR], EPiC TiM -4- XvBMC">
     <requires>
         <import addon="xbmc.python" version="2.14.0"/>
@@ -39,6 +59,26 @@
         <summary>Pulsar: Universal streaming</summary>
         <description>Follow @pulsarhq on Twitter</description>
     </extension>
+</addon>
+
+<!--suppress ALL -->
+<addon id="plugin.video.salts-modified" version="2.0.109" name="Salts Modified" provider-name="tknorris (mod by scott marten)">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+        <import addon="script.module.urlresolver" version="2.2.0"/>
+        <import addon="script.module.myconnpy" version="1.1.6" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+     <extension point="xbmc.service" library="service.py" start="startup"/>
+    <extension point="xbmc.addon.metadata">
+        <summary>Stream video from many difference sources</summary>
+        <description>This is the mod version of Salts by Scott Marten. After instal, run the Auto-Configure SALTS option from the settings menu.</description>
+        <platform>all</platform>
+        <updates>movietv scraper fix</updates>
+		<forum>http://forums.tvaddons.ag/forums/180-TKNORRIS-RELEASE-REPOSITORY</forum>
+	</extension>
 </addon>
 
 <addon id="plugin.video.torrenter" name="Torrenter" version="2.4.3a" provider-name="vadim.skorba, DiMartino">
