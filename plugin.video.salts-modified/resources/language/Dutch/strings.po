@@ -1,5 +1,5 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.saltZ
+# Addon id: plugin.video.salts
 # Addon Provider: TV Addons
 # Translators:
 # Mike Bike, 2015-2016

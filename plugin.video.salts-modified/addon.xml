@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--suppress ALL -->
-<addon id="plugin.video.saltZ" version="2.0.109b" name="Stream All The SourcezZz" provider-name="tknorris (mod by scott marten)">
+<addon id="plugin.video.salts-modified" version="2.0.109" name="Salts Modified" provider-name="tknorris (mod by scott marten)">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.urlresolver" version="2.2.0"/>
