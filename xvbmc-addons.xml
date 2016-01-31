@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
 <!--suppress ALL -->
-<addon id="plugin.video.g-movies" version="2.0.109" name="G-Movies" provider-name="tknorris">
+<addon id="plugin.video.g-movies" version="2.0.109" name="[COLOR orange]G-Movies[/COLOR]" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.urlresolver" version="2.2.0"/>
