@@ -1,6 +1,6 @@
 <settings>
     <category label="30545">
-        <setting id="install_theme" label="30669" type="action" action="RunPlugin(plugin://plugin.video.saltZ/?mode=install_themes)" option="close" visible="!System.HasAddon(script.salts.themepak)"/>
+        <setting id="install_theme" label="30669" type="action" action="RunPlugin(plugin://plugin.video.salts/?mode=install_themes)" option="close" visible="!System.HasAddon(script.salts.themepak)"/>
         <setting id="theme" type="enum" label="30500" values="Shine|Luna Blue|Iconic|Simple|SALTy|SALTy (Blended)|SALTy (Blue)|SALTy (Frog)|SALTy (Green)|SALTy (Macaw)|SALTier (Green)|SALTier (Orange)|SALTier (Red)|IGDB|Simply Elegant|IGDB Redux" default="0"
         visible="System.HasAddon(script.salts.themepak)"/>
         <setting id="mute_notifications" type="bool" label="30658" default="false"/>
@@ -57,8 +57,8 @@
     </category>
 
     <category label="Trakt.tv">
-        <setting id="get_pin" label="30547" type="action" action="RunPlugin(plugin://plugin.video.saltZ/?mode=get_pin)" option="close" visible="eq(1,))"/>
-        <setting id="trakt_user" label="30501" type="action" action="RunPlugin(plugin://plugin.video.saltZ/?mode=get_pin)" option="close" visible="!eq(0,)"/>
+        <setting id="get_pin" label="30547" type="action" action="RunPlugin(plugin://plugin.video.salts/?mode=get_pin)" option="close" visible="eq(1,))"/>
+        <setting id="trakt_user" label="30501" type="action" action="RunPlugin(plugin://plugin.video.salts/?mode=get_pin)" option="close" visible="!eq(0,)"/>
         <setting id="use_https" type="bool" label="30548" default="false"/>
         <setting id="trakt_timeout" type="slider" label="30549" default="10" range="0,120" option="int"/>
         <setting id="list_size" type="slider" label="30550" default="20" range="1,100" option="int"/>
@@ -78,9 +78,9 @@
 
     <category label="30557">
         <setting id="tvshow-folder" type="folder" label="30558"
-                 default="special://userdata/addon_data/plugin.video.saltZ/TVShows"/>
+                 default="special://userdata/addon_data/plugin.video.salts/TVShows"/>
         <setting id="movie-folder" type="folder" label="30559"
-                 default="special://userdata/addon_data/plugin.video.saltZ/Movies"/>
+                 default="special://userdata/addon_data/plugin.video.salts/Movies"/>
         <setting id="auto-update_subs" type="bool" label="30560" default="true"/>
         <setting id="update_subs-interval" type="slider" range=".5,.5,24" option="float" label="30561" default="2" visible="eq(-1,true)"/>
         <setting id="update_subs-during-startup" type="bool" label="30562" default="true" visible="eq(-2,true)"/>
@@ -104,9 +104,9 @@
         <setting id="show_download" type="bool" label="30574" default="false"/>
         <setting id="down_progress" type="enum" label="30575" lvalues="30511|30589|30590" default="1" enable="eq(-1,true)"/>
         <setting id="tv-download-folder" type="folder" label="30576"
-                 default="special://userdata/addon_data/plugin.video.saltZ/Download/TVShows" enable="eq(-2,true)"/>
+                 default="special://userdata/addon_data/plugin.video.salts/Download/TVShows" enable="eq(-2,true)"/>
         <setting id="movie-download-folder" type="folder" label="30577"
-                 default="special://userdata/addon_data/plugin.video.saltZ/Download/Movies" enable="eq(-3,true)"/>
+                 default="special://userdata/addon_data/plugin.video.salts/Download/Movies" enable="eq(-3,true)"/>
         <setting id="source_timeout" type="slider" label="30578" default="10" range="0,120" option="int"/>
         <setting id="source_results" type="number" label="30579" default="0"/>
         <setting id="filter_unusable" type="bool" label="30580" default="true"/>
@@ -504,7 +504,7 @@
         <setting id="subtitle-hd" type="bool" label="30619" default="false" enable="eq(-4,true)"/>
         <setting id="subtitle-download" type="bool" label="30620" default="true" enable="eq(-5,true)"/>
         <setting id="subtitle-autopick" type="bool" label="30665" default="false" enable="eq(-1,true) + eq(-6,true)"/>
-        <setting id="subtitle-folder" type="folder" label="30621" default="special://userdata/addon_data/plugin.video.saltZ/Subtitles" enable="eq(-2,true)+eq(-7,true)"/>
+        <setting id="subtitle-folder" type="folder" label="30621" default="special://userdata/addon_data/plugin.video.salts/Subtitles" enable="eq(-2,true)+eq(-7,true)"/>
         <setting id="subtitle-show" type="bool" label="30622" default="false" enable="eq(-3,true)+eq(-8,true)"/>
     </category>
     
@@ -517,12 +517,12 @@
         <setting id="db_name" type="text" label="30628" enable="eq(-5,true)" visible="eq(-5,true)" default="salts_db"/>
         <setting id="enable_upgrade" type="bool" label="30629" default="true" enable="eq(-6,true)" visible="eq(-6,true)"/>
         <setting id="flush_cache" type="action" label="30630" enable="true"
-            action="RunPlugin(plugin://plugin.video.saltZ/?mode=flush_cache)"/>
+            action="RunPlugin(plugin://plugin.video.salts/?mode=flush_cache)"/>
         <setting id="reset_db" type="action" label="30631" enable="true"
-            action="RunPlugin(plugin://plugin.video.saltZ/?mode=reset_db)"/>
+            action="RunPlugin(plugin://plugin.video.salts/?mode=reset_db)"/>
          <setting id="db_export" type="action" label="30632" enable="true" 
-             action="RunPlugin(plugin://plugin.video.saltZ/?mode=export_db)"/>
+             action="RunPlugin(plugin://plugin.video.salts/?mode=export_db)"/>
          <setting id="db_import" type="action" label="30633" enable="true"
-             action="RunPlugin(plugin://plugin.video.saltZ/?mode=import_db)"/>
+             action="RunPlugin(plugin://plugin.video.salts/?mode=import_db)"/>
     </category>
 </settings>
