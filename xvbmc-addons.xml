@@ -46,7 +46,6 @@
     </extension>
 </addon>
 
-<!--suppress ALL -->
 <addon id="plugin.video.saltshd.lite" version="1.0.110" name="Salts HD Lite" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
