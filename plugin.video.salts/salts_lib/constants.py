@@ -46,7 +46,7 @@ TRAKT_LIST_SORT = __enum(RANK='rank', RECENTLY_ADDED='added', TITLE='title', REL
 TRAKT_SORT_DIR = __enum(ASCENDING='asc', DESCENDING='desc')
 SORT_MAP = [TRAKT_SORT.ACTIVITY, TRAKT_SORT.TITLE, TRAKT_SORT.MOST_COMPLETED, TRAKT_SORT.LEAST_COMPLETED, TRAKT_SORT.RECENTLY_AIRED,
             TRAKT_SORT.PREVIOUSLY_AIRED]
-QUALITIES = __enum(LOW='High', MEDIUM='High', HIGH='High', HD720='HD720', HD1080='HD1080')
+QUALITIES = __enum(LOW='Low', MEDIUM='Medium', HIGH='High', HD720='HD720', HD1080='HD1080')
 DIRS = __enum(UP='up', DOWN='down')
 WATCHLIST_SLUG = 'watchlist_slug'
 COLLECTION_SLUG = 'collection_slug'
@@ -77,15 +77,14 @@ BLOG_Q_MAP = {}
 BLOG_Q_MAP[QUALITIES.LOW] = [' CAM ', ' TS ', ' R6 ', 'CAMRIP']
 BLOG_Q_MAP[QUALITIES.MEDIUM] = ['-XVID', '-MP4', 'MEDIUM']
 BLOG_Q_MAP[QUALITIES.HIGH] = ['HDRIP', 'DVDRIP', 'BRRIP', 'BDRIP', '480P']
-BLOG_Q_MAP[QUALITIES.HD720] = ['720', 'HDTS', 'BRRIP', 'BDRIP', ' HD ']
+BLOG_Q_MAP[QUALITIES.HD720] = ['720', 'HDTS', ' HD ']
 BLOG_Q_MAP[QUALITIES.HD1080] = ['1080']
 
 HOST_Q = {}
 HOST_Q[QUALITIES.LOW] = ['youwatch', 'allmyvideos', 'played.to', 'gorillavid']
-HOST_Q[QUALITIES.MEDIUM] = ['primeshare', 'exashare', 'bestreams', 'flashx', 'vidto', 'vodlocker', 'thevideo', 'vidzi', 'vidbull',
-                            'realvid', 'nosvideo', 'daclips', 'sharerepo', 'zalaa', 'filehoot', 'vshare']
-HOST_Q[QUALITIES.HIGH] = ['vidspot', 'mrfile', 'divxstage', 'streamcloud', 'mooshare', 'novamov', 'mail.ru', 'vid.ag', 'allmyvideos']
-HOST_Q[QUALITIES.HD720] = ['thefile', 'sharesix', 'filenuke', 'vidxden', 'movshare', 'nowvideo', 'vidbux', 'streamin.to', 'allvid.ch']
+HOST_Q[QUALITIES.MEDIUM] = ['primeshare', 'exashare', 'bestreams', 'flashx', 'vidto', 'vodlocker', 'thevideo', 'vidzi', 'vidbull', 'realvid', 'nosvideo', 'daclips', 'sharerepo', 'zalaa']
+HOST_Q[QUALITIES.HIGH] = ['vidspot', 'mrfile', 'divxstage', 'streamcloud', 'mooshare', 'novamov', 'mail.ru', 'vid.ag']
+HOST_Q[QUALITIES.HD720] = ['thefile', 'sharesix', 'filenuke', 'vidxden', 'movshare', 'nowvideo', 'vidbux', 'streamin.to']
 HOST_Q[QUALITIES.HD1080] = ['hugefiles', '180upload', 'mightyupload', 'videomega']
 
 Q_ORDER = {QUALITIES.LOW: 1, QUALITIES.MEDIUM: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
