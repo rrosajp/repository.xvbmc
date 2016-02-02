@@ -78,10 +78,10 @@ def settings_menu():
     kodi.create_item({'mode': MODES.SCRAPERS}, i18n('scraper_sort_order'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.RES_SETTINGS}, i18n('url_resolver_settings'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.ADDON_SETTINGS}, i18n('addon_settings'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
-    
+    kodi.create_item({'mode': MODES.AUTO_CONF}, i18n('auto_config'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.RESET_BASE_URL}, i18n('reset_base_url'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.GET_PIN}, i18n('auth_salts'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
-    
+    kodi.create_item({'mode': MODES.SHOW_VIEWS}, i18n('set_default_views'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.BROWSE_URLS}, i18n('remove_cached_urls'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.end_of_directory()
 

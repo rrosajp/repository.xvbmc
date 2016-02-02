@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.saltshd.lite" version="1.0.110" name="Salts HD Lite" provider-name="tknorris">
+<!--suppress ALL -->
+<addon id="plugin.video.salts" version="1.0.110" name="Stream All The Sources" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.urlresolver" version="2.2.0"/>
@@ -11,7 +12,7 @@
      <extension point="xbmc.service" library="service.py" start="startup"/>
     <extension point="xbmc.addon.metadata">
         <summary>Stream video from many difference sources</summary>
-        <description>This is the mod version of Salts by Scott Marten.</description>
+        <description>This addon uses trakt.tv for most show and movie meta data and uses a variety of websites for hoster sources</description>
         <platform>all</platform>
         <website>http://tvaddons.ag/</website>
 		<forum>http://forums.tvaddons.ag/forums/180-TKNORRIS-RELEASE-REPOSITORY</forum>
