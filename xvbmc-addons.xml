@@ -66,26 +66,6 @@
 	</extension>
 </addon>
 
-<!--suppress ALL -->
-<addon id="plugin.video.saltshd.lite" version="1.0.110" name="Salts HD Lite" provider-name="tknorris">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-        <import addon="script.module.urlresolver" version="2.2.0"/>
-        <import addon="script.module.myconnpy" version="1.1.6" />
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>video</provides>
-    </extension>
-     <extension point="xbmc.service" library="service.py" start="startup"/>
-    <extension point="xbmc.addon.metadata">
-        <summary>Stream video from many difference sources</summary>
-        <description>This is the mod version of Salts by Scott Marten.</description>
-        <platform>all</platform>
-        <website>http://tvaddons.ag/</website>
-		<forum>http://forums.tvaddons.ag/forums/180-TKNORRIS-RELEASE-REPOSITORY</forum>
-	</extension>
-</addon>
-
 <addon id="plugin.video.torrenter" name="Torrenter" version="2.4.3a" provider-name="vadim.skorba, DiMartino">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
@@ -341,25 +321,6 @@
     <platform>all</platform>
     <summary lang="en">Resolve common video host URL's to be playable in XBMC/Kodi.</summary>
     <description lang="en">Resolve common video host URL's to be playable in XBMC/Kodi, simplify addon development of video plugins requiring multi video hosts.</description>
-  </extension>
-</addon>
-
-<addon id="script.openelec.rpi2.overclock.wizard"
-       name="OpenELEC RPi2 Overclock Wizard"
-       version="1.20.2"
-       provider-name="Leopold Mod by Scott Marten">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="os.openelec.tv" version="2.0" optional="false"/>
-  </requires>
-  <extension point="xbmc.service" library="service.py" start="startup"/>
-  <extension point="xbmc.python.script" library="default.py"/>
-  <extension point="xbmc.addon.metadata">
-    <platform>all</platform>
-    <summary>Unofficial Raspberry Pi Overclock Wizard for OpenELEC</summary>
-    <description>This Kodi add-on for OpenELEC allows Raspberry Pi settings such as overclocking to be configured without having to manually edit /flash/config.txt.</description>
-    <disclaimer>This add-on has the potential to void the warranty of your Raspberry Pi2. Use at your own risk!</disclaimer>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
   </extension>
 </addon>
 
