@@ -1,10 +1,13 @@
-![](http://i.imgur.com/E7gzyfI.png)
+![](https://i.imgur.com/A2MNj7I.png)
 
+[![Build Status](https://travis-ci.org/scakemyer/plugin.video.pulsar.svg?branch=master)](https://travis-ci.org/scakemyer/plugin.video.pulsar)
 
 What it is
 ----------
 Pulsar is an torrent finding and streaming engine. It doesn't go on torrent websites for legal reasons. However, it calls specially crafted addons (called providers) that are installed separately. They are normal XBMC addons, and thus can be installed/updated/distributed just like any other addon.
 
+This project is a fork of the well known, but no longer maintained Pulsar project from [steeve](https://github.com/steeve).
+Big thanks for his great job.
 
 Supported platforms
 -------------------
@@ -14,10 +17,20 @@ Supported platforms
 - OS X 64 bits
 - Android ARM (4.x)
 
+Build
+-----
+If you want to build this plugin, feel free. First, build the pulsar daemon (see the [pulsar project](https://github.com/scakemyer/pulsar) for more information). Then, create a symlink, like this:
+```
+ln -s $GOPATH/src/github.com/scakemyer/pulsar/build ./resources/bin
+```
+and build the package:
+```
+make
+```
 
 Download
 --------
-See the [Releases](https://github.com/steeve/plugin.video.pulsar/releases) page.
+See the [Releases](https://github.com/scakemyer/plugin.video.pulsar/releases) page.
 
 
 Installation
@@ -25,11 +38,6 @@ Installation
 - Install Pulsar like any other addon
 - Go in Settings > Services > Remote Control and **enable both options**
 - Restart XBMC
-
-
-Follow [@pulsarhq](http://twitter.com/pulsarhq) on Twitter
-----------------------------------------------------------
-[![](http://i.imgur.com/B5hiGN4.png)](http://twitter.com/pulsarhq)
 
 
 How it works
