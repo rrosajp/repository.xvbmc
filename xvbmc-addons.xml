@@ -46,26 +46,6 @@
     </extension>
 </addon>
 
-<!--suppress ALL -->
-<addon id="plugin.video.salts" version="2.4.110" name="Stream All The Sources" provider-name="tknorris">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-        <import addon="script.module.urlresolver" version="2.2.0"/>
-        <import addon="script.module.myconnpy" version="1.1.6" />
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>video</provides>
-    </extension>
-     <extension point="xbmc.service" library="service.py" start="startup"/>
-    <extension point="xbmc.addon.metadata">
-        <summary>Stream video from many difference sources</summary>
-        <description>This addon uses trakt.tv for most show and movie meta data and uses a variety of websites for hoster sources</description>
-        <platform>all</platform>
-        <website>http://tvaddons.ag/</website>
-		<forum>http://forums.tvaddons.ag/forums/180-TKNORRIS-RELEASE-REPOSITORY</forum>
-	</extension>
-</addon>
-
 <addon id="plugin.video.torrenter" name="Torrenter" version="2.4.3a" provider-name="vadim.skorba, DiMartino">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
@@ -107,25 +87,21 @@
 	</extension>
 </addon>
 
-<addon id="repository.xvbmc"
-		name="XvBMC Addon Depot"
-		version="1.0.0"
-		provider-name="XBMC Voor Beginners">
-	<extension point="xbmc.addon.repository"
-		name="XvBMC Add-on Depot">
+<addon id="repository.xvbmc" name="XvBMC Addon Depot" version="1.0.1" provider-name="XBMC Voor Beginners">
+	<extension point="xbmc.addon.repository" name="XvBMC Add-on Depot">
 		<dir>
 			<info compressed="false">https://github.com/XvBMC/repository.xvbmc/raw/master/xvbmc-addons.xml</info>
 			<checksum>https://github.com/XvBMC/repository.xvbmc/raw/master/xvbmc-addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/XvBMC/repository.xvbmc/master/zips/</datadir>
+			<datadir zip="true">https://github.com/XvBMC/repository.xvbmc/raw/master/zips/</datadir>
 		</dir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">XvBMC Addon Repository</summary>
 		<summary lang="nl">XvBMC Addon Depot</summary>
-		<description lang="en">Description</description>
-		<description lang="nl">Omschrijving</description>
-		<disclaimer lang="en">Disclaimer</disclaimer>
-		<disclaimer lang="nl">Vrijwaring</disclaimer>
+		<description lang="en">XvBMC Addon Repository / XvBMC Addon Depot</description>
+		<description lang="nl">XvBMC Addon Depot / XvBMC Addon Repository</description>
+		<disclaimer lang="en">READ: https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/LICENSE</disclaimer>
+		<disclaimer lang="nl">LEES: https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/LICENSE</disclaimer>
 		<platform>all</platform>
 	</extension>
 </addon>
