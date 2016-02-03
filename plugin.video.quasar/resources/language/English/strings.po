@@ -136,6 +136,10 @@ msgctxt "#30102"
 msgid "This addon can only be run from within Quasar"
 msgstr "This addon can only be run from within Quasar"
 
+msgctxt "#30103"
+msgid "Unable to find Quasar binary"
+msgstr "Unable to find Quasar binary"
+
 # Quasar daemon
 
 msgctxt "#30200"
@@ -233,3 +237,15 @@ msgstr "Item removed from Library"
 msgctxt "#30223"
 msgid "Files"
 msgstr "Files"
+
+msgctxt "#30224"
+msgid "Provider error"
+msgstr "Provider error"
+
+msgctxt "#30225"
+msgid "Navigation error"
+msgstr "Navigation error"
+
+msgctxt "#30226"
+msgid "Daemon error"
+msgstr "Daemon error"
