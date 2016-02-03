@@ -17,7 +17,7 @@
         <source><![CDATA[https://github.com/scakemyer/plugin.video.pulsar]]></source>
         <language>en</language>
         <license><![CDATA[Non commercial. See https://github.com/scakemyer/plugin.video.pulsar/blob/master/LICENSE]]></license>
-        <summary><![CDATA[Quasar: Torrent streaming]]></summary>
-        <description><![CDATA[Stream torrent files]]></description>
+        <summary><![CDATA[Quasar-4-HELiX: Torrent streaming]]></summary>
+        <description><![CDATA[Stream torrent files with Quasar's fixed Pulsar-4-HELiX (still using 'plugin.video.pulsar' for compatibility with providers)]]></description>
     </extension>
 </addon>
