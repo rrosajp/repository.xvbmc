@@ -122,6 +122,10 @@ msgctxt "#30026"
 msgid "Library Path"
 msgstr "Library Path"
 
+msgctxt "#30027"
+msgid "Connections limit"
+msgstr "Connections limit"
+
 # Interface
 
 msgctxt "#30100"
@@ -249,3 +253,7 @@ msgstr "Navigation error"
 msgctxt "#30226"
 msgid "Daemon error"
 msgstr "Daemon error"
+
+msgctxt "#30227"
+msgid "Error updating Quasar daemon"
+msgstr "Error updating Quasar daemon"
