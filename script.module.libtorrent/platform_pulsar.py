@@ -13,7 +13,7 @@ except:
 
 def get_libname(platform):
     libname=[]
-    if platform['system'] in ['darwin', 'linux_x86', 'linux_arm', 'linux_armv6', 'linux_armv7', 'linux_x86_64']:
+    if platform['system'] in ['darwin', 'linux_x86', 'linux_arm', 'linux_armv6', 'linux_armv7', 'linux_x86_64', 'ios_arm']:
         libname=['libtorrent.so']
     elif platform['system'] == 'windows':
         libname=['libtorrent.pyd']
@@ -71,13 +71,13 @@ def get_platform():
         }
         if xbmc.getCondVisibility("system.platform.android"):
             ret["os"] = "android"
-            if "arm" in os.uname()[4]:
+            if "arm" in os.uname()[4] or "aarch64" in os.uname()[4]:
                 ret["arch"] = "arm"
         elif xbmc.getCondVisibility("system.platform.linux"):
             ret["os"] = "linux"
             uname=os.uname()[4]
             if "arm" in uname:
-                if "armv7" in uname or "aarch64" in uname:
+                if "armv7" in uname:
                     ret["arch"] = "armv7"
                 elif "armv6" in uname:
                     ret["arch"] = "armv6"
@@ -125,8 +125,8 @@ def get_system(ret):
         ret["system"] = 'darwin'
         ret["message"] = ['It is possible to compile python-libtorrent for OS X.',
                           'But you would have to do it by yourself, there is some info on github.com.']
-    elif ret["os"] == "ios":
-        ret["system"] = 'ios'
+    elif ret["os"] == "ios" and ret["arch"] == "arm":
+        ret["system"] = 'ios_arm'
         ret["message"] = ['It is probably NOT possible to compile python-libtorrent for iOS.',
                           'But you can use torrent-client control functions.']
 

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 '''
     Torrenter v2 plugin for XBMC/Kodi
     Copyright (C) 2012-2015 Vadim Skorba v1 - DiMartino v2
@@ -38,8 +38,8 @@ class Core:
     torrent_player=__settings__.getSetting("torrent_player")
     history_bool = __settings__.getSetting('history') == 'true'
     open_option = int(__settings__.getSetting('open_option'))
-    language = {0: 'en', 1: 'ru', 2: 'ru'}.get(int(__settings__.getSetting("language")))
-    scrapperDB_ver = {'en':'1.1', 'ru':'1.3'}
+    language = {0: 'en', 1: 'ru', 2: 'uk', 3: 'he'}.get(int(__settings__.getSetting("language")))
+    scrapperDB_ver = {'en':'1.1', 'ru':'1.3', 'he':'1.3'}
 
     log('SYS ARGV: ' + str(sys.argv))
 
@@ -258,10 +258,89 @@ class Core:
         #    xbmc.sleep(1000)
         #    self.Downloader.__exit__()
         #self.Player = AnteoPlayer(userStorageDirectory=self.userStorageDirectory, torrentUrl=torrentUrl, params=params)
-        yes=xbmcgui.Dialog().yesno('< %s >' % (Localization.localize('Torrenter Update ') + '2.4.2'),
-                                        Localization.localize('New player to Torrenter v2 - Torrent2HTTP! It should be faster, '
-                                                              'stable and better with Android, also seeking works in it.'),
-                                        Localization.localize('Would you like to try it?'),)
+        log('userStorageDirectory - '+(self.userStorageDirectory))
+        log('is_writable - '+str(is_writable(self.userStorageDirectory)))
+        #log('getsize - '+str(os.path.getsize(self.userStorageDirectory)))
+        import stat
+
+        try:
+            log(os.popen("DIR").read())
+        except Exception, e:
+            log('lol didnt work')
+            log(str(e))
+
+        try:
+            log(os.popen("cd %s; ls -la" % os.path.dirname(self.userStorageDirectory)).read())
+        except Exception, e:
+            log('lol didnt work2')
+            log(str(e))
+
+        try:
+            log(os.popen("cd %s; ls -la" % self.userStorageDirectory).read())
+        except Exception, e:
+            log('lol didnt work3')
+            log(str(e))
+
+        try:
+            log(os.popen("id; chmod 777 %s" % self.userStorageDirectory).read())
+        except Exception, e:
+            log('lol didnt work3')
+            log(str(e))
+
+        #try:
+        #    log(os.popen("cd %s; df -h" % self.userStorageDirectory).read())
+        #except Exception, e:
+        #    log('lol didnt work2')
+        #    log(str(e))
+
+        try:
+            log(str(os.path.isdir(self.userStorageDirectory)))
+        except Exception, e:
+            log(str(e))
+        try:
+            log(str(os.path.exists(self.userStorageDirectory)))
+        except Exception, e:
+            log(str(e))
+        try:
+            log(str(os.listdir(self.userStorageDirectory)))
+        except Exception, e:
+            log(str(e))
+        try:
+            log(str(os.listdir(os.path.dirname(self.userStorageDirectory))))
+        except Exception, e:
+            log(str(e))
+        try:
+            os.makedirs(os.path.join(self.userStorageDirectory, 'xtorrents'))
+        except Exception, e:
+            log(str(e))
+        try:
+            os.chmod(os.path.dirname(self.userStorageDirectory), stat.S_IWOTH)
+        except Exception, e:
+            log(str(e))
+        try:
+            os.chmod(self.userStorageDirectory, stat.S_IWOTH)
+        except Exception, e:
+            log(str(e))
+        try:
+            log(str(os.path.isdir(self.userStorageDirectory)))
+        except Exception, e:
+            log(str(e))
+        try:
+            log(os.popen("cd %s; ls -la" % os.path.dirname(self.userStorageDirectory)).read())
+            torrentFile = os.path.join(self.userStorageDirectory, 'shiiiiit')
+            localFile = xbmcvfs.File(torrentFile, "w+b")
+            localFile.write('HELLO')
+            localFile.close()
+        except Exception, e:
+            log('lol didnt work2')
+            log(str(e))
+        try:
+            log(str(os.listdir(self.userStorageDirectory)))
+        except Exception, e:
+            log(str(e))
+
+
+        xbmcgui.Dialog().ok('Dam Son!','Now send this shit to DiMartino')
 
     def DownloadStatus(self, params={}):
         db = DownloadDB()
@@ -1258,7 +1337,7 @@ class Core:
             if not hash:
                 actions = [('start', self.localize('Start')), ('stop', self.localize('Stop')),
                            ('remove', self.localize('Remove')),
-                           ('3', self.localize('High Priority All Files')), ('0', self.localize('Skip All Files')),
+                           ('3', self.localize('High Priority Files')), ('0', self.localize('Skip All Files')),
                            ('removedata', self.localize('Remove with files'))]
 
                 folder = True
@@ -1435,11 +1514,12 @@ class Core:
         get = params.get
         xbmc.executebuiltin('xbmc.Playlist.Clear')
         url = unquote(get("url"), None)
+        fileIndex = unquote(get("index"), None)
         if url:
             self.__settings__.setSetting("lastTorrentUrl", url)
             torrent = Downloader.Torrent(self.userStorageDirectory, torrentFilesDirectory=self.torrentFilesDirectory)
             self.__settings__.setSetting("lastTorrent", torrent.saveTorrent(url))
-            fileIndex = chooseFile(torrent.getContentList())
+            if fileIndex==None: fileIndex = chooseFile(torrent.getContentList())
             if fileIndex:
                 xbmc.executebuiltin('xbmc.RunPlugin("plugin://plugin.video.torrenter/?action=playTorrent&url='+fileIndex+'")')
 
@@ -1654,7 +1734,7 @@ class Core:
                         dirid = 0
                     if dirid == -1: return
                     dirname = clean[dirid]
-            if self.__settings__.getSetting("torrent") in ['1','2']:
+            if self.__settings__.getSetting("torrent") in ['1','2','4']:
                 default = self.__settings__.getSetting("torrent_dir")
                 keyboard = xbmc.Keyboard(default, self.localize('Save to path') + ':')
                 keyboard.doModal()
@@ -1828,5 +1908,7 @@ class Core:
             return 'vuze.png'
         elif client == '3':
             return 'deluge.png'
+        elif client == '4':
+            return 'qbittorrent.png'
         else:
             return 'torrent-client.png'

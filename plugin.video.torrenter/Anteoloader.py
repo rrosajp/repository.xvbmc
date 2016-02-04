@@ -286,13 +286,13 @@ class AnteoPlayer(xbmc.Player):
                         log('[AnteoPlayer]: ************************************* break')
                         break
                     log('[AnteoPlayer]: ************************************* GO NEXT?')
-                    if self.next_dl and isinstance(self.next_contentId, int) and self.iterator == 100:
+                    if self.next_dl and self.next_contentId != False and isinstance(self.next_contentId, int) and self.iterator == 100:
                         self.contentId = self.next_contentId
                         continue
                     log('[AnteoPlayer]: ************************************* NO! break')
                 break
 
-            xbmc.Player().stop()
+        xbmc.Player().stop()
 
         if '1' != self.__settings__.getSetting("keep_files") and 'Saved Files' not in self.userStorageDirectory:
             xbmc.sleep(1000)
@@ -355,10 +355,12 @@ class AnteoPlayer(xbmc.Player):
             keep_complete = False
             keep_incomplete = False
             keep_files = False
+            resume_file = None
         else:
             keep_complete = True
             keep_incomplete = True
             keep_files = True
+            resume_file=os.path.join(self.userStorageDirectory, 'torrents', os.path.basename(self.torrentUrl)+'.resume_data')
 
         dht_routers = ["router.bittorrent.com:6881","router.utorrent.com:6881"]
         user_agent = 'uTorrent/2200(24683)'
@@ -368,7 +370,7 @@ class AnteoPlayer(xbmc.Player):
                              connections_limit=connections_limit, download_kbps=download_limit, upload_kbps=upload_limit,
                              encryption=encryption, keep_complete=keep_complete, keep_incomplete=keep_incomplete,
                              dht_routers=dht_routers, use_random_port=use_random_port, listen_port=listen_port,
-                             keep_files=keep_files, user_agent=user_agent)
+                             keep_files=keep_files, user_agent=user_agent, resume_file=resume_file)
 
     def buffer(self):
         self.pre_buffer_bytes = 30*1024*1024 #30 MB
@@ -436,15 +438,15 @@ class AnteoPlayer(xbmc.Player):
     def setup_nextep(self):
         try:
             if self.get("url2"):
-                debug("url2")
+                debug("[setup_nextep]: url2")
                 self.ids_video = urllib.unquote_plus(self.get("url2")).split(',')
             else:
-                debug("not url2")
+                debug("[setup_nextep]: not url2")
                 self.ids_video = self.get_ids()
         except:
             pass
 
-        if self.__settings__.getSetting('next_dl') == 'true' and self.ids_video:
+        if self.__settings__.getSetting('next_dl') == 'true' and self.ids_video and len(self.ids_video)>1:
             self.next_dl = True
         else:
             self.next_dl = False
@@ -459,7 +461,6 @@ class AnteoPlayer(xbmc.Player):
         label = os.path.basename(file_status.name)
         self.basename = label
         self.seeding_run = False
-        subtitles = None
         listitem = xbmcgui.ListItem(label, path=url)
 
         if self.next_dl:
