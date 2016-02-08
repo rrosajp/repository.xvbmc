@@ -25,11 +25,10 @@ from salts_lib import kodi
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.constants import XHR
 import scraper
 
-
 BASE_URL = 'http://dizimag.co'
+XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Dizimag_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -50,7 +49,7 @@ class Dizimag_Scraper(scraper.Scraper):
         return link
 
     def format_source_label(self, item):
-        label = '[%s] %s ' % (item['quality'], item['host'])
+        label = '[%s] %s' % (item['quality'], item['host'])
         return label
 
     def get_sources(self, video):
@@ -63,7 +62,7 @@ class Dizimag_Scraper(scraper.Scraper):
             if re.search('Şu an fragman*', html, re.I):
                 return hosters
             
-            match = re.search('url\s*:\s*"([^"]+)"\s*,\s*data:\s*["\'](id=\d+)', html)
+            match = re.search('''url\s*:\s*"([^"]+)"\s*,\s*data:\s*["'](id=\d+)''', html)
             if match:
                 url, data = match.groups()
                 url = urlparse.urljoin(self.base_url, url)

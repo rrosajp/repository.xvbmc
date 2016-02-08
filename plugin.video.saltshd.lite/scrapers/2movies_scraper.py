@@ -30,13 +30,13 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import RAND_UAS
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import WIN_VERS
-from salts_lib.constants import XHR
 import scraper
 
 
 BASE_URL = 'http://twomovies.us'
 AJAX_URL = '/Xajax/aj0001'
 LOCAL_USER_AGENT = 'SALTS for Kodi/%s' % (kodi.get_version())
+XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class TwoMovies_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -56,7 +56,7 @@ class TwoMovies_Scraper(scraper.Scraper):
     def resolve_link(self, link):
         url = urlparse.urljoin(self.base_url, link)
         html = self._http_get(url, cookies={'links_tos': '1'}, cache_limit=0)
-        match = re.search('<iframe[^<]+src=(?:"|\')([^"\']+)', html, re.DOTALL | re.I)
+        match = re.search('''<iframe[^<]+src=(?:"|')([^"']+)''', html, re.DOTALL | re.I)
         if match:
             return match.group(1)
         else:
@@ -72,7 +72,7 @@ class TwoMovies_Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=1)
+            html = self._http_get(url, cache_limit=24)
             pattern = 'class="playDiv3".*?href="([^"]+).*?>(.*?)</a>'
             for match in re.finditer(pattern, html, re.DOTALL | re.I):
                 url, host = match.groups()
@@ -85,7 +85,7 @@ class TwoMovies_Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year):
         results = []
-        html = self._http_get(self.base_url, cache_limit=2)
+        html = self._http_get(self.base_url, cache_limit=1)
         match = re.search('xajax.config.requestURI\s*=\s*"([^"]+)', html)
         if match:
             ajax_url = match.group(1)
@@ -96,7 +96,7 @@ class TwoMovies_Scraper(scraper.Scraper):
         xjxr = str(int(time.time() * 1000))
         search_arg = 'S<![CDATA[%s]]>' % (title)
         data = {'xjxfun': 'search_suggest', 'xjxr': xjxr, 'xjxargs[]': [search_arg, 'Stitle']}
-        html = self._http_get(search_url, data=data, headers=XHR, cache_limit=1)
+        html = self._http_get(search_url, data=data, headers=XHR, cache_limit=12)
         if video_type == VIDEO_TYPES.MOVIE:
             marker = '/watch_movie/'
         else:
