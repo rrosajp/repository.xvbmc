@@ -26,7 +26,6 @@ from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.constants import XHR
 from salts_lib.utils2 import i18n
 import scraper
 
@@ -37,6 +36,7 @@ LOGIN_URL = '/en/users/sign_in'
 MAX_REDIRECT = 10
 CATEGORIES = {VIDEO_TYPES.TVSHOW: '2,3', VIDEO_TYPES.MOVIE: '1,3,4'}
 ORORO_WAIT = 1000
+XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class OroroTV_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -101,7 +101,7 @@ class OroroTV_Scraper(scraper.Scraper):
         results = []
         norm_title = scraper_utils.normalize_title(title)
         include_paid = kodi.get_setting('%s-include_premium' % (self.get_name())) == 'true'
-        for match in re.finditer('<span class=\'value\'>(\d{4})(.*?)href="([^"]+)[^>]+>([^<]+)', html, re.DOTALL):
+        for match in re.finditer('''<span class='value'>(\d{4})(.*?)href="([^"]+)[^>]+>([^<]+)''', html, re.DOTALL):
             match_year, middle, url, match_title = match.groups()
             if not include_paid and video_type == VIDEO_TYPES.MOVIE and 'paid accounts' in middle:
                 continue

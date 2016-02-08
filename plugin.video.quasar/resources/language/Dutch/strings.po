@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-31 10:12+0100\n"
-"PO-Revision-Date: 2016-01-31 10:51+0100\n"
+"POT-Creation-Date: 2016-02-07 15:15+0100\n"
+"PO-Revision-Date: 2016-02-07 15:17+0100\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.4\n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: nl_NL\n"
 
 # Settings
 msgctxt "#30000"
@@ -24,7 +24,7 @@ msgid "General"
 msgstr "Algemeen"
 
 msgctxt "#30001"
-msgid "Download Path (NOT FAT32)"
+msgid "Download path (not FAT32)"
 msgstr "Download Pad (GEEN FAT32)"
 
 msgctxt "#30002"
@@ -32,23 +32,23 @@ msgid "Keep files after playback/download stops"
 msgstr "Behoud bestanden nadat het afspelen/downloaden gestopt is"
 
 msgctxt "#30003"
-msgid "Buffer Size (MB)"
+msgid "Buffer size (MB)"
 msgstr "Buffer Grootte (MB)"
 
 msgctxt "#30004"
-msgid "Max Upload Rate (kB/s)"
+msgid "Max upload rate (kB/s)"
 msgstr "Max Upload Snelheid (kB/s)"
 
 msgctxt "#30005"
-msgid "Max Download Rate (kB/s)"
+msgid "Max download rate (kB/s)"
 msgstr "Max Download Snelheid (kB/s)"
 
 msgctxt "#30006"
-msgid "Listen Port Min"
+msgid "Listen port min"
 msgstr "Luister Poort Min"
 
 msgctxt "#30007"
-msgid "Listen Port Max"
+msgid "Listen port max"
 msgstr "Luister Poort Max"
 
 msgctxt "#30008"
@@ -84,7 +84,7 @@ msgid "Advanced"
 msgstr "Uitgebreid"
 
 msgctxt "#30016"
-msgid "Custom Provider Timeout"
+msgid "Custom provider timeout"
 msgstr "Aangepaste Provider Time-out"
 
 msgctxt "#30017"
@@ -104,28 +104,40 @@ msgid "Clear cache"
 msgstr "Cache Opschonen"
 
 msgctxt "#30021"
-msgid "Enable Paging"
+msgid "Enable pagination"
 msgstr "Pagineren Inschakelen"
 
 msgctxt "#30022"
-msgid "Enable Overlay Status Bar"
+msgid "Enable overlay status"
 msgstr "Inschakelen Overlay Status Balk"
 
 msgctxt "#30023"
-msgid "Choose Stream Automatically"
+msgid "Choose stream automatically"
 msgstr "Kies Stream Automatisch"
 
 msgctxt "#30024"
-msgid "Get updates for Pre-Releases"
-msgstr "Verkrijg Updates voor Pre-Releases"
+msgid "Get updates for pre-releases"
+msgstr "Verkrijg Updates voor pre-releases"
 
 msgctxt "#30025"
 msgid "Limit rates after buffering only"
 msgstr "Beperk snelheden na het bufferen"
 
 msgctxt "#30026"
-msgid "Library Path"
+msgid "Library path"
 msgstr "Bibliotheek Pad"
+
+msgctxt "#30027"
+msgid "Connections limit"
+msgstr "Maximaal aantal verbindingen"
+
+msgctxt "#30028"
+msgid "Background handling of torrents"
+msgstr "Op de achtergrond verwerken van torrents"
+
+msgctxt "#30029"
+msgid "Session saving frequency (seconds)"
+msgstr "Frequency voor het opslaan van een sessie (seconden)"
 
 # Interface
 msgctxt "#30100"
@@ -133,12 +145,16 @@ msgid "Quasar has crashed, restarting..."
 msgstr "Quasar is gechrashed, restarting..."
 
 msgctxt "#30101"
-msgid "You must restart KODI before using Quasar"
-msgstr "Je moet KODI opnieuw opstarten voordat je Quasar gebruikt"
+msgid "You must restart Kodi before using Quasar"
+msgstr "Je moet Kodi opnieuw opstarten voordat je Quasar gebruikt"
 
 msgctxt "#30102"
-msgid "This addon can only be run from within Quasar"
+msgid "This add-on can only be run from within Quasar"
 msgstr "Deze addon kan alleen gebruikt worden door Quasar"
+
+msgctxt "#30103"
+msgid "Unable to find Quasar binary"
+msgstr "Quasar binary niet gevonden"
 
 # Quasar daemon
 msgctxt "#30200"
@@ -150,7 +166,7 @@ msgid "Search TV Shows"
 msgstr "Zoeken van TV Shows"
 
 msgctxt "#30202"
-msgid "Choose Stream..."
+msgid "Choose stream..."
 msgstr "Kies Stream..."
 
 msgctxt "#30203"
@@ -214,23 +230,23 @@ msgid "Paste Magnet or URL"
 msgstr "Plak Magnet or URL"
 
 msgctxt "#30218"
-msgid "Next Page"
+msgid "Next page"
 msgstr "Volgende Pagina"
 
 msgctxt "#30219"
-msgid "Add/Remove from Library"
+msgid "Add / Remove from library"
 msgstr "Toevoegen/verwijderen van bibliotheek"
 
 msgctxt "#30220"
-msgid "Library Path not set"
+msgid "Library path not set"
 msgstr "Bibliotheek Pad niet omschreven"
 
 msgctxt "#30221"
-msgid "Item successfully added to Library"
+msgid "Item successfully added to library"
 msgstr "Item succesvol aan bibliotheek toegevoegd"
 
 msgctxt "#30222"
-msgid "Item removed from Library"
+msgid "Item removed from library"
 msgstr "Item succesvol uit bibliotheek verwijderd"
 
 msgctxt "#30223"
@@ -248,3 +264,27 @@ msgstr "Navigatie fout"
 msgctxt "#30226"
 msgid "Daemon error"
 msgstr "Daemon fout"
+
+msgctxt "#30227"
+msgid "Error updating Quasar daemon"
+msgstr "Fout tijdens updaten van Quasar daemon"
+
+msgctxt "#30228"
+msgid "Available streams for"
+msgstr "Beschikbare streams voor"
+
+msgctxt "#30229"
+msgid "Torrents"
+msgstr "Torrents"
+
+msgctxt "#30230"
+msgid "Play / resume torrent"
+msgstr "Afspelen/resumeren torrent"
+
+msgctxt "#30231"
+msgid "Pause torrent"
+msgstr "Pauzeren torrent"
+
+msgctxt "#30232"
+msgid "Delete torrent"
+msgstr "Verwijder torrent"

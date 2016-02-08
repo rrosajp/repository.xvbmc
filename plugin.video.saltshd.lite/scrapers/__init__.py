@@ -5,11 +5,12 @@ import time
 
 from salts_lib import kodi
 from salts_lib import log_utils
+from salts_lib import utils2
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 
-__all__ = ['scraper', 'local_scraper', 'yifystreaming_scraper', 'torbase_scraper', 'pubfilm_scraper', 'hdmovie14_scraper', '123movies_scraper', 'xmovies8v2_scraper', 
-'xmovies8_scraper', 'nitertv_scraper', 'movietv_scraper', '9movies_scraper', 'watchhd_scraper', 'pw_scraper', 'clickplay_scraper', 'firemovies_scraper', 'dizigold_scraper', 'moviesub_scraper', 'dayt_scraper', 'tvwtvs_scraper', 'mwm_scraper', 'dizilab_scraper', 'dizimag_scraper', 'sezonlukdizi_scraper', 'diziay_scraper', 'dizipas_scraper', 'farda_scraper', 'santaseries_scraper']
+__all__ = ['scraper', 'proxy', 'local_scraper', 'yifystreaming_scraper', 'torbase_scraper', 'pubfilm_scraper', 'hdmovie14_scraper', '123movies_scraper', 'xmovies8v2_scraper', 
+'xmovies8_scraper', 'nitertv_scraper', '9movies_scraper', 'watchhd_scraper', 'pw_scraper', 'clickplay_scraper', 'firemovies_scraper', 'dizigold_scraper', 'moviesub_scraper', 'dayt_scraper', 'alluc_scraper', 'tvwtvs_scraper', 'mwm_scraper', 'dizilab_scraper', 'dizimag_scraper', 'sezonlukdizi_scraper', 'diziay_scraper', 'farda_scraper', 'santaseries_scraper']
 
 from . import *
     
@@ -63,8 +64,9 @@ def update_settings():
         cat_count = 1
         old_xml = xml
         classes = scraper.Scraper.__class__.__subclasses__(scraper.Scraper)  # @UndefinedVariable
+        classes += proxy.Proxy.__class__.__subclasses__(proxy.Proxy)  # @UndefinedVariable
         for cls in sorted(classes, key=lambda x: x.get_name().upper()):
-            if cls.has_proxy(): continue
+            if not cls.get_name() or cls.has_proxy(): continue
             new_settings += cls.get_settings()
             if len(new_settings) > 90:
                 xml = update_xml(xml, new_settings, cat_count)
@@ -80,4 +82,54 @@ def update_settings():
         else:
             log_utils.log('No Settings Update Needed', log_utils.LOGDEBUG)
 
+
+def update_all_scrapers():
+        try: last_check = int(kodi.get_setting('last_list_check'))
+        except: last_check = 0
+        now = time.time()
+        list_url = kodi.get_setting('scraper_url')
+        scraper_password = kodi.get_setting('scraper_password')
+        list_path = os.path.join(kodi.translate_path(kodi.get_profile()), 'scraper_list.txt')
+        exists = os.path.exists(list_path)
+        if list_url and scraper_password and (not exists or last_check < (now - (24 * 60 * 60))):
+            scraper_list = utils2.get_and_decrypt(list_url, scraper_password)
+            if scraper_list:
+                try:
+                    with open(list_path, 'w') as f:
+                        f.write(scraper_list)
+    
+                    kodi.set_setting('last_list_check', str(int(now)))
+                    for line in scraper_list.split('\n'):
+                        line = line.replace(' ', '')
+                        if line:
+                            scraper_url, filename = line.split(',')
+                            if scraper_url.startswith('http'):
+                                update_scraper(filename, scraper_url)
+                except Exception as e:
+                    log_utils.log('Exception during scraper update: %s' % (e), log_utils.LOGWARNING)
+    
+def update_scraper(filename, scraper_url):
+    try:
+        if not filename: return
+        py_path = os.path.join(kodi.get_path(), 'scrapers', filename)
+        exists = os.path.exists(py_path)
+        scraper_password = kodi.get_setting('scraper_password')
+        if scraper_url and scraper_password:
+            new_py = utils2.get_and_decrypt(scraper_url, scraper_password)
+            if new_py:
+                if exists:
+                    with open(py_path, 'r') as f:
+                        old_py = f.read()
+                else:
+                    old_py = ''
+                
+                log_utils.log('%s path: %s, new_py: %s, match: %s' % (filename, py_path, bool(new_py), new_py == old_py), log_utils.LOGDEBUG)
+                if old_py != new_py:
+                    with open(py_path, 'w') as f:
+                        f.write(new_py)
+                        
+    except Exception as e:
+        log_utils.log('Failure during %s scraper update: %s' % (filename, e), log_utils.LOGWARNING)
+
 update_settings()
+update_all_scrapers()

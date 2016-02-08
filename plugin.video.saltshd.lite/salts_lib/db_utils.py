@@ -68,7 +68,7 @@ class DB_Connection():
             log_utils.log('Loading sqlite3 as DB engine', log_utils.LOGDEBUG)
             self.db_type = DB_TYPES.SQLITE
             db_dir = kodi.translate_path("special://database")
-            self.db_path = os.path.join(db_dir, 'saltshd.litecache.db')
+            self.db_path = os.path.join(db_dir, 'saltshd.lite.db')
         self.db_lib = db_lib
         self.__connect_to_db()
 

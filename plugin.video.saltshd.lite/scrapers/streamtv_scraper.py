@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     SALTS XBMC Addon
     Copyright (C) 2014 tknorris
@@ -17,16 +18,18 @@
 """
 import re
 import urlparse
+import copy
 
 from salts_lib import kodi
 from salts_lib import scraper_utils
+from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 
-BASE_URL = 'http://stream-tv2.co'
-BASE_EP_URL = 'http://stream-tv-series.info'
+BASE_URL = 'http://stream-tv2.ag'
+DEF_EP_URL = 'http://stream-tv-series.net'
 
 class StreamTV_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -47,14 +50,15 @@ class StreamTV_Scraper(scraper.Scraper):
         return link
 
     def format_source_label(self, item):
-        label = '[%s] %s ' % (item['quality'], item['host'])
+        label = '[%s] %s' % (item['quality'], item['host'])
         return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
-            url = urlparse.urljoin(BASE_EP_URL, source_url)
+            base_ep_url = self.__get_base_ep_url(video)
+            url = urlparse.urljoin(base_ep_url, source_url)
             html = self._http_get(url, cache_limit=.5)
 
             for match in re.finditer('postTabs_titles.*?iframe.*?src="([^"]+)', html, re.I | re.DOTALL):
@@ -65,6 +69,17 @@ class StreamTV_Scraper(scraper.Scraper):
 
         return hosters
 
+    def __get_base_ep_url(self, video):
+        temp_video = copy.copy(video)
+        temp_video.video_type = VIDEO_TYPES.TVSHOW
+        url = urlparse.urljoin(self.base_url, self.get_url(video))
+        html = self._http_get(url, cache_limit=8)
+        match = re.search('href="([^"]+[sS]\d+-?[eE]\d+[^"]+)', html)
+        if match:
+            return match.group(1)
+        else:
+            return DEF_EP_URL
+        
     def get_url(self, video):
         return self._default_get_url(video)
 
@@ -76,15 +91,14 @@ class StreamTV_Scraper(scraper.Scraper):
             return scraper_utils.pathify_url(ep_url)
 
     def search(self, video_type, title, year):
-        url = self.base_url
-        html = self._http_get(url, cache_limit=8)
-
         results = []
+        html = self._http_get(self.base_url, cache_limit=8)
         norm_title = scraper_utils.normalize_title(title)
         pattern = 'li><a\s+href="([^"]+)">([^<]+)'
         for match in re.finditer(pattern, html):
             url, match_title = match.groups()
             if norm_title in scraper_utils.normalize_title(match_title):
+                match_title = match_title.replace(' – ', '')
                 result = {'url': scraper_utils.pathify_url(url), 'title': match_title, 'year': ''}
                 results.append(result)
 

@@ -27,13 +27,13 @@ from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.constants import XHR
 from salts_lib.utils2 import i18n
 import scraper
 
 
 BASE_URL = 'http://www.flixanity.is'
 EMBED_URL = '/ajax/embeds.php'
+XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Flixanity_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -107,7 +107,7 @@ class Flixanity_Scraper(scraper.Scraper):
     def search(self, video_type, title, year):
         self.__get_token()
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/api/v1/cautare')
+        search_url = urlparse.urljoin(self.base_url, '/api/v1/caut')
         timestamp = int(time.time() * 1000)
         query = {'q': title, 'limit': '100', 'timestamp': timestamp, 'verifiedCheck': self.__token}
         html = self._http_get(search_url, data=query, headers=XHR, cache_limit=1)

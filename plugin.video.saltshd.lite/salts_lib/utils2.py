@@ -24,6 +24,7 @@ import urllib
 import urlparse
 import threading
 import sys
+import hashlib
 import xml.etree.ElementTree as ET
 import log_utils
 import xbmc
@@ -33,6 +34,7 @@ import xbmcgui
 import xbmcplugin
 import kodi
 import strings
+import pyaes
 from constants import *
 
 THEME_LIST = ['Shine', 'Luna_Blue', 'Iconic', 'Simple', 'SALTy', 'SALTy (Blended)', 'SALTy (Blue)', 'SALTy (Frog)', 'SALTy (Green)',
@@ -377,7 +379,7 @@ def reap_workers(workers, timeout=0):
 
 def parallel_get_sources(q, scraper, video):
     worker = threading.current_thread()
-    log_utils.log('Worker: %s (%s) for %s sources' % (worker.name, worker, scraper.get_name()), log_utils.LOGDEBUG)
+    log_utils.log('********Worker: %s (%s) for %s sources: %s' % (worker.name, worker, scraper.get_name(), video), log_utils.LOGDEBUG)
     hosters = scraper.get_sources(video)
     if hosters is None: hosters = []
     if kodi.get_setting('filter_direct') == 'true':
@@ -444,7 +446,8 @@ def scraper_enabled(name):
 def set_view(content, set_sort):
     # set content type so library shows more views and info
     if content:
-        xbmcplugin.setContent(int(sys.argv[1]), content)
+        kodi.set_content(content)
+        # xbmcplugin.setContent(int(sys.argv[1]), content)
 
     view = kodi.get_setting('%s_view' % (content))
     if view != '0':
@@ -757,3 +760,19 @@ def i18n(string_id):
     except Exception as e:
         log_utils.log('Failed String Lookup: %s (%s)' % (string_id, e))
         return string_id
+
+def get_and_decrypt(url, password):
+    try:
+        req = urllib2.urlopen(url)
+        cipher_text = req.read()
+    except Exception as e:
+        log_utils.log('Failure during getting: %s (%s)' % (url, e), log_utils.LOGWARNING)
+        return
+
+    if cipher_text:
+        scraper_key = hashlib.sha256(password).digest()
+        IV = '\0' * 16
+        decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(scraper_key, IV))
+        plain_text = decrypter.feed(cipher_text)
+        plain_text += decrypter.feed()
+        return plain_text

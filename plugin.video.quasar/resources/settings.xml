@@ -5,8 +5,9 @@
         <setting label="30000" type="lsep" />
         <setting id="download_path" type="folder" label="30001" source="auto" option="writeable" />
         <setting id="library_path" type="folder" label="30026" source="auto" option="writeable" />
+        <setting id="background_handling" type="bool" label="30028" default="true" />
         <setting id="keep_files" type="bool" label="30002" default="false" />
-        <setting id="enable_paging" type="bool" label="30021" default="true" />
+        <setting id="enable_pagination" type="bool" label="30021" default="true" />
         <setting id="enable_overlay_status" type="bool" label="30022" default="true" />
         <setting id="choose_stream_auto" type="bool" label="30023" default="true" />
         <setting id="pre_release_updates" type="bool" label="30024" default="false" />
@@ -17,6 +18,7 @@
         <setting id="max_download_rate" label="30005" type="number" default="" />
         <setting id="limit_after_buffering" label="30025" type="bool" default="false" />
         <setting id="connections_limit" label="30027" type="number" default="" />
+        <setting id="session_save" label="30029" type="number" default="15" />
         <setting id="listen_port_min" label="30006" type="number" default="6889" />
         <setting id="listen_port_max" label="30007" type="number" default="7000" />
     </category>
