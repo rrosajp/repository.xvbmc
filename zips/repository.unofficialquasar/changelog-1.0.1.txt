@@ -1,8 +1,0 @@
-v1.0.1
-* version bumb from: http://offshoregit.com/pulsarunofficial/raw/master/repository.unofficialquasar/
-
-v1.0.0
-* Initial Release
-
-
-
