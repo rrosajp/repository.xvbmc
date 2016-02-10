@@ -1,14 +1,5 @@
-v3.0.0
-* Changed from Pulsar to Quasar Addons
-
-v2.0.0
-* Changed Host to Offshoregit
-
 v1.0.1
-* Repo name - added color
+* version bumb from: http://offshoregit.com/pulsarunofficial/raw/master/repository.unofficialquasar/
 
 v1.0.0
-* Mirror Repo - Github
-
-
-
+* Initial Release
