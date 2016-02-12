@@ -20,7 +20,7 @@ msgstr "Geral"
 
 msgctxt "#30001"
 msgid "Download path (not FAT32)"
-msgstr "Pasta de download (NÃO FAT32)"
+msgstr "Pasta de download (menos FAT32)"
 
 msgctxt "#30002"
 msgid "Keep files after playback/download stops"
@@ -116,11 +116,23 @@ msgstr "Receber atualizações de pré-lançamentos"
 
 msgctxt "#30025"
 msgid "Limit rates after buffering only"
-msgstr "Limitar taxas apenas ao final do buffer"
+msgstr "Limitar taxas apenas ao completar o buffer"
 
 msgctxt "#30026"
 msgid "Library path"
 msgstr "Pasta da biblioteca"
+
+msgctxt "#30027"
+msgid "Connections limit"
+msgstr "Limite de conexões"
+
+msgctxt "#30028"
+msgid "Background handling of torrents"
+msgstr "Baixar torrents em segundo plano"
+
+msgctxt "#30029"
+msgid "Session saving frequency (seconds)"
+msgstr "Frequência de salvamento da sessão (segundos)"
 
 # Interface
 
@@ -135,6 +147,34 @@ msgstr "Você precisa reiniciar o Kodi antes de usar o Quasar"
 msgctxt "#30102"
 msgid "This add-on can only be run from within Quasar"
 msgstr "Este addon só pode ser executado pelo Quasar"
+
+msgctxt "#30103"
+msgid "Unable to find Quasar binary"
+msgstr "Não foi possível encontrar o programa Quasar"
+
+msgctxt "#30104"
+msgid "Insert file or URL"
+msgstr "Insira arquivo ou URL"
+
+msgctxt "#30105"
+msgid "URL"
+msgstr "URL"
+
+msgctxt "#30106"
+msgid "File"
+msgstr "Arquivo"
+
+msgctxt "#30107"
+msgid "Insert URL"
+msgstr "Insira a URL"
+
+msgctxt "#30108"
+msgid "File path"
+msgstr "Pasta do arquivo"
+
+msgctxt "#30109"
+msgid "OK"
+msgstr "OK"
 
 # Quasar daemon
 
@@ -203,7 +243,7 @@ msgid "TV Shows"
 msgstr "Séries"
 
 msgctxt "#30216"
-msgid "Paste URL"
+msgid "Add Torrent"
 msgstr "Inserir URL"
 
 msgctxt "#30217"
@@ -216,7 +256,7 @@ msgstr "Próxima página"
 
 msgctxt "#30219"
 msgid "Add / Remove from library"
-msgstr "Adicionar/Remover da biblioteca"
+msgstr "Adicionar / Remover da biblioteca"
 
 msgctxt "#30220"
 msgid "Library path not set"
@@ -233,3 +273,63 @@ msgstr "Item removido da biblioteca"
 msgctxt "#30223"
 msgid "Files"
 msgstr "Arquivos"
+
+msgctxt "#30224"
+msgid "Provider error"
+msgstr "Erro no provedor"
+
+msgctxt "#30225"
+msgid "Navigation error"
+msgstr "Erro na navegação"
+
+msgctxt "#30226"
+msgid "Daemon error"
+msgstr "Erro no serviço"
+
+msgctxt "#30227"
+msgid "Error updating Quasar daemon"
+msgstr "Erro ao atualizar o serviço Quasar"
+
+msgctxt "#30228"
+msgid "Available streams for"
+msgstr "Fontes disponíveis para"
+
+msgctxt "#30229"
+msgid "Torrents"
+msgstr "Torrents"
+
+msgctxt "#30230"
+msgid "Play / resume torrent"
+msgstr "Reproduzir / retomar torrent"
+
+msgctxt "#30231"
+msgid "Pause torrent"
+msgstr "Pausar torrent"
+
+msgctxt "#30232"
+msgid "Delete torrent"
+msgstr "Apagar torrent"
+
+msgctxt "#30233"
+msgid "Pause session"
+msgstr "Pausar sessão"
+
+msgctxt "#30234"
+msgid "Resume session"
+msgstr "Retomar sessão"
+
+msgctxt "#30235"
+msgid "Resume torrent"
+msgstr "Retomar torrent"
+
+msgctxt "#30236"
+msgid "Recently Released"
+msgstr "Lançados Recentemente"
+
+msgctxt "#30237"
+msgid "Recent Shows"
+msgstr "Séries Recentes"
+
+msgctxt "#30238"
+msgid "Recent Episodes"
+msgstr "Episódios Recentes"
