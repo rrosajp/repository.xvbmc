@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.nl-viewer2" name="[COLOR FF3C6689]NL Viewer V2[/COLOR] viewer" version="1.0.3"
+<addon id="plugin.video.nl-viewer2" name="[COLOR FF3C6689]NL[/COLOR] Viewer V2" version="1.0.4"
        provider-name="Scott Marten">
     <requires>
         <import addon="xbmc.python" version="2.12.0"/>
