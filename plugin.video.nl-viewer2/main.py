@@ -1,6 +1,6 @@
 # coding: utf-8
 # Main Addon
-__author__ = 'mancuniancol'
+__author__ = 'Scott Marten'
 
 from xbmcswift2 import Plugin
 from tools2 import *
@@ -22,7 +22,8 @@ def index():
          'thumbnail': dirImages("search.png"),
          'properties': {'fanart_image': settings.fanart}
          }]
-    listTypes = ['Nederlandse Films1',
+    listTypes = ['[COLOR FF3C6689]NL Films[/COLOR]',
+				 'Nederlandse Films1',
                  'Nederlandse Films2',
 				 'Nederlandse Films3',
                  'Nederlandse Films4',
@@ -31,10 +32,25 @@ def index():
 				 'Nederlandse Films7',
                  'Nederlandse Films8',
 				 '2LT Nederlands',
+				 'Nederlandse Films DMT1',
+				 'Nederlandse Films DMT2',
+				 'Nederlandse Films 720P deel 1',
+				 'Nederlandse Films 720P deel 2',
+				 'Nederlandse Films 1080P deel 1',
+				 'Asian NL Films',
+				 '[COLOR FF3C6689]Nederlandse Cabaretiers[/COLOR]',
+				 'Daniel Arends - De Zachte Heelmeester (2014)',
+				 'Theo Maassen - Zonder Pardon',
+				 'Theo Maassen - Met alle respect',
+				 'Guido Weijers - Oudejaarsconference 2014',
+				 'Javier Guzman - Oorverdovend',
+				 'Javier Guzman - Ton Zuur',
+				 '[COLOR FF3C6689]NL TV Shows[/COLOR]',
 				 'Zwarte Tulp',
-				 'Rendez-Vous',
+				 
                  ]
-    listUrl = ['/video/by-default_sort/desc/page1/gesproken%20/',
+    listUrl = ['   ',
+			   '/video/by-default_sort/desc/page1/gesproken%20/',
 	           '/video/by-default_sort/desc/page2/gesproken%20/',
 			   '/video/by-default_sort/desc/page3/gesproken%20/',
 	           '/video/by-default_sort/desc/page4/gesproken%20/',
@@ -43,8 +59,23 @@ def index():
 			   '/video/by-default_sort/desc/page7/gesproken%20/',
 	           '/video/by-default_sort/desc/page8/gesproken%20/',
 			   '/video/by-default_sort/desc/page1/NL%20Audio%202LT/',
+			   '/video/by-default_sort/desc/page1/nl%20gespr%20dmt/',
+			   '/video/by-default_sort/desc/page2/nl%20gespr%20dmt/',
+			   '/video/by-default_sort/desc/page1/gesproken%20720/',
+			   '/video/by-default_sort/desc/page2/gesproken%20720/',
+			   '/video/by-default_sort/desc/page1/gesproken%201080/',
+			   '/all/by-default_sort/desc/page1/asian%20dutch/',
+			   '   ',
+			   '/all/by-default_sort/desc/page1/De%20Zachte%20Heelmeester%202014/',
+			   '/all/by-default_sort/desc/page1/Theo%20Maassen%20Zonder%20Ned./',
+			   '/all/by-default_sort/desc/page1/Met%20alle%20respect.m4v/',
+			   '/all/by-default_sort/desc/page1/%5BREQ%5D%20Guido%20Weijers/',
+			   '/all/by-default_sort/desc/page1/Javier%20Guzman%20NL%20DutchTV/',
+			   '/all/by-default_sort/desc/page1/Javier%20Guzman%20%20Ton%20Zuur%20(DVD-R)/',
+			   '   ',
 			   '/all/by-default_sort/desc/page1/zwarte%20tulp%20sam/',
-			   '/all/by-default_sort/desc/page1/Rendez-Vous.2015%20etrg/',
+			   
+			   
                
                ]
     listIcons = [dirImages("movies.png"),
@@ -58,9 +89,42 @@ def index():
 				 dirImages("movies.png"),
 				 dirImages("movies.png"),
 				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
+				 dirImages("movies.png"),
                  
                  ]
     listAction = ['readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
+				  'readHTML',
 				  'readHTML',
 				  'readHTML',
 				  'readHTML',

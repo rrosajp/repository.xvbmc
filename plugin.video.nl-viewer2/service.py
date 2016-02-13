@@ -1,6 +1,6 @@
 # coding: utf-8
 # Service Module
-__author__ = 'mancuniancol'
+__author__ = 'Scott Marten'
 from time import asctime
 from time import gmtime
 from time import localtime
