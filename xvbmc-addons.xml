@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.nl-viewer2" name="[COLOR FF3C6689]NL[/COLOR] Viewer V2" version="1.0.4"
+<addon id="plugin.video.nl-viewer2" name="[COLOR FF3C6689]NL[/COLOR] Viewer V2" version="1.0.5"
        provider-name="Scott Marten">
     <requires>
         <import addon="xbmc.python" version="2.12.0"/>
@@ -46,7 +46,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.quasar" name="Quasar" version="0.9.14" provider-name="scakemyer">
+<addon id="plugin.video.quasar" name="Quasar" version="0.9.17" provider-name="scakemyer">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -70,7 +70,7 @@
 </addon>
 
 <!--suppress ALL -->
-<addon id="plugin.video.saltshd.lite" version="1.0.112" name="Salts HD Lite" provider-name="tknorris">
+<addon id="plugin.video.saltshd.lite" version="1.0.113" name="Salts HD Lite" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.urlresolver" version="2.2.0"/>

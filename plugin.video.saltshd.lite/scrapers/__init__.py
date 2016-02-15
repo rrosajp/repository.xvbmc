@@ -10,7 +10,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 
 __all__ = ['scraper', 'proxy', 'local_scraper', 'yifystreaming_scraper', 'torbase_scraper', 'pubfilm_scraper', 'hdmovie14_scraper', '123movies_scraper', 'xmovies8v2_scraper', 
-'xmovies8_scraper', 'nitertv_scraper', '9movies_scraper', 'watchhd_scraper', 'pw_scraper', 'clickplay_scraper', 'firemovies_scraper', 'dizigold_scraper', 'moviesub_scraper', 'dayt_scraper', 'alluc_scraper', 'tvwtvs_scraper', 'mwm_scraper', 'dizilab_scraper', 'dizimag_scraper', 'sezonlukdizi_scraper', 'diziay_scraper', 'farda_scraper', 'santaseries_scraper']
+'xmovies8_scraper', 'nitertv_scraper', '9movies_scraper', 'watchhd_scraper', 'pw_scraper', 'clickplay_scraper', 'firemovies_scraper', 'dizigold_scraper', 'moviesub_scraper', 'dayt_scraper', 'alluc_scraper', 'tvwtvs_scraper', 'mwm_scraper', 'dizilab_scraper', 'dizimag_scraper', 'sezonlukdizi_scraper', 'diziay_scraper', 'farda_scraper', 'moviexk_scraper']
 
 from . import *
     
@@ -86,7 +86,7 @@ def update_settings():
 def update_all_scrapers():
         try: last_check = int(kodi.get_setting('last_list_check'))
         except: last_check = 0
-        now = time.time()
+        now = int(time.time())
         list_url = kodi.get_setting('scraper_url')
         scraper_password = kodi.get_setting('scraper_password')
         list_path = os.path.join(kodi.translate_path(kodi.get_profile()), 'scraper_list.txt')
@@ -98,7 +98,8 @@ def update_all_scrapers():
                     with open(list_path, 'w') as f:
                         f.write(scraper_list)
     
-                    kodi.set_setting('last_list_check', str(int(now)))
+                    kodi.set_setting('last_list_check', str(now))
+                    kodi.set_setting('scraper_last_update', time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now)))
                     for line in scraper_list.split('\n'):
                         line = line.replace(' ', '')
                         if line:
