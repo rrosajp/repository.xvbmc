@@ -1,4 +1,3 @@
-Version 1.0.4 Scotty doesn't knwow...
 Version 1.0.3 Adding Quasar support
 Version 1.0.2 refreshing view
 Version 1.0.1 fixing dialog error
