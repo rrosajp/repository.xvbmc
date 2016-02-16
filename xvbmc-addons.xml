@@ -46,7 +46,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.quasar" name="Quasar" version="0.9.17" provider-name="scakemyer">
+<addon id="plugin.video.quasar" name="Quasar" version="0.9.18" provider-name="scakemyer">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -70,7 +70,7 @@
 </addon>
 
 <!--suppress ALL -->
-<addon id="plugin.video.saltshd.lite" version="1.0.113" name="Salts HD Lite" provider-name="tknorris">
+<addon id="plugin.video.saltshd.lite" version="1.0.115" name="Salts HD Lite" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.urlresolver" version="2.2.0"/>
