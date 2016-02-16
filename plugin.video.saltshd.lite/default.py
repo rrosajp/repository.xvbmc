@@ -94,7 +94,7 @@ def browse_menu(section):
     if utils2.menu_on('popular'): kodi.create_item({'mode': MODES.POPULAR, 'section': section}, i18n('popular') % (section_label), thumb=utils2.art('popular.png'), fanart=utils2.art('fanart.jpg'))
     
     if utils2.menu_on('recent'): kodi.create_item({'mode': MODES.RECENT, 'section': section}, i18n('recently_updated') % (section_label), thumb=utils2.art('recent.png'), fanart=utils2.art('fanart.jpg'))
-    
+    if utils2.menu_on('mosts'): kodi.create_item({'mode': MODES.MOSTS, 'section': section}, i18n('mosts') % (section_label2), thumb=utils2.art('mosts.png'), fanart=utils2.art('fanart.jpg'))
     add_section_lists(section)
     if TOKEN:
         if utils2.menu_on('on_deck'): kodi.create_item({'mode': MODES.SHOW_BOOKMARKS, 'section': section}, i18n('trakt_on_deck'), thumb=utils2.art('on_deck.png'), fanart=utils2.art('fanart.jpg'))
@@ -809,7 +809,6 @@ def get_progress(cached=True):
 def show_progress():
     try:
         folder = kodi.get_setting('source-win') == 'Directory' and kodi.get_setting('auto-play') == 'false'
-        workers = []
         workers, progress = get_progress()
         for episode in progress:
             log_utils.log('Episode: Sort Keys: Tile: |%s| Last Watched: |%s| Percent: |%s%%| Completed: |%s|' % (episode['show']['title'], episode['last_watched_at'], episode['percent_completed'], episode['completed']), xbmc.LOGDEBUG)
@@ -832,7 +831,8 @@ def show_progress():
         kodi.set_content(CONTENT_TYPES.EPISODES)
         kodi.end_of_directory(cache_to_disc=False)
     finally:
-        utils2.reap_workers(workers, None)
+        try: utils2.reap_workers(workers, None)
+        except UnboundLocalError: pass
 
 @url_dispatcher.register(MODES.MANAGE_SUBS, ['section'])
 def manage_subscriptions(section):
@@ -1248,14 +1248,15 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, dialog, season='
                     kodi.notify(msg=i18n('resolve_failed') % (msg), duration=7500)
                     return False
     
-        resume_point = 0
-        pseudo_tv = xbmcgui.Window(10000).getProperty('PseudoTVRunning').lower()
-        if pseudo_tv != 'true' and mode not in [MODES.DOWNLOAD_SOURCE, MODES.DIRECT_DOWNLOAD]:
-            if utils.bookmark_exists(trakt_id, season, episode):
-                if utils.get_resume_choice(trakt_id, season, episode):
-                    resume_point = utils.get_bookmark(trakt_id, season, episode)
-                    log_utils.log('Resume Point: %s' % (resume_point), xbmc.LOGDEBUG)
+    resume_point = 0
+    pseudo_tv = xbmcgui.Window(10000).getProperty('PseudoTVRunning').lower()
+    if pseudo_tv != 'true' and mode not in [MODES.DOWNLOAD_SOURCE, MODES.DIRECT_DOWNLOAD]:
+        if utils.bookmark_exists(trakt_id, season, episode):
+            if utils.get_resume_choice(trakt_id, season, episode):
+                resume_point = utils.get_bookmark(trakt_id, season, episode)
+                log_utils.log('Resume Point: %s' % (resume_point), xbmc.LOGDEBUG)
     
+    with kodi.WorkingDialog():
         try:
             win = xbmcgui.Window(10000)
             win.setProperty('salts.playing', 'True')
@@ -2134,7 +2135,7 @@ def make_season_item(season, info, trakt_id, fanart, title, year):
     queries = {'mode': MODES.SET_URL_SEARCH, 'video_type': VIDEO_TYPES.SEASON, 'title': title, 'year': year, 'trakt_id': trakt_id, 'season': season['number']}
     menu_items.append((i18n('set_rel_url_search'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
     queries = {'mode': MODES.SET_URL_MANUAL, 'video_type': VIDEO_TYPES.SEASON, 'title': title, 'year': year, 'trakt_id': trakt_id, 'season': season['number']}
-    menu_items.append((i18n('set_rel_url_search'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
+    menu_items.append((i18n('set_rel_url_manual'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
 
     liz.addContextMenuItems(menu_items, replaceItems=True)
     return liz
