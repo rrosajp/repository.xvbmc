@@ -1,4 +1,4 @@
-[B]Version 1.1.1[/B]
+[B]Version 1.1.2[/B]
 - Derde versie ; EPiC version bumb
 
 [B]Version 1.1.1[/B]
