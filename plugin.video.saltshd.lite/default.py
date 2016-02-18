@@ -62,11 +62,7 @@ def main_menu():
     kodi.create_item({'mode': MODES.BROWSE, 'section': SECTIONS.TV}, i18n('tv_shows'), thumb=utils2.art('television.png'), fanart=utils2.art('fanart.jpg'))
     if utils2.menu_on('settings'): kodi.create_item({'mode': MODES.SETTINGS}, i18n('settings'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
 
-    if not TOKEN:
-        last_reminder = int(kodi.get_setting('last_reminder'))
-        now = int(time.time())
-        if last_reminder >= 0 and last_reminder < now - (24 * 60 * 60):
-            gui_utils.get_pin()
+    
     else:
         profile = trakt_api.get_user_profile()
         kodi.set_setting('trakt_user', '%s (%s)' % (profile['username'], profile['name']))
