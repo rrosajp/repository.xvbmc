@@ -146,6 +146,7 @@ class One23Movies_Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         search_url = urlparse.urljoin(self.base_url, '/movie/search/')
+        title = re.sub('[^A-Za-z0-9 ]', '', title)
         search_url += urllib.quote_plus(title)
         html = self._http_get(search_url, cache_limit=1)
         results = []
@@ -167,7 +168,7 @@ class One23Movies_Scraper(scraper.Scraper):
                     match_year = match_year.group(1) if match_year else ''
     
                     if not year or not match_year or year == match_year:
-                        result = {'title': match_title, 'year': match_year, 'url': scraper_utils.pathify_url(url)}
+                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(url)}
                         results.append(result)
 
         return results

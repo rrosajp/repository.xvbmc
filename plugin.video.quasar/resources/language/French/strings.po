@@ -1,11 +1,12 @@
 # Kodi Media Center language file
 # Addon Name: Quasar
 # Addon id: plugin.video.quasar
-# Addon Provider: steeve
+# Addon Provider: scakemyer
+#
 msgid ""
 msgstr ""
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2016-02-02 06:22-0500\n"
+"PO-Revision-Date: 2016-02-19 12:34+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +15,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 1.8.7\n"
 
 # Settings
 msgctxt "#30000"
@@ -23,31 +24,31 @@ msgstr "Général"
 
 msgctxt "#30001"
 msgid "Download path (not FAT32)"
-msgstr "Chemin de téléchargement (Pas de FAT32)"
+msgstr "Chemin de téléchargement (pas de FAT32)"
 
 msgctxt "#30002"
 msgid "Keep files after playback/download stops"
-msgstr "Conserver les fichiers après la fin de la lecture/du telechargement"
+msgstr "Conserver les fichiers après la fin de la lecture ou du téléchargement"
 
 msgctxt "#30003"
 msgid "Buffer size (MB)"
-msgstr "Taille du Tampon (Mo)"
+msgstr "Taille du tampon (Mo)"
 
 msgctxt "#30004"
 msgid "Max upload rate (kB/s)"
-msgstr "Débit Montant Max (ko/s)"
+msgstr "Débit montant max (ko/s)"
 
 msgctxt "#30005"
 msgid "Max download rate (kB/s)"
-msgstr "Débit Descendant Max (ko/s)"
+msgstr "Débit descendant max (ko/s)"
 
 msgctxt "#30006"
 msgid "Listen port min"
-msgstr "Port d'écoute Min"
+msgstr "Port d'écoute min"
 
 msgctxt "#30007"
 msgid "Listen port max"
-msgstr "Port d'écoute Max"
+msgstr "Port d'écoute max"
 
 msgctxt "#30008"
 msgid "Proxy"
@@ -75,7 +76,7 @@ msgstr "Identifiant"
 
 msgctxt "#30014"
 msgid "Password"
-msgstr "Mot de Passe"
+msgstr "Mot de passe"
 
 msgctxt "#30015"
 msgid "Advanced"
@@ -83,15 +84,15 @@ msgstr "Avancé"
 
 msgctxt "#30016"
 msgid "Custom provider timeout"
-msgstr "Timout Fournisseur Personnalisé"
+msgstr "Délai d’attente maximum du Provider personnalisé"
 
 msgctxt "#30017"
 msgid "Enabled (use at your own risk)"
-msgstr "Activé (à vos risques et périls)"
+msgstr "Activé (risqué)"
 
 msgctxt "#30018"
 msgid "Timeout in seconds"
-msgstr "Timeout en secondes"
+msgstr "Délai d’attente max (secondes)"
 
 msgctxt "#30019"
 msgid "Maintenance"
@@ -99,11 +100,11 @@ msgstr "Maintenance"
 
 msgctxt "#30020"
 msgid "Clear cache"
-msgstr "Nettoyer le Cache"
+msgstr "Vider le cache"
 
 msgctxt "#30021"
 msgid "Enable pagination"
-msgstr "Activer la Pagination"
+msgstr "Activer la pagination"
 
 msgctxt "#30022"
 msgid "Enable overlay status"
@@ -123,11 +124,11 @@ msgstr "Limiter le débit seulement après le chargement du tampon"
 
 msgctxt "#30026"
 msgid "Library path"
-msgstr "Chemin vers la bibliothèque"
+msgstr "Chemin vers la médiathèque"
 
 msgctxt "#30027"
 msgid "Connections limit"
-msgstr "Limite de Connexions"
+msgstr "Nombre de connexions max"
 
 msgctxt "#30028"
 msgid "Background handling of torrents"
@@ -135,19 +136,19 @@ msgstr "Prise en charge des Torrents en arrière plan"
 
 msgctxt "#30029"
 msgid "Session saving frequency (seconds)"
-msgstr "Fréquence de Sauvegarde de Session (secondes)"
+msgstr "Fréquence de sauvegarde de la session (secondes)"
 
 msgctxt "#30030"
 msgid "Overlay status vertical offset"
-msgstr "Décalage Vertical du Statut en Surimpression"
+msgstr "Décalage vertical du statut en surimpression"
 
 msgctxt "#30031"
 msgid "Disable providers failing health check"
-msgstr "Désactiver la détection des Fournisseurs en échec"
+msgstr "Désactiver la détection des Providers en échec"
 
 msgctxt "#30032"
 msgid "Allowed failures before provider is disabled"
-msgstr "Nombre d'erreurs avant désactivation d'un Fournisseur"
+msgstr "Nombre d'erreurs avant désactivation d'un Provider"
 
 msgctxt "#30033"
 msgid "Appearance"
@@ -155,23 +156,68 @@ msgstr "Apparence"
 
 msgctxt "#30034"
 msgid "Default view for Movies"
-msgstr "Vue par Défaut pour les Films"
+msgstr "Vue par défaut pour les films"
 
 msgctxt "#30035"
 msgid "Default view for TV Shows"
-msgstr "Vue par Défaut pour les Séries"
+msgstr "Vue par défaut pour les séries"
 
 msgctxt "#30036"
 msgid "Default view for Seasons"
-msgstr "Vue par Défaut pour les Saisons"
+msgstr "Vue par défaut pour les saisons"
 
 msgctxt "#30037"
 msgid "Default view for Episodes"
-msgstr "Vue par Défaut pour les Episodes"
+msgstr "Vue par défaut pour les épisodes"
 
 msgctxt "#30038"
 msgid "Prefer use of original title"
-msgstr "Utiliser de préférence le Titre Original"
+msgstr "Utiliser de préférence le titre original"
+
+msgctxt "#30039"
+msgid "TheMovieDB"
+msgstr "TheMovieDB"
+
+msgctxt "#30040"
+msgid "API key"
+msgstr "Clé d'API"
+
+msgctxt "#30041"
+msgid "Stream sorting"
+msgstr "Tri des flux"
+
+msgctxt "#30042"
+msgid "Sorting mode for Movies"
+msgstr "Tri des Films"
+
+msgctxt "#30043"
+msgid "Sorting mode for TV Shows"
+msgstr "Tri des Séries"
+
+msgctxt "#30044"
+msgid "By seeders"
+msgstr "Par seeders"
+
+msgctxt "#30045"
+msgid "By resolution"
+msgstr "Par résolution"
+
+msgctxt "#30046"
+msgid "Balanced"
+msgstr "Equilibré"
+
+msgctxt "#30047"
+msgid "Resolution preference for Movies"
+msgstr "Préférence de Résolution pour les Films"
+
+msgctxt "#30048"
+msgid "Resolution preference for TV Shows"
+msgstr "Préférence de Résolution pour les Séries"
+
+msgctxt "#30049"
+msgid "Percentage of additional seeders required before choosing next resolution"
+msgstr "Pourcentage de seeders additionels avant de choisir la résolution suivante"
+
 
 # Interface
 msgctxt "#30100"
@@ -180,11 +226,11 @@ msgstr "Plantage de Quasar, redémarrage..."
 
 msgctxt "#30101"
 msgid "You must restart Kodi before using Quasar"
-msgstr "Vous devez redémarrer Kodi pour pouvoir utiliser Quasar"
+msgstr "Vous devez redémarrer Kodi avant de pouvoir utiliser Quasar"
 
 msgctxt "#30102"
 msgid "This add-on can only be run from within Quasar"
-msgstr "Ce plugin ne peut être utilisé que depuis Quasar"
+msgstr "Cet add-on ne peut être utilisé que depuis Quasar"
 
 msgctxt "#30103"
 msgid "Unable to find Quasar binary"
@@ -208,7 +254,7 @@ msgstr "Saisir une URL"
 
 msgctxt "#30108"
 msgid "File path"
-msgstr "Chemin vers le Fichier"
+msgstr "Chemin vers le fichier"
 
 msgctxt "#30109"
 msgid "OK"
@@ -220,11 +266,15 @@ msgstr "Trop de plantages, abandon..."
 
 msgctxt "#30111"
 msgid "Provider failed too many times, disabling..."
-msgstr "Trop d'erreurs du Fournisseur, désactivation..."
+msgstr "Trop d'erreurs du Provider, désactivation..."
 
 msgctxt "#30112"
 msgid "Unable to disable provider"
-msgstr "Impossible de désactiver le Fournisseur"
+msgstr "Impossible de désactiver le Pournisseur"
+
+msgctxt "#30113"
+msgid "Download path not set, check your settings"
+msgstr "Chemin de téléchargement non spécifié, vérifiez votre configuration"
 
 # Quasar daemon
 msgctxt "#30200"
@@ -233,11 +283,11 @@ msgstr "Cache nettoyé"
 
 msgctxt "#30201"
 msgid "Search TV Shows"
-msgstr "Rechercher des Séries"
+msgstr "Rechercher des séries"
 
 msgctxt "#30202"
 msgid "Choose stream..."
-msgstr "Choisir un Flux"
+msgstr "Choisir un flux"
 
 msgctxt "#30203"
 msgid "Show information"
@@ -245,15 +295,15 @@ msgstr "Afficher les informations"
 
 msgctxt "#30204"
 msgid "Unable to find any providers"
-msgstr "Aucun Fournisseur Trouvé"
+msgstr "Aucun Provider trouvé"
 
 msgctxt "#30205"
 msgid "No links were found"
-msgstr "Aucun Lien Trouvé"
+msgstr "Aucun lien trouvé"
 
 msgctxt "#30206"
 msgid "Search Movies"
-msgstr "Rechercher des Films"
+msgstr "Rechercher des films"
 
 msgctxt "#30207"
 msgid "Not enough space available on the download path."
@@ -261,7 +311,7 @@ msgstr "Pas assez d'espace disponible dans le répertoire de téléchargement"
 
 msgctxt "#30208"
 msgid "Quasar daemon has started"
-msgstr "Le Service Quasar a démarré"
+msgstr "Le processus Quasar a démarré"
 
 msgctxt "#30209"
 msgid "Search"
@@ -269,15 +319,15 @@ msgstr "Rechercher"
 
 msgctxt "#30210"
 msgid "Most Popular"
-msgstr "Les Plus Populaires"
+msgstr "Les plus populaires"
 
 msgctxt "#30211"
 msgid "Top Rated"
-msgstr "Les Mieux Classés"
+msgstr "Les mieux classés"
 
 msgctxt "#30212"
 msgid "Most Voted"
-msgstr "Les Plus Notés"
+msgstr "Les plus notés"
 
 msgctxt "#30213"
 msgid "IMDB Top 250"
@@ -293,7 +343,7 @@ msgstr "Séries"
 
 msgctxt "#30216"
 msgid "Add Torrent"
-msgstr "Coller une URL"
+msgstr "Ajouter un Torrent"
 
 msgctxt "#30217"
 msgid "Paste Magnet or URL"
@@ -301,23 +351,23 @@ msgstr "Coller un Magnet ou une URL"
 
 msgctxt "#30218"
 msgid "Next page"
-msgstr "Page Suivante"
+msgstr "Page suivante"
 
 msgctxt "#30219"
 msgid "Add / Remove from library"
-msgstr "Ajouter / Supprimer de la Bibliothèque"
+msgstr "Ajouter / Supprimer de la médiathèque"
 
 msgctxt "#30220"
 msgid "Library path not set"
-msgstr "Chemin vers la Bibliothèque non spécifié"
+msgstr "Chemin vers la médiathèque non spécifié"
 
 msgctxt "#30221"
 msgid "Item successfully added to library"
-msgstr "Elément ajouté à la Bibliothèque"
+msgstr "Elément ajouté à la médiathèque"
 
 msgctxt "#30222"
 msgid "Item removed from library"
-msgstr "Elément supprimé de la Bibliothèque"
+msgstr "Elément supprimé de la médiathèque"
 
 msgctxt "#30223"
 msgid "Files"
@@ -325,11 +375,11 @@ msgstr "Fichiers"
 
 msgctxt "#30224"
 msgid "Provider error"
-msgstr "Erreur du Fournisseur"
+msgstr "Erreur du Provider"
 
 msgctxt "#30225"
 msgid "Navigation error"
-msgstr "Erreur de Navigation"
+msgstr "Erreur de navigation"
 
 msgctxt "#30226"
 msgid "Daemon error"
@@ -341,7 +391,7 @@ msgstr "Erreur lors de la mise à jour du processus Quasar"
 
 msgctxt "#30228"
 msgid "Available streams for"
-msgstr "Flux Disponibles pour"
+msgstr "Flux disponibles pour"
 
 msgctxt "#30229"
 msgid "Torrents"
@@ -353,7 +403,7 @@ msgstr "Lire / Reprendre le Torrent"
 
 msgctxt "#30231"
 msgid "Pause torrent"
-msgstr "Mettre en Pause le Torrent"
+msgstr "Mettre en pause le Torrent"
 
 msgctxt "#30232"
 msgid "Delete torrent"
@@ -361,31 +411,31 @@ msgstr "Supprimer le Torrent"
 
 msgctxt "#30233"
 msgid "Pause session"
-msgstr "Mettre en Pause la Session"
+msgstr "Mettre en pause la session"
 
 msgctxt "#30234"
 msgid "Resume session"
-msgstr "Reprendre la Lecture de la Session"
+msgstr "Reprendre la lecture de la session"
 
 msgctxt "#30235"
 msgid "Resume torrent"
-msgstr "Reprendre la Lecture du Torrent"
+msgstr "Reprendre la lecture du Torrent"
 
 msgctxt "#30236"
 msgid "Recently Released"
-msgstr "Sorties Récentes"
+msgstr "Sorties récentes"
 
 msgctxt "#30237"
 msgid "Recent Shows"
-msgstr "Séries Récentes"
+msgstr "Séries récentes"
 
 msgctxt "#30238"
 msgid "Recent Episodes"
-msgstr "Episodes Récents"
+msgstr "Episodes récents"
 
 msgctxt "#30239"
 msgid "Providers"
-msgstr "Fournisseurs"
+msgstr "Providers"
 
 msgctxt "#30240"
 msgid "Enable"
@@ -401,8 +451,36 @@ msgstr "Vérifier"
 
 msgctxt "#30243"
 msgid "Provider failures"
-msgstr "Erreurs du Fournisseur"
+msgstr "Erreurs du Provider"
 
 msgctxt "#30244"
 msgid "Provider settings"
-msgstr "Paramètres du Fournisseurs"
+msgstr "Paramètres du Provider"
+
+msgctxt "#30245"
+msgid "Popular on Trakt"
+msgstr "Trakt: Les plus populaires"
+
+msgctxt "#30246"
+msgid "Trending"
+msgstr "Trakt: Les plus tendances (en ce moment)"
+
+msgctxt "#30247"
+msgid "Most Played"
+msgstr "Trakt: Les plus joués (dans l'absolu)"
+
+msgctxt "#30248"
+msgid "Most Watched"
+msgstr "Trakt: Les plus regardés (visiteurs uniques)"
+
+msgctxt "#30249"
+msgid "Most Collected"
+msgstr "Trakt: Les plus ajoutés aux collections"
+
+msgctxt "#30250"
+msgid "Most Anticipated"
+msgstr "Trakt: Les plus attendus"
+
+msgctxt "#30251"
+msgid "Box Office"
+msgstr "Trakt: Box Office"
