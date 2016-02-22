@@ -2,6 +2,7 @@
 # Addon Name: Quasar
 # Addon id: plugin.video.quasar
 # Addon Provider: scakemyer
+#
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2016-02-01 12:00-0300\n"
@@ -11,6 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 
 # Settings
 
@@ -170,6 +172,51 @@ msgctxt "#30038"
 msgid "Prefer use of original title"
 msgstr "Preferir usar título original"
 
+msgctxt "#30039"
+msgid "TheMovieDB"
+msgstr "TheMovieDB"
+
+msgctxt "#30040"
+msgid "API key"
+msgstr "API key"
+
+msgctxt "#30041"
+msgid "Stream sorting"
+msgstr "Ordem das fontes"
+
+msgctxt "#30042"
+msgid "Sorting mode for Movies"
+msgstr "Ordem das fontes para Filmes"
+
+msgctxt "#30043"
+msgid "Sorting mode for TV Shows"
+msgstr "Ordem das fontes para Seriados"
+
+msgctxt "#30044"
+msgid "By seeders"
+msgstr "Pelo número de seeds"
+
+msgctxt "#30045"
+msgid "By resolution"
+msgstr "Pela resolução"
+
+msgctxt "#30046"
+msgid "Balanced"
+msgstr "Balanceado"
+
+msgctxt "#30047"
+msgid "Resolution preference for Movies"
+msgstr "Preferência de resolução para Filmes"
+
+msgctxt "#30048"
+msgid "Resolution preference for TV Shows"
+msgstr "Preferência de resolução para Seriados"
+
+msgctxt "#30049"
+msgid "Percentage of additional seeders required before choosing next resolution"
+msgstr "Porcentagem adicional de seeds necessários antes de escolher próxima resolução"
+
+
 # Interface
 
 msgctxt "#30100"
@@ -222,7 +269,12 @@ msgstr "Provedor falhou diversas vezes, desabilitando..."
 
 msgctxt "#30112"
 msgid "Unable to disable provider"
-msgstr "Falhou em desabilitar o provedor"
+msgstr "Não foi possível desabilitar o provedor"
+
+msgctxt "#30113"
+msgid "Download path not set, check your settings"
+msgstr "Local de download não definido, verifique suas configurações"
+ 
 
 # Quasar daemon
 
@@ -405,3 +457,31 @@ msgstr "Falhas do provedor"
 msgctxt "#30244"
 msgid "Provider settings"
 msgstr "Configurações do provedor"
+
+msgctxt "#30245"
+msgid "Popular on Trakt"
+msgstr "Popular no Trakt"
+
+msgctxt "#30246"
+msgid "Trending"
+msgstr "Tendências"
+
+msgctxt "#30247"
+msgid "Most Played"
+msgstr "Mais Tocados"
+
+msgctxt "#30248"
+msgid "Most Watched"
+msgstr "Mais Assistidos"
+
+msgctxt "#30249"
+msgid "Most Collected"
+msgstr "Mais Coletados"
+
+msgctxt "#30250"
+msgid "Most Anticipated"
+msgstr "Mais Aguardados"
+
+msgctxt "#30251"
+msgid "Box Office"
+msgstr "Maiores Bilheterias"

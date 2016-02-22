@@ -1,11 +1,14 @@
 # Kodi Media Center language file
 # Addon Name: Quasar
 # Addon id: plugin.video.quasar
-# Addon Provider: steeve
+# Addon Provider: scakemyer
+#
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2016-02-15 19:51+0200\n"
-"PO-Revision-Date: 2016-02-15 20:02+0200\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-20 18:28+0200\n"
+"PO-Revision-Date: 2016-02-20 18:41+0200\n"
 "Last-Translator: Assaf Sapir <meijin007 AT gmail.com>, ShlomiD\n"
 "Language-Team: \n"
 "Language: he\n"
@@ -13,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7\n"
 
 # Settings
 msgctxt "#30000"
@@ -171,6 +175,50 @@ msgctxt "#30038"
 msgid "Prefer use of original title"
 msgstr "שימוש בכותרת מקורית"
 
+msgctxt "#30039"
+msgid "TheMovieDB"
+msgstr "TheMovieDB"
+
+msgctxt "#30040"
+msgid "API key"
+msgstr "מפתח API"
+
+msgctxt "#30041"
+msgid "Stream sorting"
+msgstr "סידור מקורות"
+
+msgctxt "#30042"
+msgid "Sorting mode for Movies"
+msgstr "שיטת סידור לסרטים"
+
+msgctxt "#30043"
+msgid "Sorting mode for TV Shows"
+msgstr "שיטת סידור לסדרות"
+
+msgctxt "#30044"
+msgid "By seeders"
+msgstr "לפי זורעים"
+
+msgctxt "#30045"
+msgid "By resolution"
+msgstr "לפי איכות"
+
+msgctxt "#30046"
+msgid "Balanced"
+msgstr "מאוזן"
+
+msgctxt "#30047"
+msgid "Resolution preference for Movies"
+msgstr "העדפות רזולוציה לסרטים"
+
+msgctxt "#30048"
+msgid "Resolution preference for TV Shows"
+msgstr "העדפות רזולוציה לסדרות"
+
+msgctxt "#30049"
+msgid "Percentage of additional seeders required before choosing next resolution"
+msgstr "אחוז נדרש של זורעים לפני בחירה של המקור הבא"
+
 # Interface
 msgctxt "#30100"
 msgid "Quasar has crashed, restarting..."
@@ -178,7 +226,7 @@ msgstr "Quasar קרס, מופעל מחדש..."
 
 msgctxt "#30101"
 msgid "You must restart Kodi before using Quasar"
-msgstr "יש להפעיל את Kodi מחדש לפני השימוש ב Quasar"
+msgstr "יש להפעיל את Kodi מחדש לפני השימוש ב־Quasar"
 
 msgctxt "#30102"
 msgid "This add-on can only be run from within Quasar"
@@ -223,6 +271,10 @@ msgstr "הספק נכשל יותר מדי פעמים, משבית..."
 msgctxt "#30112"
 msgid "Unable to disable provider"
 msgstr "לא ניתן לבטל את ההפעלה של הספק"
+
+msgctxt "#30113"
+msgid "Download path not set, check your settings"
+msgstr "לא הוגדר נתיב הורדה, אנא בדקו את ההגדרות"
 
 # Quasar daemon
 msgctxt "#30200"
@@ -404,3 +456,31 @@ msgstr "כישלונות ספקים"
 msgctxt "#30244"
 msgid "Provider settings"
 msgstr "הגדרות ספקים"
+
+msgctxt "#30245"
+msgid "Popular on Trakt"
+msgstr "פופולרי ב־Trakt"
+
+msgctxt "#30246"
+msgid "Trending"
+msgstr "טרנדי"
+
+msgctxt "#30247"
+msgid "Most Played"
+msgstr "נוגנו הכי הרבה"
+
+msgctxt "#30248"
+msgid "Most Watched"
+msgstr "נצפו הכי הרבה"
+
+msgctxt "#30249"
+msgid "Most Collected"
+msgstr "נאספו הכי הרבה"
+
+msgctxt "#30250"
+msgid "Most Anticipated"
+msgstr "הכי הרבה ציפיות"
+
+msgctxt "#30251"
+msgid "Box Office"
+msgstr "שוברי קופות"

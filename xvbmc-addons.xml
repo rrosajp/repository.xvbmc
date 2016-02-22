@@ -23,6 +23,48 @@
     </extension>
 </addon>
 
+<addon id="plugin.video.party-time!"
+	name="Party Time!"
+	version="1.0.2"
+	provider-name="Scott Marten">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.0.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Harderstylez Podcast and more!</summary>
+    <description lang="en">Great collection of Hardstyle and Hardcore youtube movies, and podcasts from Zany, Coone, Brennan Heart enz enz..</description>
+    <platform>all</platform>
+    <forum>n/a</forum>
+    <website>n/a</website>
+  </extension>
+</addon>
+
+<addon id="plugin.video.popcorn-time" name="Popcorn Time" version="1.0.6" provider-name="mancuniancol">
+	<requires>
+		<import addon="xbmc.python" version="2.12.0"/>
+		<import addon="script.module.mctools" optional="false"/>
+	</requires>
+    <extension point="xbmc.python.pluginsource" library="main.py">
+        <provides>video</provides>
+	</extension>
+	<extension point="xbmc.service" library="service.py" start="login">
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Download HD movies at the smallest size</summary>
+		<description lang="en">This Add-on allows to view YTS links be play for Pulsar, XBMCtorrent, KmediaTorrent, Torrenter V2 or YATP with additional local library integration option</description>
+		<language></language>
+		<platform>all</platform>
+		<forum></forum>
+		<disclaimer lang="en">It is just for educational purpose[CR]Check if it is illegal in your country to use.</disclaimer>
+		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+	</extension>
+</addon>
+
 <addon id="plugin.video.pulsar" name="Quasar" version="0.9.0" provider-name="scakemyer">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
@@ -46,7 +88,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.quasar" name="Quasar" version="0.9.19" provider-name="scakemyer">
+<addon id="plugin.video.quasar" name="Quasar" version="0.9.23" provider-name="scakemyer">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -60,7 +102,7 @@
         <platform>all</platform>
         <language>en</language>
         <website><![CDATA[https://github.com/scakemyer/plugin.video.quasar]]></website>
-        <forum><![CDATA[http://forum.xbmc.org/showthread.php?tid=200957]]></forum>
+        <forum><![CDATA[http://forum.kodi.tv/showthread.php?tid=257967]]></forum>
         <source><![CDATA[https://github.com/scakemyer/plugin.video.quasar]]></source>
         <language>en</language>
         <license><![CDATA[Non commercial. See https://github.com/scakemyer/plugin.video.quasar/blob/master/LICENSE]]></license>
@@ -70,7 +112,27 @@
 </addon>
 
 <!--suppress ALL -->
-<addon id="plugin.video.saltshd.lite" version="1.0.116" name="Salts HD Lite" provider-name="tknorris">
+<addon id="plugin.video.saltshd.lite" version="1.0.117" name="Salts HD Lite" provider-name="tknorris">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+        <import addon="script.module.urlresolver" version="2.2.0"/>
+        <import addon="script.module.myconnpy" version="1.1.6" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+     <extension point="xbmc.service" library="service.py" start="startup"/>
+    <extension point="xbmc.addon.metadata">
+        <summary>Stream video from many difference sources</summary>
+        <description>This is the mod version of Salts by Scott Marten.</description>
+        <platform>all</platform>
+        <website>http://tvaddons.ag/</website>
+		<forum>http://forums.tvaddons.ag/forums/180-TKNORRIS-RELEASE-REPOSITORY</forum>
+	</extension>
+</addon>
+
+<!--suppress ALL -->
+<addon id="plugin.video.saltsrd.lite" version="1.0.117" name="Salts RD Lite" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.urlresolver" version="2.2.0"/>
@@ -285,7 +347,7 @@
   <extension point='xbmc.python.module'/>
 </addon>
 
-<addon id="script.module.mctools" name="common tools mc" version="1.3.5" provider-name="mancuniancol">
+<addon id="script.module.mctools" name="common tools mc" version="1.3.6" provider-name="mancuniancol">
   <requires>
     <import addon="xbmc.python" version="2.1.0" />
     <import addon="script.module.beautifulsoup4" optional="false"/>
@@ -436,7 +498,6 @@
   <requires>
     <import addon="xbmc.python" version="2.1.0" />
     <import addon="script.module.t0mm0.common" version="2.0.0"/>
-    <import addon="script.module.simplejson" version="3.3.0"/>
   </requires>
   <extension point="xbmc.python.module" library="lib" />
   <extension point="xbmc.addon.metadata">
