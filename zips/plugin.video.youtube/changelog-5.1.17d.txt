@@ -1,3 +1,6 @@
+5.1.17d (2016-02-22)
+[fix] API. (Thx www.Kaosbox.tv) +HELiX support
+
 5.1.17c (2016-02-17)
 [fix] API. (Thx www.Kaosbox.tv)
 
