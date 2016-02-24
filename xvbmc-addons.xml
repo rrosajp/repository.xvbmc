@@ -321,9 +321,6 @@
 
 <addon id="repository.tvaddons.nl" name="TV Addons Nederland" version="6.6.6" provider-name="TVAddons.nl MOD by XvBMC">
     <extension point="xbmc.addon.repository" name=".TV Addons Repository">
-        <info compressed="true">http://repo.tvaddons.nl/addons.xml</info>
-        <checksum>http://repo.tvaddons.nl/addons.xml.md5</checksum>
-        <datadir zip="true">http://repo.tvaddons.nl/repo</datadir>
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory</summary>
