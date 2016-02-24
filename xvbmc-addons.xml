@@ -319,6 +319,21 @@
 	</extension>
 </addon>
 
+<addon id="repository.tvaddons.nl" name=".TV Addons Nederland" version="6.6.6" provider-name="TVAddons.nl">
+    <extension point="xbmc.addon.repository" name=".TV Addons Repository">
+        <info compressed="true">http://repo.tvaddons.nl/addons.xml</info>
+        <checksum>http://repo.tvaddons.nl/addons.xml.md5</checksum>
+        <datadir zip="true">http://repo.tvaddons.nl/repo</datadir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory</summary>
+        <description>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory: DON'T LIKE IT? Please *remove* our REPOsitory from your system...</description>
+		<disclaimer>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory: DON'T LIKE IT? Please *remove* our REPOsitory from your system...</disclaimer>
+        <platform>all</platform>
+		<broken>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory: DON'T LIKE IT? Please *remove* our REPOsitory from your system...</broken>
+    </extension>
+</addon>
+
 <addon id="repository.xvbmc" name=" [B][COLOR lime]X[/COLOR][/B]vBMC Addon Depot/Repo" version="1.1.4" provider-name="XvBMC Nederland">
   <requires>
     <import addon="xbmc.addon" version="12.0.0"/>
