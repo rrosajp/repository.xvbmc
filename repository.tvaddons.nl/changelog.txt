@@ -1,0 +1,3 @@
+[B]Version 6.6.6[/B]
+- ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory -
+= DON'T LIKE IT? Please *remove* our REPOsitory from your system...
