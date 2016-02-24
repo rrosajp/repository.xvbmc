@@ -3,9 +3,9 @@
     <extension point="xbmc.addon.repository" name=".TV Addons Repository">
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory</summary>
-        <description>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory: DON'T LIKE IT? Please *remove* our REPOsitory from your system...</description>
-		<disclaimer>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory: DON'T LIKE IT? Please *remove* our REPOsitory from your system...</disclaimer>
+        <summary>ONLY MARKED AS USELESS IN 'XvBMC Nederland' REPOsitory</summary>
+        <description>ONLY MARKED AS USELESS IN 'XvBMC Nederland' REPOsitory: DON'T LIKE IT? Please *remove* our REPOsitory from your system...</description>
+		<disclaimer>ONLY MARKED AS USELESS IN 'XvBMC Nederland' REPOsitory: DON'T LIKE IT? Please *remove* our REPOsitory from your system...</disclaimer>
         <platform>all</platform>
 		<broken>ONLY MARKED AS BROKEN IN 'XvBMC Nederland' REPOsitory: DON'T LIKE IT? Please *remove* our REPOsitory from your system...</broken>
     </extension>
