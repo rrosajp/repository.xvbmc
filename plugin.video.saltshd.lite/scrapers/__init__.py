@@ -9,7 +9,7 @@ from salts_lib import utils2
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 
-__all__ = ['scraper', 'proxy', 'local_scraper', 'putmv_scraper', 'torbase_scraper', 'pubfilm_scraper', 'hdmovie14_scraper', '123movies_scraper', 
+__all__ = ['scraper', 'proxy', 'local_scraper', 'putmv_scraper', 'vivoto_scraper', 'pubfilm_scraper', 'hdmovie14_scraper', '123movies_scraper', 
 'xmovies8v2_scraper', 
 'xmovies8_scraper', 'nitertv_scraper', 'tunemovie_scraper', '9movies_scraper', 'watchhd_scraper', 'pw_scraper', 'clickplay_scraper', 'firemovies_scraper', 
 'dizigold_scraper', 'moviesub_scraper', 'dayt_scraper',
