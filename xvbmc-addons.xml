@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
+<addon id="network.openvpn"
+       name="openvpn"
+       version="6.0.1"
+       provider-name="Stefan Saraev (seo at irc.freenode.net)">
+  <requires>
+    <import addon="os.openelec.tv" version="6.0"/>
+    <import addon="xbmc.python" version="2.1.0"/>
+
+  </requires>
+  <extension point="xbmc.python.script" library="default.py">
+    <provides></provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary>openvpn: a full featured SSL VPN software solution that integrates OpenVPN server capabilities.</summary>
+    <description>
+openvpn binary is installed as /storage/.kodi/addons/network.openvpn/bin/openvpn
+    </description>
+    <disclaimer>
+this is an unofficial addon. please don't ask for support in openelec forum / irc channel
+    </disclaimer>
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon id="plugin.video.nl-viewer2" name="[COLOR FF3C6689]NL[/COLOR] Viewer V2" version="1.0.5"
        provider-name="Scott Marten">
     <requires>
@@ -331,6 +355,26 @@
     </extension>
 </addon>
 
+<addon id="repository.unofficial.addon.pro"
+                name="[COLOR FF757677]Open[/COLOR][COLOR FF8ABEE2]ELEC[/COLOR] Add-ons (unofficial)"
+                version="6.0.2"
+                provider-name="OpenELEC Community">
+        <extension point="xbmc.addon.repository"
+                name="OpenELEC Add-ons (unofficial)">
+                <dir minversion="15.0.0">
+                    <info>http://unofficial.addon.pro/addons/6.0/WeTek_Play/arm/addons.xml</info>
+                    <checksum>http://unofficial.addon.pro/addons/6.0/WeTek_Play/arm/addons.xml.md5</checksum>
+                    <datadir zip="true">http://unofficial.addon.pro/addons/6.0/WeTek_Play/arm</datadir>
+                </dir>
+        </extension>
+        <extension point="xbmc.addon.metadata">
+                <summary>OpenELEC Add-ons (unofficial)</summary>
+                <description>The OpenELEC unofficial repository contains add-ons from the community. These add-ons are not supported by OpenELEC staff. If you find a broken add-on please check the OpenELEC or Kodi forums for community support threads and ask the add-on author to submit fixes via GitHub.</description>
+                <disclaimer>Add-ons in this repository are not maintained or supported by OpenELEC staff.</disclaimer>
+                <platform>all</platform>
+        </extension>
+</addon>
+
 <addon id="repository.xvbmc" name=" [B][COLOR lime]X[/COLOR][/B]vBMC Addon Depot/Repo" version="1.1.4" provider-name="XvBMC Nederland">
   <requires>
     <import addon="xbmc.addon" version="12.0.0"/>
@@ -600,5 +644,23 @@
 		<disclaimer lang="en">It only works with MC's providers</disclaimer>
 		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
 	</extension>
+</addon>
+
+<addon id="service.vpn.manager"
+       name="VPN Manager for OpenVPN"
+       version="0.2.3"
+       provider-name="Zomboided">
+  <requires>
+    <import addon="xbmc.python" version="2.7.0"/>
+  </requires>
+  <extension point="xbmc.service" library="service.py" start="startup"/>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <summary lang="en">Configure and manage VPN connections using openVPN</summary>
+    <description lang="en">Establish a connection to a VPN provider and automatically switch VPN locations based on the add-on being used.  Also supports automatic reconnect and connection at boot time.  And with some simple configuring (see README and remote.xml file in add-on directory), you can cycle through VPN connections using a remote button.</description>
+  </extension>
 </addon>
 </addons>

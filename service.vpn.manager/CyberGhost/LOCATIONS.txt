@@ -1,0 +1,8 @@
+DE Fastest (TCP),4-de.cg-dialup.net,tcp,443,#USERKEY=client_de_tcp.key #USERCERT=client_de_tcp.cert #REMOVE=2
+DE Fastest (UDP),4-de.cg-dialup.net,udp,443,#USERKEY=client_de_udp.key #USERCERT=client_de_udp.cert #REMOVE=1
+NL Fastest (TCP),5-nl.cg-dialup.net,tcp,443,#USERKEY=client_nl_tcp.key #USERCERT=client_nl_tcp.cert #REMOVE=2
+NL Fastest (UDP),5-nl.cg-dialup.net,udp,443,#USERKEY=client_nl_udp.key #USERCERT=client_nl_udp.cert #REMOVE=1
+US Fastest (TCP),4-us.cg-dialup.net,tcp,443,#USERKEY=client_us_tcp.key #USERCERT=client_us_tcp.cert #REMOVE=2
+US Fastest (UDP),4-us.cg-dialup.net,udp,443,#USERKEY=client_us_udp.key #USERCERT=client_us_udp.cert #REMOVE=1
+UK Fastest (UDP),1-gb.cg-dialup.net,udp,443,#USERKEY=client_uk_udp.key #USERCERT=client_uk_udp.cert #REMOVE=1
+UK Individual (UDP),London-S01-I01.cg-dialup.net,udp,443,#USERKEY=client_uk_udp.key #USERCERT=client_uk_udp.cert #REMOVE=1
