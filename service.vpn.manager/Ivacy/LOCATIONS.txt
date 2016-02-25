@@ -1,0 +1,6 @@
+Chicago (UDP),usil1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2
+Chicago (TCP),usil1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1
+Germany (UDP),germany-udp.ivacy.net,udp,53,#REMOVE=2
+Germany (TCP),germany-tcp.ivacy.net,tcp,80,#REMOVE=1
+Netherlands (UDP),netherlands-udp.ivacy.net,udp,53,#REMOVE=2
+Netherlands (TCP),netherlands-tcp.ivacy.net,tcp,80,#REMOVE=1
