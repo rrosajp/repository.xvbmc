@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.upgrade.xvbmc" name=" [COLOR red]upgrade[/COLOR] [B][COLOR lime]XvBMC v2.4[/COLOR][/B] Pi2 to Isengard" version="1.0.1" provider-name="EPiC">
+    <requires>
+		<import addon="xbmc.python" version="2.14.0"/>
+	</requires>
+	<extension point="xbmc.python.script" library="upgrade_TiM.py">
+		<provides>executable</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<summary lang="en">EPiC XvBMC *upgrade* Pi2 v2.4 image (Helix-2-Isengard)</summary>
+		<description lang="en">EPiC XvBMC 'Helix-2-Isengard' *upgrade* for Pi2 v2.4 image (Kodi 14 to Kodi 15)</description>
+		<license>GNU General Public License, v2</license>
+		<language></language>
+		<forum>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
+		<source>https://www.facebook.com/groups/XvBMCnederland/</source>
+	</extension>
+</addon>
