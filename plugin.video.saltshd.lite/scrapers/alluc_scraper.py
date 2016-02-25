@@ -31,7 +31,7 @@ import scraper
 
 Q_LIST = [item[0] for item in sorted(Q_ORDER.items(), key=lambda x:x[1])]
 
-BASE_URL = 'http://www.alluc.ee'
+BASE_URL = 'http://www.alluc.com'
 SEARCH_URL = '/api/search/%s/?query=%s+lang%%3Aen&count=100&from=0&getmeta=0'
 SEARCH_TYPES = ['stream', 'download']
 API_KEY = '&apikey=02216ecc1bf4bcc83a1ee6c72a5f0eda'
