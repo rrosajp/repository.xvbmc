@@ -1,0 +1,5 @@
+[B]v1.0.1[/B] 
+ - Upgrade (Helix) to Jarvis Milhouse "Final" -4- Pi2 v2.4 XvBMC image
+
+[B]v1.0.0[/B] 
+ - EPiC Initial Release...
