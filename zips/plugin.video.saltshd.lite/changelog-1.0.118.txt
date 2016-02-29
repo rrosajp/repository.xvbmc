@@ -1,5 +1,5 @@
 [B]Version 1.0.118[/B]
-- Scotty doesn't know... ;-P
+- Scotty doesn't know... ;-P (scrapers)
 
 [B]Version 2.0.7[/B]
 - Rewrite/Improve Premiumize scraper

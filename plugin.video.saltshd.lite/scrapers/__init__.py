@@ -11,6 +11,7 @@ from salts_lib.constants import VIDEO_TYPES
 
 __all__ = ['scraper',
  '123movies_scraper',
+ 'movcav_scraper',
  'xmovies8v2_scraper',
  '9movies_scraper',
  'watchhd_scraper',
@@ -32,6 +33,7 @@ __all__ = ['scraper',
  'farda_scraper',
  'tunemovie_scraper',
  'pw_scraper',
+ 'local_scraper',
  'proxy',
  'moviexk_scraper']
 

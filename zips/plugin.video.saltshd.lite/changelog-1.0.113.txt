@@ -1,5 +1,5 @@
 [B]Version 1.0.113[/B]
-- Scotty doesn't know... ;-P
+- Scotty doesn't know... ;-P (scrapers)
 
 [B]Version 1.0.112[/B]
 - Remove movietv.to scraper
