@@ -1,8 +1,8 @@
 5.1.19 (2016-02-24)
-[fix] Final fix for API
+[fix] Final fix for API (+HELiX-proof).
 
 5.1.18 (2016-02-23)
-[fix] Change API Keys for Kodi 16 and Kodi 17. Hope it help.
+[fix] Change API Keys for Kodi 16 and Kodi 17. Hope it help (+HELiX-proof).
 
 5.1.17 (2016-01-25)
 [add] support kodi 17 by Uukrul
