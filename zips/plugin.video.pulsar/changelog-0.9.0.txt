@@ -1,4 +1,4 @@
-v0.9.0 (KODi HELiX)
+v0.9.0 (EPiC Pulsar-2-Quasar -4- KODi HELiX)
 
 @scakemyer scakemyer released this 7 days ago · 55 commits to master since this release
 
