@@ -1,8 +1,0 @@
-[B]Version 1.1.2[/B]
-- Derde versie ; EPiC version bumb
-
-[B]Version 1.1.1[/B]
-- Tweede versie *lol* (TiM)
-
-[B]Version 1.0.0[/B]
-- Eerste versie.
