@@ -2,7 +2,7 @@
 <addons>
 <addon  id="net.rieter.xot"
         version="4.0.0.9"
-        name="Retrospect"
+        name="Retrospect (4 *update* only, NOT 4 install"
         provider-name="Bas Rieter / EPiC Nightly">
 
     <requires>
