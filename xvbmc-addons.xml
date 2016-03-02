@@ -2,7 +2,7 @@
 <addons>
 <addon  id="net.rieter.xot"
         version="4.0.0.9"
-        name="Retrospect (4 *update* only, NOT 4 install)"
+        name="Retrospect (nightly)"
         provider-name="Bas Rieter / EPiC Nightly">
 
     <requires>
@@ -20,9 +20,9 @@
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
         <minversion>29000</minversion>
-        <summary>UPDATE ONLY FIX: Retrospect (previously XBMC Online TV) is a plugin that allows the playback of a lot of TV shows that are available (legally) via the broadcasters websites.</summary>
-        <description>UPDATE ONLY FIX: Retrospect uses the official websites of a lot of different broadcasting companies (mainly Dutch, Belgian, British and Swedish) to make their re-run episodes available on the Kodi platform. More information can be found at www.rieter.net.[CR][CR]Retrospect reports back usage statistics to our servers. This option can be disabled from the add-on settings.</description>
-        <disclaimer>UPDATE ONLY FIX: Retrospect is provided as is. We do not take any responsibility for possible (but highly unlikely) damage cause to your system. Nor do we take responsibility for the content that can be watched via this add-on.</disclaimer>
+        <summary>UPDATE ONLY, NOT! an installer: Retrospect (previously XBMC Online TV) is a plugin that allows the playback of a lot of TV shows that are available (legally) via the broadcasters websites.</summary>
+        <description>UPDATE ONLY, NOT! an installer: Retrospect uses the official websites of a lot of different broadcasting companies (mainly Dutch, Belgian, British and Swedish) to make their re-run episodes available on the Kodi platform. More information can be found at www.rieter.net.[CR][CR]Retrospect reports back usage statistics to our servers. This option can be disabled from the add-on settings.</description>
+        <disclaimer>UPDATE ONLY, NOT! an installer: Retrospect is provided as is. We do not take any responsibility for possible (but highly unlikely) damage cause to your system. Nor do we take responsibility for the content that can be watched via this add-on.</disclaimer>
         <nofanart>false</nofanart>
         <language></language>
     </extension>
