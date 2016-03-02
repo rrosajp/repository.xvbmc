@@ -1,7 +1,7 @@
 <settings>
     <category label="30545">
         <setting id="install_theme" label="30669" type="action" action="RunPlugin(plugin://plugin.video.saltshd.lite/?mode=install_themes)" option="close" visible="false"/>
-        <setting id="theme" type="enum" label="30500" values="Shine|Luna Blue|Iconic|Simple|SALTy|SALTy (Blended)|SALTy (Blue)|SALTy (Frog)|SALTy (Green)|SALTy (Macaw)|SALTier (Green)|SALTier (Orange)|SALTier (Red)|IGDB|Simply Elegant|IGDB Redux" default="0"
+        <setting id="theme" type="enum" label="30500" values="Shine|Luna Blue|Iconic|Simple|SALTy|SALTy (Blended)|SALTy (Blue)|SALTy (Frog)|SALTy (Green)|SALTy (Macaw)|SALTier (Green)|SALTier (Orange)|SALTier (Red)|IGDB|Simply Elegant|IGDB Redux" default="4"
         visible="false"/>
         <setting id="mute_notifications" type="bool" label="30658" default="true"/>
         <setting id="calendar-day" type="slider" label="30502" default="0" range="-7,7" option="int"/>
@@ -203,9 +203,10 @@
          <setting id="MovCav-sub_check" type="bool" label="    Invoegen in Bestaande Pagina controlles?" default="true" visible="eq(-2,true)"/>
          <setting id="MovCav_last_results" type="number" default="0" visible="false"/>
          <setting id="MovieSub-enable" type="bool" label="MovieSub Geactiveerd" default="true" visible="true"/>
-         <setting id="MovieSub-base_url" type="text" label="    Basis Url" default="http://www.moviesub.tv" visible="eq(-1,true)"/>
+         <setting id="MovieSub-base_url" type="text" label="    Basis Url" default="http://www.moviesub.net" visible="eq(-1,true)"/>
          <setting id="MovieSub-sub_check" type="bool" label="    Invoegen in Bestaande Pagina controlles?" default="true" visible="eq(-2,true)"/>
          <setting id="MovieSub_last_results" type="number" default="0" visible="false"/>
+         <setting id="MovieSub-base_url2" type="text" label="    TV Shows Basis Url" default="http://www.moviesub.tv" visible="eq(-4,true)"/>
          <setting id="MovieXK-enable" type="bool" label="MovieXK Geactiveerd" default="true" visible="true"/>
          <setting id="MovieXK-base_url" type="text" label="    Basis Url" default="http://www.moviexk.net" visible="eq(-1,true)"/>
          <setting id="MovieXK-sub_check" type="bool" label="    Invoegen in Bestaande Pagina controlles?" default="true" visible="eq(-2,true)"/>

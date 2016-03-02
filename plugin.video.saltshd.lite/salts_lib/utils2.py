@@ -42,7 +42,7 @@ THEME_LIST = ['Shine', 'Luna_Blue', 'Iconic', 'Simple', 'SALTy', 'SALTy (Blended
               'SALTy (Macaw)', 'SALTier (Green)', 'SALTier (Orange)', 'SALTier (Red)', 'IGDB', 'Simply Elegant', 'IGDB Redux']
 THEME = THEME_LIST[int(kodi.get_setting('theme'))]
 if xbmc.getCondVisibility('System.HasAddon(script.salts.themepak)'):
-    themepak_path = xbmcaddon.Addon('script.salts.themepak').getAddonInfo('path')
+    themepak_path = xbmcaddon.Addon('plugin.video.saltshd.lite').getAddonInfo('path')
 else:
     themepak_path = kodi.get_path()
 THEME_PATH = os.path.join(themepak_path, 'art', 'themes', THEME)
