@@ -1,0 +1,23 @@
+# 4.0.0.9 # 
+EPiC Rieter (XOT) Nightly v4.0.1.0 'set to' v4.0.0.9 'for Jarvis FiXes'. 
+ 
+# Use at own risk # 
+ 
+ *NEW* Kodi Repository location
+ *nfo* The more recent builds (july 2010) of Kodi support Add-ons Repositories. 
+       There is also an official Retrospect repository that holds the most recent Retrospect build. 
+       In order to use it you will have to download the repository and install it in Kodi using the “install from zip” option in the Add-on Manager. 
+       After installing it, there will be a new Retrospect repository in the Kodi Add-on Manager.
+       http://www.rieter.net/ext/?uri=http://www.rieter.net/net.rieter.xot.repository/net.rieter.xot.repository/net.rieter.xot.repository-1.0.5.zip
+ 
+ extra Nightly builds: Retrospect also has nightly builds available. 
+       Read this post to find out where to get them and how to install them.
+       http://www.rieter.net/content/2015/02/21/xbmc-online-tv-nightly-git-repository/
+ 
+ Grtz, Team XvBMC Nederland 
+       https://www.fb.com/groups/XvBMCnederland/ 
+       https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/ 
+       https://www.fb.com/groups/xbmcvoorbeginners.android/ 
+ 
+# Use at own risk # 
+ 

@@ -1,0 +1,27 @@
+{
+  "channels": [
+    {
+      "guid": "79C799AE-B6BA-11E0-87FD-20434824019B",
+      "name": "De Redactie",
+      "description": "Online uitzendingen van www.deredactie.be.",
+      "icon": "redactielarge.png",
+      "category": "National",
+      "channelcode": "redactie",
+      "sortorder": 10,
+      "language": "be",
+      "fanart": "redactiefanart.png"
+    },
+    {
+      "guid": "71128378-B6BA-11E0-A68A-1B434824019B",
+      "name": "Sporza",
+      "description": "Online uitzendingen van www.sporza.be.",
+      "icon": "sporzalarge.png",
+      "category": "National",
+      "channelcode": "sporza",
+      "sortorder": 13,
+      "language": "be",
+      "compatible": "Environments.All",
+      "fanart": "sportzafanart.jpg"
+    }
+  ]
+}
