@@ -764,11 +764,11 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
         </extension>
 </addon>
 
-<addon id="repository.xvbmc" name=" [B][COLOR lime]X[/COLOR][/B]vBMC Addon Depot/Repo" version="1.1.4" provider-name="XvBMC Nederland">
+<addon id="repository.xvbmc" name=" [COLOR lime][B]X[/B][/COLOR]vBMC Addon REPOsitory" version="2.0.0" provider-name="XvBMC Nederland">
   <requires>
     <import addon="xbmc.addon" version="12.0.0"/>
   </requires>
-	<extension point="xbmc.addon.repository" name="XvBMC Add-on Repo/Depot">
+	<extension point="xbmc.addon.repository" name="XvBMC Addon Repo/Depot">
 		<dir>
 			<info compressed="false">https://github.com/XvBMC/repository.xvbmc/raw/master/xvbmc-addons.xml</info>
 			<checksum>https://github.com/XvBMC/repository.xvbmc/raw/master/xvbmc-addons.xml.md5</checksum>
@@ -783,19 +783,10 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">XvBMC The Netherlands Addon REPOsitory</summary>
 		<summary lang="nl">XvBMC Nederland Addon REPOsitory</summary>
-		<description>[B]XvBMC Nederland Addon Repository / XvBMC Nederland Addon Depot[/B]
-
- https://www.fb.com/groups/XvBMCnederland/
- https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/
- https://www.fb.com/groups/xbmcvoorbeginners.android/
- https://www.fb.com/groups/XbmcvoorbeginnersfilmsForum/
- https://www.fb.com/groups/XbmcVoorBeginnersSportChat/
- https://www.fb.com/groups/xbmckoopenverkoop/
-
-[B]XvBMC Nederland Addon Repository / XvBMC Nederland Addon Depot[/B]
-		</description>
-		<disclaimer lang="en">The owners and submitters to this repository do not host or distribute any of the content displayed by these addons nor do they have any affiliation with its content.</disclaimer>
-		<disclaimer lang="nl">The owners and submitters to this repository do not host or distribute any of the content displayed by these addons nor do they have any affiliation with its content.</disclaimer>
+		<description lang="en">XvBMC The Netherlands Addon Repository / XvBMC The Netherlands Addon Depot \ be sure to check out our FB-page: https://www.fb.com/groups/XvBMCnederland/</description>
+		<description lang="nl">XvBMC Nederland Addon Repository / XvBMC Nederland Addon Depot \ en volg zeker ook even onze Facebook pagina: https://www.fb.com/groups/XvBMCnederland/</description>
+		<disclaimer lang="en">The owners and submitters to this repository do not host or distribute any of the content displayed by these addons nor do they have any affiliation with its content. Please Read: https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/LICENSE just because you can ;)</disclaimer>
+		<disclaimer lang="nl">The owners and submitters to this repository do not host or distribute any of the content displayed by these addons nor do they have any affiliation with its content. Please Read: https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/LICENSE just because you can ;)</disclaimer>
 		<platform>all</platform>
 		<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
 		<forum>https://www.fb.com/groups/XvBMCnederland/</forum>
