@@ -513,7 +513,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
 </addon>
 
-<addon id="plugin.video.quasar" name="Quasar" version="0.9.24" provider-name="scakemyer">
+<addon id="plugin.video.quasar" name="Quasar" version="0.9.25" provider-name="scakemyer">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -1026,40 +1026,24 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<addon id="script.upgrade.xvbmc" name=" [COLOR red]upgrade[/COLOR] [B][COLOR lime]XvBMC v2.4[/COLOR][/B] Pi2 to Isengard" version="1.0.1" provider-name="EPiC">
-    <requires>
-		<import addon="xbmc.python" version="2.14.0"/>
-	</requires>
-	<extension point="xbmc.python.script" library="upgrade_TiM.py">
-		<provides>executable</provides>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<summary lang="en">EPiC XvBMC *upgrade* Pi2 v2.4 image (Helix-2-Isengard)</summary>
-		<description lang="en">EPiC XvBMC 'Helix-2-Isengard' *upgrade* for Pi2 v2.4 image (Kodi 14 to Kodi 15)</description>
-		<license>GNU General Public License, v2</license>
-		<language></language>
-		<forum>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
-		<source>https://www.facebook.com/groups/XvBMCnederland/</source>
-	</extension>
-</addon>
-
-<addon id="script.upgrade.xvbmc.beta" name=" [COLOR red]upgrade[/COLOR] [B][COLOR lime]XvBMC v2.4[/COLOR][/B] Pi2 to Jarvis (beta)" version="1.0.1" provider-name="EPiC">
-    <requires>
-		<import addon="xbmc.python" version="2.14.0"/>
-	</requires>
-	<extension point="xbmc.python.script" library="upgrade_TiM.py">
-		<provides>executable</provides>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<summary lang="en">EPiC XvBMC *upgrade* Pi2 v2.4 image to Jarvis (beta)</summary>
-		<description lang="en">EPiC XvBMC Kodi 16 *upgrade* for Pi2 v2.4 image 'Helix-2-Jarvis'</description>
-		<license>GNU General Public License, v2</license>
-		<language></language>
-		<forum>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
-		<source>https://www.facebook.com/groups/XvBMCnederland/</source>
-	</extension>
+<addon id="script.xvbmc.upper" name=" [COLOR lime][B]X[/B][/COLOR]vBMC OpenELEC/Kodi Upgrader" version="2.0.0" provider-name="EPiC">
+  <requires>
+    <import addon="xbmc.python" version="2.14.0"/>
+    <import addon="script.module.simplejson" version="2.0.10"/>
+  </requires>
+   <extension point="xbmc.python.script" library="XvBMC.py">
+   <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">XvBMC OpenELEC/Kodi Upgrader</summary>
+    <description lang="en">XvBMC 'Universal' OpenELEC/Kodi Upgrader (Milhouse beta builds)</description>
+	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
+	<platform>all</platform>
+	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+	<forum>https://www.fb.com/groups/XvBMCnederland/</forum>
+	<website>https://www.fb.com/groups/XvBMCnederland/</website>
+	<source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+  </extension>
 </addon>
 
 <addon id="service.vpn.manager"
