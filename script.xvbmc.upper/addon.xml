@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.xvbmc.upper" name=" [COLOR lime][B]X[/B][/COLOR]vBMC OpenELEC/Kodi Upgrader" version="2.0.0" provider-name="EPiC">
+  <requires>
+    <import addon="xbmc.python" version="2.14.0"/>
+    <import addon="script.module.simplejson" version="2.0.10"/>
+  </requires>
+   <extension point="xbmc.python.script" library="XvBMC.py">
+   <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">XvBMC OpenELEC/Kodi Upgrader</summary>
+    <description lang="en">XvBMC 'Universal' OpenELEC/Kodi Upgrader (Milhouse beta builds)</description>
+	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
+	<platform>all</platform>
+	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+	<forum>https://www.fb.com/groups/XvBMCnederland/</forum>
+	<website>https://www.fb.com/groups/XvBMCnederland/</website>
+	<source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+  </extension>
+</addon>
