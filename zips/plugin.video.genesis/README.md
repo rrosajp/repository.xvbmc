@@ -1,6 +1,6 @@
-==========================
-Specto fork of EPiC GENSiS
-==========================
+===========================
+Specto fork of EPiC GENESiS
+===========================
 
 About
 -----
@@ -26,10 +26,10 @@ MO' iNFO:
 Specto v2016.03.06.xvbmc
 ------------------------
 + an EPiC XvBMC *FORK* 2 replace old Lambda's GENESiS! 
-! You should use Salts HD Lite by now  ;-)  :-P  3:) ! 
++ You should use Salts HD Lite by now  ;-)  :-P  3:) ! 
  
-! Trakt + RealDebrid *UNDER CONSTRUCTION* 
-! see: http://filmkodi.com/en/fork-of-genesis/#comment-355 
++ Trakt + RealDebrid *UNDER CONSTRUCTION* 
++ see: http://filmkodi.com/en/fork-of-genesis/#comment-355 
 ------------------------
 Specto v2016.03.06.xvbmc
 ------------------------
