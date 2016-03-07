@@ -248,11 +248,13 @@ class Plugin:
         categories = channelRegister.GetCategories()
 
         xbmcItems = []
+        icon = os.path.join(Config.rootDir, "icon.png")
+        fanart = os.path.join(Config.rootDir, "fanart.jpg")
         for category in categories:
-            icon = os.path.join(Config.rootDir, "icon.png")
             name = LanguageHelper.GetLocalizedCategory(category)
             xbmcItem = xbmcgui.ListItem(name, name)
             xbmcItem.setIconImage(icon)
+            xbmcItem.setProperty('fanart_image', fanart)
             xbmcItem.setThumbnailImage(icon)
             url = self.__CreateActionUrl(None, action=self.actionListCategory, category=category)
             xbmcItems.append((url, xbmcItem, True))
@@ -494,14 +496,15 @@ class Plugin:
                 message = LanguageHelper.GetLocalizedString(LanguageHelper.DrmText)
                 XbmcWrapper.ShowDialog(title, message)
             elif item.isDrmProtected:
-                Logger.Debug("DRM Warning message disableb by settings")
+                Logger.Debug("DRM Warning message disabled by settings")
 
             if not item.complete:
                 item = self.channelObject.ProcessVideoItem(item)
 
             # validated the updated item
-            if not item.complete:
+            if not item.complete or not item.HasMediaItemParts():
                 Logger.Warning("UpdateVideoItem returned an item that had item.complete = False:\n%s", item)
+                Statistics.RegisterError(self.channelObject, item=item)
 
             if not item.HasMediaItemParts():
                 # the update failed or no items where found. Don't play
@@ -553,7 +556,7 @@ class Plugin:
 
         except:
             if item:
-                Statistics.RegisterError(self.channelObject, item.name)
+                Statistics.RegisterError(self.channelObject, item=item)
             else:
                 Statistics.RegisterError(self.channelObject)
 
