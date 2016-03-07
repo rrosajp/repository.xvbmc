@@ -24,6 +24,7 @@ from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib import scraper_utils
+from salts_lib import recaptcha_v2
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
@@ -32,7 +33,8 @@ from salts_lib.kodi import i18n
 import scraper
 
 
-BASE_URL = 'http://watch1080p.com'
+BASE_URL = base64.decodestring('aHR0cDovL3dhdGNoMTA4MHAuY29t')
+SEARCH_URL = 'aHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vY3VzdG9tc2VhcmNoL3YxZWxlbWVudD9rZXk9QUl6YVN5Q1ZBWGlVelJZc01MMVB2NlJ3U0cxZ3VubU1pa1R6UXFZJnJzej1maWx0ZXJlZF9jc2UmbnVtPTEwJmhsPWVuJmN4PTAxMjg0NjI0MTAwMTc0NDgzNzMwNzpia210NWhrb3ZsZyZnb29nbGVob3N0PXd3dy5nb29nbGUuY29tJnE9JXM='
 
 class WatchHD_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -58,14 +60,30 @@ class WatchHD_Scraper(scraper.Scraper):
         except:
             headers = {}
 
+        if not link.startswith('http'):
+            link = urlparse.urljoin(self.base_url, link)
         html = self._http_get(link, headers=headers, cache_limit=0)
+                    
         fragment = dom_parser.parse_dom(html, 'div', {'class': 'player'})
         if fragment:
             iframe_url = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
             if iframe_url:
+                iframe_url = iframe_url[0]
                 headers = {'Referer': link}
-                html = self._http_get(iframe_url[0], headers=headers, cache_limit=0)
-                match = re.search("window\.atob\('([^']+)", html)
+                html = self._http_get(iframe_url, headers=headers, cache_limit=0)
+                sitekey = dom_parser.parse_dom(html, 'div', {'class': 'g-recaptcha'}, ret='data-sitekey')
+                if sitekey:
+                    token = recaptcha_v2.UnCaptchaReCaptcha().processCaptcha(sitekey[0], lang='en')
+                    if token:
+                        data = {'g-recaptcha-response': token}
+                        html = self._http_get(iframe_url, data=data, cache_limit=0)
+                        log_utils.log(html)
+                        
+                match = re.search("\.replace\(\s*'([^']+)'\s*,\s*'([^']*)'\s*\)", html, re.I)
+                if match:
+                    html = html.replace(match.group(1), match.group(2))
+
+                match = re.search("window\.atob[\([]+'([^']+)", html)
                 if match:
                     func_count = len(re.findall('window\.atob', html))
                     html = match.group(1)
@@ -131,6 +149,9 @@ class WatchHD_Scraper(scraper.Scraper):
                             continue
                         
                         quality = QUALITIES.HIGH
+                        
+                    if stream_url.startswith(self.base_url):
+                        stream_url = stream_url[len(self.base_url):]
                     stream_url += '|User-Agent=%s&Referer=%s&Cookie=%s' % (scraper_utils.get_ua(), url, self._get_stream_cookies())
                     hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': True}
                     hoster['title'] = title
@@ -156,15 +177,18 @@ class WatchHD_Scraper(scraper.Scraper):
             return season_url
     
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/search/%s' % (urllib.quote_plus(title)))
-        html = self._http_get(search_url, cache_limit=.25)
+        search_url = base64.decodestring(SEARCH_URL) % (urllib.quote_plus(title))
+        html = self._http_get(search_url, cache_limit=1)
         results = []
-        for item in dom_parser.parse_dom(html, 'div', {'class': 'name_top'}):
-            match = re.search('href="([^"]+)[^>]+>([^<]+)', item)
-            if match:
-                url, match_title_year = match.groups()
-                is_season = re.search('Season\s+(\d+)', match_title_year, re.IGNORECASE)
+        js_data = scraper_utils.parse_json(html)
+        if 'results' in js_data:
+            norm_title = scraper_utils.normalize_title(title)
+            for item in js_data['results']:
+                is_season = re.search('Season\s+(\d+)', item['titleNoFormatting'], re.IGNORECASE)
                 if not is_season and video_type == VIDEO_TYPES.MOVIE or is_season and VIDEO_TYPES.SEASON:
+                    match_title_year = item['titleNoFormatting']
+                    match_title_year = re.sub('^Watch\s+', '', match_title_year)
+                    match_url = item['url']
                     match_year = ''
                     if video_type == VIDEO_TYPES.MOVIE:
                         match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)', match_title_year)
@@ -173,12 +197,16 @@ class WatchHD_Scraper(scraper.Scraper):
                         else:
                             match_title = match_title_year
                     else:
-                        match_title = match_title_year
                         if season and int(is_season.group(1)) != int(season):
                             continue
+                        match = re.search('(.*?)\s+\(\d{4}\)', match_title_year)
+                        if match:
+                            match_title = match.group(1)
+                        else:
+                            match_title = match_title_year
                     
-                    if not year or not match_year or year == match_year:
-                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(url)}
+                    if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
+                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                         results.append(result)
 
         return results
@@ -187,5 +215,5 @@ class WatchHD_Scraper(scraper.Scraper):
     def get_settings(cls):
         settings = super(cls, cls).get_settings()
         name = cls.get_name()
-        settings.append('         <setting id="%s-auto_pick" type="bool" label="    %s" default="false" visible="eq(-4,true)"/>' % (name, i18n('auto_pick')))
+        settings.append('         <setting id="%s-auto_pick" type="bool" label="    %s" default="true" visible="eq(-4,true)"/>' % (name, i18n('auto_pick')))
         return settings
