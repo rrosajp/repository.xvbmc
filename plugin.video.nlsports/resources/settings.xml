@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="Algemeen">
+		<setting label="URL Reactie timeout [sec]" id="reqTimeout" type="number" default="10" />
+	</category>
+    <category label="Untested Features">
+        <setting label="Enable Untested Features" id="newFeatures" type="bool" default="false" />
+    </category>
+</settings>
