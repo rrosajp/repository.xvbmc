@@ -620,7 +620,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon
   id="plugin.video.SportsDevil"
-  version="2"
+  version="2.2016.03.06"
   name="SportsDevil"
   provider-name="SportsDevil">
   <requires>
@@ -634,9 +634,9 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
    <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary>Play videos of different sports streaming sites</summary>
-    <description>Play videos of different sports streaming sites</description>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+    <summary>Play videos of different sports streaming sites (version 2016.03.06)</summary>
+    <description>Play videos of different sports streaming sites (version 2016.03.06)</description>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991 (version 2016.03.06)</license>
     <platform>all</platform>
   </extension>
 </addon>
