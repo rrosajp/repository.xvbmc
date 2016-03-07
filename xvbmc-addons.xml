@@ -396,7 +396,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
-       version="1.0.11"
+       version="1.0.12"
        provider-name="AwesomeStreams">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -423,6 +423,29 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <description lang="en">Addon With Livestreams and movies from all over the world</description>
     <platform>all</platform>
   </extension>
+</addon>
+
+<addon id="plugin.video.genesis" name="Specto EPiC Genesis FORK"  version="2016.03.05.1" provider-name="mrknow (+EPiC *fork* -4- XvBMC)" >
+	<requires>
+		<import addon="xbmc.python" version="2.1.0" />
+		<import addon="script.module.requests" version="1.0.0" />
+		<import addon="script.module.metahandler" optional="true" />
+		<import addon="plugin.video.youtube" optional="true" />
+
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="default.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.service" library="service.py" start="startup" />
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Mrknow fork of GENESiS (XvBMC TiP: USE Salts HD/RD Lite 'fork' INSTEAD!) Trakt+RealDebrid *UNDER CONSTRUCTION*</summary>
+		<description lang="en">Mrknow Specto-fork of GENESiS; *official Specto support* @ https://github.com/mrknow/filmkodi/issues (XvBMC TiP: USE Salts HD/RD Lite 'fork' INSTEAD!) Trakt+RealDebrid *UNDER CONSTRUCTION*</description>
+		<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon. The author does not have any affiliation with the content provider. (XvBMC TiP: USE Salts HD/RD Lite 'fork' INSTEAD!) Trakt+RealDebrid *UNDER CONSTRUCTION*</disclaimer>
+		<forum>https://github.com/mrknow/filmkodi/issues</forum>
+		<source>http://filmkodi.com/repository/</source>
+		<website>http://filmkodi.com/en/wtyczka-specto-fork-genesis/</website>
+		<platform>all</platform>
+	</extension>
 </addon>
 
 
@@ -556,7 +579,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 </addon>
 
 <!--suppress ALL -->
-<addon id="plugin.video.saltshd.lite" version="1.0.123" name="Salts HD Lite" provider-name="tknorris">
+<addon id="plugin.video.saltshd.lite" version="1.0.124" name="Salts HD Lite" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.urlresolver" version="2.2.0"/>
