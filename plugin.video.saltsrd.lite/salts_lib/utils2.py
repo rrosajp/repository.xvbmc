@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import json
 import datetime
 import time
 import re
@@ -41,7 +42,7 @@ THEME_LIST = ['Shine', 'Luna_Blue', 'Iconic', 'Simple', 'SALTy', 'SALTy (Blended
               'SALTy (Macaw)', 'SALTier (Green)', 'SALTier (Orange)', 'SALTier (Red)', 'IGDB', 'Simply Elegant', 'IGDB Redux']
 THEME = THEME_LIST[int(kodi.get_setting('theme'))]
 if xbmc.getCondVisibility('System.HasAddon(script.salts.themepak)'):
-    themepak_path = xbmcaddon.Addon('script.salts.themepak').getAddonInfo('path')
+    themepak_path = xbmcaddon.Addon('plugin.video.saltsrd.lite').getAddonInfo('path')
 else:
     themepak_path = kodi.get_path()
 THEME_PATH = os.path.join(themepak_path, 'art', 'themes', THEME)
@@ -769,3 +770,18 @@ def get_and_decrypt(url, password):
         plain_text = decrypter.feed(cipher_text)
         plain_text += decrypter.feed()
         return plain_text
+
+def json_load_as_str(file_handle):
+    return _byteify(json.load(file_handle, object_hook=_byteify), ignore_dicts=True)
+
+def json_loads_as_str(json_text):
+    return _byteify(json.loads(json_text, object_hook=_byteify), ignore_dicts=True)
+
+def _byteify(data, ignore_dicts=False):
+    if isinstance(data, unicode):
+        return data.encode('utf-8')
+    if isinstance(data, list):
+        return [_byteify(item, ignore_dicts=True) for item in data]
+    if isinstance(data, dict) and not ignore_dicts:
+        return dict([(_byteify(key, ignore_dicts=True), _byteify(value, ignore_dicts=True)) for key, value in data.iteritems()])
+    return data

@@ -9,12 +9,40 @@ from salts_lib import utils2
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 
-__all__ = ['scraper', 'proxy', 'local_scraper', 'putmv_scraper', 'alluc_scraper', 'directdl_scraper', 'icefilms_scraper', 'oneclicktvshows_scraper', 'myvideolinks_scraper', 'torbase_scraper', 'pubfilm_scraper', 'hdmovie14_scraper', '123movies_scraper', 
-'xmovies8v2_scraper', 
-'xmovies8_scraper', 'nitertv_scraper', 'tunemovie_scraper', '9movies_scraper', 'watchhd_scraper', 'pw_scraper', 'clickplay_scraper', 'firemovies_scraper', 
-'dizigold_scraper', 'rlsbb_scraper', 'moviesub_scraper', 'dayt_scraper',
- 'tvwtvs_scraper', 'mwm_scraper', 'dizilab_scraper', 'dizimag_scraper', 'sezonlukdizi_scraper', 'diziay_scraper', 
- 'farda_scraper', 'moviexk_scraper']
+__all__ = ['scraper',
+ '123movies_scraper',
+ 'movcav_scraper',
+ 'xmovies8v2_scraper',
+ '9movies_scraper',
+ 'watchhd_scraper',
+ 'directdl_scraper',
+ 'ddlvalley_scraper',
+ 'icefilms_scraper',
+ 'filmikz_scraper',
+ 'myvideolinks_scraper',
+ 'oneclicktvshows_scraper',
+ 'rlsbb_scraper',
+ 'sezonlukdizi_scraper',
+ 'tvwtvs_scraper',
+ 'dayt_scraper',
+ 'dizigold_scraper',
+ 'putmv_scraper',
+ 'vivoto_scraper',
+ 'pubfilm_scraper',
+ 'hdmovie14_scraper',
+ 'xmovies8_scraper',
+ 'nitertv_scraper',
+ 'clickplay_scraper',
+ 'firemovies_scraper',
+ 'moviesub_scraper',
+ 'dizilab_scraper',
+ 'dizimag_scraper',
+ 'farda_scraper',
+ 'tunemovie_scraper',
+ 'pw_scraper',
+ 'local_scraper',
+ 'proxy',
+ 'moviexk_scraper']
 
 from . import *
     

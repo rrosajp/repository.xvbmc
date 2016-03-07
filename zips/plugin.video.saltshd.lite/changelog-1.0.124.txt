@@ -5,7 +5,7 @@
 - Code Cosmetics ;-p
 
 [B]Version 1.0.122[/B]
-- Traky Fix(es)
+- Trakt Fix(es)
 
 [B]Version 1.0.121[/B]
 - Library Fix
