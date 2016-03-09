@@ -149,7 +149,7 @@ class Trakt_API():
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
 
     def get_anticipated(self, section, page=None):
-        url = '/%s/anticipated' % (TRAKT_SECTIONS[section])
+        url = '/%s/boxoffice' % (TRAKT_SECTIONS[section])
         params = {'extended': 'full,images', 'limit': self.list_size}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
