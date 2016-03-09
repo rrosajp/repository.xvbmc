@@ -1,3 +1,27 @@
+[B]Version 1.0.125[/B]
+- Code Cosmetics ;-p
+
+[B]Version 1.0.124[/B]
+- Code Cosmetics ;-p
+
+[B]Version 1.0.123[/B]
+- Code Cosmetics ;-p
+
+[B]Version 1.0.122[/B]
+- Trakt Fix(es)
+
+[B]Version 1.0.121[/B]
+- Library Fix
+
+[B]Version 1.0.120[/B]
+- Scotty doesn't know... ;-P (scrapers)
+
+[B]Version 1.0.119[/B]
+- Scotty doesn't know... ;-P (scrapers)
+
+[B]Version 1.0.118[/B]
+- Scotty doesn't know... ;-P (scrapers)
+
 [B]Version 2.0.7[/B]
 - Rewrite/Improve Premiumize scraper
 - Add mtvs scraper
