@@ -31,19 +31,25 @@ from libs.common import getFriendlyProfileName
 
 def generateAll():
     infoTrace("generation.py", "Generating Location files")
-    generateIvacy()
+    generateIPVanish()
     return
+    generateCyberGhost()
+    generateTorGuard()
+    generateibVPN()
+    generatePP()    
+    generateHideMe()
+    generateAirVPN()
     generatePureVPN()
     generateLiquidVPN()
     generatetigerVPN()
     generateHMA()    
     generateVyprVPN()
-    generateIPVanish()
+    generateIvacy()
     generatePIA()
-    generateibVPN()
     generateNordVPN()
-    
 
+
+    
 def getLocations(vpn_provider, path_ext):
     if path_ext == "":
         location_path = "/LOCATIONS.txt"
@@ -54,32 +60,217 @@ def getLocations(vpn_provider, path_ext):
 
 def getProfileList(vpn_provider):
     path = getAddonPath(True, "providers/" + vpn_provider + "/*.ovpn")
-    return glob.glob(path)  
+    return glob.glob(path)      
 
 
+def generateCyberGhost():
+    # Data is stored as a bunch of ovpn files
+    # File name has location but needs mapping.  File has the server
+    profiles = getProfileList("CyberGhost")
+    location_file = getLocations("CyberGhost", "Premium and Premium Plus Account")
+    for profile in profiles:
+        geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+        geo = resolveCountry(geo[0:2]) + geo[2:]
+        geo = geo.replace("TCP", "(TCP)")
+        geo = geo.replace("UDP", "(UDP)")
+        profile_file = open(profile, 'r')
+        lines = profile_file.readlines()
+        profile_file.close()
+        servers = ""
+        ports = ""
+        for line in lines:
+            if line.startswith("remote "):
+                _, server, port = line.split()
+                if not servers == "" : servers = servers + " "
+                servers = servers + server
+                if not ports == "" : ports = ports + " "
+                ports = ports + port
+            if line.startswith("proto "):
+                _, proto = line.split()
+        if "(TCP)" in geo : output_line = geo + "," + servers + "," + proto + "," + ports + ",#REMOVE=2\n"
+        if "(UDP)" in geo : output_line = geo + "," + servers + "," + proto + "," + ports + ",#REMOVE=1\n"
+        location_file.write(output_line)
+    location_file.close()      
+
+    return
+
+
+    
+def generateTorGuard():
+    # Data is stored as a bunch of ovpn files
+    # File name has location.  File has the server
+    profiles = getProfileList("TorGuard")
+    location_file = getLocations("TorGuard", "")
+    for profile in profiles:
+        geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+        geo = geo.replace("TorGuard.","")
+        geo = geo.replace(".Stealth.TCP", " Stealth")
+        geo = geo.replace(".Stealth.UDP", " Stealth")
+        geo = geo.replace("-", " - ")
+        profile_file = open(profile, 'r')
+        lines = profile_file.readlines()
+        profile_file.close()
+        servers = ""
+        ports = ""
+        proto = ""
+        rem_flags = ""
+        cipher = False
+        remote_server = False
+        float = False
+        route = False
+        remote_random = False
+        for line in lines:
+            if line.startswith("remote "):
+                _, server, port = line.split()
+                if not servers == "" : servers = servers + " "
+                servers = servers + server
+                if not ports == "" : ports = ports + " "
+                ports = ports + port
+            if line.startswith("proto "):
+                _, proto = line.split() 
+            if line.startswith("dev tun"): 
+                if line.startswith("dev tun1"):
+                    rem_flags = rem_flags + "2"
+                else:
+                    rem_flags = rem_flags + "1"
+            if line.startswith("cipher AES-256-CBC"):
+                cipher = True
+            if line.startswith("remote-cert-tls server"):
+                remote_server = True
+            if line.startswith("float"):
+                float = True
+            if line.startswith("route-delay"):
+                route = True
+            if line.startswith("remote-random"):
+                remote_random = True
+        if not cipher: rem_flags = rem_flags + "3"
+        if not remote_server: rem_flags = rem_flags + "4"
+        if not float: rem_flags = rem_flags + "5"
+        if not route: rem_flags = rem_flags + "6"
+        if not remote_random: rem_flags = rem_flags + "7"
+        output_line = geo + " (" + proto.upper() + ")," + servers + "," + proto + "," + ports + ",#REMOVE=" + rem_flags + "\n"
+        location_file.write(output_line)
+    location_file.close()      
+    
+    
+def generatePP():
+    # Data is stored as a bunch of ovpn files
+    # File name has location.  File has the server
+    profiles = getProfileList("PerfectPrivacy")
+    location_file = getLocations("PerfectPrivacy", "")
+    for profile in profiles:
+        geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+        geo = geo.replace("TelAviv", "Tel Aviv")
+        geo = geo.replace("Hongkong", "Hong Kong")
+        geo = geo.replace("NewYork", "New York")
+        geo_key = geo + "_ta.key"
+        if not xbmcvfs.exists(getAddonPath(True, "PerfectPrivacy/" + geo_key)):
+            geo = "****ERROR****"
+        profile_file = open(profile, 'r')
+        lines = profile_file.readlines()
+        profile_file.close()
+        servers = ""
+        ports = ""
+        for line in lines:
+            if line.startswith("remote "):
+                _, server, port = line.split()
+                if not servers == "" : servers = servers + " "
+                servers = servers + server
+                if not ports == "" : ports = ports + " "
+                ports = ports + port
+        output_line = geo + " (UDP)," + servers + "," + "udp," + ports + ",#TLSKEY=" + geo_key + "\n" 
+        location_file.write(output_line)
+    location_file.close()      
+    
+
+def generateHideMe():
+    # Data is stored in ovpn files with location info in Servers.txt
+    location_file = getLocations("HideMe", "")
+    free_locations = [""]
+    profiles = getProfileList("HideMe")
+    for profile in profiles:
+        profile_file = open(profile, 'r')
+        lines = profile_file.readlines()
+        profile_file.close()
+        geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+        for line in lines:
+            if line.startswith("remote "):
+                _, server, port = line.split()
+            if line.startswith("proto "):
+                _, proto = line.split()                
+        output_line = geo + " (" + proto.upper() + ")," + server + "," + proto + "," + port + "\n"
+        location_file.write(output_line)
+    location_file.close()
+    
+    
+def generateAirVPN():
+    # Data is stored in ovpn files
+    # File name is AirVPN_Location_rest
+    location_file_hosts = getLocations("AirVPN", "DNS Names")
+    location_file_ip = getLocations("AirVPN", "IP Addresses")
+    directories = ["Resolved", "Hostnames"]
+    for directory in directories:
+        profiles = getProfileList("AirVPN/" + directory)
+        for profile in profiles:
+            profile_file = open(profile, 'r')
+            lines = profile_file.readlines()
+            profile_file.close()
+            tokens = (profile[profile.rfind("\\")+1:profile.index(".ovpn")]).split("_")
+            geo = tokens[1]
+            for line in lines:
+                if line.startswith("remote "):
+                    _, server, port = line.split()
+                if line.startswith("proto "):
+                    _, proto = line.split()                
+            output_line = geo + " (" + proto.upper() + ")," + server + "," + proto + "," + port + "\n"
+            if directory == "Resolved" : location_file_ip.write(output_line)
+            if directory == "Hostnames" : location_file_hosts.write(output_line)
+    location_file_hosts.close()
+    location_file_ip.close()
+
+    
 def generateIvacy():
-    # Data is stored in a flat text file
-    # Location, City, ignore, TCP server, UDP server
+    # Data is stored as a bunch of ovpn files
+    # File name has location.  File has the server
+    profiles = getProfileList("Ivacy")
     location_file = getLocations("Ivacy", "")
-    source_file = open(getAddonPath(True, "providers/Ivacy/Servers.txt"), 'r')
-    source = source_file.readlines()
-    source_file.close()
-    for line in source:
-        tokens = line.split("\t")        
-        for t in tokens:
-            if "-tcp" in t:                
-                server = t.strip(' \t\n\r')
-                geo = tokens[0].strip(' \t\n\r') 
-                #+ " - " + tokens[1].strip(' \t\n\r')
-                output_line = geo + " (TCP)," + server + "," + "tcp,80,#REMOVE=1" + "\n"
-                location_file.write(output_line)
-            if "-udp" in t:                
-                server = t.strip(' \t\n\r')
-                geo = tokens[0].strip(' \t\n\r')
-                #+ " - " + tokens[1].strip(' \t\n\r')
-                output_line = geo + " (UDP)," + server + "," + "udp,53,#REMOVE=2" + "\n"
-                location_file.write(output_line)
-    location_file.close()    
+    for profile in profiles:
+        geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+        geo = geo.replace("(", " - ")
+        geo = geo.replace(")", "")
+        geo = geo.replace("-TCP", "")
+        geo = geo.replace("-UDP", "")
+        if geo.endswith(" - "):
+            geo = geo.replace(" - ", "")
+        try:
+            pos = geo.index(" - ")
+            geo = geo[:pos+3] + (geo[pos+3:pos+4]).upper() + geo[pos+4:]
+        except:
+            pos = -1
+        profile_file = open(profile, 'r')
+        lines = profile_file.readlines()
+        profile_file.close()
+        servers = ""
+        ports = ""
+        flags = ""
+        for line in lines:
+            if line.startswith("remote "):
+                _, server, port = line.split()
+                if not servers == "" : servers = servers + " "
+                servers = servers + server
+                if not ports == "" : ports = ports + " "
+                ports = ports + port
+            if line.startswith("ca "):
+                _, cert = line.split()
+                flags = flags + " #CERT=" + cert
+            if line.startswith("proto "):
+                _, proto = line.split()
+        if proto == "tcp":                
+            output_line = geo + " (" + proto.upper() + ")," + server + "," + proto + "," + port + ",#REMOVE=1" + flags + "\n"
+        if proto == "udp":
+            output_line = geo + " (" + proto.upper() + ")," + server + "," + proto + "," + port + ",#REMOVE=2" + flags + "\n"
+        location_file.write(output_line)
+    location_file.close()  
     
     
 def generateLiquidVPN():
@@ -138,7 +329,13 @@ def generateibVPN():
     # Data is stored as a bunch of ovpn files
     # File name has location.  File has the server
     profiles = getProfileList("ibVPN")
-    location_file = getLocations("ibVPN", "")
+    location_file = getLocations("ibVPN", "All Locations")
+    location_file_usa = getLocations("ibVPN", "USA and Canada")
+    location_file_uk = getLocations("ibVPN", "UK and Ireland")
+    location_file_eu = getLocations("ibVPN", "EU")
+    usa = ["US", "CA"]
+    uk = ["UK", "IE"]
+    eu = ["DE", "NL", "FR", "CH", "LU", "RO", "SE", "ES", "IT", "FI", "PL", "AT", "CZ", "HU", "IS", "NO", "BG", "BE", "PT"]
     for profile in profiles:
         geo = profile[profile.index("ibVPN ")+6:]
         geo = geo.replace(".ovpn", "")
@@ -156,10 +353,16 @@ def generateibVPN():
                 if not ports == "" : ports = ports + " "
                 ports = ports + port
         output_line = geo + " (UDP)," + servers + "," + "udp," + ports + "\n"
+        if geo[0:2] in usa: location_file_usa.write(output_line)
+        if geo[0:2] in uk: location_file_uk.write(output_line)
+        if geo[0:2] in eu: location_file_eu.write(output_line)
         location_file.write(output_line)
-    location_file.close()  
+    location_file.close()
+    location_file_usa.close()
+    location_file_uk.close()
+    location_file_eu.close()
 
-    
+
 def generatePIA():
     # Data is stored as a bunch of ovpn files
     # File name has location.  File has the server
@@ -200,8 +403,8 @@ def generateIPVanish():
         profile = profile.replace("Buenos-Aires", "Buenos Aires")        
         tokens = profile.split("-")
         server = tokens[3] + "-" + tokens[4].replace(".ovpn", "") + ".ipvanish.com"
-        output_line_udp = tokens[1] + " - " + tokens[2] + " (UDP)," + server + "," + "udp,443" + "\n"
-        output_line_tcp = tokens[1] + " - " + tokens[2] + " (TCP)," + server + "," + "tcp,443" + "\n"
+        output_line_udp = tokens[1] + " - " + tokens[2] + " " + tokens[4].replace(".ovpn", "") + " (UDP)," + server + "," + "udp,443" + "\n"
+        output_line_tcp = tokens[1] + " - " + tokens[2] + " " + tokens[4].replace(".ovpn", "") + " (TCP)," + server + "," + "tcp,443" + "\n"
         location_file.write(output_line_udp)
         location_file.write(output_line_tcp)
     location_file.close()
@@ -353,4 +556,263 @@ def generateNordVPN():
             if not line == "" and not line.startswith("#mute") and not (i < 15 and line.startswith("#")):
                 output_file.write(line + "\n")
             i = i + 1
+   
+   
+def resolveCountry(code):   
+    Countries = {'Afghanistan': 'AF',
+        'Albania': 'AL',
+        'Algeria': 'DZ',
+        'American Samoa': 'AS',
+        'Andorra': 'AD',
+        'Angola': 'AO',
+        'Anguilla': 'AI',
+        'Antarctica': 'AQ',
+        'Antigua and Barbuda': 'AG',
+        'Argentina': 'AR',
+        'Armenia': 'AM',
+        'Aruba': 'AW',
+        'Australia': 'AU',
+        'Austria': 'AT',
+        'Azerbaijan': 'AZ',
+        'Bahamas': 'BS',
+        'Bahrain': 'BH',
+        'Bangladesh': 'BD',
+        'Barbados': 'BB',
+        'Belarus': 'BY',
+        'Belgium': 'BE',
+        'Belize': 'BZ',
+        'Benin': 'BJ',
+        'Bermuda': 'BM',
+        'Bhutan': 'BT',
+        'Bolivia, Plurinational State of': 'BO',
+        'Bonaire, Sint Eustatius and Saba': 'BQ',
+        'Bosnia and Herzegovina': 'BA',
+        'Botswana': 'BW',
+        'Bouvet Island': 'BV',
+        'Brazil': 'BR',
+        'British Indian Ocean Territory': 'IO',
+        'Brunei Darussalam': 'BN',
+        'Bulgaria': 'BG',
+        'Burkina Faso': 'BF',
+        'Burundi': 'BI',
+        'Cambodia': 'KH',
+        'Cameroon': 'CM',
+        'Canada': 'CA',
+        'Cape Verde': 'CV',
+        'Cayman Islands': 'KY',
+        'Central African Republic': 'CF',
+        'Chad': 'TD',
+        'Chile': 'CL',
+        'China': 'CN',
+        'Christmas Island': 'CX',
+        'Cocos (Keeling) Islands': 'CC',
+        'Colombia': 'CO',
+        'Comoros': 'KM',
+        'Congo': 'CG',
+        'Congo, the Democratic Republic of the': 'CD',
+        'Cook Islands': 'CK',
+        'Costa Rica': 'CR',
+        'Country name': 'Code',
+        'Croatia': 'HR',
+        'Cuba': 'CU',
+        'Curaçao': 'CW',
+        'Cyprus': 'CY',
+        'Czech Republic': 'CZ',
+        "Côte d'Ivoire": 'CI',
+        'Denmark': 'DK',
+        'Djibouti': 'DJ',
+        'Dominica': 'DM',
+        'Dominican Republic': 'DO',
+        'Ecuador': 'EC',
+        'Egypt': 'EG',
+        'El Salvador': 'SV',
+        'Equatorial Guinea': 'GQ',
+        'Eritrea': 'ER',
+        'Estonia': 'EE',
+        'Ethiopia': 'ET',
+        'Falkland Islands (Malvinas)': 'FK',
+        'Faroe Islands': 'FO',
+        'Fiji': 'FJ',
+        'Finland': 'FI',
+        'France': 'FR',
+        'French Guiana': 'GF',
+        'French Polynesia': 'PF',
+        'French Southern Territories': 'TF',
+        'Gabon': 'GA',
+        'Gambia': 'GM',
+        'Georgia': 'GE',
+        'Germany': 'DE',
+        'Ghana': 'GH',
+        'Gibraltar': 'GI',
+        'Greece': 'GR',
+        'Greenland': 'GL',
+        'Grenada': 'GD',
+        'Guadeloupe': 'GP',
+        'Guam': 'GU',
+        'Guatemala': 'GT',
+        'Guernsey': 'GG',
+        'Guinea': 'GN',
+        'Guinea-Bissau': 'GW',
+        'Guyana': 'GY',
+        'Haiti': 'HT',
+        'Heard Island and McDonald Islands': 'HM',
+        'Holy See (Vatican City State)': 'VA',
+        'Honduras': 'HN',
+        'Hong Kong': 'HK',
+        'Hungary': 'HU',
+        'ISO 3166-2:GB': '(.uk)',
+        'Iceland': 'IS',
+        'India': 'IN',
+        'Indonesia': 'ID',
+        'Iran, Islamic Republic of': 'IR',
+        'Iraq': 'IQ',
+        'Ireland': 'IE',
+        'Isle of Man': 'IM',
+        'Israel': 'IL',
+        'Italy': 'IT',
+        'Jamaica': 'JM',
+        'Japan': 'JP',
+        'Jersey': 'JE',
+        'Jordan': 'JO',
+        'Kazakhstan': 'KZ',
+        'Kenya': 'KE',
+        'Kiribati': 'KI',
+        "Korea, Democratic People's Republic of": 'KP',
+        'Korea, Republic of': 'KR',
+        'Kuwait': 'KW',
+        'Kyrgyzstan': 'KG',
+        "Lao People's Democratic Republic": 'LA',
+        'Latvia': 'LV',
+        'Lebanon': 'LB',
+        'Lesotho': 'LS',
+        'Liberia': 'LR',
+        'Libya': 'LY',
+        'Liechtenstein': 'LI',
+        'Lithuania': 'LT',
+        'Luxembourg': 'LU',
+        'Macao': 'MO',
+        'Macedonia, the former Yugoslav Republic of': 'MK',
+        'Madagascar': 'MG',
+        'Malawi': 'MW',
+        'Malaysia': 'MY',
+        'Maldives': 'MV',
+        'Mali': 'ML',
+        'Malta': 'MT',
+        'Marshall Islands': 'MH',
+        'Martinique': 'MQ',
+        'Mauritania': 'MR',
+        'Mauritius': 'MU',
+        'Mayotte': 'YT',
+        'Mexico': 'MX',
+        'Micronesia, Federated States of': 'FM',
+        'Moldova, Republic of': 'MD',
+        'Monaco': 'MC',
+        'Mongolia': 'MN',
+        'Montenegro': 'ME',
+        'Montserrat': 'MS',
+        'Morocco': 'MA',
+        'Mozambique': 'MZ',
+        'Myanmar': 'MM',
+        'Namibia': 'NA',
+        'Nauru': 'NR',
+        'Nepal': 'NP',
+        'Netherlands': 'NL',
+        'New Caledonia': 'NC',
+        'New Zealand': 'NZ',
+        'Nicaragua': 'NI',
+        'Niger': 'NE',
+        'Nigeria': 'NG',
+        'Niue': 'NU',
+        'Norfolk Island': 'NF',
+        'Northern Mariana Islands': 'MP',
+        'Norway': 'NO',
+        'Oman': 'OM',
+        'Pakistan': 'PK',
+        'Palau': 'PW',
+        'Palestine, State of': 'PS',
+        'Panama': 'PA',
+        'Papua New Guinea': 'PG',
+        'Paraguay': 'PY',
+        'Peru': 'PE',
+        'Philippines': 'PH',
+        'Pitcairn': 'PN',
+        'Poland': 'PL',
+        'Portugal': 'PT',
+        'Puerto Rico': 'PR',
+        'Qatar': 'QA',
+        'Romania': 'RO',
+        'Russian Federation': 'RU',
+        'Rwanda': 'RW',
+        'Réunion': 'RE',
+        'Saint Barthélemy': 'BL',
+        'Saint Helena, Ascension and Tristan da Cunha': 'SH',
+        'Saint Kitts and Nevis': 'KN',
+        'Saint Lucia': 'LC',
+        'Saint Martin (French part)': 'MF',
+        'Saint Pierre and Miquelon': 'PM',
+        'Saint Vincent and the Grenadines': 'VC',
+        'Samoa': 'WS',
+        'San Marino': 'SM',
+        'Sao Tome and Principe': 'ST',
+        'Saudi Arabia': 'SA',
+        'Senegal': 'SN',
+        'Serbia': 'RS',
+        'Seychelles': 'SC',
+        'Sierra Leone': 'SL',
+        'Singapore': 'SG',
+        'Sint Maarten (Dutch part)': 'SX',
+        'Slovakia': 'SK',
+        'Slovenia': 'SI',
+        'Solomon Islands': 'SB',
+        'Somalia': 'SO',
+        'South Africa': 'ZA',
+        'South Georgia and the South Sandwich Islands': 'GS',
+        'South Sudan': 'SS',
+        'Spain': 'ES',
+        'Sri Lanka': 'LK',
+        'Sudan': 'SD',
+        'Suriname': 'SR',
+        'Svalbard and Jan Mayen': 'SJ',
+        'Swaziland': 'SZ',
+        'Sweden': 'SE',
+        'Switzerland': 'CH',
+        'Syrian Arab Republic': 'SY',
+        'Taiwan, Province of China': 'TW',
+        'Tajikistan': 'TJ',
+        'Tanzania, United Republic of': 'TZ',
+        'Thailand': 'TH',
+        'Timor-Leste': 'TL',
+        'Togo': 'TG',
+        'Tokelau': 'TK',
+        'Tonga': 'TO',
+        'Trinidad and Tobago': 'TT',
+        'Tunisia': 'TN',
+        'Turkey': 'TR',
+        'Turkmenistan': 'TM',
+        'Turks and Caicos Islands': 'TC',
+        'Tuvalu': 'TV',
+        'Uganda': 'UG',
+        'Ukraine': 'UA',
+        'United Arab Emirates': 'AE',
+        'United Kingdom': 'GB',
+        'United Kingdom': 'UK',
+        'United States': 'US',
+        'United States Minor Outlying Islands': 'UM',
+        'Uruguay': 'UY',
+        'Uzbekistan': 'UZ',
+        'Vanuatu': 'VU',
+        'Venezuela, Bolivarian Republic of': 'VE',
+        'Viet Nam': 'VN',
+        'Virgin Islands, British': 'VG',
+        'Virgin Islands, U.S.': 'VI',
+        'Wallis and Futuna': 'WF',
+        'Western Sahara': 'EH',
+        'Yemen': 'YE',
+        'Zambia': 'ZM',
+        'Zimbabwe': 'ZW',
+        'Åland Islands': 'AX'}   
+    for c in Countries:
+        if Countries[c] == code: return c        
+    return code + " is unknown"
+   
    

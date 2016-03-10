@@ -24,21 +24,29 @@ import xbmcvfs
 import xbmcaddon
 import glob
 from libs.utility import debugTrace, errorTrace, infoTrace
-from libs.platform import getAddonPath, fakeConnection
+from libs.platform import getAddonPath, getUserDataPath, fakeConnection
 
-
-# **** ADD MORE VPN PROVIDERS HERE ****
-# Directory names for each of the providers (in the root of the addon)
-providers = ["PIA", "IPVanish", "VyprVPN", "ibVPN", "NordVPN", "tigerVPN", "HMA", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy"]
 
 # **** ADD MORE VPN PROVIDERS HERE ****
 # Display names for each of the providers (matching the guff in setup.xml)
-# Must be in the same order as the provider directory name above
-provider_display = ["Private Internet Access", "IPVanish", "VyperVPN", "Invisible Browsing VPN", "NordVPN", "tigerVPN", "Hide My Ass", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy"]
+provider_display = ["Private Internet Access", "IPVanish", "VyperVPN", "Invisible Browsing VPN", "NordVPN", "tigerVPN", "Hide My Ass", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "Hide.Me", "Perfect Privacy", "TorGuard"]
+
+# **** ADD MORE VPN PROVIDERS HERE ****
+# Directory names for each of the providers (in the root of the addon)
+# Must be in the same order as the provider display name above
+providers = ["PIA", "IPVanish", "VyprVPN", "ibVPN", "NordVPN", "tigerVPN", "HMA", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "HideMe", "PerfectPrivacy", "TorGuard"]
 
 # **** ADD VPN PROVIDERS HERE IF THEY USE A KEY ****
-providers_with_keys = ["CyberGhost"]
-    
+# List of providers which use user keys and certs, either a single one, or one per connection
+# Names must match the directory names as used in providers, just above
+providers_with_multiple_keys = ["PerfectPrivacy"]
+providers_with_single_keys = ["AirVPN", "CyberGhost"]
+
+# *** ADD VPN PROVIDERS HERE IF THEY DON'T USE USERNAME AND PASSWORD ****
+# List of providers which don't use auth-user-pass.
+# Names must match the directory names as used in providers, just above
+providers_no_pass = ["AirVPN"]
+
         
 def getAddonPathWrapper(path):
     # This function resets the VPN profiles to the standard VPN Manager install
@@ -50,6 +58,16 @@ def getAddonPathWrapper(path):
         return getAddonPath(True, path)
 
 
+def getUserDataPathWrapper(path):
+    # This function resets the VPN profiles to the standard VPN Manager install
+    # location as per OpenELEC, or to the platform install location
+    force_default_install = fakeConnection()    
+    if force_default_install:
+        return "/storage/.kodi/userdata/addon_data/service.vpn.manager/" + path        
+    else:
+        return getUserDataPath(path)        
+        
+        
 def getVPNLocation(vpn_provider):
     # This function translates between the display name and the directory name
     i=0
@@ -68,9 +86,93 @@ def getProfileList(vpn_provider):
     return sorted(glob.glob(path))  
 
 
-def usesUserKey(vpn_provider):
-    if vpn_provider in providers_with_keys: return True
+def usesUserKeys(vpn_provider):
+    if usesSingleKey(vpn_provider): return True
+    if usesMultipleKeys(vpn_provider): return True
     return False
+    
+    
+def usesSingleKey(vpn_provider):
+    if vpn_provider in providers_with_single_keys: return True
+    return False
+
+    
+def usesMultipleKeys(vpn_provider):
+    if vpn_provider in providers_with_multiple_keys: return True
+    return False
+    
+
+def getUserKeys(vpn_provider):
+    # Return the list of key and cert files for a given provider (aka directory name...)
+    path = getUserDataPath(getVPNLocation(vpn_provider)+"/*.key")
+    debugTrace("Getting key files " + path)
+    return (glob.glob(path))         
+
+    
+def getUserCerts(vpn_provider):
+    # Return the list of key and cert files for a given provider (aka directory name...)
+    path = getUserDataPath(getVPNLocation(vpn_provider)+"/*.crt")
+    debugTrace("Getting certificate files " + path)
+    return (glob.glob(path))         
+    
+    
+def gotKeys(vpn_provider, ovpn_name):
+    # Check to see if we have the key for this connection.  If this provider just uses
+    # a single key then the getKey/CertName piece will work this out.  If no key is passed
+    # in then we'll just report whether or not any keys exist for this provider
+    if not ovpn_name == "":
+        key_name = getUserDataPath(vpn_provider + "/" + getKeyName(vpn_provider, ovpn_name))
+        cert_name = getUserDataPath(vpn_provider + "/" + getCertName(vpn_provider, ovpn_name))
+        debugTrace("Checking for user key " + key_name)
+        debugTrace("Checking for user cert " + cert_name)
+        if xbmcvfs.exists(key_name) and xbmcvfs.exists(cert_name): return True
+        debugTrace("One of the user key and cert files did not exist")
+        return False
+    else:
+        return False
+    
+    
+def copyKeyAndCert(vpn_provider, ovpn_name, user_key, user_cert):
+    # Copy the user key and cert to the userdata directory
+    key_dest = getUserDataPath(vpn_provider + "/" + getKeyName(vpn_provider, ovpn_name))
+    key_source = user_key
+    cert_dest = getUserDataPath(vpn_provider + "/" + getCertName(vpn_provider, ovpn_name))
+    cert_source = user_cert
+    try:
+        debugTrace("Copying key " + key_source + " to " + key_dest)
+        if xbmcvfs.exists(key_dest): xbmcvfs.delete(key_dest)
+        xbmcvfs.copy(key_source, key_dest)
+        debugTrace("Copying cert " + cert_source + " to " + cert_dest)
+        if xbmcvfs.exists(cert_dest): xbmcvfs.delete(cert_dest)
+        xbmcvfs.copy(cert_source, cert_dest)
+        return True
+    except:
+        errorTrace("vpnproviders.py", "Failed to copy user key or cert file to userdata")
+        return False
+    
+
+def getKeyName(vpn_provider, ovpn_name):
+    # Determines the user key name based on the provider
+    if usesSingleKey(vpn_provider):
+        return "user.key"
+    if usesMultipleKeys(vpn_provider):
+        return "user_" + ovpn_name.replace(" ", "_") + ".key"
+    return ""
+
+
+def getCertName(vpn_provider, ovpn_name):
+    # Determines the user cert name based on the provider
+    if usesSingleKey(vpn_provider):
+        return "user.crt"
+    if usesMultipleKeys(vpn_provider):
+        return "user_" + ovpn_name.replace(" ", "_") + ".crt"
+    return ""
+        
+
+def usesPassAuth(vpn_provider):
+    # Determine if we're using a user name and password or not
+    if vpn_provider in providers_no_pass: return False
+    return True
 
     
 def getRegexPattern(vpn_provider):
@@ -114,7 +216,11 @@ def ovpnGenerated(vpn_provider):
 
     
 def getLocationFiles(vpn_provider):
-    return glob.glob(getAddonPath(True, vpn_provider + "/LOCATIONS*.txt"))
+    # Return the locations files, add any user version to the end of the list
+    locations = glob.glob(getAddonPath(True, vpn_provider + "/LOCATIONS*.txt"))
+    user_locations = getUserDataPath(vpn_provider + "/LOCATIONS.txt")
+    if xbmcvfs.exists(user_locations): locations.append(user_locations.replace(".txt", " User.txt"))
+    return locations
     
 
 def fixOVPNFiles(vpn_provider, alternative_locations_name):
@@ -155,12 +261,13 @@ def generateOVPNFiles(vpn_provider, alternative_locations_name):
     
     # Load locations file
     if not alternative_locations_name == "":
-        locations_name = getAddonPath(True, vpn_provider + "/LOCATIONS " + alternative_locations_name + ".txt")
+        if alternative_locations_name == "User":
+            locations_name = getUserDataPath(vpn_provider + "/LOCATIONS.txt")
+        else:
+            locations_name = getAddonPath(True, vpn_provider + "/LOCATIONS " + alternative_locations_name + ".txt")
     else:
         locations_name = getAddonPath(True, vpn_provider + "/LOCATIONS.txt")
 
-    print locations_name    
-        
     try:
         debugTrace("Opening locations file for " + vpn_provider + "/n" + locations_name)
         locations_file = open(locations_name, 'r')
@@ -184,15 +291,15 @@ def generateOVPNFiles(vpn_provider, alternative_locations_name):
             # Initialise the set of values that can be modified by the location file tuples
             ca_cert = "ca.crt"
             ta_key = "ta.key"
-            user_key = "client.key"
-            user_cert = "client.crt"
+            user_key = getUserDataPathWrapper(vpn_provider + "/" + getKeyName(vpn_provider, geo))
+            user_cert = getUserDataPathWrapper(vpn_provider + "/" + getCertName(vpn_provider, geo))
             remove_flags = ""
             
             if len(location_values) > 4: 
-                # The final location value is a list of multiple x=y declarations.  These need
-                # to be parsed out and modified.  Right now only ca.crt is supported...
+                # The final location value is a list of multiple x=y declarations.
+                # These need to be parsed out and modified.
                 modifier_tuples = (location_values[4].strip(' \t\n\r')).split()
-                # Loop through all of the values splitting them into x and y
+                # Loop through all of the values splitting them into name value pairs
                 for modifier in modifier_tuples:
                     pair = modifier.split("=")
                     if "#CERT" in pair[0]: ca_cert = pair[1].strip()
@@ -249,8 +356,8 @@ def generateOVPNFiles(vpn_provider, alternative_locations_name):
                 output_line = output_line.replace("#CERT", getAddonPathWrapper(vpn_provider + "/" + ca_cert))
                 output_line = output_line.replace("#TLSKEY", getAddonPathWrapper(vpn_provider + "/" + ta_key))
                 output_line = output_line.replace("#CRLVERIFY", getAddonPathWrapper(vpn_provider + "/" + "crl.pem"))
-                output_line = output_line.replace("#USERKEY", getAddonPathWrapper(vpn_provider + "/" + user_key))
-                output_line = output_line.replace("#USERCERT", getAddonPathWrapper(vpn_provider + "/" + user_cert))
+                output_line = output_line.replace("#USERKEY", user_key)
+                output_line = output_line.replace("#USERCERT", user_cert)
                 # This is a little hack to remove a tag that doesn't work with TCP but is needed for UDP
                 # Could do this with a #REMOVE, but doing it here is less error prone.
                 if "explicit-exit-notify" in line and proto == "tcp": output_line = ""
@@ -271,7 +378,7 @@ def generateOVPNFiles(vpn_provider, alternative_locations_name):
 def updateVPNFiles(vpn_provider):
     # If the OVPN files aren't generated then they need to be updated with location info    
     
-    infoTrace("profileupdate.py", "Updating VPN profiles for " + vpn_provider)
+    infoTrace("vpnproviders.py", "Updating VPN profiles for " + vpn_provider)
     # Get the list of VPN profile files        
     ovpn_connections = getProfileList(vpn_provider)
 

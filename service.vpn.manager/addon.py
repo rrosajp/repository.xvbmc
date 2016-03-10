@@ -27,12 +27,12 @@ from libs.common import connectionValidated, getIPInfo, isVPNConnected, getVPNPr
 from libs.common import getFriendlyProfileList, connectVPN, disconnectVPN, setVPNState, requestVPNCycle, getFilteredProfileList
 from libs.common import getAddonPath, isVPNMonitorRunning, setVPNMonitorState, getVPNMonitorState, wizard
 from libs.common import getIconPath
-from libs.platform import getPlatform, platforms
+from libs.platform import getPlatform, platforms, getPlatformString
 from libs.utility import debugTrace, errorTrace, infoTrace
 from libs.vpnproviders import getProfileList
 
 
-debugTrace("-- Entered addon.py " + sys.argv[0] + " --")
+debugTrace("-- Entered addon.py " + sys.argv[0] + " " + sys.argv[1] + " " + sys.argv[2] + " --")
 
 # Set the addon name for use in the dialogs
 addon = xbmcaddon.Addon()
@@ -66,30 +66,82 @@ def topLevel():
     url = base_url + "?display"
     li = xbmcgui.ListItem("Display VPN status", iconImage=getIconPath()+"display.png")
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
+    if addon.getSetting("vpn_system_menu_item") == "true":
+        url = base_url + "?system"
+        li = xbmcgui.ListItem("Display enhanced information", iconImage=getIconPath()+"enhanced.png")
+        xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
     url = base_url + "?list"
-    li = xbmcgui.ListItem("Change VPN connection", iconImage=getIconPath()+"locked.png")
+    li = xbmcgui.ListItem("Change or disconnect VPN connection", iconImage=getIconPath()+"locked.png")
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
     url = base_url + "?cycle"
     li = xbmcgui.ListItem("Cycle through primary VPN connections", iconImage=getIconPath()+"cycle.png")
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
     url = base_url + "?switch"
     if isVPNMonitorRunning():
-        li = xbmcgui.ListItem("Pause VPN monitor add-on filtering", iconImage=getIconPath()+"paused.png")
+        li = xbmcgui.ListItem("Pause add-on filtering", iconImage=getIconPath()+"paused.png")
     else:
-        li = xbmcgui.ListItem("VPN monitor paused, restart add-on filtering", iconImage=getIconPath()+"play.png")
+        li = xbmcgui.ListItem("Restart add-on filtering", iconImage=getIconPath()+"play.png")
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
     xbmcplugin.endOfDirectory(addon_handle)
     return
 
+
+def listSystem():
+    lines = []
+    site, ip, country, isp = getIPInfo(addon)
+    lines.append("[B][COLOR ff0099ff]Connection[/COLOR][/B]")
+    if isVPNConnected():
+        lines.append("Connected using profile " + getVPNProfileFriendly())
+        lines.append("VPN provider is " + addon.getSetting("vpn_provider"))
+    else:
+        lines.append("Not connected to a VPN")
+    lines.append("Connection location is " + country)
+    lines.append("External IP address is " + ip)
+    lines.append("Service Provider is " + isp)
+    lines.append("Location sourced from " + site)
+    lines.append("[B][COLOR ff0099ff]Network[/COLOR][/B]")
+    lines.append("IP address is " + xbmc.getInfoLabel("Network.IPAddress"))
+    lines.append("Gateway is " + xbmc.getInfoLabel("Network.GatewayAddress"))
+    lines.append("Subnet mask is " + xbmc.getInfoLabel("Network.SubnetMask"))
+    lines.append("Primary DNS is " + xbmc.getInfoLabel("Network.DNS1Address"))
+    lines.append("Secondary DNS is " + xbmc.getInfoLabel("Network.DNS2Address"))
+    lines.append("[B][COLOR ff0099ff]VPN Manager[/COLOR][/B]")
+    lines.append("VPN Manager verison is " + addon.getAddonInfo("version"))
+    lines.append("VPN Manager behaviour is " + getPlatformString())
+    if isVPNMonitorRunning():
+        lines.append("VPN Manager add-on filtering is running")
+    else:
+        lines.append("VPN Manager add-on filtering is paused")
+    lines.append("[B][COLOR ff0099ff]System[/COLOR][/B]")
+    lines.append("Kodi build version is " + xbmc.getInfoLabel("System.BuildVersion"))
+    lines.append("System name is " + xbmc.getInfoLabel("System.FriendlyName"))
+    lines.append("System date is " + xbmc.getInfoLabel("System.Date"))
+    lines.append("System time is " + xbmc.getInfoLabel("System.Time"))
+    lines.append("Platform is " + sys.platform)
+    lines.append("Free memory is " + xbmc.getInfoLabel("System.FreeMemory"))
+    lines.append("Disk is " + xbmc.getInfoLabel("System.TotalSpace") + ", " + xbmc.getInfoLabel("System.UsedSpace"))
     
+    for line in lines:
+        url = base_url + "?back"
+        li = xbmcgui.ListItem(line, iconImage=getIconPath()+"enhanced.png")
+        xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
+    xbmcplugin.endOfDirectory(addon_handle)
+    return
+
+
+def back():
+    xbmc.executebuiltin("Action(ParentDir)")
+    return
+    
+
 def displayStatus():
-    ip, country = getIPInfo()
-    if isVPNConnected() :
+    _, ip, country, isp = getIPInfo(addon)
+    if isVPNConnected():
         debugTrace("VPN is connected, displaying the connection info")
-        xbmcgui.Dialog().ok(addon_name, "Connected to a VPN in " + country + ".\nIP address is " + ip + ".\nUsing profile " + getVPNProfileFriendly()  + ".")
-    else :
+        xbmcgui.Dialog().ok(addon_name, "Connected to a VPN in " + country + ".\nUsing profile " + getVPNProfileFriendly() + ".\nExternal IP address is " + ip + ".\nService Provider is " + isp + ".")
+    else:
         debugTrace("VPN is not connected, displaying the connection info")
-        xbmcgui.Dialog().ok(addon_name, "Disconnected from VPN.\nNetwork location is " + country + ".\nIP address is " + ip + ".")
+        xbmcgui.Dialog().ok(addon_name, "Disconnected from VPN.\nNetwork location is " + country + ".\nIP address is " + ip + ".\nService Provider is " + isp + ".")
     return
 
     
@@ -108,7 +160,7 @@ def listConnections():
     if vpn_provider != "":
         # Get the list of connections and add them to the directory
         all_connections = getProfileList(vpn_provider)
-        ovpn_connections = getFilteredProfileList(all_connections, addon.getSetting("vpn_protocol"))
+        ovpn_connections = getFilteredProfileList(all_connections, addon.getSetting("vpn_protocol"), None)
         connections = getFriendlyProfileList(vpn_provider, ovpn_connections)
         inc = 0
         for connection in ovpn_connections:
@@ -116,9 +168,11 @@ def listConnections():
             conn_text = ""
             conn_primary = ""
             i=1
-            while (i < 6):
+            # Adjust 10 and 11 below if changing number of conn_max
+            while (i < 11):
                 if addon.getSetting(str(i) + "_vpn_validated_friendly") == connections[inc] :
                     conn_primary = " (" + str(i) + ")"
+                    i = 10
                 i=i+1
 
             if getVPNProfileFriendly() == connections[inc] and isVPNConnected(): 
@@ -126,7 +180,7 @@ def listConnections():
                 icon = getIconPath()+"connected.png"
             else:
                 if not conn_primary == "":
-                    conn_text = "[COLOR ff9999ff]" + connections[inc] + conn_primary + "[/COLOR]"
+                    conn_text = "[COLOR ff0099ff]" + connections[inc] + conn_primary + "[/COLOR]"
                 else:
                     conn_text = connections[inc] + conn_primary
                 icon = getIconPath()+"locked.png"                
@@ -169,17 +223,24 @@ def switchService():
     debugTrace("Switching monitor state, current state is " + getVPNMonitorState())
     if isVPNMonitorRunning():
         setVPNMonitorState("Stopped")
+        addon.setSetting("monitor_paused", "true")
         infoTrace("addon.py", "VPN monitor service paused")
     else:
         setVPNMonitorState("Started")
+        addon.setSetting("monitor_paused", "false")
         infoTrace("addon.py", "VPN monitor service restarted")
     xbmc.executebuiltin('Container.Refresh')
     return
 
 
-if action == "display" : 
+if action == "display": 
     # Display the network status
     displayStatus()
+elif action == "system":
+    listSystem()
+elif action == "back" : 
+    back()
+    #listSystem()
 elif not connectionValidated(addon) and action != "":
     # Haven't got a valid connection so force user into the wizard or the settings dialog
     if not addon.getSetting("vpn_wizard_run") == "true" : 
@@ -198,6 +259,7 @@ else:
     elif action == "change" : changeConnection()
     elif action == "cycle" : cycleConnection()
     elif action == "switch" : switchService()
+
     else: topLevel()
 
 debugTrace("-- Exit addon.py --")    

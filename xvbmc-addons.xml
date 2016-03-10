@@ -801,7 +801,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="service.vpn.manager"
        name="VPN Manager for OpenVPN"
-       version="0.2.3"
+       version="0.3.9"
        provider-name="Zomboided">
   <requires>
     <import addon="xbmc.python" version="2.7.0"/>

@@ -24,22 +24,39 @@
 
 import xbmc
 import xbmcaddon
+import xbmcgui
+import xbmcvfs
 import sys
 from libs.common import connectVPN
 from libs.utility import debugTrace, errorTrace, infoTrace
+from libs.vpnproviders import usesPassAuth, getVPNLocation, getUserDataPath
+from libs.platform import getAddonPath
 
 
 addon = xbmcaddon.Addon("service.vpn.manager")
+addon_name = addon.getAddonInfo("name")
 
 # Get the first argument which will indicate the connection that's being dealt with
 connection_order = sys.argv[1]
 
-debugTrace("Entered connect.py with parameter "+str(connection_order))
+debugTrace("Entered connect.py with parameter " + connection_order)
 
-connectVPN(connection_order, "")
+# If a new connection is being validated, check everything needed is entered
+vpn_provider = addon.getSetting("vpn_provider")
+vpn_username = addon.getSetting("vpn_username")
+vpn_password = addon.getSetting("vpn_password")
+    
+if xbmcvfs.exists(getUserDataPath(getVPNLocation(vpn_provider) + "/DEFAULT.txt")):
+    vpn_username = "default"
+    vpn_password = "default"
+    
+if not usesPassAuth(vpn_provider) or (not vpn_username == "" and not vpn_provider == ""):
+    connectVPN(str(connection_order), "")
+else:
+    xbmcgui.Dialog().ok(addon_name, "Please enter a user name and password.  " + vpn_provider + " requires them for authentication.")
 
 # Finally return to the settings screen if that's where we came from
-if connection_order > 0 : 
+if connection_order > 0:
     xbmc.executebuiltin("Addon.OpenSettings(service.vpn.manager)")
 
 debugTrace("Exit connect.py")

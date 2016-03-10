@@ -19,11 +19,24 @@
 #    Shared code fragments used by the VPN Manager for OpenVPN add-on.
 
 import xbmc
+import xbmcaddon
+
+addon = xbmcaddon.Addon("service.vpn.manager")
+addon_name = addon.getAddonInfo("name")
 
 
-def debugTrace(data):
+def ifDebug():
+    if addon.getSetting("vpn_enable_debug") == "true":
+        return True
+    return False
+
+    
+def debugTrace(data):    
     log = "VPN Mgr : " + data
-    xbmc.log(msg=log, level=xbmc.LOGDEBUG)
+    if addon.getSetting("vpn_enable_debug") == "true":
+        print log        
+    else:
+        xbmc.log(msg=log, level=xbmc.LOGDEBUG)
     
     
 def errorTrace(module, data):

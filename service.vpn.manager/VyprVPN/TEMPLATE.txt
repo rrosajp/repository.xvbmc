@@ -9,7 +9,6 @@ persist-tun
 persist-remote-ip
 ca #CERT
 tls-remote #SERVER
-explicit-exit-notify 2
 auth-user-pass #PASS
 comp-lzo
 verb 1
