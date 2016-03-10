@@ -9,7 +9,6 @@ nobind
 persist-key
 persist-tun
 ns-cert-type server
-explicit-exit-notify 2
 verb 1
 route-metric 1
 ping-exit 30

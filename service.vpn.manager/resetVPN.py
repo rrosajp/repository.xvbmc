@@ -21,12 +21,8 @@
 
 import xbmcgui
 import xbmcaddon
-import xbmcvfs
-from libs.common import resetVPNConfig, updateService, stopVPNConnection, setVPNLastConnectedProfile, setVPNLastConnectedProfileFriendly
-from libs.common import getAddonPath, getVPNLocation, getIconPath
-from libs.utility import debugTrace, errorTrace, infoTrace
-from libs.vpnproviders import cleanPassFiles, removeGeneratedFiles
-
+from libs.common import resetVPNConnections
+from libs.utility import debugTrace
 
 debugTrace("-- Entered resetVPN.py --")
 
@@ -34,26 +30,10 @@ debugTrace("-- Entered resetVPN.py --")
 addon = xbmcaddon.Addon("service.vpn.manager")
 addon_name = addon.getAddonInfo("name")
 
-
 # Reset the VPN connection values stored in the settings.xml
-if xbmcgui.Dialog().yesno(addon_name, "Updating the VPN settings will reset all VPN connections.\nConnections must be re-validated before use.\nContinue with reset?"):
-    infoTrace("resetVPN.py", "Resetting all validated VPN settings and disconnected existing VPN connections")
-    resetVPNConfig(addon)
-    # Remove any last connect settings
-    setVPNLastConnectedProfile("")
-    setVPNLastConnectedProfileFriendly("")
-        
-    # Removal any password files that were created (they'll get recreated if needed)
-    debugTrace("Deleting all pass.txt files")
-    cleanPassFiles()
-    
-    # No need to stop/start monitor, just need to let it know that things have changed.
-    # Because this is a reset of the VPN, the monitor should just work out it has no good connections
-    updateService()
-    debugTrace("Stopping any active VPN connections")
-    stopVPNConnection()
-    xbmcgui.Dialog().notification(addon_name, "Disconnected", getIconPath()+"disconnected.png", 5000, False)
+if xbmcgui.Dialog().yesno(addon_name, "Updating the VPN settings will reset all VPN connections.  Connections must be re-validated before use.\nContinue?"):
+    resetVPNConnections(addon)
 
-xbmc.executebuiltin("Addon.OpenSettings(service.vpn.manager)")    
+xbmc.executebuiltin("Addon.OpenSettings(service.vpn.manager)")      
 
 debugTrace("-- Exit resetVPN.py --")    

@@ -1,6 +1,140 @@
-Chicago (UDP),usil1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2
-Chicago (TCP),usil1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1
-Germany (UDP),germany-udp.ivacy.net,udp,53,#REMOVE=2
-Germany (TCP),germany-tcp.ivacy.net,tcp,80,#REMOVE=1
-Netherlands (UDP),netherlands-udp.ivacy.net,udp,53,#REMOVE=2
-Netherlands (TCP),netherlands-tcp.ivacy.net,tcp,80,#REMOVE=1
+Australia - Brisbane (TCP),au-bn1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+Australia - Brisbane (UDP),au-bn1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+Australia - Melbourne (TCP),vlus-au1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+Australia - Melbourne (UDP),vlus-au1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+Austria - Vienna (TCP),at1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Austria - Vienna (UDP),at1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Belgium - Brussels (TCP),vleu-be1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Belgium - Brussels (UDP),vleu-be1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Brazil - AOL (TCP),br1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Brazil - AOL (UDP),br1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Brunei - Bandar (TCP),bn1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Brunei - Bandar (UDP),bn1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Bulgaria - Sofia (TCP),bg1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Bulgaria - Sofia (UDP),bg1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Canada - Montreal (TCP),caq1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Canada - Montreal (UDP),caq1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Canada - Vancouver (TCP),cav1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Canada - Vancouver (UDP),cav1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Chile - Santiago (TCP),vlbr-cl1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Chile - Santiago (UDP),vlbr-cl1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+China - Shangai (TCP),cn-hn1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+China - Shangai (UDP),cn-hn1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Colombia - Barranquilla (TCP),co1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Colombia - Barranquilla (UDP),co1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Costa Rica - Heredia (TCP),vlus-cr1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Costa Rica - Heredia (UDP),vlus-cr1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Denmark (TCP),vleu-dk1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Denmark (UDP),vleu-dk1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Egypt - Cairo (TCP),vlus-eg1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Egypt - Cairo (UDP),vlus-eg1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+France - Paris 1 (TCP),fr1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+France - Paris 1 (UDP),fr1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+France - Paris 2 (TCP),vleu-fr1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+France - Paris 2 (UDP),vleu-fr1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+France - Paris 3 (TCP),vlus-fr1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+France - Paris 3 (UDP),vlus-fr1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Germany (TCP),vlus-de1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+Germany (UDP),vlus-de1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+Germany - Frankfurt (TCP),de1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+Germany - Frankfurt (UDP),de1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+Ghana - Kumasi (TCP),gh1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Ghana - Kumasi (UDP),gh1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Hong Kong - Central (TCP),hk1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Hong Kong - Central (UDP),hk1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+India - New Delhi (TCP),vleu-in1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+India - New Delhi (UDP),vleu-in1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Italy - Taranto 1 (TCP),it1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Italy - Taranto 1 (UDP),it1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Italy - Taranto 2 (TCP),vlus-it1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Italy - Taranto 2 (UDP),vlus-it1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Japan - Tokyo 1 (TCP),jp1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Japan - Tokyo 1 (UDP),jp1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Japan - Tokyo 2 (TCP),vlus-jp1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Japan - Tokyo 2 (UDP),vlus-jp1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Jordan - Amman (TCP),vlus-jo1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Jordan - Amman (UDP),vlus-jo1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Kenya - Mombasa (TCP),ke1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Kenya - Mombasa (UDP),ke1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Kuwait (TCP),vlus-kw1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Kuwait (UDP),vlus-kw1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Lativia - Riga (TCP),lv1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Lativia - Riga (UDP),lv1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Luxembourg - Luxembourg (TCP),lu1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Luxembourg - Luxembourg (UDP),lu1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Malaysia - Johar Bahru (TCP),my1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Malaysia - Johar Bahru (UDP),my1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Mexico - Jalisco (TCP),mx1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Mexico - Jalisco (UDP),mx1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Netherlands - Amsterdam (TCP),nl1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+Netherlands - Amsterdam (UDP),nl1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+Newzealand - Auckland (TCP),nz1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Newzealand - Auckland (UDP),nz1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Newzealand - Wellington (TCP),vlus-nz1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Newzealand - Wellington (UDP),vlus-nz1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Nigeria - Suleja (TCP),ng1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Nigeria - Suleja (UDP),ng1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Pakistan - Islamabad (TCP),pk1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Pakistan - Islamabad (UDP),pk1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Panama - Panama City (TCP),vlus-pa1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Panama - Panama City (UDP),vlus-pa1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Peru - Lima (TCP),pe1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Peru - Lima (UDP),pe1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Russia - Moscow (TCP),vlus-ru1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Russia - Moscow (UDP),vlus-ru1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+SaudiArabia - Jeddah (TCP),sa1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+SaudiArabia - Jeddah (UDP),sa1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Seychelles - Victoria (TCP),sc1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Seychelles - Victoria (UDP),sc1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Singapore - Singapore (TCP),sg1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Singapore - Singapore (UDP),sg1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+SouthAfrica - Benoni (TCP),za1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+SouthAfrica - Benoni (UDP),za1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+SouthKorea - Seoul 1 (TCP),kr1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+SouthKorea - Seoul 1 (UDP),kr1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Spain - Madrid (TCP),es1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Spain - Madrid (UDP),es1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Sweden - Stockholm 1 (TCP),se1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Sweden - Stockholm 1 (UDP),se1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Sweden - Stockholm 2 (TCP),vlus-se1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Sweden - Stockholm 2 (UDP),vlus-se1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Switzerland - Bern (TCP),ch1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Switzerland - Bern (UDP),ch1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Taiwan - Taoyuan (TCP),tw1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Taiwan - Taoyuan (UDP),tw1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Turkey - Istanbul (TCP),vlus-tr1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Turkey - Istanbul (UDP),vlus-tr1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+UAE - Dubai (TCP),ae1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+UAE - Dubai (UDP),ae1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+UK - London 1 (TCP),vlsa-ukl1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+UK - London 1 (UDP),vlsa-ukl1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+UK - Maidenhead (TCP),ukm1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+UK - Maidenhead (UDP),ukm1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+UK - Manchester (TCP),vlus-uk-man1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+UK - Manchester (UDP),vlus-uk-man1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+US - Atlanta (TCP),usga1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - Atlanta (UDP),usga1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - Chicago 1 (TCP),usil1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+US - Chicago 1 (UDP),usil1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+US - Chicago 2 (TCP),vlap-usil1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca2.crt
+US - Chicago 2 (UDP),vlap-usil1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca2.crt
+US - Florida (TCP),usfl1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - Florida (UDP),usfl1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - Georgia (TCP),vlap-usga1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - Georgia (UDP),vlap-usga1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - Los Angeles 1 (TCP),usla1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - Los Angeles 1 (UDP),usla1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - Los Angeles 2 (TCP),usca1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - Los Angeles 2 (UDP),usca1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - New Jersey (TCP),usnj1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - New Jersey (UDP),usnj1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - NewYork 1 (TCP),au1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - NewYork 1 (UDP),usny1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - San Francisco (TCP),vlsa-ussf1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - San Francisco (UDP),vlsa-ussf1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - Virginia (TCP),vlbr-usvc1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - Virginia (UDP),vlbr-usvc1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+US - Washington (TCP),ussa1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+US - Washington (UDP),ussa1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
+Venezuela - Caracas (TCP),ve1-ovpn-tcp.ivacy.net,tcp,80,#REMOVE=1 #CERT=ca.crt
+Venezuela - Caracas (UDP),ve1-ovpn-udp.ivacy.net,udp,53,#REMOVE=2 #CERT=ca.crt
