@@ -101,8 +101,8 @@ msgid "Clear cache"
 msgstr "Clear cache"
 
 msgctxt "#30021"
-msgid "Enable pagination"
-msgstr "Enable pagination"
+msgid "Results per page"
+msgstr "Results per page"
 
 msgctxt "#30022"
 msgid "Enable overlay status"
@@ -215,6 +215,30 @@ msgstr "Resolution preference for TV Shows"
 msgctxt "#30049"
 msgid "Percentage of additional seeders required before choosing next resolution"
 msgstr "Percentage of additional seeders required before choosing next resolution"
+
+msgctxt "#30050"
+msgid "Disable DHT"
+msgstr "Disable DHT"
+
+msgctxt "#30051"
+msgid "Share ratio limit (percent)"
+msgstr "Share ratio limit (percent)"
+
+msgctxt "#30052"
+msgid "Seed time ratio limit (percent)"
+msgstr "Seed time ratio limit (percent)"
+
+msgctxt "#30053"
+msgid "Seed time limit (hours)"
+msgstr "Seed time limit (hours)"
+
+msgctxt "#30054"
+msgid "Update library"
+msgstr "Update library"
+
+msgctxt "#30055"
+msgid "Add Specials to library"
+msgstr "Add Specials to library"
 
 
 # Interface
@@ -485,3 +509,11 @@ msgstr "Most Anticipated"
 msgctxt "#30251"
 msgid "Box Office"
 msgstr "Box Office"
+
+msgctxt "#30252"
+msgid "Add to library"
+msgstr "Add to library"
+
+msgctxt "#30253"
+msgid "Remove from library"
+msgstr "Remove from library"

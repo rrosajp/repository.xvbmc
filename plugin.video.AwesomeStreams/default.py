@@ -44,6 +44,8 @@ class NoRedirection(urllib2.HTTPErrorProcessor):
 
 ASBase = 'aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4LnhtbA=='
 ASBase1 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4Mi54bWw='
+ASBase3 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4My54bWw='
+
 
 
 sourceSitebvls = 'http://bvls2016.sc'      
@@ -298,8 +300,11 @@ def ASIndex():
     getData(base64.b64decode(ASBase1),'')
     addDir('News','News',46,icon ,  FANART,'','','','')
     addDir('Privacy Policy','Privacy Policy',45,icon ,  FANART,'','','','')
-    getData(base64.b64decode(ASBase),'')
+    getData(base64.b64decode(ASBase3),'')
     addDir('Sport365.live - from ZemTV','',47,icon ,  FANART,'','','','')
+    getData(base64.b64decode(ASBase),'')
+  
+   
   
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
@@ -985,14 +990,14 @@ def getItems(items,fanart):
                 addon_log('EPG Error')
             try:
                 url = []
-                if len(item('linkas')) >0:
+                if len(item('link')) >0:
 #                    print 'item link', item('linkas')
-                    for i in item('linkas'):
+                    for i in item('link'):
                         if not i.string == None:
                             url.append(i.string)
                     
-                elif len(item('sportsdevilas')) >0:
-                    for i in item('sportsdevilas'):
+                elif len(item('sportsdevil')) >0:
+                    for i in item('sportsdevil'):
                         if not i.string == None:
                             sportsdevil = 'plugin://plugin.video.SportsDevil/?mode=1&amp;item=catcher%3dstreams%26url=' +i.string
                             referer = item('referer')[0].string
