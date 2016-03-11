@@ -5,4 +5,7 @@ V1.03 Movies channels added
 V1.04 Movies Added Movies channels removed
 V1.05 Movie channels added
 V1.11 Streamlinks fixed
-v1.12 Sport365.live toegvoegd
+V1.12 JSON Fixed
+V1.13 Redesign
+V1.14 Redesign
+V1.15 Redesign
