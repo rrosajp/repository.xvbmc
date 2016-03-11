@@ -45,6 +45,7 @@ class NoRedirection(urllib2.HTTPErrorProcessor):
 ASBase = 'aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4LnhtbA=='
 ASBase1 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4Mi54bWw='
 ASBase3 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4My54bWw='
+ASBase4 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4NC54bWw='
 
 
 
@@ -303,7 +304,7 @@ def ASIndex():
     getData(base64.b64decode(ASBase3),'')
     addDir('Sport365.live - from ZemTV','',47,icon ,  FANART,'','','','')
     getData(base64.b64decode(ASBase),'')
-  
+    getData(base64.b64decode(ASBase4),'')
    
   
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
