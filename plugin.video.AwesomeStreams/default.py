@@ -301,10 +301,16 @@ def ASIndex():
     getData(base64.b64decode(ASBase1),'')
     addDir('News','News',46,icon ,  FANART,'','','','')
     addDir('Privacy Policy','Privacy Policy',45,icon ,  FANART,'','','','')
-    getData(base64.b64decode(ASBase3),'')
-    addDir('Sport365.live - from ZemTV','',47,icon ,  FANART,'','','','')
     getData(base64.b64decode(ASBase),'')
+    getData(base64.b64decode(ASBase3),'')
+    #addDir('Sport365.live - from ZemTV','',47,icon ,  FANART,'','','','')
+    try :
+     AddSports365Channels()
+    except :
+        pass
     getData(base64.b64decode(ASBase4),'')
+ 
+ 
    
   
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -1109,7 +1115,7 @@ def getItems(items,fanart):
                                     f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;streamtype=HLS'
                                     
                                 else:
-                                    f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;streamtype=SIMPLE'
+                                    f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;streamtype=TSDOWNLOADER'
                         url.append(f4m)
                 elif len(item('ftv')) >0:
                     for i in item('ftv'):

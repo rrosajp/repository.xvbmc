@@ -1,5 +1,8 @@
+[B]v2.4.0[/B] 
+ + Upgrade Kodi (Helix) to 'last' Milhouse Isengard/Jarvis (XvBMC NL) + OpenELEC BETA's
+
 [B]v2.0.0[/B] 
- - Upgrade Kodi (Helix) to 'latest/last' Milhouse Isengard/Jarvis (XvBMC v2.4 Pi2 image)
+ - Upgrade Kodi (Helix) to 'last' Milhouse Isengard/Jarvis   (XvBMC v2.4 image)
 
 [B]v1.0.1[/B] 
  # Upgrade Kodi (Helix) to Isengard Milhouse "Final" -4- Pi2 (XvBMC v2.4 image)
