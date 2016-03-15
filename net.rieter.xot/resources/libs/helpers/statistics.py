@@ -20,8 +20,21 @@ from config import Config
 
 class Statistics:
     __STATISTICS = "Statistics"
+    __ERRORS = "Errors"
+    __ACTION_PLAY = "Play"
+    __ACTION_LIST = "List"
+    __ACTION_CHANNEL = "Channel"
 
     def __init__(self):
+        """
+        Category    Action          Label               Value           Referer
+        ================================================================================
+        Statistics  CDN             <cdn-url>           <bytes>         -
+        Statistics  <channelname>   Channel             1               -
+        Statistics  <channelname>   Play: <name>        1               <url>
+        Errors      <channelname>   List: <name>        1               <url>
+        Errors      <channelname>   Play: <name>        1               <url>
+        """
         raise ValueError("Cannot and should not create an instance")
 
     @staticmethod
@@ -31,7 +44,8 @@ class Statistics:
         @param totalBytes: int - The total bytes transfered
         """
 
-        Statistics.__RegisterHit(Statistics.__STATISTICS, "CDN", "Cached", totalBytes)
+        Statistics.__RegisterHit(Statistics.__STATISTICS,
+                                 "CDN", Config.TextureUrl, value=totalBytes)
 
     @staticmethod
     def RegisterError(channel, title="Channel", item=None):
@@ -40,15 +54,21 @@ class Statistics:
         @param channel: Channel : The channel that had the error
         """
 
-        referrer = None
+        referer = None
+
+        if item is None:
+            item = channel.parentItem
+
         if item is not None:
             title = item.name
-            referrer = item.url
-        elif channel.parentItem is not None:
-            title = channel.parentItem.name
-            referrer = channel.parentItem.url or None
+            referer = item.url
+            if item.IsPlayable():
+                title = "%s: %s" % (Statistics.__ACTION_PLAY, title)
+            else:
+                title = "%s: %s" % (Statistics.__ACTION_LIST, title)
 
-        Statistics.__RegisterHit("Errors", channel.channelName, title, 1, referrer)
+        Statistics.__RegisterHit(Statistics.__ERRORS,
+                                 channel.channelName, title, value=1, referer=referer)
 
     @staticmethod
     def RegisterChannelOpen(channel, startTime=None):
@@ -66,14 +86,17 @@ class Statistics:
             timeDelta = (datetime.now() - startTime)
             duration = timeDelta.seconds * 1000 + (timeDelta.microseconds / (10 ** 3))
 
-        Statistics.__RegisterHit(Statistics.__STATISTICS, "Channel", channel.channelName, duration)
+        Statistics.__RegisterHit(Statistics.__STATISTICS,
+                                 channel.channelName, Statistics.__ACTION_CHANNEL, value=duration)
 
     @staticmethod
-    def RegisterPlayback(channel, startTime=None, offset=0):
+    def RegisterPlayback(channel, item, startTime=None, offset=0):
         """ Register a video playback
 
         Arguments:
-        channel  : String   - Name of the channel
+        channel  : String    - Name of the channel
+        item :     MediaItem - The item that is playing
+
 
         Keyword Arguments:
         starTime : datetime - The start time of the add-on
@@ -86,12 +109,14 @@ class Statistics:
         if startTime:
             timeDelta = (datetime.now() - startTime)
             duration = timeDelta.seconds * 1000 + (timeDelta.microseconds / (10 ** 3)) + offset
-
         Logger.Trace("Duration set to: %s (%s, offset=%s)", duration, timeDelta or "None", offset)
-        Statistics.__RegisterHit(Statistics.__STATISTICS, "Playback", channel.channelName, duration)
+
+        action = "%s: %s" % (Statistics.__ACTION_PLAY, item.name)
+        Statistics.__RegisterHit(Statistics.__STATISTICS,
+                                 channel.channelName, action, value=duration, referer=item.url)
 
     @staticmethod
-    def __RegisterHit(category, action, label, value=None, referrer=None):
+    def __RegisterHit(category, action, label, value=None, referer=None):
         """ Register an event with Google Analytics
 
         @param category:    String   - Name of category to register
@@ -99,8 +124,7 @@ class Statistics:
         @param value:       String   - Value of action to register
         @param label:       String   - The label for the event
         @param value:       int      - The value for the event (Defaults to None)
-        @param referrer:    String   - The referrer (Defaults to None)
-
+        @param referer:     String   - The referer (Defaults to None)
 
         See: https://ga-dev-tools.appspot.com/hit-builder/
         v=1&t=event&tid=UA-3902785-1&cid=3c8961be-6a53-48f6-bded-d136760ab55f&ec=Test&ea=Test%20Action&el=Test%20%5Blabel)&ev=100
@@ -124,8 +148,10 @@ class Statistics:
             }
             if value is not None:
                 postData["ev"] = value
-            if referrer is not None:
-                postData["dr"] = HtmlEntityHelper.UrlEncode(referrer)
+            if referer is not None:
+                if "://" not in referer:
+                    referer = "http://%s" % (referer,)
+                postData["dr"] = HtmlEntityHelper.UrlEncode(referer)
 
             url = "http://www.google-analytics.com/collect"
             data = ""
