@@ -11,3 +11,4 @@ V1.0.14 Redesign
 V1.0.15 Redesign
 V1.0.16 Live sport Agenda moved to the main screen
 V1.0.17 Added Sport365.live to the main Screen
+V1.0.18 Fixed F4m plugin
