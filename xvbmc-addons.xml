@@ -54,7 +54,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
-       version="1.0.18"
+       version="1.0.19"
        provider-name="AwesomeStreams">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -66,7 +66,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <import addon="script.module.httplib2" />
     <import addon="script.module.youtube.dl" optional="true"/>
     <import addon="plugin.video.youtube" version="5.1.12"/>
-    <import addon="script.module.urlresolver" optional="true"/>
+    <import addon="script.module.urlresolver" version="1.0.0"/>
     <import addon="script.module.simplejson" />
     <import addon="script.common.plugin.cache" version="2.5.5"/>
     <import addon="script.module.metahandler" version="2.9.0"/>
@@ -253,7 +253,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
 </addon>
 
-<addon id="plugin.video.quasar" name="Quasar" version="0.9.30" provider-name="scakemyer">
+<addon id="plugin.video.quasar" name="Quasar" version="0.9.32" provider-name="scakemyer">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -827,7 +827,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<addon id="script.xvbmc.upper" name=" [COLOR lime][B]X[/B][/COLOR]vBMC OpenELEC/Kodi Upgrader" version="2.4.0" provider-name="EPiC XvBMC NL">
+<addon id="script.xvbmc.upper" name=" [COLOR lime][B]X[/B][/COLOR]vBMC OpenELEC/Kodi Upgrader" version="2.4.0315" provider-name="EPiC XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
     <import addon="script.module.simplejson" version="2.0.10"/>
@@ -836,8 +836,8 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC OpenELEC/Kodi Upgrader</summary>
-    <description lang="en">XvBMC 'Universal' OpenELEC/Kodi Upgrader (Milhouse beta builds)</description>
+    <summary lang="en">XvBMC OpenELEC/Kodi Upgrader (#0315)</summary>
+    <description lang="en">XvBMC 'Universal' OpenELEC/Kodi Upgrader (Milhouse beta builds *bump* #0315)</description>
 	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
 	<platform>all</platform>
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>

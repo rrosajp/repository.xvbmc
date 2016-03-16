@@ -7,6 +7,7 @@ import shutil
 import urllib2,urllib
 import os
 import xbmcaddon
+import time
  
 if sys.version_info >=  (2, 7):
     import json as json
@@ -15,7 +16,7 @@ else:
  
 ########################################################################
 __ScriptName__ = "script.XvBMC.upper"
-__ScriptVersion__ = "2.0.0"
+__ScriptVersion__ = "2.4.xxxx"
 __Author__ = "EPiC"
 __Website__ = "http://WatBenJeDan.nl/"
 ########################################################################
@@ -43,7 +44,7 @@ def showMenu():
     userchoice = []
     userchoice.append("Isengard Upgrade")
     userchoice.append("Jarvis Upgrade")
-    userchoice.append("Beta OE8 Upgrade")
+    userchoice.append("Beta OE8 Krypton #0315")
     userchoice.append("EPiC Tweak")
     userchoice.append("Exit")
     
@@ -61,7 +62,7 @@ def showMenu():
         JarvisUpgrade()
 
     # BETA's Upgrade
-    elif userchoice[inputchoice] == "Beta OE8 Upgrade":
+    elif userchoice[inputchoice] == "Beta OE8 Krypton #0315":
         BETAupgrade()
  
     # Edit user preferences
@@ -97,9 +98,12 @@ class IsengardClass(xbmcgui.Window):
     #   path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone (https://www.facebook.com/groups/XvBMCnederland/)
         lib=os.path.join(path, 'isengard.tar')
         DownloaderClass(url,lib)
-    
+	
+	time.sleep(1)
    	xbmc.executebuiltin("ReloadKeymaps")
+	time.sleep(1)
    	xbmc.executebuiltin("ReloadSkin()")
+	time.sleep(1)
    	xbmc.executebuiltin("Notification(XvBMC EPiC OpenELEC Upgrade,EPiC Isengard upgrade geslaagd,5000,special://skin/icon.png)")
  
 class JarvisClass(xbmcgui.Window):
@@ -111,24 +115,30 @@ class JarvisClass(xbmcgui.Window):
     #   path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone (https://www.facebook.com/groups/XvBMCnederland/)
         lib=os.path.join(path, 'jarvis.tar')
         DownloaderClass(url,lib)
-     
-   	xbmc.executebuiltin("ReloadKeymaps")
+	
+	time.sleep(1)
+	xbmc.executebuiltin("ReloadKeymaps")
+	time.sleep(1)
    	xbmc.executebuiltin("ReloadSkin()")
+	time.sleep(1)
    	xbmc.executebuiltin("Notification(XvBMC EPiC OpenELEC Upgrade,EPiC Jarvis upgrade geslaagd,5000,special://skin/icon.png)")
  
 class BetaClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    if dialog.yesno('EPiC XvBMC Upgrade','Upgrade -2- OE8 BETA'):
-        url = 'http://milhouse.openelec.tv/builds/master/RPi2/OpenELEC-RPi2.arm-8.0-Milhouse-20160314220202-%230314-g0026734.tar'
+    if dialog.yesno('EPiC XvBMC Upgrade','Upgrade -2- Krypton OE8.0 #0315'):
+        url = 'http://milhouse.openelec.tv/builds/master/RPi2/OpenELEC-RPi2.arm-8.0-Milhouse-20160316031612-%230315-g0026734.tar'
         path = xbmc.translatePath(os.path.join('/storage/.update/','')) # OpenELEC   (XvBMC Nederland : https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/)
     #   path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone (https://www.facebook.com/groups/XvBMCnederland/)
         lib=os.path.join(path, 'betas.tar')
         DownloaderClass(url,lib)
-     
-   	xbmc.executebuiltin("ReloadKeymaps")
+	
+	time.sleep(1)
+	xbmc.executebuiltin("ReloadKeymaps")
+	time.sleep(1)
    	xbmc.executebuiltin("ReloadSkin()")
-   	xbmc.executebuiltin("Notification(XvBMC EPiC OpenELEC Upgrade,EPiC OE8 upgrade geslaagd,5000,special://skin/icon.png)")
+	time.sleep(1)
+   	xbmc.executebuiltin("Notification(XvBMC EPiC OpenELEC Upgrade,EPiC OE8.0 upgrade geslaagd,5000,special://skin/icon.png)")
    
   
  
