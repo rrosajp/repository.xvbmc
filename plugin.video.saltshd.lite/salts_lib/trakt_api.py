@@ -149,8 +149,8 @@ class Trakt_API():
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
 
     def get_anticipated(self, section, page=None):
-        url = '/%s/boxoffice' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': self.list_size}
+        url = '/%s/anticipated' % (TRAKT_SECTIONS[section])
+        params = {'extended': 'full,images', 'limit': 50}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
@@ -163,7 +163,7 @@ class Trakt_API():
 
     def get_recent(self, section, date, page=None):
         url = '/%s/updates/%s' % (TRAKT_SECTIONS[section], date)
-        params = {'extended': 'full,images', 'limit': self.list_size}
+        params = {'extended': 'full,images', 'limit': 50}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
@@ -505,7 +505,7 @@ class Trakt_API():
                     raise
 
         try:
-            js_data = json.loads(result)
+            js_data = utils2.json_loads_as_str(result)
             if 'x-sort-by' in res_headers and 'x-sort-how' in res_headers:
                 js_data = utils2.sort_list(res_headers['x-sort-by'], res_headers['x-sort-how'], js_data)
         except ValueError:

@@ -129,7 +129,7 @@ def view_bookmarks(section):
         else:
             liz, liz_url = make_episode_item(bookmark['show'], bookmark['episode'], menu_items=menu_items)
             label = liz.getLabel()
-            label = '%s - %s' % (bookmark['show']['title'], label.decode('utf-8', 'replace'))
+            label = '%s - %s' % (bookmark['show']['title'], label)
             liz.setLabel(label)
             
         label = liz.getLabel()
@@ -138,7 +138,7 @@ def view_bookmarks(section):
             pause_label = '[COLOR blue]%.2f%%[/COLOR] %s ' % (bookmark['progress'], i18n('on'))
         paused_at = time.strftime('%Y-%m-%d', time.localtime(utils2.iso_2_utc(bookmark['paused_at'])))
         pause_label += '[COLOR deeppink]%s[/COLOR]' % (paused_at)
-        label = '[%s] %s ' % (pause_label, label.decode('utf-8', 'replace'))
+        label = '[%s] %s ' % (pause_label, label)
         liz.setLabel(label)
         xbmcplugin.addDirectoryItem(int(sys.argv[1]), liz_url, liz, isFolder=folder, totalItems=0)
     content_type = CONTENT_TYPES.EPISODES if section == SECTIONS.TV else CONTENT_TYPES.MOVIES
@@ -228,7 +228,9 @@ def add_section_lists(section):
     for list_str in main_list:
         if '@' not in list_str:
             if TOKEN:
-                add_list_item(section, lists_dict[list_str])
+                fake_list = {'name': list_str, 'ids': {'slug': list_str}}
+                user_list = lists_dict.get(list_str, fake_list)
+                add_list_item(section, user_list)
         else:
             other_list = other_dict.get(list_str, list(reversed(list_str.split('@'))))
             add_other_list_item(MODES.BROWSE, section, other_list)
@@ -468,13 +470,13 @@ def show_history(section, page=1):
             menu_items.append((i18n('browse_seasons'), 'Container.Update(%s)' % (kodi.get_plugin_url(queries))),)
             liz, liz_url = make_episode_item(show, item['episode'], menu_items=menu_items)
             label = liz.getLabel()
-            label = '%s - %s' % (show['title'], label.decode('utf-8', 'replace'))
+            label = '%s - %s' % (show['title'], label)
             liz.setLabel(label)
             
         label = liz.getLabel()
         watched_at = time.strftime('%Y-%m-%d', time.localtime(utils2.iso_2_utc(item['watched_at'])))
         header = '[COLOR deeppink]%s[/COLOR]' % (watched_at)
-        label = '[%s] %s' % (header, label.decode('utf-8', 'ignore'))
+        label = '[%s] %s' % (header, label)
         liz.setLabel(label)
         
         xbmcplugin.addDirectoryItem(int(sys.argv[1]), liz_url, liz, isFolder=folder, totalItems=totalItems)
@@ -690,7 +692,7 @@ def show_collection(section):
     if sort_key == 1:
         items.reverse()
     elif sort_key == 2:
-        items.sort(key=lambda x: re.sub('^(The |A |An )', '', x['title'], re.I))
+        items.sort(key=lambda x: utils2.title_key(x['title']))
     elif sort_key == 3:
         items.sort(key=lambda x: x['year'])
 
@@ -811,7 +813,7 @@ def show_progress():
     
                 liz, liz_url = make_episode_item(show, episode['episode'], menu_items=menu_items)
                 label = liz.getLabel()
-                label = '[[COLOR deeppink]%s[/COLOR]] %s - %s' % (date, show['title'], label.decode('utf-8', 'replace'))
+                label = '[[COLOR deeppink]%s[/COLOR]] %s - %s' % (date, show['title'], label)
                 liz.setLabel(label)
     
                 xbmcplugin.addDirectoryItem(int(sys.argv[1]), liz_url, liz, isFolder=folder)
@@ -1065,6 +1067,7 @@ def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', 
 
                 if max_results > 0 and len(hosters) >= max_results:
                     log_utils.log('Exceeded max results: %s/%s' % (max_results, len(hosters)))
+                    fails = {}
                     break
 
             else:
@@ -1127,9 +1130,13 @@ def apply_urlresolver(hosters):
     if not filter_unusable and not show_debrid:
         return hosters
     
-    import urlresolver.plugnplay
-    resolvers = urlresolver.plugnplay.man.implementors(urlresolver.UrlResolver)
-    debrid_resolvers = [resolver for resolver in resolvers if resolver.isUniversal() and resolver.get_setting('enabled') == 'true']
+    try:
+        import urlresolver.plugnplay
+        resolvers = urlresolver.plugnplay.man.implementors(urlresolver.UrlResolver)
+        debrid_resolvers = [resolver for resolver in resolvers if resolver.isUniversal() and resolver.get_setting('enabled') == 'true']
+    except:
+        import urlresolver
+        debrid_resolvers = [resolver() for resolver in urlresolver.relevant_resolvers(order_matters=True) if resolver.isUniversal()]
     filtered_hosters = []
     debrid_hosts = {}
     unk_hosts = {}
@@ -1228,9 +1235,14 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, dialog, season='
                 log_utils.log('Indirect hoster_url not supported by urlresolver: %s' % (hoster_url))
                 stream_url = hoster_url
             else:
-                stream_url = hmf.resolve()
-                if not stream_url or not isinstance(stream_url, basestring):
-                    try: msg = stream_url.msg
+                try:
+                    stream_url = hmf.resolve()
+                    if not stream_url or not isinstance(stream_url, basestring):
+                        try: msg = stream_url.msg
+                        except: msg = hoster_url
+                        raise Exception(msg)
+                except Exception as e:
+                    try: msg = str(e)
                     except: msg = hoster_url
                     kodi.notify(msg=i18n('resolve_failed') % (msg), duration=7500)
                     return False
@@ -1716,7 +1728,6 @@ def update_strms(section, dialog=None):
     for i, item in enumerate(items):
         percent_progress = (i + 1) * 100 / length
         title = re.sub('\s+\(\d{4}\)$', '', item['title'])
-        if isinstance(title, unicode): title = title.encode('utf-8')
             
         dialog.update(percent_progress, '%s %s: %s (%s)' % (i18n('updating'), section, title, item['year']))
         try:
@@ -2084,7 +2095,7 @@ def make_dir_from_cal(mode, start_date, days):
 
         liz, liz_url = make_episode_item(show, episode, show_subs=False, menu_items=menu_items)
         label = liz.getLabel()
-        label = '[[COLOR deeppink]%s[/COLOR]] %s - %s' % (date_time, show['title'], label.decode('utf-8', 'replace'))
+        label = '[[COLOR deeppink]%s[/COLOR]] %s - %s' % (date_time, show['title'], label)
         if episode['season'] == 1 and episode['number'] == 1:
             label = '[COLOR green]%s[/COLOR]' % (label)
         liz.setLabel(label)

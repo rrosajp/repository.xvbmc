@@ -77,8 +77,8 @@ DISABLE_SETTINGS = __enum(OFF='0', PROMPT='1', ON='2')
 BLOG_Q_MAP = {}
 BLOG_Q_MAP[QUALITIES.LOW] = [' CAM ', ' TS ', ' R6 ', 'CAMRIP']
 BLOG_Q_MAP[QUALITIES.MEDIUM] = ['-XVID', '-MP4', 'MEDIUM']
-BLOG_Q_MAP[QUALITIES.HIGH] = ['HDRIP', 'DVDRIP', 'BRRIP', 'BDRIP', '480P']
-BLOG_Q_MAP[QUALITIES.HD720] = ['720', 'HDTS', 'BRRIP', 'BDRIP', ' HD ']
+BLOG_Q_MAP[QUALITIES.HIGH] = ['HDRIP', 'DVDRIP', 'BRRIP', 'BDRIP', '480P', 'HDTV']
+BLOG_Q_MAP[QUALITIES.HD720] = ['720', 'HDTS', ' HD ']
 BLOG_Q_MAP[QUALITIES.HD1080] = ['1080']
 
 HOST_Q = {}
@@ -87,7 +87,7 @@ HOST_Q[QUALITIES.MEDIUM] = ['primeshare', 'exashare', 'bestreams', 'flashx', 'vi
                             'daclips', 'sharerepo', 'zalaa', 'filehoot', 'vshare.io']
 HOST_Q[QUALITIES.HIGH] = ['vidspot', 'mrfile', 'divxstage', 'streamcloud', 'mooshare', 'novamov', 'mail.ru', 'vid.ag', 'thevideo']
 HOST_Q[QUALITIES.HD720] = ['thefile', 'sharesix', 'filenuke', 'vidxden', 'movshare', 'nowvideo', 'vidbux', 'streamin.to', 'allvid.ch']
-HOST_Q[QUALITIES.HD1080] = ['hugefiles', '180upload', 'mightyupload', 'videomega', 'allmyvideos']
+HOST_Q[QUALITIES.HD1080] = ['hugefiles', '180upload', 'mightyupload', 'videomega', 'videomega-2', 'allmyvideos']
 
 Q_ORDER = {QUALITIES.LOW: 1, QUALITIES.MEDIUM: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
 
