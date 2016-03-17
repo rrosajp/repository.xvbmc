@@ -301,12 +301,15 @@ class Scraper(object):
             if int(content_length) > MAX_RESPONSE:
                 log_utils.log('Response exceeded allowed size. %s => %s / %s' % (url, content_length, MAX_RESPONSE), log_utils.LOGWARNING)
             
-            if response.info().get('Content-Encoding') == 'gzip':
-                buf = StringIO(response.read(MAX_RESPONSE))
-                f = gzip.GzipFile(fileobj=buf)
-                html = f.read()
+            if method == 'HEAD':
+                return ''
             else:
-                html = response.read(MAX_RESPONSE)
+                if response.info().get('Content-Encoding') == 'gzip':
+                    buf = StringIO(response.read(MAX_RESPONSE))
+                    f = gzip.GzipFile(fileobj=buf)
+                    html = f.read()
+                else:
+                    html = response.read(MAX_RESPONSE)
         except urllib2.HTTPError as e:
             if e.code == 503 and 'cf-browser-verification' in e.read():
                 html = cloudflare.solve(url, self.cj, scraper_utils.get_ua())
@@ -363,7 +366,7 @@ class Scraper(object):
         return {'recaptcha_challenge_field': match.group(1), 'recaptcha_response_field': solution}
 
     def _default_get_episode_url(self, show_url, video, episode_pattern, title_pattern='', airdate_pattern='', data=None, headers=None, method=None):
-        log_utils.log('Default Episode Url: |%s|%s|%s|%s|' % (self.base_url, show_url, str(video).decode('utf-8', 'replace'), data), log_utils.LOGDEBUG)
+        log_utils.log('Default Episode Url: |%s|%s|%s|%s|' % (self.base_url, show_url, str(video), data), log_utils.LOGDEBUG)
         if not show_url.startswith('http'):
             url = urlparse.urljoin(self.base_url, show_url)
         else:
@@ -550,14 +553,17 @@ class Scraper(object):
                 except Exception as e:
                     log_utils.log('Google Plus Parse failure: %s - %s' % (link, e), log_utils.LOGWARNING)
         else:
-            i = link.rfind('#')
-            if i > -1:
-                link_id = link[i + 1:]
+            if 'picasaweb' in link:
+                i = link.rfind('#')
+                if i > -1:
+                    link_id = link[i + 1:]
+                else:
+                    link_id = ''
                 match = re.search('feedPreload:\s*(.*}]}})},', html, re.DOTALL)
                 if match:
                     js = scraper_utils.parse_json(match.group(1), link)
                     for item in js['feed']['entry']:
-                        if item['gphoto$id'] == link_id:
+                        if not link_id or item['gphoto$id'] == link_id:
                             for media in item['media']['content']:
                                 if media['type'].startswith('video'):
                                     sources.append(media['url'].replace('%3D', '='))
@@ -569,6 +575,7 @@ class Scraper(object):
                         if media['type'].startswith('video'):
                             sources.append(media['url'].replace('%3D', '='))
 
+        sources = list(set(sources))
         return sources
 
     def _parse_gdocs(self, link):

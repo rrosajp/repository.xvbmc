@@ -30,7 +30,7 @@ import scraper
 
 
 BASE_URL = 'http://putmv.com'
-GVIDEO_NAMES = ['english sub', 'picasa', 'putlocker']
+GVIDEO_NAMES = ['english sub', 'picasa', 'videomega-2']
 
 class PutMV_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -41,7 +41,7 @@ class PutMV_Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.SEASON, VIDEO_TYPES.EPISODE])
+        return frozenset([VIDEO_TYPES.MOVIE, VIDEO_TYPES.SEASON, VIDEO_TYPES.EPISODE])
 
     @classmethod
     def get_name(cls):
