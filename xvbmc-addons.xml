@@ -130,7 +130,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 </addon>
 
 
-<addon id="plugin.video.kmediatorrent" name="KMediaTorrent" version="24.3.9" provider-name="jmarth +OpenELEQ +EPiC TiM -4- XvBMC">
+<addon id="plugin.video.kmediatorrent" name="KMediaTorrent" version="4.3.7" provider-name="jmarth +OpenELEQ +EPiC (XvBMC NL)">
     <requires>
         <import addon="xbmc.python" version="2.14.0"/>
         <import addon="script.module.requests" version="2.3.5"/>
@@ -142,9 +142,8 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
-        <summary><![CDATA[Torrent streaming
-        for KODI/XBMC.]]></summary>
-        <description><![CDATA[Watch torrents directly from KODI/XBMC, without waiting. TiM-4-XvBMC]]></description>
+        <summary><![CDATA[EPiC torrent streaming for KODI/XBMC. XvBMC-NL MOD.]]></summary>
+        <description><![CDATA[Watch EPiC torrents directly from KODI/XBMC, without waiting. XvBMC-NL MOD.]]></description>
     </extension>
 </addon>
 

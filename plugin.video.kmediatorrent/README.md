@@ -1,5 +1,7 @@
 KMediaTorrent (formerly known as KODITorrent)
 ===========
+v4.3.7: Added some 'OpenELEQ' Magic & some 'EPiC' VooDoo -4- XvBMC Nederland.
+===========
 
 What it is
 ----------
