@@ -824,6 +824,28 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
+<addon id="script.schoonmaak"
+       name="Kodi Schoonmaak"
+       version="0.1.10"
+       provider-name="Raw Maintenance">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <summary>Kodi Schoonmaak / Raw Maintinance</summary>
+    <description>For support please visit www.no-issue.ca </description>
+    <language></language>
+    <license></license>
+    <source></source>
+    <forum></forum>
+    <website>www.no-issue.ca</website>
+  </extension>
+</addon>
+
 <addon id="script.xvbmc.upper" name=" [COLOR lime][B]X[/B][/COLOR]vBMC OpenELEC/Kodi Upgrader" version="2.4.0315" provider-name="EPiC XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
