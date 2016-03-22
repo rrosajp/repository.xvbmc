@@ -276,7 +276,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 </addon>
 
 <!--suppress ALL -->
-<addon id="plugin.video.saltshd.lite" version="1.0.126" name="Salts HD Lite" provider-name="tknorris">
+<addon id="plugin.video.saltshd.lite" version="1.0.127" name="Salts HD Lite" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.urlresolver" version="2.2.0"/>
@@ -727,7 +727,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
 </addon>
 
-<addon id="script.module.urlresolver" name="URLResolver" version="2.10.13~beta6" provider-name="Eldorado">
+<addon id="script.module.urlresolver" name="URLResolver" version="2.10.13~beta7" provider-name="Eldorado">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 	</requires>
@@ -736,8 +736,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	<extension point="xbmc.addon.metadata">
 		<platform>all</platform>
 		<summary lang="en">Resolve common video host URL's to be playable in XBMC/Kodi.</summary>
-		<description lang="en">Resolve common video host URL's to be playable in XBMC/Kodi, simplify addon development of video
-			plugins requiring multi video hosts.</description>
+		<description lang="en">Resolve common video host URL's to be playable in XBMC/Kodi, simplify addon development of video plugins requiring multi video hosts.</description>
 	</extension>
 </addon>
 
