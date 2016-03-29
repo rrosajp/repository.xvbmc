@@ -309,11 +309,47 @@ def ASIndex():
     except :
         pass
     getData(base64.b64decode(ASBase4),'')
+    try:
+        getWizSchedule()
+    except: pass
  
- 
-   
+    
   
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+    
+def getWizSchedule():
+    wizpage = getHtml('http://www.wiz1.net/lag10_home.php')
+    match = re.compile(r'(\d{2}:\d{2}) <font color="#5185C9"><b>([^<]+)</b></font> ([^<]+)<a href="([^"]+)"', re.DOTALL | re.IGNORECASE).findall(wizpage)
+    for tijd, sport, wedstrijd, url in match:
+        tekstregel = tijd + ' - ' + sport + ' - ' + wedstrijd
+        addDir(tekstregel, url, 60,"","","","","","","",isItFolder=False)
+        
+
+def playWiz(url):
+    iframeurl = re.compile(r"channel(\d+)", re.DOTALL | re.IGNORECASE).findall(url)[0]
+    iframeurl = 'http://www.wiz1.net/ch' + iframeurl
+    wizpage = getHtml(iframeurl, url)
+    import liveresolver
+    resolved = liveresolver.resolve(url)
+    xbmc.Player().play(resolved)
+
+
+def getHtml(url, referer=None, hdr=None, data=None):
+    USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
+    headers = {'User-Agent': USER_AGENT,
+           'Accept': '*/*',
+           'Connection': 'keep-alive'}
+    if not hdr:
+        req = urllib2.Request(url, data, headers)
+    else:
+        req = urllib2.Request(url, data, hdr)
+    if referer:
+        req.add_header('Referer', referer)
+    response = urllib2.urlopen(req, timeout=60)
+    data = response.read()    
+    response.close()
+    return data    
 
 def News():
 	text = ''
@@ -2922,5 +2958,9 @@ elif mode==48:
 elif mode==53:
     addon_log("Requesting JSON-RPC Items")
     pluginquerybyJSON(url)
+    
+elif mode==60:
+    playWiz(url)
+
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

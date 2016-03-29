@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.schoonmaak"
        name="Kodi Schoonmaak"
-       version="0.1.10"
+       version="1.10.00"
        provider-name="Raw Maintenance">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -11,7 +11,7 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary>Kodi Schoonmaak / Raw Maintinance</summary>
+    <summary>Kodi Schoonmaak 1.10.00 / Raw Maintinance 0.1.10</summary>
     <description>For support please visit www.no-issue.ca </description>
     <language></language>
     <license></license>
