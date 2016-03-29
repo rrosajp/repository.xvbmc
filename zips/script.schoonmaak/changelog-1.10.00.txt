@@ -1,5 +1,5 @@
-[B]0.1.10[/b]
+[B]1.10.00[/B]
 
 = http://no-issue.ca/
 = https://github.com/rawmedia/raw_maintenance/tree/master/rawmaintenance_repo
-= https://github.com/rawmedia/raw_maintenance
+= https://github.com/rawmedia/raw_maintenance (v0.1.10)

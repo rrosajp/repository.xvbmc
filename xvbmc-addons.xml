@@ -54,7 +54,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
-       version="1.0.19"
+       version="1.0.20"
        provider-name="AwesomeStreams">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -70,6 +70,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <import addon="script.module.simplejson" />
     <import addon="script.common.plugin.cache" version="2.5.5"/>
     <import addon="script.module.metahandler" version="2.9.0"/>
+    <import addon="script.module.liveresolver" />
 
 
   </requires>
@@ -317,7 +318,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon
   id="plugin.video.SportsDevil"
-  version="2.2016.03.21"
+  version="2016.03.21"
   name="SportsDevil"
   provider-name="SportsDevil">
   <requires>
@@ -825,7 +826,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="script.schoonmaak"
        name="Kodi Schoonmaak"
-       version="0.1.10"
+       version="1.10.00"
        provider-name="Raw Maintenance">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -835,7 +836,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary>Kodi Schoonmaak / Raw Maintinance</summary>
+    <summary>Kodi Schoonmaak 1.10.00 / Raw Maintinance 0.1.10</summary>
     <description>For support please visit www.no-issue.ca </description>
     <language></language>
     <license></license>
