@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC Maintenance[COLOR red]/update[/COLOR]" version="2.0.0" provider-name="XvBMC NL">
+<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.00" provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
   </requires>
@@ -8,7 +8,7 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">XvBMC Nederland - Maintenance/update(r).</summary>
-    <description lang="en">XvBMC Maintenance ; Updates, Tweaks en Config's</description>
+    <description lang="en">XvBMC Maintenance ; Updates, tweaks, config's (v3)</description>
 	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
 	<platform>all</platform>
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
