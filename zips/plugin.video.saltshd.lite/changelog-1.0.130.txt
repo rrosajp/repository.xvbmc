@@ -1,0 +1,11 @@
+[B]Version 1.0.130[/B]
+- Scotty doesn't know... ;-P (scrapers)
+
+[B]Version 1.0.129[/B]
+- Scotty doesn't know... ;-P (scrapers)
+
+[B]Version 1.0.128[/B]
+- Add Torba scraper.
+Reset addon settings first, 
+start Torba movie and go the website from the same network and your good to go
+
