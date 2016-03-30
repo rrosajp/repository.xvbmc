@@ -30,7 +30,7 @@
 
 <addon id="network.openvpn"
        name="openvpn"
-       version="6.0.0b"
+       version="6.0.0c"
        provider-name="Stefan Saraev (seo at irc.freenode.net)">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -39,12 +39,12 @@
     <provides></provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary>openvpn: a full featured SSL VPN software solution that integrates OpenVPN server capabilities. (XvBMC:_old_*v6.0.1*)</summary>
+    <summary>openvpn: a full featured SSL VPN software solution that integrates OpenVPN server capabilities. (XvBMC: fix dependencies mismatch).</summary>
     <description>
-openvpn binary is installed as /storage/.kodi/addons/network.openvpn/bin/openvpn (XvBMC: promoted earlier as *v6.0.1*)
+openvpn binary is installed as /storage/.kodi/addons/network.openvpn/bin/openvpn (XvBMC: replace *v6.0.1* / fix dependencies not met).
     </description>
     <disclaimer>
-this is an unofficial addon. please don't ask for support in openelec forum / irc channel (XvBMC: promoted earlier as *v6.0.1*)
+this is an unofficial addon. please don't ask for support in openelec forum / irc channel (XvBMC: replace previous 6.0.0-to-6.0.1 bump).
     </disclaimer>
     <platform>all</platform>
   </extension>
