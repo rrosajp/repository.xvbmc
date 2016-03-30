@@ -27,13 +27,16 @@ import urllib2
 import xbmcgui
 import xbmc
 import glob
+import sys
 from libs.platform import getVPNLogFilePath, fakeConnection, isVPNTaskRunning, stopVPN, startVPN, getAddonPath, getSeparator, getUserDataPath
 from libs.platform import getVPNConnectionStatus, connection_status, getPlatform, platforms, writeVPNLog, checkVPNInstall, checkVPNCommand
+from libs.platform import getPlatformString
 from libs.utility import debugTrace, infoTrace, errorTrace, ifDebug
-from libs.vpnproviders import getVPNLocation, getRegexPattern, getProfileList, provider_display, usesUserKeys, usesSingleKey, gotKeys
-from libs.vpnproviders import ovpnFilesAvailable, fixOVPNFiles, getLocationFiles, removeGeneratedFiles, copyKeyAndCert
+from libs.vpnproviders import getVPNLocation, getRegexPattern, getAddonList, provider_display, usesUserKeys, usesSingleKey, gotKeys
+from libs.vpnproviders import ovpnFilesAvailable, ovpnGenerated, fixOVPNFiles, getLocationFiles, removeGeneratedFiles, copyKeyAndCert
 from libs.vpnproviders import usesPassAuth, cleanPassFiles
 from libs.ipinfo import getIPInfoFrom, getIPSources
+from libs.logbox import popupOpenVPNLog
 
 
 def getIconPath():
@@ -43,6 +46,7 @@ def getIconPath():
 def getFilteredProfileList(ovpn_connections, filter, addon):
     # Filter out the profiles that we're not using
     
+    apply_filter = True
     # Filter based on protocol type
     if "TCP" in filter:
         filterTCP = "(TCP"
@@ -53,10 +57,14 @@ def getFilteredProfileList(ovpn_connections, filter, addon):
     else:
         filterUDP = "()"
 
+    # A TCP and UDP filter will work for the non-user defined ovpn files but for user 
+    # defined profiles we should be more relaxed if the user is looking for all protocols
+    if "TCP" in filter and "UDP" in filter : apply_filter = False
+        
     # Filter out connections already in use.  If we don't wanna filter
     # the primary connections, just pass 'None' in as the addon
     used = []
-    if not addon == None:        
+    if not addon == None:
         i = 1
         # Adjust the 11 below to change conn_max
         while i < 11:
@@ -66,17 +74,16 @@ def getFilteredProfileList(ovpn_connections, filter, addon):
         
     connections = []
     for connection in ovpn_connections:
-        if filterTCP in connection or filterUDP in connection:
+        if apply_filter == False or (filterTCP in connection or filterUDP in connection):
             if not connection in used:
                 connections.append(connection)                 
     return connections
 
     
-def getFriendlyProfileList(vpn_provider, ovpn_connections):
+def getFriendlyProfileList(ovpn_connections):
     # Munge a ovpn full path name is something more friendly
-    
     connections = []
-    regex_str = getRegexPattern(vpn_provider)
+    regex_str = getRegexPattern()
     # Deal with some Windows nonsense
     if getPlatform() == platforms.WINDOWS:
         regex_str = regex_str.replace(r"/", r"\\")
@@ -87,9 +94,9 @@ def getFriendlyProfileList(vpn_provider, ovpn_connections):
     return connections
     
 
-def getFriendlyProfileName(vpn_provider, ovpn_connection):
+def getFriendlyProfileName(ovpn_connection):
     # Make the VPN profile names more readable to the user to select from
-    regex_str = getRegexPattern(vpn_provider)
+    regex_str = getRegexPattern()
     # Deal with some Windows nonsense
     if getPlatform() == platforms.WINDOWS:
         regex_str = regex_str.replace(r"/", r"\\")
@@ -296,8 +303,55 @@ def setVPNState(state):
 def getVPNState():
 	# Store current state
     return xbmcgui.Window(10000).getProperty("VPN_Manager_VPN_State")
-    
-    
+
+
+def getSystemData(addon, vpn, network, vpnm, system):
+    lines = []
+    if vpn:
+        site, ip, country, isp = getIPInfo(addon)
+        lines.append("[B][COLOR ff0099ff]Connection[/COLOR][/B]")
+        if isVPNConnected():
+            lines.append("[COLOR ff00ff00]Connected using profile " + getVPNProfileFriendly() + "[/COLOR]")
+            lines.append("VPN provider is " + addon.getSetting("vpn_provider"))
+        else:
+            lines.append("[COLOR ffff0000]Not connected to a VPN[/COLOR]")
+        lines.append("Connection location is " + country)
+        lines.append("External IP address is " + ip)
+        lines.append("Service Provider is " + isp)
+        lines.append("Location sourced from " + site)
+    if network:
+        lines.append("[B][COLOR ff0099ff]Network[/COLOR][/B]")
+        lines.append("IP address is " + xbmc.getInfoLabel("Network.IPAddress"))
+        lines.append("Gateway is " + xbmc.getInfoLabel("Network.GatewayAddress"))
+        lines.append("Subnet mask is " + xbmc.getInfoLabel("Network.SubnetMask"))
+        lines.append("Primary DNS is " + xbmc.getInfoLabel("Network.DNS1Address"))
+        lines.append("Secondary DNS is " + xbmc.getInfoLabel("Network.DNS2Address"))
+    if vpnm:
+        lines.append("[B][COLOR ff0099ff]VPN Manager[/COLOR][/B]")
+        lines.append("VPN Manager verison is " + addon.getAddonInfo("version"))
+        lines.append("VPN Manager behaviour is " + getPlatformString())
+        if getPlatform() == platforms.LINUX:
+            if getSudo():
+                lines.append("VPN Manager is prefixing commands with sudo")
+            else:
+                lines.append("VPN Manager is not using sudo")
+        if isVPNMonitorRunning():
+            lines.append("VPN Manager add-on filtering is running")
+        else:
+            lines.append("VPN Manager add-on filtering is paused")
+    if system:
+        lines.append("[B][COLOR ff0099ff]System[/COLOR][/B]")
+        lines.append("Kodi build version is " + xbmc.getInfoLabel("System.BuildVersion"))
+        lines.append("System name is " + xbmc.getInfoLabel("System.FriendlyName"))
+        lines.append("System date is " + xbmc.getInfoLabel("System.Date"))
+        lines.append("System time is " + xbmc.getInfoLabel("System.Time"))
+        lines.append("Platform is " + sys.platform)
+        lines.append("Free memory is " + xbmc.getInfoLabel("System.FreeMemory"))
+        lines.append("Disk is " + xbmc.getInfoLabel("System.TotalSpace") + ", " + xbmc.getInfoLabel("System.UsedSpace"))
+        lines.append("Screen is " + xbmc.getInfoLabel("System.ScreenResolution"))
+    return lines
+
+
 def startService():
     # Routine for config to call to request that service starts.  Can time out if there's no response
     # Check to see if service is not already running (shouldn't be...)
@@ -467,10 +521,10 @@ def requestVPNCycle():
                     icon = getIconPath()+"unlocked.png"
             else:
                 if getVPNProfile() == getVPNCycle():
-                    dialog_message = "Connected to " + getFriendlyProfileName(addon.getSetting("vpn_provider_validated"), getVPNCycle())
+                    dialog_message = "Connected to " + getFriendlyProfileName(getVPNCycle())
                     icon = getIconPath()+"connected.png"
                 else:
-                    dialog_message = "Connect to " + getFriendlyProfileName(addon.getSetting("vpn_provider_validated"), getVPNCycle()) + "?"
+                    dialog_message = "Connect to " + getFriendlyProfileName(getVPNCycle()) + "?"
             
             debugTrace("Cycle request is " + dialog_message)
             xbmcgui.Dialog().notification(addon_name, dialog_message , icon, 3000, False)
@@ -602,7 +656,7 @@ def getCredentialsPath(addon):
     
     
 def writeCredentials(addon): 
-   
+       
     # Write the credentials file        
     try:
         credentials_path = getCredentialsPath(addon)
@@ -611,6 +665,10 @@ def writeCredentials(addon):
         credentials.truncate()
         credentials.close()
         credentials = open(credentials_path,'a')
+
+        # print "AUTH DEBUG: Writing creds user " + addon.getSetting("vpn_username")
+        # print "AUTH DEBUG: Writing creds user " + addon.getSetting("vpn_password")
+
         credentials.write(addon.getSetting("vpn_username")+"\n")
         credentials.write(addon.getSetting("vpn_password")+"\n")
         credentials.close()
@@ -696,12 +754,7 @@ def connectVPN(connection_order, vpn_profile):
         if checkVPNCommand(addon): addon.setSetting("ran_openvpn", "true")
         else: return
     
-    # The VPN protocol can be blank if this is a new run and the wizard is being used.
-    # Force it to UDP as that's the most optimal and let them change in the settings.
     vpn_protocol = addon.getSetting("vpn_protocol")
-    if vpn_protocol == "":
-        addon.setSetting("vpn_protocol", "UDP")
-        vpn_protocol = "UDP"
     
     # Do some stuff to set up text used in dialog windows
     connection_title = ""
@@ -776,12 +829,15 @@ def connectVPN(connection_order, vpn_profile):
             addon.setSetting("vpn_password", default_value)  
 
         # Reset the username/password if it's not being used
-        if not usesPassAuth(vpn_provider):
+        if not usesPassAuth(getVPNLocation(vpn_provider)):
             addon.setSetting("vpn_username", "")
             addon.setSetting("vpn_password", "")  
                 
         vpn_username = addon.getSetting("vpn_username")
         vpn_password = addon.getSetting("vpn_password")
+        
+        # print "AUTH DEBUG: Got user " + vpn_username + " from settings"
+        # print "AUTH DEBUG: Got pass " + vpn_password + " from settings"
         
         # Reset the setting indicating we've a good configuration for just this connection
         if not connection_order == "0":
@@ -791,20 +847,23 @@ def connectVPN(connection_order, vpn_profile):
         last_provider = addon.getSetting("vpn_provider_validated")
         last_credentials = addon.getSetting("vpn_username_validated") + " " + addon.getSetting("vpn_password_validated")
         if last_provider == "" : last_provider = "?"
+
+        # print "AUTH DEBUG: Got last credentials " + last_credentials
         
         # Provider or credentials we've used previously have changed so we need to reset all validated connections
         vpn_credentials = vpn_username + " " + vpn_password
         if not last_provider == vpn_provider:
             last_credentials = "?"
         if not last_credentials == vpn_credentials:
-            debugTrace("Credentials have changed since last time lthrough so need to revalidate")
+            debugTrace("Credentials have changed since last time through so need to revalidate")
             resetVPNConfig(addon, 1)   
     
     # Generate or fix the OVPN files if we've not done this previously
     provider_gen = True
     if not progress.iscanceled():
         if not ovpnFilesAvailable(getVPNLocation(vpn_provider)):
-
+            # Generate the location files if this is a provider which uses generated files
+            
             # Fetch the list of locations available.  If there are multiple, the user can select
             locations = getLocationFiles(getVPNLocation(vpn_provider))            
             default_label = "Default"
@@ -814,7 +873,8 @@ def connectVPN(connection_order, vpn_profile):
                 if locations[i] == "" : locations[i] = default_label
                 i = i + 1
             selected_profile = ""
-            if len(locations) == 0: errorTrace("common.py", "No LOCATIONS.txt files found in VPN directory.  Cannot generate ovpn files.")
+            if len(locations) == 0 and ovpnGenerated(getVPNLocation(vpn_provider)): 
+                errorTrace("common.py", "No LOCATIONS.txt files found in VPN directory.  Cannot generate ovpn files.")
             if len(locations) > 1:
                 selected_location = xbmcgui.Dialog().select("Select connections profile", locations)
                 selected_profile = locations[selected_location]
@@ -830,22 +890,26 @@ def connectVPN(connection_order, vpn_profile):
             try:
                 provider_gen = fixOVPNFiles(getVPNLocation(vpn_provider), selected_profile)
             except:
-                errorTrace("Couldn't generate new .ovpn files")
+                errorTrace("common.py", "Couldn't generate new .ovpn files")
                 provider_gen = False
             xbmc.sleep(500)
 
     if provider_gen:
         if not progress.iscanceled():
-            progress_message = "Using VPN provider " + vpn_provider
+            progress_message = "Using VPN provider " + vpn_provider + "."
             progress.update(15, progress_title, progress_message)
             xbmc.sleep(500)
                             
         # Set up user credentials file
-        if not progress.iscanceled() and usesPassAuth(vpn_provider):
+        if (not progress.iscanceled()) and usesPassAuth(getVPNLocation(vpn_provider)):
             credentials_path = getCredentialsPath(addon)
             debugTrace("Attempting to use the credentials in " + credentials_path)
             if (not last_credentials == vpn_credentials) or (not xbmcvfs.exists(credentials_path)) or (not connectionValidated(addon)):
                 progress_message = "Configuring authentication settings for user " + vpn_username + "."
+
+                # print "AUTH DEBUG: Got user " + vpn_username + ", about to write credentials"
+                # print "AUTH DEBUG: Got pass " + vpn_password + ", about to write credentials"
+
                 progress.update(16, progress_title, progress_message)
                 provider_gen = writeCredentials(addon)
 
@@ -856,7 +920,7 @@ def connectVPN(connection_order, vpn_profile):
     if provider_gen:
         ovpn_name = ""
         if not progress.iscanceled():
-            if usesPassAuth(vpn_provider):
+            if usesPassAuth(getVPNLocation(vpn_provider)):
                 progress_message = "Using authentication settings for user " + vpn_username + "."
             else:
                 progress_message = "User authentication not used with " + vpn_provider + "."
@@ -868,10 +932,10 @@ def connectVPN(connection_order, vpn_profile):
 
             if not connection_order == "0":
                 debugTrace("Displaying list of connections")
-                all_connections = getProfileList(vpn_provider)
+                all_connections = getAddonList(vpn_provider, "*.ovpn")
                 ovpn_connections = getFilteredProfileList(all_connections, vpn_protocol, addon)
                 ovpn_connections.sort()
-                connections = getFriendlyProfileList(vpn_provider, ovpn_connections)
+                connections = getFriendlyProfileList(ovpn_connections)
                 
                 if len(connections) > 0:
                     if existing_connection == "":
@@ -890,29 +954,29 @@ def connectVPN(connection_order, vpn_profile):
                     else:
                         ovpn_connection = ovpn_connections[selected_connection]
             else:
-                ovpn_name = getFriendlyProfileName(vpn_provider, vpn_profile)
+                ovpn_name = getFriendlyProfileName(vpn_profile)
                 ovpn_connection = vpn_profile
 
-        if not progress.iscanceled() and not ovpn_name == "":
+        if (not progress.iscanceled()) and (not ovpn_name == ""):
             # Fetch the key from the user if one is needed
             if usesUserKeys(getVPNLocation(vpn_provider)):                
                 # If a key already exists, skip asking for it
                 if not (gotKeys(getVPNLocation(vpn_provider), ovpn_name)):
                     # Stick out a helpful message if this is first time through
                     if not gotKeys(getVPNLocation(vpn_provider), ""):
-                        xbmcgui.Dialog().ok(addon_name, vpn_provider + " provides unique key and certificate files to authenticate, typically called [I]client.key and client.crt[/I] or [I]user.key and user.crt[/I].  Make these files available on an accessable drive or USB key.")                
+                        xbmcgui.Dialog().ok(addon_name, vpn_provider + " provides unique key and certificate files to authenticate, typically called [I]client.key and client.crt[/I] or [I]user.key and user.crt[/I].  Make these files available on an accessable drive or USB key.")
                     # Get the last directory browsed to avoid starting from the top
                     start_dir = xbmcgui.Window(10000).getProperty("VPN_Manager_User_Directory")
                     if usesSingleKey(getVPNLocation(vpn_provider)): select_title = "Select the user key file to use for all connections"
                     else: select_title = "Select the user key file to use for this individual connection"
                     key_file = xbmcgui.Dialog().browse(1, select_title, "files", ".key", False, False, start_dir, False)
                     if key_file.endswith(".key"):
-                        start_dir = os.path.dirname(key_file) + getSeparator()
+                        start_dir = os.path.dirname(key_file)
                         if usesSingleKey(getVPNLocation(vpn_provider)): select_title = "Select the user certificate file to use for all connections"
                         else: select_title = "Select the user certificate file to use for this individual connection"
                         crt_file = xbmcgui.Dialog().browse(1, select_title, "files", ".crt", False, False, start_dir, False)                    
                         if crt_file.endswith(".crt"):
-                            start_dir = os.path.dirname(crt_file) + getSeparator()
+                            start_dir = os.path.dirname(crt_file)
                             xbmcgui.Window(10000).setProperty("VPN_Manager_User_Directory", start_dir)
                             keys_copied = copyKeyAndCert(getVPNLocation(vpn_provider), ovpn_name, key_file, crt_file)
                             got_keys = keys_copied
@@ -920,11 +984,19 @@ def connectVPN(connection_order, vpn_profile):
                             got_keys = False
                     else:
                         got_keys = False
-
+                        
         # Try and connect to the VPN provider using the entered credentials        
-        if not progress.iscanceled() and not ovpn_name == "" and got_keys:    
+        if (not progress.iscanceled()) and (not ovpn_name == "") and got_keys:    
             progress_message = "Connecting using profile " + ovpn_name + "."
             debugTrace(progress_message)
+
+            # print "AUTH DEBUG: Reading contents of pass.txt before connecting"                
+            # credentials_path = getCredentialsPath(addon)                
+            # credentials = open(credentials_path,'r')
+            # lines = credentials.readlines()
+            # credentials.close()
+            # for line in lines:
+            #    print "AUTH DEBUG: " + line
             
             # Start the connection and wait a second before starting to check the state
             startVPN(ovpn_connection)
@@ -946,6 +1018,7 @@ def connectVPN(connection_order, vpn_profile):
     # Mess with the state to make it look as if we've connected to a VPN
     if fakeConnection() and not progress.iscanceled() and provider_gen and not ovpn_name == "" and got_keys: state = connection_status.CONNECTED
     
+    log_option = True
     # Determine what happened during the connection attempt        
     if state == connection_status.CONNECTED :
         # Success, VPN connected! Display an updated progress window whilst we work out where we're connected to
@@ -979,6 +1052,8 @@ def connectVPN(connection_order, vpn_profile):
         # down the path of installing the VPN, configuring the credentials or selecting the connection
         # We're assuming here that if the VPN or user ID has been changed, then the connections are invalid
         # already.  If the cancel happens during the connection validation, we can just use the existing one.
+        # Surpress the display of the log option on the final dialog
+        log_option = False
         # Set the final message to indicate user cancelled operation
         progress_message = "Cancelling connection attempt, restarting VPN monitor."
         progress.update(97, progress_title, progress_message)
@@ -1009,14 +1084,17 @@ def connectVPN(connection_order, vpn_profile):
         progress_message = "Error connecting to VPN, VPN monitor restarted."
         # First set of errors happened prior to trying to connect
         if not provider_gen:
-            dialog_message = "Error creating OVPN or credentials file for provider.\nCheck log to determine cause of failure."
+            dialog_message = "Error updating .ovpn files or creating user credentials file.\nCheck log to determine cause of failure."
+            log_option = False
         elif not got_keys:
+            log_option = False
             if not keys_copied:
                 dialog_message = "Failed to copy supplied user key and cert files.\nCheck log and retry."
             else:
                 dialog_message = "User key and certificate files are required, but were not provided.  Locate the files and try again."
         elif ovpn_name == "":
-            dialog_message = "No unused VPN profiles were available for " + vpn_protocol + " protocol.\nChange VPN provider settings."
+            log_option = False
+            dialog_message = "No VPN profiles were available for " + vpn_protocol + ".\nThey've all been used, or none exist for the selected protocol."
         else:
             # This second set of errors happened because we tried to connect and failed
             if state == connection_status.AUTH_FAILED: 
@@ -1029,6 +1107,8 @@ def connectVPN(connection_order, vpn_profile):
                 dialog_message = "Error connecting to VPN, could not estabilish connection.\nCheck your username, password and network connectivity and retry."
             elif state == connection_status.TIMEOUT:
                 dialog_message = "Error connecting to VPN, connection has timed out.\nTry using a different VPN profile or retry."
+            elif state == connection_status.ROUTE_FAILED:
+                dialog_message = "Error connecting to VPN, could not update routing table.\nRetry and then check log."
             else:
                 dialog_message = "Error connecting to VPN, something unexpected happened.\nRetry to check openvpn operation and then check log."
                 addon.setSetting("ran_openvpn", "false")
@@ -1058,7 +1138,11 @@ def connectVPN(connection_order, vpn_profile):
     freeCycleLock()
 
     # Display connection result in an ok dialog
-    xbmcgui.Dialog().ok(progress_title, dialog_message)
+    if log_option:
+        if xbmcgui.Dialog().yesno(progress_title, dialog_message, "", "", "OK", "VPN Log"):
+            popupOpenVPNLog(getVPNLocation(vpn_provider))
+    else:
+        xbmcgui.Dialog().ok(progress_title, dialog_message)
     
     # Refresh the screen if this is not being done on settings screen
     if connection_order == "0" : xbmc.executebuiltin('Container.Refresh')

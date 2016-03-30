@@ -29,9 +29,10 @@ import xbmcgui
 import xbmcvfs
 import datetime
 import os
-from libs.vpnproviders import removeGeneratedFiles, cleanPassFiles, providers, usesUserKeys, usesMultipleKeys, getUserKeys, getUserCerts
+from libs.vpnproviders import removeGeneratedFiles, cleanPassFiles, providers, usesUserKeys, usesMultipleKeys, getUserKeys
+from libs.vpnproviders import getUserCerts, getVPNDisplay, getVPNLocation
 from libs.utility import debugTrace, errorTrace, infoTrace
-from libs.platform import getLogPath, getUserDataPath
+from libs.platform import getLogPath, getUserDataPath, writeVPNLog
 from libs.common import resetVPNConnections, isVPNConnected
 #from libs.generation import generateAll
 
@@ -40,11 +41,11 @@ addon_name = addon.getAddonInfo("name")
 
 action = sys.argv[1]
 
-debugTrace("-- Entered profileupdate.py with parameter " + action + " --")
+debugTrace("-- Entered managefiles.py with parameter " + action + " --")
 
 # Reset the ovpn files
 if action == "ovpn":
-    if addon.getSetting("1_vpn_validated") == "" or xbmcgui.Dialog().yesno(addon_name, "Resetting the ovpn files will reset all VPN connections.  Connections must be re-validated before use.\nContinue?"):
+    if addon.getSetting("1_vpn_validated") == "" or xbmcgui.Dialog().yesno(addon_name, "Resetting the .ovpn files will reset all VPN connections.  Connections must be re-validated before use.\nContinue?"):
     
         # Only used during development to create location files
         #generateAll()
@@ -53,7 +54,9 @@ if action == "ovpn":
         if isVPNConnected(): resetVPNConnections(addon)            
         debugTrace("Deleting all generated ovpn files")
         # Delete the ovpn files and the generated flag file.
-        removeGeneratedFiles()        
+        removeGeneratedFiles()
+        # Remove any user/password files
+        cleanPassFiles()
         xbmcgui.Dialog().ok(addon_name, "Deleted all .ovpn files.  Validate a connection to recreate them.\n")
 
 
@@ -67,6 +70,8 @@ elif action == "log":
         dest_folder = xbmcgui.Dialog().browse(0, "Select folder to copy log file into", "files", "", False, False, start_dir, False)
         dest_path = "kodi " + datetime.datetime.now().strftime("%y-%m-%d %H-%M-%S") + ".log"
         dest_path = dest_folder + dest_path.replace(" ", "_")
+        # Write VPN log to log before copying
+        writeVPNLog()
         debugTrace("Copying " + log_path + " to " + dest_path)
         addon = xbmcaddon.Addon("service.vpn.manager")
         infoTrace("managefiles.py", "Copying log file to " + dest_path + ".  Using version " + addon.getSetting("version_number"))
@@ -93,10 +98,11 @@ elif action == "user":
         provider_list = []
         for provider in providers:
             if usesUserKeys(provider):
-                provider_list.append(provider)
+                provider_list.append(getVPNDisplay(provider))
         provider_list.sort()
         index = xbmcgui.Dialog().select("Select VPN provider", provider_list)
-        provider = provider_list[index]
+        provider_display = provider_list[index]
+        provider = getVPNLocation(provider_display)
         # Get the key/cert pairs for that provider and offer up for deletion
         user_keys = getUserKeys(provider)
         user_certs = getUserCerts(provider)
@@ -137,7 +143,7 @@ elif action == "user":
                     else:
                         if all_user[index] == single_pair : all_user[index] = "user"
                         if all_user[index] == all_item:                        
-                            if xbmcgui.Dialog().yesno(addon_name, "Are you sure you want to delete all key and certificate files for " + provider + "?"):
+                            if xbmcgui.Dialog().yesno(addon_name, "Are you sure you want to delete all key and certificate files for " + provider_display + "?"):
                                 for item in all_user:
                                     if not item == all_item and not item == finished_item: 
                                         path = getUserDataPath(provider + "/" + item)
@@ -162,13 +168,13 @@ elif action == "user":
                         user_keys = getUserKeys(provider)
                         user_certs = getUserCerts(provider)
                         if len(user_keys) == 0 and len(user_certs) == 0:
-                            xbmcgui.Dialog().ok(addon_name, "All key and certificate files for " + provider + " have been deleted.")
+                            xbmcgui.Dialog().ok(addon_name, "All key and certificate files for " + provider_display + " have been deleted.")
                 else:
                     still_deleting = False
         else:
-            xbmcgui.Dialog().ok(addon_name, "No key and certificate files exist for " + provider + ".")
+            xbmcgui.Dialog().ok(addon_name, "No key and certificate files exist for " + provider_display + ".")
 
 
 xbmc.executebuiltin("Addon.OpenSettings(service.vpn.manager)")    
     
-debugTrace("-- Exit profileupdate.py --")
+debugTrace("-- Exit managefiles.py --")

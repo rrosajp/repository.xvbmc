@@ -24,29 +24,32 @@ import xbmcvfs
 import xbmcaddon
 import glob
 from libs.utility import debugTrace, errorTrace, infoTrace
-from libs.platform import getAddonPath, getUserDataPath, fakeConnection
+from libs.platform import getAddonPath, getUserDataPath, fakeConnection, getSeparator
 
 
 # **** ADD MORE VPN PROVIDERS HERE ****
 # Display names for each of the providers (matching the guff in setup.xml)
-provider_display = ["Private Internet Access", "IPVanish", "VyperVPN", "Invisible Browsing VPN", "NordVPN", "tigerVPN", "Hide My Ass", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "Hide.Me", "Perfect Privacy", "TorGuard"]
+provider_display = ["Private Internet Access", "IPVanish", "VyperVPN", "Invisible Browsing VPN", "NordVPN", "tigerVPN", "Hide My Ass", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "Hide.Me", "Perfect Privacy", "TorGuard", "User Defined", "LimeVPN", "HideIPVPN"]
 
 # **** ADD MORE VPN PROVIDERS HERE ****
 # Directory names for each of the providers (in the root of the addon)
 # Must be in the same order as the provider display name above
-providers = ["PIA", "IPVanish", "VyprVPN", "ibVPN", "NordVPN", "tigerVPN", "HMA", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "HideMe", "PerfectPrivacy", "TorGuard"]
+providers = ["PIA", "IPVanish", "VyprVPN", "ibVPN", "NordVPN", "tigerVPN", "HMA", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "HideMe", "PerfectPrivacy", "TorGuard", "UserDefined", "LimeVPN", "HideIPVPN"]
 
 # **** ADD VPN PROVIDERS HERE IF THEY USE A KEY ****
 # List of providers which use user keys and certs, either a single one, or one per connection
 # Names must match the directory names as used in providers, just above
 providers_with_multiple_keys = ["PerfectPrivacy"]
-providers_with_single_keys = ["AirVPN", "CyberGhost"]
+providers_with_single_keys = ["AirVPN", "CyberGhost", "HMA", "HideIPVPN"]
 
 # *** ADD VPN PROVIDERS HERE IF THEY DON'T USE USERNAME AND PASSWORD ****
 # List of providers which don't use auth-user-pass.
 # Names must match the directory names as used in providers, just above
 providers_no_pass = ["AirVPN"]
 
+
+# Leave this alone...it must match the text in providers
+user_def_str = "UserDefined"
         
 def getAddonPathWrapper(path):
     # This function resets the VPN profiles to the standard VPN Manager install
@@ -77,14 +80,29 @@ def getVPNLocation(vpn_provider):
         i = i + 1
     return ""
 
+    
+def getVPNDisplay(vpn_provider):    
+    # This function translates between the directory name and the display name
+    i=0
+    for provider in providers:
+        if vpn_provider == provider: return provider_display[i]
+        i = i + 1
+    return vpn_provider
+    
 
-def getProfileList(vpn_provider):
+def getAddonList(vpn_provider, filter):
     # Return the list of ovpn files for a given provider (aka directory name...)
-    path = getAddonPath(True, getVPNLocation(vpn_provider)+"/*.ovpn")
+    path = getAddonPath(True, getVPNLocation(vpn_provider) + "/" + filter)
     debugTrace("Getting list of profiles in " + path)
-    # Get the list of connection profiles and another list of strings to abuse for the selection screen
     return sorted(glob.glob(path))  
 
+    
+def getUserDataList(vpn_provider, filter):    
+    # Return all user files for a provider (aka directory name...)
+    path = getUserDataPath(getVPNLocation(vpn_provider) + "/" + filter)
+    debugTrace("Getting list of files in " + path)
+    return sorted(glob.glob(path))  
+    
 
 def usesUserKeys(vpn_provider):
     if usesSingleKey(vpn_provider): return True
@@ -93,11 +111,15 @@ def usesUserKeys(vpn_provider):
     
     
 def usesSingleKey(vpn_provider):
+    if isUserDefined(vpn_provider):
+        if xbmcaddon.Addon("service.vpn.manager").getSetting("user_def_keys") == "Single": return True
     if vpn_provider in providers_with_single_keys: return True
     return False
 
     
 def usesMultipleKeys(vpn_provider):
+    if isUserDefined(vpn_provider):
+        if xbmcaddon.Addon("service.vpn.manager").getSetting("user_def_keys") == "Multiple": return True
     if vpn_provider in providers_with_multiple_keys: return True
     return False
     
@@ -171,13 +193,15 @@ def getCertName(vpn_provider, ovpn_name):
 
 def usesPassAuth(vpn_provider):
     # Determine if we're using a user name and password or not
-    if vpn_provider in providers_no_pass: return False
+    if isUserDefined(vpn_provider):
+        if not (xbmcaddon.Addon("service.vpn.manager").getSetting("user_def_credentials") == "true"): 
+            return False
+    elif vpn_provider in providers_no_pass: return False
     return True
 
     
-def getRegexPattern(vpn_provider):
-    # Return a regex expression to make a file name look good.  Not using 
-    # the input variable as all of the profiles are generated with good names
+def getRegexPattern():
+    # Return a regex expression to make a file name look good.
     return r'(?s).*/(.*).ovpn'
 
     
@@ -198,9 +222,14 @@ def cleanGeneratedFiles():
 def removeGeneratedFiles():
     for provider in providers:
         if ovpnGenerated(provider):
-            ovpn_connections = getProfileList(provider)    
-            for connection in ovpn_connections:
-                xbmcvfs.delete(connection)
+            if isUserDefined(provider):
+                # If this is the user defined provider, delete everything
+                files = getAddonList(provider, "*")
+            else:
+                # If this is a regular provider, delete just the ovpn files
+                files = getAddonList(provider, "*.ovpn")    
+            for file in files:
+                xbmcvfs.delete(file)
         filename = getAddonPath(True, provider + "/GENERATED.txt")
         if xbmcvfs.exists(filename) : xbmcvfs.delete(filename)             
 
@@ -211,9 +240,15 @@ def ovpnFilesAvailable(vpn_provider):
 
     
 def ovpnGenerated(vpn_provider):
+    if isUserDefined(vpn_provider): return True
     if xbmcvfs.exists(getAddonPath(True, vpn_provider + "/TEMPLATE.txt")): return True
     return False
 
+    
+def isUserDefined(vpn_provider):
+    if vpn_provider == user_def_str: return True
+    return False
+    
     
 def getLocationFiles(vpn_provider):
     # Return the locations files, add any user version to the end of the list
@@ -224,9 +259,16 @@ def getLocationFiles(vpn_provider):
     
 
 def fixOVPNFiles(vpn_provider, alternative_locations_name):
+    debugTrace("Fixing OVPN files for " + vpn_provider + " using list " + alternative_locations_name)
     # Generate or update the VPN files
     if ovpnGenerated(vpn_provider):
-        return generateOVPNFiles(vpn_provider, alternative_locations_name)
+        if not isUserDefined(vpn_provider):
+            return generateOVPNFiles(vpn_provider, alternative_locations_name)
+        else:
+            # User Defined provider is a special case.  The files are copied from
+            # userdata rather than generated as such, followed by an update (if needed)
+            if copyUserDefinedFiles():
+                return updateVPNFiles(vpn_provider)
     else:
         return updateVPNFiles(vpn_provider)
     
@@ -247,6 +289,12 @@ def generateOVPNFiles(vpn_provider, alternative_locations_name):
         portTCP = ""
     else:
         portTCP = addon.getSetting("alternative_tcp_port")
+
+    # Get the logging level
+    verb_value = addon.getSetting("openvpn_verb")
+    if verb_value == "":
+        verb_value = "1"
+        addon.setSetting("openvpn_verb", verb_value)
         
     # Load ovpn template
     try:
@@ -358,6 +406,9 @@ def generateOVPNFiles(vpn_provider, alternative_locations_name):
                 output_line = output_line.replace("#CRLVERIFY", getAddonPathWrapper(vpn_provider + "/" + "crl.pem"))
                 output_line = output_line.replace("#USERKEY", user_key)
                 output_line = output_line.replace("#USERCERT", user_cert)
+                # Overwrite the verb value with the one in the settings
+                if output_line.startswith("verb "):
+                    output_line = "verb " + verb_value
                 # This is a little hack to remove a tag that doesn't work with TCP but is needed for UDP
                 # Could do this with a #REMOVE, but doing it here is less error prone.
                 if "explicit-exit-notify" in line and proto == "tcp": output_line = ""
@@ -368,19 +419,18 @@ def generateOVPNFiles(vpn_provider, alternative_locations_name):
             errorTrace("vpnproviders.py", "Can't write a location file for " + vpn_provider + " failed on line\n" + location)
             return False
     
-    # Write a file to indicate successful generation of the ovpn files
-    ovpn_file = open(getAddonPath(True, vpn_provider + "/GENERATED.txt"), 'w')
-    ovpn_file.close()
-    
-    return True
+    # Flag that the files have been generated
+    writeGeneratedFile(vpn_provider)
 
+    return True
+    
     
 def updateVPNFiles(vpn_provider):
     # If the OVPN files aren't generated then they need to be updated with location info    
     
     infoTrace("vpnproviders.py", "Updating VPN profiles for " + vpn_provider)
     # Get the list of VPN profile files        
-    ovpn_connections = getProfileList(vpn_provider)
+    ovpn_connections = getAddonList(vpn_provider, "*.ovpn")
 
     # See if there's a port override going on
     addon = xbmcaddon.Addon("service.vpn.manager")
@@ -393,7 +443,13 @@ def updateVPNFiles(vpn_provider):
         portTCP = ""
     else:
         portTCP = addon.getSetting("alternative_tcp_port")
-    
+
+    # Get the logging level
+    verb_value = addon.getSetting("openvpn_verb")
+    if verb_value == "":
+        verb_value = "1"
+        addon.setSetting("openvpn_verb", verb_value)
+        
     for connection in ovpn_connections:
         try:
             f = open(connection, 'r+')
@@ -401,13 +457,18 @@ def updateVPNFiles(vpn_provider):
             lines = f.readlines()
             f.seek(0)
             f.truncate()
+            # Get the profile friendly name in case we need to generate key/cert names
+            name = connection[connection.rfind(getSeparator())+1:]
             # Update the necessary values in the ovpn file
             for line in lines:
                 
-                if "auth-user-pass" in line:
-                    line = "auth-user-pass " + getAddonPathWrapper(vpn_provider + "/" + "pass.txt\n")
+                # Update path to pass.txt
+                if not isUserDefined(vpn_provider) or addon.getSetting("user_def_credentials") == "true":
+                    if line.startswith("auth-user-pass "):
+                        line = "auth-user-pass " + getAddonPathWrapper(vpn_provider + "/" + "pass.txt\n")
 
-                if "remote " in line:
+                # Update port numbers
+                if line.startswith("remote "):
                     port = ""
                     for newline in lines:
                         if "proto " in newline:
@@ -416,16 +477,56 @@ def updateVPNFiles(vpn_provider):
                     if not port == "":
                         tokens = line.split()
                         line = "remote " + tokens[1] + " " + port + "\n"
-                           
+
+                # Update user cert and key                
+                if usesUserKeys(vpn_provider):
+                    if line.startswith("cert "):
+                        line = "cert " + getUserDataPathWrapper(vpn_provider + "/" + getCertName(vpn_provider, name) + "\n")
+                    if line.startswith("key "):
+                        line = "key " + getUserDataPathWrapper(vpn_provider + "/" + getKeyName(vpn_provider, name) + "\n")
+                
+                # For user defined profile we need to replace any path tags with the addon dir path
+                if isUserDefined(vpn_provider):
+                    line = line.replace("#PATH", getAddonPathWrapper(vpn_provider))
+                
+                # Set the logging level
+                if line.startswith("verb "):
+                    line = "verb " + verb_value + "\n"
+    
                 f.write(line)
             f.close()
         except:
-            errorTrace("profileupdate.py", "Failed to update ovpn file")
+            errorTrace("vpnproviders.py", "Failed to update ovpn file")
             return False
 
-    # Write a file to indicate successful update of the ovpn files
-    ovpn_file = open(getAddonPath(True, vpn_provider + "/GENERATED.txt"), 'w')
-    ovpn_file.close()
+    # Flag that the files have been generated            
+    writeGeneratedFile(vpn_provider)
             
     return True    
-    
+
+
+def copyUserDefinedFiles():    
+    # Copy everything in the user directory to the addon directory
+    infoTrace("vpnproviders.py", "Copying user defined files from userdata directory")
+    source_path = getUserDataPath((user_def_str)+"/")
+    dest_path = getAddonPath(True, user_def_str + "/")
+    # Get the list of connection profiles and another list of strings to abuse for the selection screen    
+    try:
+        files = getUserDataList(user_def_str, "*")
+        if len(files) == 0:
+            errorTrace("vpnproviders.py", "No User Defined files available to copy from " + source_path)
+            return False
+        for file in files:
+            name = file[file.rfind(getSeparator())+1:]
+            dest_file = dest_path + getSeparator() + name
+            xbmcvfs.copy(file, dest_file)
+        return True
+    except:
+        errorTrace("vpnproviders.py", "Error copying files from " + source_path + " to " + dest_path)
+        return False
+
+
+def writeGeneratedFile(vpn_provider):
+    # Write a file to indicate successful generation of the ovpn files
+    ovpn_file = open(getAddonPath(True, vpn_provider + "/GENERATED.txt"), 'w')
+    ovpn_file.close()

@@ -31,8 +31,11 @@ from libs.common import getFriendlyProfileName
 
 def generateAll():
     infoTrace("generation.py", "Generating Location files")
-    generateIPVanish()
+    generateLimeVPN()
+    generateHideIPVPN()
     return
+    generateVyprVPN()
+    generateIvacy()
     generateCyberGhost()
     generateTorGuard()
     generateibVPN()
@@ -43,13 +46,11 @@ def generateAll():
     generateLiquidVPN()
     generatetigerVPN()
     generateHMA()    
-    generateVyprVPN()
-    generateIvacy()
+    generateIPVanish()
     generatePIA()
     generateNordVPN()
 
 
-    
 def getLocations(vpn_provider, path_ext):
     if path_ext == "":
         location_path = "/LOCATIONS.txt"
@@ -63,6 +64,86 @@ def getProfileList(vpn_provider):
     return glob.glob(path)      
 
 
+def generateLimeVPN():
+    # Data is stored as a bunch of ovpn files
+    # File name has the country, but needs translation, files have multiple servers/ports
+    profiles = getProfileList("LimeVPN")
+    location_file = getLocations("LimeVPN", "")
+    for profile in profiles:
+        geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+        geo = geo.replace(".limevpn"," ")
+        geo = geo.replace("aus", "Australia ")
+        geo = geo.replace("ca", "Canada ")
+        geo = geo.replace("jp", "Japan ")
+        geo = geo.replace("nl", "Netherlands ")
+        geo = geo.replace("ru", "Russia ")
+        geo = geo.replace("sg", "Singapore ")
+        geo = geo.replace("uk", "United Kingdom ")
+        if not "Australia" in geo and not "Russia" in geo: geo = geo.replace("us", "United States ")
+        profile_file = open(profile, 'r')
+        lines = profile_file.readlines()
+        profile_file.close()
+        servers = ""
+        ports = ""
+        for line in lines:
+            if line.startswith("remote "):
+                line = line[:line.index("#")-1]
+                _, server, port = line.split()
+                if not servers == "" : servers = servers + " "
+                servers = servers + server
+                if not ports == "" : ports = ports + " "
+                ports = ports + port
+            if line.startswith("proto "):
+                _, proto = line.split()
+        output_line = geo + "(" + proto.upper() + ")," + servers + "," + proto + "," + ports + "\n" 
+        location_file.write(output_line)
+    location_file.close()      
+    
+    
+def generateHideIPVPN():
+    # Data is stored as a bunch of ovpn files
+    # File name has the country, but needs translation, files have multiple servers/ports
+    profiles = getProfileList("HideIPVPN")
+    location_file = getLocations("HideIPVPN", "Full and Trial Account")
+    location_file_uk = getLocations("HideIPVPN", "UK VPN")
+    location_file_us = getLocations("HideIPVPN", "US VPN")
+    location_file_poland = getLocations("HideIPVPN", "Poland VPN")
+    for profile in profiles:
+        geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+        geo = geo.replace(".hideipvpn.com_"," ")
+        geo = geo.replace("pl", "Poland ")
+        geo = geo.replace("de", "Germany ")
+        geo = geo.replace("ca", "Canada ")
+        geo = geo.replace("nl", "Netherlands ")
+        geo = geo.replace("uk", "United Kingdom ")
+        geo = geo.replace("us", "United States ")
+        geo = geo.replace("TCP", "(TCP)")
+        geo = geo.replace("UDP", "(UDP)")
+        profile_file = open(profile, 'r')
+        lines = profile_file.readlines()
+        profile_file.close()
+        servers = ""
+        ports = ""
+        for line in lines:
+            if line.startswith("remote "):
+                _, server, port = line.split()
+                if not servers == "" : servers = servers + " "
+                servers = servers + server
+                if not ports == "" : ports = ports + " "
+                ports = ports + port
+            if line.startswith("proto "):
+                _, proto = line.split()
+        output_line = geo + "," + servers + "," + proto + "," + ports + "\n" 
+        location_file.write(output_line)
+        if "Kingdom" in geo: location_file_uk.write(output_line)
+        if "States" in geo: location_file_us.write(output_line)
+        if "Poland" in geo: location_file_poland.write(output_line)
+    location_file.close()      
+    location_file_uk.close()
+    location_file_us.close()
+    location_file_poland.close()
+    
+    
 def generateCyberGhost():
     # Data is stored as a bunch of ovpn files
     # File name has location but needs mapping.  File has the server
@@ -403,8 +484,8 @@ def generateIPVanish():
         profile = profile.replace("Buenos-Aires", "Buenos Aires")        
         tokens = profile.split("-")
         server = tokens[3] + "-" + tokens[4].replace(".ovpn", "") + ".ipvanish.com"
-        output_line_udp = tokens[1] + " - " + tokens[2] + " " + tokens[4].replace(".ovpn", "") + " (UDP)," + server + "," + "udp,443" + "\n"
-        output_line_tcp = tokens[1] + " - " + tokens[2] + " " + tokens[4].replace(".ovpn", "") + " (TCP)," + server + "," + "tcp,443" + "\n"
+        output_line_udp = tokens[1] + " - " + tokens[2] + " (UDP)," + server + "," + "udp,443" + "\n"
+        output_line_tcp = tokens[1] + " - " + tokens[2] + " (TCP)," + server + "," + "tcp,443" + "\n"
         location_file.write(output_line_udp)
         location_file.write(output_line_tcp)
     location_file.close()
@@ -412,8 +493,11 @@ def generateIPVanish():
     
 def generateVyprVPN():
     # Data is stored in a flat text file
-    # <Something>  xx.yy.nordvpn.com
-    location_file = getLocations("VyprVPN", "")
+    # There appear to be a regular set of servers, which are either goldenfrog or vyprvpn
+    # And an alternative set of servers that are available via some giganews hook up.
+    # Both use the same certificate.
+    location_file_vypr = getLocations("VyprVPN", "VyprVPN Account")
+    location_file_giga = getLocations("VyprVPN", "Giganews Account")
     source_file = open(getAddonPath(True, "providers/VyprVPN/Servers.txt"), 'r')
     source = source_file.readlines()
     source_file.close()
@@ -426,12 +510,13 @@ def generateVyprVPN():
                 geo = geo.strip(' \t\n\r')
                 server = server.replace("vpn.goldenfrog.com", "vyprvpn.com")
                 if "," in geo: geo = "USA - " + geo[:geo.index(",")]
-                output_line_udp = geo + " (UDP)," + server + "," + "udp,1194" + "\n"
-                # VyprVPN doesn't appear to support TCP, so UDP option only
-                #output_line_tcp = geo + " (TCP 443)," + server + "," + "tcp,443"  + "\n"
-                location_file.write(output_line_udp)
-                #location_file.write(output_line_tcp) 
-    location_file.close()
+                output_line_vypr = geo + " (UDP)," + server + "," + "udp,1194" + "\n"
+                server = server.replace("vyprvpn.com", "vpn.giganews.com")
+                output_line_giga = geo + " (UDP)," + server + "," + "udp,1194" + "\n"
+                location_file_vypr.write(output_line_vypr)                
+                location_file_giga.write(output_line_giga)                
+    location_file_vypr.close()
+    location_file_giga.close()
     
     
 def generateHMA():

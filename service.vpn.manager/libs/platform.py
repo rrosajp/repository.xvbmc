@@ -32,8 +32,6 @@ from sys import platform
 platforms = enum(UNKNOWN=0, WINDOWS=1, LINUX=2, RPI=3, ANDROID=4, MAC=5)  
 platforms_str = ("Unknown", "Windows", "Linux, openvpn installed", "Linux, openvpn plugin", "Android", "Apple")
 
-use_sudo = False
-
 
 def fakeConnection():
     # Return True to fake out any calls to openVPN to change the network
@@ -61,6 +59,16 @@ def getPlatform():
     return platforms.UNKNOWN    
         
 
+def useSudo():
+    sudo_setting = xbmcaddon.Addon("service.vpn.manager").getSetting("openvpn_sudo")
+    if sudo_setting == "Always": return True
+    if sudo_setting == "Never": return False
+    if getPlatform() == platforms.LINUX:
+        # For non-OpenELEC Linux (based on the path name...) we don't need to use sudo
+        if not getAddonPath(True, "").startswith("/storage/.kodi/"): return True
+    return False
+
+    
 def getPlatformString():
     p = getPlatform()
     return platforms_str[p]
@@ -83,7 +91,7 @@ def stopVPN():
         p = getPlatform()
         if p == platforms.LINUX or p == platforms.RPI:
             command="killall -9 openvpn"            
-            #if p == platforms.LINUX and use_sudo : command = "sudo " + command
+            if useSudo() : command = "sudo " + command
             debugTrace("Stopping VPN with " + command)
             os.system(command)
             
@@ -97,7 +105,8 @@ def startVPN(vpn_profile):
     if not fakeConnection():
         p = getPlatform()
         if p == platforms.RPI or p == platforms.LINUX:
-            command=getOpenVPNPath() + " \"" + vpn_profile + "\" > " + getVPNLogFilePath() + " &"           
+            command=getOpenVPNPath() + " \"" + vpn_profile + "\" > " + getVPNLogFilePath() + " &"
+            if useSudo() : command = "sudo " + command            
             debugTrace("Starting VPN with " + command)
             os.system(command)
             
@@ -106,7 +115,7 @@ def startVPN(vpn_profile):
     else:
         # This bit is just to help with debug during development.
         command=getOpenVPNPath() + " \"" + vpn_profile + "\" > " + getVPNLogFilePath() + " &"
-        debugTrace("Starting VPN with " + command)
+        debugTrace("Faking starting VPN with " + command)
     return
 
 
@@ -184,6 +193,8 @@ def checkVPNCommand(addon):
                 # Write the log file in case there's something in it
                 errorTrace("platform.py", "Ran openvpn command and it failed")
                 writeVPNLog()
+            else:
+                errorTrace("platform.py", "Ran openvpn command and VPN log didn't appear")
                 
         # **** ADD MORE PLATFORMS HERE ****
         
@@ -218,7 +229,7 @@ def isVPNTaskRunning():
     return False
 
 
-connection_status = enum(UNKNOWN=0, CONNECTED=1, AUTH_FAILED=2, NETWORK_FAILED=3, TIMEOUT=4, ERROR=5) 
+connection_status = enum(UNKNOWN=0, CONNECTED=1, AUTH_FAILED=2, NETWORK_FAILED=3, TIMEOUT=4, ROUTE_FAILED=5, ERROR=6) 
     
 def getVPNConnectionStatus():
     # Open the openvpn output file and parse it for known phrases
@@ -247,6 +258,12 @@ def getVPNConnectionStatus():
                     state = connection_status.NETWORK_FAILED
                 if "Connection timed out" in line:
                     state = connection_status.TIMEOUT
+                #if "ERROR: Linux route" in line:
+                    # state = connection_status.ROUTE_FAILED
+                    # This tests for a Linux route failure, only it's commented out as
+                    # it can legitimately fail if the route already exists.  If it fails
+                    # for other reasons, I can't tell the different just yet.
+                    # break
             log.close()
             # Haven't found what's expected so return an empty stream
             if not state == connection_status.UNKNOWN: debugTrace("VPN connection status is " + str(state))
@@ -268,11 +285,6 @@ def writeVPNLog():
         infoTrace("platform.py", "<<< VPN log file end")
     except:
         errorTrace("platform.py", "Couldn't write VPN error log")
-                
-                
-def useSudo(option):
-    # True or False...
-    use_sudo = option
 
 
 def getSeparator():
