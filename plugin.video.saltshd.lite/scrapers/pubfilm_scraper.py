@@ -71,7 +71,7 @@ class PubFilm_Scraper(scraper.Scraper):
             
             iframe_url = ''
             if video.video_type == VIDEO_TYPES.MOVIE:
-                iframe_url = dom_parser.parse_dom(html, 'iframe', {'name': 'EZWebPlayer'}, ret='src')
+                iframe_url = dom_parser.parse_dom(html, 'a', {'target': 'EZWebPlayer'}, ret='href')
                 if iframe_url:
                     iframe_url = iframe_url[0]
             else:
@@ -87,7 +87,7 @@ class PubFilm_Scraper(scraper.Scraper):
                 if match:
                     sources = self.__get_gk_links(match.group(1))
                 else:
-                    sources = self.__get_iframe_links(html)
+                    sources = self._parse_sources_list(html)
                     
                 for source in sources:
                     stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
@@ -102,28 +102,12 @@ class PubFilm_Scraper(scraper.Scraper):
 
         return hosters
 
-    def __get_iframe_links(self, html):
-        sources = {}
-        for match in re.finditer('''<source[^>]+src=['"]([^'"]+)([^>]+)''', html):
-            source, extra = match.groups()
-            if self._get_direct_hostname(source) == 'gvideo':
-                quality = scraper_utils.gv_get_quality(source)
-            else:
-                match = re.search('''data-res\s*=\s*["']([^"']+)''', extra)
-                if match:
-                    quality = scraper_utils.height_get_quality(match.group(1))
-                else:
-                    quality = QUALITIES.HIGH
-            sources[source] = {'quality': quality, 'direct': True}
-        return sources
-    
     def __get_gk_links(self, iframe_url):
         sources = {}
         data = {'link': iframe_url}
         headers = {'Referer': iframe_url}
         html = self._http_get(GK_URL, data=data, headers=headers, cache_limit=.5)
         js_data = scraper_utils.parse_json(html, GK_URL)
-        log_utils.log(js_data)
         if 'link' in js_data:
             if isinstance(js_data['link'], basestring):
                 sources[js_data['link']] = {'quality': QUALITIES.HIGH, 'direct': False}
