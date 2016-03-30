@@ -25,11 +25,11 @@ import xbmcgui
 import os
 from libs.common import connectionValidated, getIPInfo, isVPNConnected, getVPNProfile, getVPNProfileFriendly
 from libs.common import getFriendlyProfileList, connectVPN, disconnectVPN, setVPNState, requestVPNCycle, getFilteredProfileList
-from libs.common import getAddonPath, isVPNMonitorRunning, setVPNMonitorState, getVPNMonitorState, wizard
-from libs.common import getIconPath
+from libs.common import isVPNMonitorRunning, setVPNMonitorState, getVPNMonitorState, wizard
+from libs.common import getIconPath, getSystemData
 from libs.platform import getPlatform, platforms, getPlatformString
+from libs.vpnproviders import getAddonList
 from libs.utility import debugTrace, errorTrace, infoTrace
-from libs.vpnproviders import getProfileList
 
 
 debugTrace("-- Entered addon.py " + sys.argv[0] + " " + sys.argv[1] + " " + sys.argv[2] + " --")
@@ -86,41 +86,8 @@ def topLevel():
     return
 
 
-def listSystem():
-    lines = []
-    site, ip, country, isp = getIPInfo(addon)
-    lines.append("[B][COLOR ff0099ff]Connection[/COLOR][/B]")
-    if isVPNConnected():
-        lines.append("Connected using profile " + getVPNProfileFriendly())
-        lines.append("VPN provider is " + addon.getSetting("vpn_provider"))
-    else:
-        lines.append("Not connected to a VPN")
-    lines.append("Connection location is " + country)
-    lines.append("External IP address is " + ip)
-    lines.append("Service Provider is " + isp)
-    lines.append("Location sourced from " + site)
-    lines.append("[B][COLOR ff0099ff]Network[/COLOR][/B]")
-    lines.append("IP address is " + xbmc.getInfoLabel("Network.IPAddress"))
-    lines.append("Gateway is " + xbmc.getInfoLabel("Network.GatewayAddress"))
-    lines.append("Subnet mask is " + xbmc.getInfoLabel("Network.SubnetMask"))
-    lines.append("Primary DNS is " + xbmc.getInfoLabel("Network.DNS1Address"))
-    lines.append("Secondary DNS is " + xbmc.getInfoLabel("Network.DNS2Address"))
-    lines.append("[B][COLOR ff0099ff]VPN Manager[/COLOR][/B]")
-    lines.append("VPN Manager verison is " + addon.getAddonInfo("version"))
-    lines.append("VPN Manager behaviour is " + getPlatformString())
-    if isVPNMonitorRunning():
-        lines.append("VPN Manager add-on filtering is running")
-    else:
-        lines.append("VPN Manager add-on filtering is paused")
-    lines.append("[B][COLOR ff0099ff]System[/COLOR][/B]")
-    lines.append("Kodi build version is " + xbmc.getInfoLabel("System.BuildVersion"))
-    lines.append("System name is " + xbmc.getInfoLabel("System.FriendlyName"))
-    lines.append("System date is " + xbmc.getInfoLabel("System.Date"))
-    lines.append("System time is " + xbmc.getInfoLabel("System.Time"))
-    lines.append("Platform is " + sys.platform)
-    lines.append("Free memory is " + xbmc.getInfoLabel("System.FreeMemory"))
-    lines.append("Disk is " + xbmc.getInfoLabel("System.TotalSpace") + ", " + xbmc.getInfoLabel("System.UsedSpace"))
-    
+def listSystem(addon):
+    lines = getSystemData(addon, True, True, True, True)
     for line in lines:
         url = base_url + "?back"
         li = xbmcgui.ListItem(line, iconImage=getIconPath()+"enhanced.png")
@@ -159,9 +126,9 @@ def listConnections():
     debugTrace("Listing the connections available for " + vpn_provider)
     if vpn_provider != "":
         # Get the list of connections and add them to the directory
-        all_connections = getProfileList(vpn_provider)
+        all_connections = getAddonList(vpn_provider, "*.ovpn")
         ovpn_connections = getFilteredProfileList(all_connections, addon.getSetting("vpn_protocol"), None)
-        connections = getFriendlyProfileList(vpn_provider, ovpn_connections)
+        connections = getFriendlyProfileList(ovpn_connections)
         inc = 0
         for connection in ovpn_connections:
             url = base_url + "?change?" + ovpn_connections[inc]
@@ -237,7 +204,7 @@ if action == "display":
     # Display the network status
     displayStatus()
 elif action == "system":
-    listSystem()
+    listSystem(addon)
 elif action == "back" : 
     back()
     #listSystem()

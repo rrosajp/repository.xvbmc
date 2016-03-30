@@ -46,7 +46,7 @@ ASBase = 'aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy
 ASBase1 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4Mi54bWw='
 ASBase3 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4My54bWw='
 ASBase4 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4NC54bWw='
-
+ASBase5 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4NS54bWw='
 
 
 sourceSitebvls = 'http://bvls2016.sc'      
@@ -303,21 +303,32 @@ def ASIndex():
     addDir('Privacy Policy','Privacy Policy',45,icon ,  FANART,'','','','')
     getData(base64.b64decode(ASBase),'')
     getData(base64.b64decode(ASBase3),'')
-    #addDir('Sport365.live - from ZemTV','',47,icon ,  FANART,'','','','')
-    try :
-     AddSports365Channels()
-    except :
-        pass
+    addDir('Sport365.live - from ZemTV','',47,icon ,  FANART,'','','','')
     getData(base64.b64decode(ASBase4),'')
-    try:
-        getWizSchedule()
-    except: pass
- 
+    addDir('Wiz1.net','getWizSchedule,',61,icon ,  FANART,'','','','')
+    getData(base64.b64decode(ASBase5),'')
+    addDir('Goatd.net','',62,icon ,  FANART,'','','','')
     
   
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
-    
+
+def getgoatSchedule():
+    goatpage = getHtml('http://goatd.net/')
+    match = re.compile(r'<b>ET</b></td>\s+<td[^<]+><img src="([^"]+)".*?href="([^"]+)"[^>]+>([^<]+)<.*?<b>([^<]+)<.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(goatpage)
+    for img, url, wedstrijd, tijd, tijdzone in match:
+        tekstregel = tijd + ' ' + tijdzone + ' - ' + wedstrijd
+        url = 'http://goatd.net/' + url
+        addDir(tekstregel, url, 63, img,"","","","","","",isItFolder=False)
+
+
+def playgoat(url):
+    import liveresolver
+    resolved = liveresolver.resolve(url)
+    xbmc.Player().play(resolved)
+
+
+
 def getWizSchedule():
     wizpage = getHtml('http://www.wiz1.net/lag10_home.php')
     match = re.compile(r'(\d{2}:\d{2}) <font color="#5185C9"><b>([^<]+)</b></font> ([^<]+)<a href="([^"]+)"', re.DOTALL | re.IGNORECASE).findall(wizpage)
@@ -327,9 +338,6 @@ def getWizSchedule():
         
 
 def playWiz(url):
-    iframeurl = re.compile(r"channel(\d+)", re.DOTALL | re.IGNORECASE).findall(url)[0]
-    iframeurl = 'http://www.wiz1.net/ch' + iframeurl
-    wizpage = getHtml(iframeurl, url)
     import liveresolver
     resolved = liveresolver.resolve(url)
     xbmc.Player().play(resolved)
@@ -2962,5 +2970,13 @@ elif mode==53:
 elif mode==60:
     playWiz(url)
 
+elif mode==61:
+    getWizSchedule()
+
+elif mode==62:
+    getgoatSchedule()
+
+elif mode==63:
+    playgoat(url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

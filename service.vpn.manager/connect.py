@@ -50,7 +50,7 @@ if xbmcvfs.exists(getUserDataPath(getVPNLocation(vpn_provider) + "/DEFAULT.txt")
     vpn_username = "default"
     vpn_password = "default"
     
-if not usesPassAuth(vpn_provider) or (not vpn_username == "" and not vpn_provider == ""):
+if not usesPassAuth(getVPNLocation(vpn_provider)) or (not vpn_username == "" and not vpn_provider == ""):
     connectVPN(str(connection_order), "")
 else:
     xbmcgui.Dialog().ok(addon_name, "Please enter a user name and password.  " + vpn_provider + " requires them for authentication.")
