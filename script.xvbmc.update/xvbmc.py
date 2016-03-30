@@ -39,7 +39,7 @@ def showMenu():
     # Create list of menu items
     userchoice = []
     userchoice.append("XvBMC ServicePack actueel")
-    userchoice.append("XvBMC ServicePack all-in-1")
+    userchoice.append("XvBMC ServicePack all-in-1 restore")
     userchoice.append("overclock Pi - none")
     userchoice.append("overclock Pi - turbo")
     userchoice.append("overclock Pi - x265")
@@ -56,7 +56,7 @@ def showMenu():
         ServicePack()
 
     #    https://archive.org/download/XvBMC/updaterollup.zip    
-    elif userchoice[inputchoice] == "XvBMC ServicePack all-in-1":
+    elif userchoice[inputchoice] == "XvBMC ServicePack all-in-1 restore":
         UpdateRollup()
     
     #    /storage/.kodi/addons/script.xvbmc.update/config-noclock.txt
@@ -79,7 +79,7 @@ def showMenu():
 class ServicePackClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL recent servicepack','Download laatste XvBMC ServicePack?'):
+    if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?'):
         url = 'https://github.com/XvBMC/repository.xvbmc/blob/master/zips/update/servicepack.zip?raw=true'
         path = xbmc.translatePath(os.path.join('special://home/addons/','packages')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
 #       path = xbmc.translatePath(os.path.join('special://home',''))                 # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
@@ -96,7 +96,7 @@ class ServicePackClass(xbmcgui.Window):
 class UpdateRollupClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL servicepack rollup','Download XvBMC updates rollup (all-in-1)?'):
+    if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?'):
         url = 'https://github.com/XvBMC/repository.xvbmc/blob/master/zips/update/updaterollup.zip?raw=true'
         path = xbmc.translatePath(os.path.join('special://home/addons/','packages')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
 #       path = xbmc.translatePath(os.path.join('special://home',''))                 # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
@@ -108,7 +108,7 @@ class UpdateRollupClass(xbmcgui.Window):
 	time.sleep(1)
 #  	xbmc.executebuiltin("ReloadKeymaps")
    	xbmc.executebuiltin("ReloadSkin()")
-   	xbmc.executebuiltin("Notification(XvBMC Nederland update rollup,XvBMC servicepack rollup geslaagd...,5000,XvBMC.png)")
+   	xbmc.executebuiltin("Notification(XvBMC Nederland servicepack rollup,XvBMC updates rollup geslaagd...,5000,XvBMC.png)")
  
  
 class Config0Class(xbmcgui.Window):
