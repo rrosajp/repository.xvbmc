@@ -105,6 +105,21 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
+<addon id="plugin.video.f4mTester" version="2.2.4" name="f4mTester" provider-name="Shani">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+        <import addon="script.video.F4mProxy" version="2.2.3"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>f4mTester</summary>
+        <description></description>
+        <platform>all</platform>
+    </extension>
+</addon>
+
 <addon id="plugin.video.genesis" name="Specto EPiC Genesis FORK"  version="2016.03.05.1" provider-name="mrknow (+EPiC *fork* -4- XvBMC)" >
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
@@ -491,6 +506,26 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 		<description lang="nl">Dit is mijn depot. Ik kan hiermee doen en laten wat ik wil. Sommige dingen in dit depot kunnen en zullen reeds geinstalleerde addons overschrijven. Als je dat niet wil, installeer dit depot dan niet!</description>
 		<disclaimer lang="en">[COLOR FF8ABEE2]Open[/COLOR][COLOR FF757677]ELEQ[/COLOR] did not make all the add-ons in this repository and is in no way responsible for their content.</disclaimer>
 		<disclaimer lang="nl">[COLOR FF8ABEE2]Open[/COLOR][COLOR FF757677]ELEQ[/COLOR] heeft niet alle add-ons in dit depot gemaakt en is ook op geen enkele manier verantwoordelijk voor hun inhoud.</disclaimer>
+		<platform>all</platform>
+	</extension>
+</addon>
+
+<addon id="repository.shani" name="Shanis Addon Repository" version="2.8" provider-name="Shani">
+	<extension point="xbmc.addon.repository" name="Shanis Addon Repository">
+    <dir>
+            <info compressed="false">https://raw.github.com/Shani-08/ShaniXBMCWork2/master/addons.xml</info>
+            <checksum>https://raw.github.com/Shani-08/ShaniXBMCWork2/master/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.github.com/Shani-08/ShaniXBMCWork2/master/zips</datadir>
+    </dir>
+
+    <info compressed="false">https://offshoregit.com/Shani-08/main/addons.xml</info>
+    <checksum>https://offshoregit.com/Shani-08/main/addons.xml.md5</checksum>
+    <datadir zip="true">https://offshoregit.com/Shani-08/main/zips</datadir>
+
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Addons related to XBMC for Zemtv etc</summary>
+		<description>Go though the plugins and see what you like</description>
 		<platform>all</platform>
 	</extension>
 </addon>
@@ -901,6 +936,25 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 		<email></email>
 		<source>https://github.com/trakt/script.trakt</source>
 	</extension>
+</addon>
+
+<addon id="script.video.F4mProxy"
+	     name="F4mProxy"
+	     version="2.4.5"
+	     provider-name="Shani">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0" />
+  </requires>
+  <extension point="xbmc.python.module" library="lib" />
+    <extension point="xbmc.python.pluginsource" library="addon.py">
+		<provides>executable</provides>
+  </extension>
+
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <summary lang="en">Proxy for f4m</summary>
+    <description lang="en">Use this addon to play F4m v1 and v2 streams</description>
+  </extension>
 </addon>
 
 <addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.00a" provider-name="XvBMC NL">
