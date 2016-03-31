@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="network.openvpn"
-       name="openvpn"
+       name="OpenVPN (Stefan Saraev)"
        version="6.0.0c"
        provider-name="Stefan Saraev (seo at irc.freenode.net)">
   <requires>
