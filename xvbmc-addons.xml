@@ -29,7 +29,7 @@
 </addon>
 
 <addon id="network.openvpn"
-       name="openvpn"
+       name="OpenVPN (Stefan Saraev)"
        version="6.0.0c"
        provider-name="Stefan Saraev (seo at irc.freenode.net)">
   <requires>
@@ -741,7 +741,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
 </addon>
 
-<addon id="script.module.urlresolver" name="URLResolver" version="2.10.13~beta9" provider-name="Eldorado">
+<addon id="script.module.urlresolver" name="URLResolver" version="3.0.0" provider-name="Eldorado">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 	</requires>
@@ -773,7 +773,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="script.openvpn" name="OpenVPN" version="2.1.0" provider-name="brianhornsby">
+<addon id="script.openvpn" name="OpenVPN (alternative)" version="2.1.0" provider-name="brianhornsby">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 		<import addon="script.module.beautifulsoup" version="3.0.8"/>

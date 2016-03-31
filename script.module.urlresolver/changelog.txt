@@ -1,3 +1,21 @@
+[B]3.0.0[/B]
++ TKnorris : Bump to 3.0.0
+
+[B]2.10.13~beta9[/B]
++ TKnorris : 0.0.5 of Premiumize; 2.022 of SALTS; beta9 of SMU
+
+[B]2.10.13~beta8[/B]
++ TKnorris : 2.0.21 of SALTS; 0.0.4 of Premiumize; beta8 of SMU
+
+[B]2.10.13~beta7[/B]
++ TKnorris FiX (Real-Debrid fix)
+
+[B]2.10.13~beta6[/B]
++ TKnorris FiX (reboot fix)
+
+[B]2.10.13~beta4[/B]
++ CRAP FiX (XvBMC-NL)
+
 [B]Version 2.10.0[/B]
 - Code Base Changes:
     - Removed dependency in addon.xml for Youtube, Gotham users would not be able to install as official youtube addon only exists in Helix+ repo
