@@ -17,6 +17,8 @@ import urlparse
 import httplib
 import time
 import live365
+from datetime import datetime, timedelta
+from time import time
 from addon.common.net import Net
 from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup, BeautifulSOAP
 try:
@@ -42,11 +44,10 @@ class NoRedirection(urllib2.HTTPErrorProcessor):
        return response
    https_response = http_response
 
-ASBase = 'aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4LnhtbA=='
-ASBase1 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4Mi54bWw='
-ASBase3 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4My54bWw='
-ASBase4 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4NC54bWw='
-ASBase5 ='aHR0cHM6Ly9naXRodWIuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL3Jhdy9tYXN0ZXIveG1sL0luZGV4NS54bWw='
+ASBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL21hc3Rlci94bWwvSW5kZXgueG1s'
+ASBase5 ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL21hc3Rlci94bWwvTGl2ZVNwb3J0LnhtbA=='
+
+
 
 
 sourceSitebvls = 'http://bvls2016.sc'      
@@ -295,22 +296,77 @@ def findStream(page) :
     streamUrl = bitly.getStreamUrl(b64coded)
     return streamUrl
 
-				
+
 def ASIndex():
     addon_log("ASIndex")
-    getData(base64.b64decode(ASBase1),'')
+    addDir('[COLOR orange][B]********* Awesome Streams *********[/B][/COLOR]','',71,icon ,  fanart,'','','','')
     addDir('News','News',46,icon ,  FANART,'','','','')
     addDir('Privacy Policy','Privacy Policy',45,icon ,  FANART,'','','','')
+    addDir('[COLOR orange][B]******** Adition Categories ********[/B][/COLOR]','',71,icon ,  fanart,'','','','')
     getData(base64.b64decode(ASBase),'')
-    getData(base64.b64decode(ASBase3),'')
-    addDir('Sport365.live - from ZemTV','',47,icon ,  FANART,'','','','')
-    getData(base64.b64decode(ASBase4),'')
-    addDir('Wiz1.net','getWizSchedule,',61,icon ,  FANART,'','','','')
-    getData(base64.b64decode(ASBase5),'')
-    addDir('Goatd.net','',62,icon ,  FANART,'','','','')
-    
-  
+    addDir('Live Sport','',70,icon ,  FANART,'','','','')
+    addDir('[COLOR orange][B]****************************************[/B][/COLOR]','',71,icon ,  fanart,'','','','')
+
+
+ 
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def indexsport():
+    addon_log("indexsport")
+    addDir('[COLOR orange][B]********* Extra Streams *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
+    addDir('Sport365 - From ZemTV','',47,icon,fanart,"","","","","",)
+    addDir('Wiz1','',61,icon,fanart,"","","","","",)
+    addDir('GoATD','',62,icon,fanart,"","","","","",)
+    addDir('TheFeed2all.eu','',65,icon,fanart,"","","","","",)
+    addDir('[COLOR orange][B]********* Special Live Sport Events for today *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
+    addDir('[COLOR orange][B]******************** All time is CE *******************[/B][/COLOR]','',70,icon ,  fanart,'','','','')
+    getData(base64.b64decode(ASBase5),'')
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+    
+def Catfeed2all():
+        addDir('Football' ,'football.html',64,icon ,  FANART,'','','','')
+        addDir('AM. Football' ,'american-football.html',64,icon ,  FANART,'','','','')
+        addDir('Basketball' ,'basketball.html',64,icon ,  FANART,'','','','')
+        addDir('Boxing/WWE/UFC' ,'boxing-wwe-ufc.html',64,icon ,  FANART,'','','','')
+        addDir('Rugby' ,'rugby.html',64,icon ,  FANART,'','','','')
+        addDir('Ice Hockey' ,'ice-hockey.html',64,icon ,  FANART,'','','','')
+        addDir('Tennis' ,'tennis.html',64,icon ,  FANART,'','','','')
+        addDir('Motorsport' ,'motosport.html',64,icon ,  FANART,'','','','')
+        addDir('Golf' ,'golf.html',64,icon ,  FANART,'','','','')
+        addDir('Baseball' ,'baseball.html',64,icon ,  FANART,'','','','')
+        addDir('Darts' ,'darts.html',64,icon ,  FANART,'','','','')
+        addDir('Snooker' ,'snooker.html',64,icon ,  FANART,'','','','')
+        addDir('Handball' ,'handball.html',64,icon ,  FANART,'','','','')
+        addDir('Cricket' ,'cricket.html',64,icon ,  FANART,'','','','')
+        addDir('Aussie Rules' ,'aussie-rules.html',64,icon ,  FANART,'','','','')
+        addDir('Others' ,'others.html',64,icon ,  FANART,'','','','')
+	return
+
+def getfeedSchedule(url):
+    feedpage = getHtml('http://www.thefeed2all.eu/type/' + url)
+    match = re.compile('<span class=\".+?\">(.*?)</span> </span>(.*?)</a>.+?<a  href=\'(.*?)\' title=\'.+?\' target=.+?>Link 1</a>',re.DOTALL).findall(feedpage)
+    for tijd, wedstrijd,url in match:
+        try:
+           dt = datetime.strptime(tijd, "%H:%M")
+           dt = dt + timedelta(hours=2)
+           tijd = str(dt.hour).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
+        except :
+            pass
+        tekstregel = tijd+''+wedstrijd
+        url = 'http://www.thefeed2all.eu/' + url
+        addDir(tekstregel, url, 60, icon,fanart,"","","","","",isItFolder=False)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+
+def playLiveResolver(url):
+    import liveresolver
+    resolved = liveresolver.resolve(url)
+    if resolved:
+        xbmc.Player().play(resolved)
+    else:
+        xbmc.executebuiltin("XBMC.Notification(AwesomeStreams,No playable link found. - ,5000)")
+    xbmc.Player().play(resolved)
     
 
 def getgoatSchedule():
@@ -319,14 +375,8 @@ def getgoatSchedule():
     for img, url, wedstrijd, tijd, tijdzone in match:
         tekstregel = tijd + ' ' + tijdzone + ' - ' + wedstrijd
         url = 'http://goatd.net/' + url
-        addDir(tekstregel, url, 63, img,"","","","","","",isItFolder=False)
-
-
-def playgoat(url):
-    import liveresolver
-    resolved = liveresolver.resolve(url)
-    xbmc.Player().play(resolved)
-
+        addDir(tekstregel, url, 60, img,"","","","","","",isItFolder=False)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
 def getWizSchedule():
@@ -335,12 +385,7 @@ def getWizSchedule():
     for tijd, sport, wedstrijd, url in match:
         tekstregel = tijd + ' - ' + sport + ' - ' + wedstrijd
         addDir(tekstregel, url, 60,"","","","","","","",isItFolder=False)
-        
-
-def playWiz(url):
-    import liveresolver
-    resolved = liveresolver.resolve(url)
-    xbmc.Player().play(resolved)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
 def getHtml(url, referer=None, hdr=None, data=None):
@@ -2968,7 +3013,7 @@ elif mode==53:
     pluginquerybyJSON(url)
     
 elif mode==60:
-    playWiz(url)
+    playLiveResolver(url)
 
 elif mode==61:
     getWizSchedule()
@@ -2976,7 +3021,16 @@ elif mode==61:
 elif mode==62:
     getgoatSchedule()
 
-elif mode==63:
-    playgoat(url)
+elif mode==64:
+	getfeedSchedule(url)	
+ 
+elif mode==65:
+    Catfeed2all()   
 
+if mode==70:
+    addon_log("indexsport")
+    indexsport()
+if mode==71:
+    ASIndex()
+   
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

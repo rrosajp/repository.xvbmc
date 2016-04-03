@@ -223,9 +223,9 @@ def getLinks():
                 qty=lng[-2].split('<')[0]
                 lng= lng[-1]
             if len(lng)>0:
-                lng=Colored("[" +lng+"]","orange")
-            if len(qty)>0:
-                qty=Colored("["+qty+"]","red")
+                lng=Colored("" +lng+"","darkorange")
+            if len(qty)>1:
+                qty=Colored("" +qty+"","darkorange")				
                 
             
             if not lnk.startswith("http"):
@@ -234,9 +234,9 @@ def getLinks():
             if tp=="green":
                 lnk=base64.b64encode("Sports365:"+base64.b64encode(lnk))
                 #addDir(Colored(cat.capitalize()+": "+tm+" : "+ qty+lng+nm  ,'ZM') ,lnk,11 ,"",isItFolder=False)
-                ret+=[(cat.capitalize()+": "+tm+" : "+ qty+lng+nm ,lnk,True)]
+                ret+=[(lng+" "+tm+" : "+ cat.capitalize()+nm+" "+qty,lnk,True)]
             else:
-                ret+=[(cat.capitalize()+": "+tm+" : "+ qty+lng+nm ,lnk,False)]
+                ret+=[(lng+" "+tm+" : "+ cat.capitalize()+nm+" "+qty,lnk,False)]
         except: traceback.print_exc(file=sys.stdout)
         progress.close()
     return ret
