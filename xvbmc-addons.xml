@@ -52,7 +52,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
-       version="1.0.21"
+       version="1.0.23"
        provider-name="AwesomeStreams">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
