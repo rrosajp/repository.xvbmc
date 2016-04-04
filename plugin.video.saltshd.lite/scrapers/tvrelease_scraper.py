@@ -60,6 +60,7 @@ class TVReleaseNet_Scraper(scraper.Scraper):
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
+        host_count = {}
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
@@ -86,16 +87,18 @@ class TVReleaseNet_Scraper(scraper.Scraper):
                         if video.video_type == VIDEO_TYPES.EPISODE:
                             _title, _season, _episode, height, _extra = scraper_utils.parse_episode_link(q_str)
                         else:
-                            _title, _year, height, _extra = scraper_utils.parse_episode_link(q_str)
+                            _title, _year, height, _extra = scraper_utils.parse_movie_link(q_str)
                         quality = scraper_utils.height_get_quality(height)
                     else:
                         quality = QUALITY_MAP.get(match.group(1).upper(), QUALITIES.HIGH)
                     quality = scraper_utils.get_quality(video, host, quality)
+                    host_count[host] = host_count.get(host, 0) + 1
                     hoster = {'multi-part': False, 'class': self, 'host': host, 'quality': quality, 'views': None, 'url': stream_url, 'rating': None, 'direct': False}
                     if size: hoster['size'] = size
                     hosters.append(hoster)
 
-        return hosters
+        new_hosters = [hoster for hoster in hosters if host_count[hoster['host']] <= 1]
+        return new_hosters
 
     def get_url(self, video):
         return self._blog_get_url(video, delim=' ')
