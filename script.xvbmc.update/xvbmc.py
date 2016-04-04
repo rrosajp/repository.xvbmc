@@ -45,7 +45,7 @@ def showMenu():
     userchoice.append("XvBMC Overclock Pi - turbo")
     userchoice.append("XvBMC Overclock Pi - x265")
     userchoice.append("XvBMC #DEV# Corner (Firmware)")
-    userchoice.append("XvBMC #DEV# Corner (OpeneELEC_arm-6.95.1)")
+    userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.1)")
     userchoice.append("XvBMC Tweaking")
     userchoice.append("Exit")
     
@@ -83,7 +83,7 @@ def showMenu():
         Firmware()
  
     #    http://openelec.tv/get-openelec/category/57-raspberry-pi2-builds?download=19:raspberry-pi-2-and-pi3-model-b-512mb-update-file #
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (OpeneELEC_arm-6.95.1)":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (OpenELEC_arm-6.95.1)":
         OpenElecTV()
  
     #    Edit user preferences                                              #
