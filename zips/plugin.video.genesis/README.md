@@ -22,17 +22,49 @@ Attributions
 
 
 MO' iNFO:
-------------------------
-Specto v2016.03.06.xvbmc
-------------------------
+-----------------------------------
+Specto v2016.03.26xvbmc
+-----------------------------------
 + an EPiC XvBMC *FORK* 2 replace old Lambda's GENESiS! 
-+ You should use Salts HD Lite by now  ;-)  :-P  3:) ! 
+! You should use Salts HD Lite by now  ;-)  :-P  3:) ! 
  
-+ Trakt + RealDebrid *UNDER CONSTRUCTION* 
-+ see: http://filmkodi.com/en/fork-of-genesis/#comment-355 
+! Trakt + RealDebrid + URLresolver v3 *UNDER CONSTRUCTION* 
+! see: http://filmkodi.com/en/fork-of-genesis/#comment-355 
+ 
+ 
 ------------------------
+Specto v2016.03.26.1
+------------------------
+Fix marked as watched - Metahandler
+------------------------
+Specto v2016.03.12.3
+------------------------
+Cache repair
+Movies repair - done in 90%
+TV Shows repair  - done in 80%
+
+------------------------
+Specto v2016.03.11.3
+------------------------
+Cache repair
+Movies repair - done in 90%
+TV Shows repair  - done in 2%
+ 
+ 
+-----------------------------------
 Specto v2016.03.06.xvbmc
-------------------------
+-----------------------------------
++ an EPiC XvBMC *FORK* 2 replace old Lambda's GENESiS! 
+! You should use Salts HD Lite by now  ;-)  :-P  3:) ! 
+ 
+! Trakt + RealDebrid *UNDER CONSTRUCTION* 
+! see: http://filmkodi.com/en/fork-of-genesis/#comment-355 
+ 
+-----------------------------------
+Specto v2016.03.06 (GENESiS *FORK*)
+-----------------------------------
++ Openload - decodeOpenLoad made by mortael
+-----------------------------------
 
 
 License

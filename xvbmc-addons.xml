@@ -120,7 +120,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
 </addon>
 
-<addon id="plugin.video.genesis" name="Specto EPiC Genesis FORK"  version="2016.03.05.1" provider-name="mrknow (+EPiC *fork* -4- XvBMC)" >
+<addon id="plugin.video.genesis" name="Specto EPiC Genesis FORK"  version="2016.03.26xvbmc" provider-name="mrknow (+EPiC *fork* -4- XvBMC)" >
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 		<import addon="script.module.requests" version="1.0.0" />
