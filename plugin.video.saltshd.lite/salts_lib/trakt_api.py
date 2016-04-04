@@ -143,7 +143,7 @@ class Trakt_API():
 
     def get_trending(self, section, page=None):
         url = '/%s/trending' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': 100}
+        params = {'extended': 'full,images', 'limit': 60}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
