@@ -29,7 +29,6 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.kodi import i18n
 import scraper
 
-
 BASE_URL = 'http://superchillin.com'
 
 class NoobRoom_Scraper(scraper.Scraper):
@@ -76,12 +75,7 @@ class NoobRoom_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-
-            if 'Watch in 1080p' in html:
-                has_1080p = True
-            else:
-                has_1080p = False
-
+            has_1080p = True if 'Watch in 1080p' in html else False
             if video.video_type == VIDEO_TYPES.MOVIE:
                 quality = QUALITIES.HD720
                 paid_quality = QUALITIES.HD1080
@@ -100,7 +94,6 @@ class NoobRoom_Scraper(scraper.Scraper):
                 hosters.append(hoster)
 
                 if self.include_paid and has_1080p:
-                    
                     url += '&hd=1'
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'url': url, 'quality': paid_quality, 'views': None, 'rating': 100 - int(load), 'direct': True}
                     hosters.append(hoster)
@@ -152,11 +145,11 @@ class NoobRoom_Scraper(scraper.Scraper):
         if not self.username or not self.password:
             return ''
 
-        html = self._cached_http_get(url, self.base_url, self.timeout, data=data, headers=headers, method=method, cache_limit=cache_limit)
+        html = super(self.__class__, self)._http_get(url, data=data, headers=headers, method=method, cache_limit=cache_limit)
         if 'href="logout.php"' not in html:
             log_utils.log('Logging in for url (%s)' % (url), log_utils.LOGDEBUG)
             self.__login(html)
-            html = self._cached_http_get(url, self.base_url, self.timeout, data=data, headers=headers, method=method, cache_limit=0)
+            html = super(self.__class__, self)._http_get(url, data=data, headers=headers, method=method, cache_limit=0)
 
         return html
 
@@ -167,6 +160,6 @@ class NoobRoom_Scraper(scraper.Scraper):
         if match:
             data.update(self._do_recaptcha(match.group(1)))
             
-        html = self._cached_http_get(url, self.base_url, self.timeout, data=data, allow_redirect=False, cache_limit=0)
+        html = super(self.__class__, self)._http_get(url, data=data, allow_redirect=False, cache_limit=0)
         if 'index.php' not in html:
             raise Exception('noobroom login failed')
