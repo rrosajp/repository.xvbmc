@@ -17,7 +17,7 @@ addon = xbmcaddon.Addon('script.xvbmc.update')
  
 def DownloaderClass(url,dest):
     dp = xbmcgui.DialogProgress()
-    dp.create('XvBMC NL maintenance','XvBMC stuff downloaden en uitpakken...','')
+    dp.create('XvBMC Nederland - Maintenance','XvBMC-NL: doing some VooDoo...','')
     urllib.urlretrieve(url,dest,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))
   
 def _pbhook(numblocks, blocksize, filesize, url=None,dp=None):
@@ -40,10 +40,12 @@ def showMenu():
     userchoice = []
     userchoice.append("XvBMC ServicePack (2 april)")
     userchoice.append("XvBMC ServicePack (1 t/m ..) bulk pack")
-    userchoice.append("XvBMC System/OS update v6.90.004")
-    userchoice.append("overclock Pi - none")
-    userchoice.append("overclock Pi - turbo")
-    userchoice.append("overclock Pi - x265")
+    userchoice.append("XvBMC System/OS LibreELEC_v6.90.004")
+    userchoice.append("XvBMC Overclock Pi - none")
+    userchoice.append("XvBMC Overclock Pi - turbo")
+    userchoice.append("XvBMC Overclock Pi - x265")
+    userchoice.append("XvBMC #DEV# Corner (Firmware)")
+    userchoice.append("XvBMC #DEV# Corner (OpeneELEC_arm-6.95.1)")
     userchoice.append("XvBMC Tweaking")
     userchoice.append("Exit")
     
@@ -52,31 +54,39 @@ def showMenu():
                                            userchoice)
     # Process menu actions
     
-    #  https://archive.org/download/XvBMC/servicepack.zip
+    #  https://archive.org/download/XvBMC/servicepack.zip                   #
     if userchoice[inputchoice] == "XvBMC ServicePack (2 april)":
         ServicePack()
 
-    #    https://archive.org/download/XvBMC/updaterollup.zip    
+    #    https://archive.org/download/XvBMC/updaterollup.zip                #
     elif userchoice[inputchoice] == "XvBMC ServicePack (1 t/m ..) bulk pack":
         UpdateRollup()
 	
-	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-6.90.004.tar
-    elif userchoice[inputchoice] == "XvBMC System/OS update v6.90.004":
+	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-6.90.004.tar       #
+    elif userchoice[inputchoice] == "XvBMC System/OS LibreELEC_v6.90.004":
         SystemOS()
     
-    #    /storage/.kodi/addons/script.xvbmc.update/config-noclock.txt
-    elif userchoice[inputchoice] == "overclock Pi - none":
+    #    /storage/.kodi/addons/script.xvbmc.update/config-noclock.txt       #
+    elif userchoice[inputchoice] == "XvBMC Overclock Pi - none":
         Config0()
  
-    #    /storage/.kodi/addons/script.xvbmc.update/config-turbo.txt
-    elif userchoice[inputchoice] == "overclock Pi - turbo":
+    #    /storage/.kodi/addons/script.xvbmc.update/config-turbo.txt         #
+    elif userchoice[inputchoice] == "XvBMC Overclock Pi - turbo":
         Config1()
-	
-    #    /storage/.kodi/addons/script.xvbmc.update/config-x265.txt
-    elif userchoice[inputchoice] == "overclock Pi - x265":
+ 
+    #    /storage/.kodi/addons/script.xvbmc.update/config-x265.txt          #
+    elif userchoice[inputchoice] == "XvBMC Overclock Pi - x265":
         Config2()
  
-    # Edit user preferences
+    #    /storage/.kodi/addons/script.xvbmc.update/firmware.sh                                                                         #
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware)":
+        Firmware()
+ 
+    #    http://openelec.tv/get-openelec/category/57-raspberry-pi2-builds?download=19:raspberry-pi-2-and-pi3-model-b-512mb-update-file #
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (OpeneELEC_arm-6.95.1)":
+        OpenElecTV()
+ 
+    #    Edit user preferences                                              #
     elif userchoice[inputchoice] == "XvBMC Tweaking":
         xbmcgui.Dialog().ok("XvBMC Tweaks", "EPiC Tweaking @XvBMC bitches", "Coming soon to a theater near you ;-P")
  
@@ -96,7 +106,7 @@ class ServicePackClass(xbmcgui.Window):
 #  	xbmc.executebuiltin("ReloadKeymaps")
    	xbmc.executebuiltin("ReloadSkin()")
 	time.sleep(1)
-   	xbmc.executebuiltin("Notification(XvBMC Nederland last servicepack,XvBMC updates geslaagd...,5000,XvBMC.png)")
+   	xbmc.executebuiltin("Notification(XvBMC Nederland last servicepack,XvBMC updates geslaagd...,5000,special://home/addons/script.xvbmc.update/icon.png)")
  
 class UpdateRollupClass(xbmcgui.Window):
   def __init__(self):
@@ -113,7 +123,7 @@ class UpdateRollupClass(xbmcgui.Window):
 #  	xbmc.executebuiltin("ReloadKeymaps")
    	xbmc.executebuiltin("ReloadSkin()")
 	time.sleep(1)
-   	xbmc.executebuiltin("Notification(XvBMC Nederland servicepack rollup,XvBMC updates rollup geslaagd...,5000,XvBMC.png)")
+   	xbmc.executebuiltin("Notification(XvBMC Nederland servicepack rollup,XvBMC updates rollup geslaagd...,5000,special://home/addons/script.xvbmc.update/icon.png)")
  
 class SystemOSClass(xbmcgui.Window):
   def __init__(self):
@@ -128,7 +138,7 @@ class SystemOSClass(xbmcgui.Window):
 #   time.sleep(1)
 #  	xbmc.executebuiltin("ReloadKeymaps")
 #  	xbmc.executebuiltin("ReloadSkin()")
-   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,XvBMC.png)")
+   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
 	time.sleep(1)
 	xbmc.executebuiltin("Reboot")
  
@@ -143,7 +153,7 @@ class Config0Class(xbmcgui.Window):
 #   time.sleep(1)
 #  	xbmc.executebuiltin("ReloadKeymaps")
 #  	xbmc.executebuiltin("ReloadSkin()")
-#  	xbmc.executebuiltin("Notification(XvBMC Nederland Pi default,REBOOT for no-overclock,5000,XvBMC.png)")
+#  	xbmc.executebuiltin("Notification(XvBMC Nederland Pi default,REBOOT for no-overclock,5000,special://home/addons/script.xvbmc.update/icon.png)")
  
 class Config1Class(xbmcgui.Window):
   def __init__(self):
@@ -156,7 +166,7 @@ class Config1Class(xbmcgui.Window):
 #   time.sleep(1)
 #  	xbmc.executebuiltin("ReloadKeymaps")
 #  	xbmc.executebuiltin("ReloadSkin()")
-#   xbmc.executebuiltin("Notification(XvBMC Nederland Pi turbo,REBOOT for turbo-overclock,5000,XvBMC.png)")
+#   xbmc.executebuiltin("Notification(XvBMC Nederland Pi turbo,REBOOT for turbo-overclock,5000,special://home/addons/script.xvbmc.update/icon.png)")
  
 class Config2Class(xbmcgui.Window):
   def __init__(self):
@@ -169,7 +179,37 @@ class Config2Class(xbmcgui.Window):
 #   time.sleep(1)
 #  	xbmc.executebuiltin("ReloadKeymaps")
 #  	xbmc.executebuiltin("ReloadSkin()")
-#  	xbmc.executebuiltin("Notification(XvBMC Nederland Pi x265,REBOOT for x265-overclock,5000,XvBMC.png)")
+#  	xbmc.executebuiltin("Notification(XvBMC Nederland Pi x265,REBOOT for x265-overclock,5000,special://home/addons/script.xvbmc.update/icon.png)")
+ 
+class FirmwareClass(xbmcgui.Window):
+  def __init__(self):
+    dialog = xbmcgui.Dialog()
+    if dialog.yesno('XvBMC NL Raspberry Firmware','Update -2- recent Pi firmware?'):
+        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/firmware.sh"
+	os.system(bashCommand)
+	#~ xbmc.executebuiltin('ReloadSkin()')
+    
+#   time.sleep(1)
+#  	xbmc.executebuiltin("ReloadKeymaps")
+#  	xbmc.executebuiltin("ReloadSkin()")
+#  	xbmc.executebuiltin("Notification(XvBMC Firmware Update,FINISHED! PLEASE REBOOT...,5000,special://home/addons/script.xvbmc.update/icon.png)")
+ 
+class OpenElecTVClass(xbmcgui.Window):
+  def __init__(self):
+    dialog = xbmcgui.Dialog()
+    if dialog.yesno('XvBMC OpenELEC OS update','Preparing arm-6.95.1 and Reboot when done...'):
+        url = 'http://openelec.tv/get-openelec/category/57-raspberry-pi2-builds?download=19:raspberry-pi-2-and-pi3-model-b-512mb-update-file'
+        path = xbmc.translatePath(os.path.join('/storage/.update/','')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
+#       path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
+        lib=os.path.join(path, 'openelec6951.tar')
+        DownloaderClass(url,lib)
+    
+#   time.sleep(1)
+#  	xbmc.executebuiltin("ReloadKeymaps")
+#  	xbmc.executebuiltin("ReloadSkin()")
+   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
+	time.sleep(1)
+	xbmc.executebuiltin("Reboot")
  
  
 def ServicePack():
@@ -179,11 +219,11 @@ def ServicePack():
 def UpdateRollup():
     mydisplay = UpdateRollupClass()
     del mydisplay
-
+ 
 def SystemOS():
     mydisplay = SystemOSClass()
     del mydisplay
-	
+ 
 def Config0():
     mydisplay = Config0Class()
     del mydisplay
@@ -194,6 +234,14 @@ def Config1():
  
 def Config2():
     mydisplay = Config2Class()
+    del mydisplay
+ 
+def Firmware():
+    mydisplay = FirmwareClass()
+    del mydisplay
+ 
+def OpenElecTV():
+    mydisplay = OpenElecTVClass()
     del mydisplay
  
  
