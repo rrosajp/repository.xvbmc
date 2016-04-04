@@ -1,5 +1,5 @@
 # Addon Name: Genesis
-# Addon id: plugin.video.genesis
+# Addon id: plugin.video.specto
 # Addon Provider: Genesis
 # Translators:
 # Translators:

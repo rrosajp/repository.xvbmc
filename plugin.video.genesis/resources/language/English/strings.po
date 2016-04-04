@@ -1,12 +1,12 @@
-# Addon Name: genesis fork EPiC Specto
-# Addon id: plugin.video.genesis
-# Addon Provider: Specto/Genesis
+# Addon Name: Specto
+# Addon id: plugin.video.specto
+# Addon Provider: Specto
 # Translators:
 # Translators:
 # Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: genesis\n"
+"Project-Id-Version: Specto\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2015-10-05 02:21+0000\n"
 "Last-Translator: lambda81\n"
@@ -30,8 +30,8 @@ msgid "Channels"
 msgstr "Channels"
 
 msgctxt "#30004"
-msgid "My genesis"
-msgstr "My Specto/Genesis"
+msgid "My Specto"
+msgstr "My Specto"
 
 msgctxt "#30005"
 msgid "Latest Movies"
@@ -290,36 +290,36 @@ msgid "[B]HOSTS[/B] : SD Priority"
 msgstr "[B]HOSTS[/B] : SD Priority"
 
 msgctxt "#30119"
-msgid "[B]Specto/Genesis[/B] : Clear sources..."
-msgstr "[B]Specto/Genesis[/B] : Clear sources..."
+msgid "[B]Specto[/B] : Clear sources..."
+msgstr "[B]Specto[/B] : Clear sources..."
 
 msgctxt "#30120"
-msgid "[B]Specto/Genesis[/B] : Clear cache..."
-msgstr "[B]Specto/Genesis[/B] : Clear cache..."
+msgid "[B]Specto[/B] : Clear cache..."
+msgstr "[B]Specto[/B] : Clear cache..."
 
 msgctxt "#30121"
-msgid "[B]Specto/Genesis[/B] : Library"
-msgstr "[B]Specto/Genesis[/B] : Library"
+msgid "[B]Specto[/B] : Library"
+msgstr "[B]Specto[/B] : Library"
 
 msgctxt "#30122"
-msgid "[B]Specto/Genesis[/B] : Downloads"
-msgstr "[B]Specto/Genesis[/B] : Downloads"
+msgid "[B]Specto[/B] : Downloads"
+msgstr "[B]Specto[/B] : Downloads"
 
 msgctxt "#30131"
 msgid "[B]LIBRARY[/B] : Settings"
 msgstr "[B]LIBRARY[/B] : Settings"
 
 msgctxt "#30132"
-msgid "[B]Specto/Genesis[/B] : Update folders..."
-msgstr "[B]Specto/Genesis[/B] : Update folders..."
+msgid "[B]Specto[/B] : Update folders..."
+msgstr "[B]Specto[/B] : Update folders..."
 
 msgctxt "#30133"
-msgid "[B]Specto/Genesis[/B] : Movie folder..."
-msgstr "[B]Specto/Genesis[/B] : Movie folder..."
+msgid "[B]Specto[/B] : Movie folder..."
+msgstr "[B]Specto[/B] : Movie folder..."
 
 msgctxt "#30134"
-msgid "[B]Specto/Genesis[/B] : TV folder..."
-msgstr "[B]Specto/Genesis[/B] : TV folder..."
+msgid "[B]Specto[/B] : TV folder..."
+msgstr "[B]Specto[/B] : TV folder..."
 
 msgctxt "#30135"
 msgid "[B]TRAKT[/B] : Import Collection..."
@@ -1035,9 +1035,9 @@ msgstr "Library"
 
 msgctxt "#30921"
 msgid ""
-"Specto/Genesis folders will be imported to library if they are added to media "
+"Specto folderswill be imported to library if they are added to media "
 "sources."
-msgstr "Specto/Genesis folders will be imported to library if they are added to media sources."
+msgstr "Specto folderswill be imported to library if they are added to media sources."
 
 msgctxt "#30922"
 msgid "Movies"
@@ -1116,7 +1116,7 @@ msgid "Trakt Account Authorization"
 msgstr ""
 
 msgctxt "#31162"
-msgid "To authorize Specto/Genesis to access your trakt.tv account:"
+msgid "To authorize SPECTO to access your trakt.tv account:"
 msgstr ""
 
 msgctxt "#31163"
@@ -1124,7 +1124,7 @@ msgid "1) Visit [COLOR skyblue]http://trakt.tv/pin/8219[/COLOR] or scan the QR C
 msgstr ""
 
 msgctxt "#31164"
-msgid "2) If prompted, authorize Specto/Genesis to access your account."
+msgid "2) If prompted, authorize SPECTO to access your account."
 msgstr ""
 
 msgctxt "#31165"
@@ -1132,7 +1132,7 @@ msgid "3) Enter the PIN provided in the box below."
 msgstr ""
 
 msgctxt "#31166"
-msgid "Specto/Genesis can be used without a trakt.tv account, but to take full advantage of Specto/Genesis you should authorize it to access your trakt.tv account."
+msgid "SPECTO can be used without a trakt.tv account, but to take full advantage of SPECTO you should authorize it to access your trakt.tv account."
 msgstr ""
 
 msgctxt "#31167"
@@ -1180,7 +1180,7 @@ msgid "A RealDebrid account already exists"
 msgstr ""
 
 msgctxt "#32412"
-msgid "After reset, save Specto/Genesis settings"
+msgid "After reset, save Specto settings"
 msgstr ""
 
 msgctxt "#32413"

@@ -144,7 +144,7 @@ elif action == 'tvNavigator':
 
 elif action == 'myNavigator':
     from resources.lib.indexers import navigator
-    navigator.navigator().genesis()
+    navigator.navigator().specto()
 
 elif action == 'downloadNavigator':
     from resources.lib.indexers import navigator
