@@ -32,7 +32,7 @@
                 <width>450</width>
                 <height>30</height>
                 <font>font13_title</font>
-                <label>$ADDON[plugin.video.saltsrd 30666]</label>
+                <label>$ADDON[plugin.video.saltsrd.lite 30666]</label>
                 <align>center</align>
                 <aligny>center</aligny>
                 <textcolor>darkorange</textcolor>
@@ -61,7 +61,7 @@
                 <height>40</height>
                 <align>center</align>
                 <aligny>center</aligny>
-                <label>$ADDON[plugin.video.saltsrd 30667]</label>
+                <label>$ADDON[plugin.video.saltsrd.lite 30667]</label>
                 <font>font12_title</font>
                 <textoffsetx>10</textoffsetx>
                 <ondown>201</ondown>
@@ -75,7 +75,7 @@
                 <height>40</height>
                 <align>center</align>
                 <aligny>center</aligny>
-                <label>$ADDON[plugin.video.saltsrd 30668]</label>
+                <label>$ADDON[plugin.video.saltsrd.lites 30668]</label>
                 <font>font12_title</font>
                 <textoffsetx>10</textoffsetx>
                 <onup>200</onup>

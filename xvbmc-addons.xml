@@ -309,11 +309,10 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<!--suppress ALL -->
-<addon id="plugin.video.saltsrd.lite" version="1.0.130" name="Salts RD Lite" provider-name="TKnorris">
+<addon id="plugin.video.saltsrd.lite" version="1.0.132b" name="Salts RD Lite" provider-name="TKnorris">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
-        <import addon="script.module.urlresolver" version="2.2.0"/>
+        <import addon="script.module.urlresolver" version="3.0.0"/>
         <import addon="script.module.myconnpy" version="1.1.6" />
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
@@ -321,11 +320,11 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
      <extension point="xbmc.service" library="service.py" start="startup"/>
     <extension point="xbmc.addon.metadata">
-        <summary>Stream video from many difference sources</summary>
-        <description>This is the mod version of Salts by Scott Marten + EPiC.</description>
+        <summary>Stream video from many difference sources with RD</summary>
+        <description>This is the mod version of Salts by Scott Marten + EPiC. (Credits -2- TKnorris of course)</description>
         <platform>all</platform>
         <website>http://tvaddons.ag/</website>
-		<forum>http://forums.tvaddons.ag/forums/180-TKNORRIS-RELEASE-REPOSITORY</forum>
+		<forum>https://www.facebook.com/groups/XvBMCnederland/</forum>
 	</extension>
 </addon>
 
