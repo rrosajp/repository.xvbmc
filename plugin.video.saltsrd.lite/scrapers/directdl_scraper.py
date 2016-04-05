@@ -102,7 +102,7 @@ class DirectDownload_Scraper(scraper.Scraper):
         result = self.db_connection.get_related_url(video.video_type, video.title, video.year, self.get_name(), video.season, video.episode)
         if result:
             url = result[0][0]
-            log_utils.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url))
+            log_utils.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url), log_utils.LOGDEBUG)
         else:
             date_match = False
             search_title = '%s S%02dE%02d' % (video.title, int(video.season), int(video.episode))
@@ -120,7 +120,7 @@ class DirectDownload_Scraper(scraper.Scraper):
                 if Q_DICT[result['quality']] > best_q_index:
                     best_q_index = Q_DICT[result['quality']]
                     url = result['url']
-            self.db_connection.set_related_url(video.video_type, video.title, video.year, self.get_name(), url)
+            self.db_connection.set_related_url(video.video_type, video.title, video.year, self.get_name(), url, video.season, video.episode)
         return url
 
     @classmethod
@@ -150,7 +150,7 @@ class DirectDownload_Scraper(scraper.Scraper):
             log_utils.log('Translating Search Url: %s' % (url), log_utils.LOGDEBUG)
             url = self.__translate_search(url)
 
-        return self._cached_http_get(url, self.base_url, self.timeout, data=data, cache_limit=cache_limit)
+        return super(self.__class__, self)._http_get(url, data=data, cache_limit=cache_limit)
 
     def __translate_search(self, url):
         query = urlparse.parse_qs(urlparse.urlparse(url).query)

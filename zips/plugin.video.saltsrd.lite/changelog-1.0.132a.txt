@@ -1,10 +1,5 @@
-Version 1.0.132[B]b[/B] EPiC Real-Debrid
+[B]Version 1.0.132a[/B] EPiC Real-Debrid
 + Salts HD Lite .132 "engine" (kudos-2-TKnorris though)
-- 1st  'code cosmetics'  :-p  (scrapers/sources clean!)
-
-Version 1.0.132[B]a[/B] EPiC Real-Debrid
-+ Salts HD Lite .132 "engine" (kudos-2-TKnorris though)
-
 
 [B]Version 1.0.130[/B] EPiC Real-Debrid
 + Salts HD Lite .130 "engine" (kudos-2-TKnorris though)

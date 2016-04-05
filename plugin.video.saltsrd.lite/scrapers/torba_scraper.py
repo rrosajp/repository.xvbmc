@@ -20,10 +20,10 @@ import re
 import urllib
 import urlparse
 import xbmcvfs
-import xbmcgui
-import xbmc
+# import xbmcgui
+# import xbmc
 import json
-import time
+# import time
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import log_utils
@@ -31,6 +31,7 @@ from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
+from salts_lib import gui_utils
 import scraper
 
 
@@ -57,6 +58,7 @@ class TorbaSe_Scraper(scraper.Scraper):
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
+        self.auth_url = False
 
     @classmethod
     def provides(cls):
@@ -82,44 +84,29 @@ class TorbaSe_Scraper(scraper.Scraper):
         except Exception as e:
             log_utils.log('Failure during torba resolver: %s' % (e), log_utils.LOGWARNING)
 
-    def __authorize_ip(self, stream_url):
-        headers = {'User-Agent': KODI_UA}
-        html = self._http_get(stream_url, headers=headers, cache_limit=0)
-        try: js_data = json.loads(html)
-        except: return html
-        
-        if 'url' in js_data:
-            try:
-                if 'qrcode' in js_data:
-                    img = xbmcgui.ControlImage(558, 0, 164, 164, js_data['qrcode'])
-                    wdlg = xbmcgui.WindowDialog()
-                    wdlg.addControl(img)
-                    wdlg.show()
-                    line2 = 'Scan the QR Code or v'
-                else:
-                    line2 = 'V'
-                pd = xbmcgui.DialogProgress()
-                line1 = 'To watch this video you must authorize your IP address.'
-                line2 += 'isit [COLOR blue]%s[/COLOR] from any device on the same network as SALTS.' % (js_data['url'])
-                pd.create('Torba IP Authorization', line1, line2)
-                pd.update(100)
-                begin = time.time()
-                interval = 5000
-                while True:
-                    for _ in range(INTERVALS):
-                        if pd.iscanceled(): return False
-                        xbmc.sleep(interval / INTERVALS)
-                        elapsed = time.time() - begin
-                        progress = int((EXPIRE_DURATION - elapsed) * 100 / EXPIRE_DURATION)
-                        pd.update(progress)
-
-                    html = self._http_get(stream_url, headers=headers, cache_limit=0)
-                    try: js_data = json.loads(html)
-                    except: return html
-            finally:
-                pd.close()
+    def __authorize_ip(self, auth_url):
+        self.auth_url = auth_url
+        authorized, response = self.check_auth()
+        if authorized:
+            return response
         else:
-            log_utils.log('Unusable JSON from Torba: %s' % (js_data), log_utils.LOGWARNING)
+            if 'url' in response:
+                return gui_utils.do_ip_auth(self, response['url'], response.get('qrcode'))
+            else:
+                log_utils.log('Unusable JSON from Torba: %s' % (response), log_utils.LOGWARNING)
+                return False
+    
+    def check_auth(self):
+        if not self.auth_url:
+            return True, None
+        
+        headers = {'User-Agent': KODI_UA}
+        html = self._http_get(self.auth_url, headers=headers, cache_limit=0)
+        try:
+            js_data = json.loads(html)
+            return False, js_data
+        except:
+            return True, html
     
     def format_source_label(self, item):
         label = '[%s] %s' % (item['quality'], item['host'])
@@ -130,7 +117,7 @@ class TorbaSe_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=0)
+            html = self._http_get(url, cache_limit=.5)
             vid_link = dom_parser.parse_dom(html, 'a', {'class': 'video-play'}, 'href')
             if vid_link:
                 i = vid_link[0].rfind('/')
@@ -139,7 +126,7 @@ class TorbaSe_Scraper(scraper.Scraper):
                     stream_id = self.__get_stream_id(vid_id)
                     if stream_id:
                         pl_url = PL_URL % (vid_id, stream_id)
-                        playlist = self._http_get(pl_url, cache_limit=0)
+                        playlist = self._http_get(pl_url, cache_limit=.25)
                         sources = self.__get_streams_from_m3u8(playlist.split('\n'), BASE_URL2, vid_id, stream_id)
                         for source in sources:
                             hoster = {'multi-part': False, 'host': self._get_direct_hostname(source), 'class': self, 'quality': sources[source], 'views': None, 'rating': None, 'url': source, 'direct': True}

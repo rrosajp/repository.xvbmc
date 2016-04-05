@@ -26,6 +26,7 @@ from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
+from salts_lib.constants import USER_AGENT
 import scraper
 
 BASE_URL = 'http://pubfilm.com'
@@ -69,23 +70,20 @@ class PubFilm_Scraper(scraper.Scraper):
                 fragment = fragment[0]
                 views = re.sub('[^\d]', '', fragment)
             
-            iframe_url = ''
+            iframe_urls = []
             if video.video_type == VIDEO_TYPES.MOVIE:
-                iframe_url = dom_parser.parse_dom(html, 'a', {'target': 'EZWebPlayer'}, ret='href')
-                if iframe_url:
-                    iframe_url = iframe_url[0]
+                iframe_urls = dom_parser.parse_dom(html, 'a', {'target': 'EZWebPlayer'}, ret='href')
             else:
                 for label, link in self.__get_episode_links(html):
                     if int(label) == int(video.episode):
-                        iframe_url = link
-                        break
+                        iframe_urls.append(link)
                 
-            if iframe_url:
+            for iframe_url in iframe_urls:
                 headers = {'Referer': iframe_url}
-                html = self._http_get(iframe_url, headers=headers, cache_limit=5)
+                html = self._http_get(iframe_url, headers=headers, cache_limit=.5)
                 match = re.search('{link\s*:\s*"([^"]+)', html)
                 if match:
-                    sources = self.__get_gk_links(match.group(1))
+                    sources = self.__get_gk_links(match.group(1), iframe_url)
                 else:
                     sources = self._parse_sources_list(html)
                     
@@ -102,15 +100,22 @@ class PubFilm_Scraper(scraper.Scraper):
 
         return hosters
 
-    def __get_gk_links(self, iframe_url):
+    def __get_gk_links(self, link, iframe_url):
         sources = {}
-        data = {'link': iframe_url}
-        headers = {'Referer': iframe_url}
-        html = self._http_get(GK_URL, data=data, headers=headers, cache_limit=.5)
+        data = {'link': link}
+        headers = XHR
+        headers.update({'Referer': iframe_url, 'User-Agent': USER_AGENT})
+        html = self._http_get(GK_URL, data=data, headers=headers, cache_limit=.25)
         js_data = scraper_utils.parse_json(html, GK_URL)
         if 'link' in js_data:
             if isinstance(js_data['link'], basestring):
-                sources[js_data['link']] = {'quality': QUALITIES.HIGH, 'direct': False}
+                stream_url = js_data['link']
+                if self._get_direct_hostname(stream_url) == 'gvideo':
+                    temp = self._parse_google(stream_url)
+                    for source in temp:
+                        sources[source] = {'quality': scraper_utils.gv_get_quality(source), 'direct': True}
+                else:
+                    sources[stream_url] = {'quality': QUALITIES.HIGH, 'direct': False}
             else:
                 for link in js_data['link']:
                     stream_url = link['link']
@@ -120,7 +125,7 @@ class PubFilm_Scraper(scraper.Scraper):
                         quality = scraper_utils.height_get_quality(link['label'])
                     else:
                         quality = QUALITIES.HIGH
-                sources[stream_url] = {'quality': quality, 'direct': True}
+                    sources[stream_url] = {'quality': quality, 'direct': True}
         return sources
         
     def get_url(self, video):
@@ -137,7 +142,8 @@ class PubFilm_Scraper(scraper.Scraper):
         links = dom_parser.parse_dom(html, 'a', {'target': 'EZWebPlayer'}, ret='href')
         labels = dom_parser.parse_dom(html, 'input', {'class': '[^"]*abutton[^"]*'}, ret='value')
         labels = [re.sub('[^\d]', '', label) for label in labels]
-        return zip(labels, links)
+        episodes = [(label, link) for label, link in zip(labels, links) if label.isdigit()]
+        return episodes
     
     def search(self, video_type, title, year, season=''):
         results = []
