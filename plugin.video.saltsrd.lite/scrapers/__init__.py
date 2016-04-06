@@ -55,7 +55,7 @@ __all__ = ['scraper',
  'watchhd_scraper',
  'watchseries_scraper',
  'xmovies8_scraper',
- 'xmovies8v2_scraper',]
+ 'xmovies8v2_scraper']
 
 from . import *
     
