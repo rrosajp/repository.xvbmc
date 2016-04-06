@@ -42,9 +42,9 @@ def showMenu():
     userchoice.append("XvBMC ServicePack (1 t/m ..) bulk pack")
     userchoice.append("XvBMC System/OS LibreELEC_v6.90.004")
     userchoice.append("XvBMC Overclock Pi - none")
-    userchoice.append("XvBMC Overclock Pi - turbo")
+    userchoice.append("XvBMC Overclock Pi - Turbo")
     userchoice.append("XvBMC Overclock Pi - x265")
-    userchoice.append("XvBMC #DEV# Corner (Firmware)")
+    userchoice.append("XvBMC #DEV# Corner (Firmware 4 april)")
     userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.1)")
     userchoice.append("XvBMC Tweaking")
     userchoice.append("Exit")
@@ -71,7 +71,7 @@ def showMenu():
         Config0()
  
     #    /storage/.kodi/addons/script.xvbmc.update/config-turbo.txt         #
-    elif userchoice[inputchoice] == "XvBMC Overclock Pi - turbo":
+    elif userchoice[inputchoice] == "XvBMC Overclock Pi - Turbo":
         Config1()
  
     #    /storage/.kodi/addons/script.xvbmc.update/config-x265.txt          #
@@ -79,7 +79,7 @@ def showMenu():
         Config2()
  
     #    /storage/.kodi/addons/script.xvbmc.update/firmware.sh                                                                         #
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware)":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware 4 april)":
         Firmware()
  
     #    http://openelec.tv/get-openelec/category/57-raspberry-pi2-builds?download=19:raspberry-pi-2-and-pi3-model-b-512mb-update-file #

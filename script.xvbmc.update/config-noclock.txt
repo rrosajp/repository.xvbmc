@@ -1,4 +1,4 @@
-# Config settings
+# Config settings           #
 [all] 
   gpu_mem=320
   gpu_mem_256=128
@@ -9,14 +9,14 @@
 # over_voltage_sdram=5
 # sdram_schmoo=0x02000020
   
-# dtoverlay=sdtweak,overclock_50=100
+# dtparam=sd_overclock=83
   
   disable_overscan=1
-# overscan_scale=1
-# overscan_left=57
-# overscan_right=59
-# overscan_top=20
-# overscan_bottom=20
+# overscan_scale=1          #
+# overscan_left=57          #
+# overscan_right=59         #
+# overscan_top=20           #
+# overscan_bottom=20        #
   
   hdmi_force_hotplug=1
   hdmi_ignore_cec=0
@@ -28,19 +28,19 @@
   
   
 # beta # BETA # beta # BETA # 
-  
-# decode_DTS=0x00000000
-# decode_DDP=0x00000000
-# decode_MPG2=0x00000000
-# decode_WVC1=0x00000000
-  
-  hdmi_drive=2       # normal HDMi (1= normal DVi).
-# hdmi_edid_file=0
-# hdmi_force_edid_audio=0
-  
-# avoid_warnings=1   # removes the warning overlay.
-# avoid_warnings=2   # additionally allows turbo when low-voltage is present.
-
+ 
+# decode_DTS=0x00000000     #
+# decode_DDP=0x00000000     #
+# decode_MPG2=0x00000000    #
+# decode_WVC1=0x00000000    #
+ 
+  hdmi_drive=2              # normal HDMi (1= normal DVi).
+# hdmi_edid_file=0          # read the edid data from monitor
+# hdmi_force_edid_audio=0   # allow passthrough of DTS/AC3 even when not reported as supported
+ 
+# avoid_warnings=1          # removes the warning overlay.
+# avoid_warnings=2          # additionally allows turbo when low-voltage is present.
+ 
 # beta # BETA # beta # BETA # 
   
   
