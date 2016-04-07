@@ -44,7 +44,9 @@ def showMenu():
     userchoice.append("XvBMC Overclock Pi - none")
     userchoice.append("XvBMC Overclock Pi - Turbo")
     userchoice.append("XvBMC Overclock Pi - x265")
-    userchoice.append("XvBMC #DEV# Corner (Firmware 4 april)")
+    userchoice.append("XvBMC Refresh UpdateAddonRepos")
+    userchoice.append("XvBMC #DEV# Corner (cutting edge Firmware)")
+    userchoice.append("XvBMC #DEV# Corner (Firmware revert back!!)")
     userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.1)")
     userchoice.append("XvBMC Tweaking")
     userchoice.append("Exit")
@@ -78,9 +80,17 @@ def showMenu():
     elif userchoice[inputchoice] == "XvBMC Overclock Pi - x265":
         Config2()
  
+    #    http://kodi.wiki/view/List_of_built-in_functions                   #
+    elif userchoice[inputchoice] == "XvBMC Refresh UpdateAddonRepos":
+        forceRefresh()
+ 
     #    /storage/.kodi/addons/script.xvbmc.update/firmware.sh                                                                         #
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware 4 april)":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (cutting edge Firmware)":
         Firmware()
+ 
+    #    /storage/.kodi/addons/script.xvbmc.update/goback.sh                                                                           #
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware revert back!!)":
+        OLDfirmware()
  
     #    http://openelec.tv/get-openelec/category/57-raspberry-pi2-builds?download=19:raspberry-pi-2-and-pi3-model-b-512mb-update-file #
     elif userchoice[inputchoice] == "XvBMC #DEV# Corner (OpenELEC_arm-6.95.1)":
@@ -102,7 +112,7 @@ class ServicePackClass(xbmcgui.Window):
         DownloaderClass(url,lib)
         addonfolder = xbmc.translatePath(os.path.join('special://home',''))
         xbmc.executebuiltin("XBMC.Extract(%s,%s)"%(lib,addonfolder))
-    
+ 
 #  	xbmc.executebuiltin("ReloadKeymaps")
    	xbmc.executebuiltin("ReloadSkin()")
 	time.sleep(1)
@@ -119,7 +129,7 @@ class UpdateRollupClass(xbmcgui.Window):
         DownloaderClass(url,lib)
         addonfolder = xbmc.translatePath(os.path.join('special://home',''))
         xbmc.executebuiltin("XBMC.Extract(%s,%s)"%(lib,addonfolder))
-    
+ 
 #  	xbmc.executebuiltin("ReloadKeymaps")
    	xbmc.executebuiltin("ReloadSkin()")
 	time.sleep(1)
@@ -134,10 +144,7 @@ class SystemOSClass(xbmcgui.Window):
 #       path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
         lib=os.path.join(path, 'libreelec690004.tar')
         DownloaderClass(url,lib)
-    
-#   time.sleep(1)
-#  	xbmc.executebuiltin("ReloadKeymaps")
-#  	xbmc.executebuiltin("ReloadSkin()")
+ 
    	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
 	time.sleep(1)
 	xbmc.executebuiltin("Reboot")
@@ -149,11 +156,6 @@ class Config0Class(xbmcgui.Window):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/config0.sh"
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')
-    
-#   time.sleep(1)
-#  	xbmc.executebuiltin("ReloadKeymaps")
-#  	xbmc.executebuiltin("ReloadSkin()")
-#  	xbmc.executebuiltin("Notification(XvBMC Nederland Pi default,REBOOT for no-overclock,5000,special://home/addons/script.xvbmc.update/icon.png)")
  
 class Config1Class(xbmcgui.Window):
   def __init__(self):
@@ -162,11 +164,6 @@ class Config1Class(xbmcgui.Window):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/config1.sh"
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')
-    
-#   time.sleep(1)
-#  	xbmc.executebuiltin("ReloadKeymaps")
-#  	xbmc.executebuiltin("ReloadSkin()")
-#   xbmc.executebuiltin("Notification(XvBMC Nederland Pi turbo,REBOOT for turbo-overclock,5000,special://home/addons/script.xvbmc.update/icon.png)")
  
 class Config2Class(xbmcgui.Window):
   def __init__(self):
@@ -175,24 +172,30 @@ class Config2Class(xbmcgui.Window):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/config2.sh"
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')
-    
-#   time.sleep(1)
-#  	xbmc.executebuiltin("ReloadKeymaps")
-#  	xbmc.executebuiltin("ReloadSkin()")
-#  	xbmc.executebuiltin("Notification(XvBMC Nederland Pi x265,REBOOT for x265-overclock,5000,special://home/addons/script.xvbmc.update/icon.png)")
+ 
+class forceRefreshClass(xbmcgui.Window):
+  def __init__(self):
+    dialog = xbmcgui.Dialog()
+    xbmc.executebuiltin("UpdateAddonRepos")
+    dialog.ok('XvBMC Nederland Maintenance', 'De addons worden vernieuwd...')
+    xbmc.executebuiltin("UpdateLocalAddons")
+    xbmc.executebuiltin("ReloadSkin()")
  
 class FirmwareClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry Firmware','Update -2- recent Pi firmware?'):
+    if dialog.yesno('XvBMC NL Raspberry Firmware','Update -2- most recent PI firmware?'):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/firmware.sh"
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')
-    
-#   time.sleep(1)
-#  	xbmc.executebuiltin("ReloadKeymaps")
-#  	xbmc.executebuiltin("ReloadSkin()")
-#  	xbmc.executebuiltin("Notification(XvBMC Firmware Update,FINISHED! PLEASE REBOOT...,5000,special://home/addons/script.xvbmc.update/icon.png)")
+ 
+class OLDfirmwareClass(xbmcgui.Window):
+  def __init__(self):
+    dialog = xbmcgui.Dialog()
+    if dialog.yesno('XvBMC NL Raspberry Firmware Reset','Revert Back PI firmware -4- XvBMC?'):
+        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/goback.sh"
+	os.system(bashCommand)
+	#~ xbmc.executebuiltin('ReloadSkin()')
  
 class OpenElecTVClass(xbmcgui.Window):
   def __init__(self):
@@ -203,10 +206,7 @@ class OpenElecTVClass(xbmcgui.Window):
 #       path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
         lib=os.path.join(path, 'openelec6951.tar')
         DownloaderClass(url,lib)
-    
-#   time.sleep(1)
-#  	xbmc.executebuiltin("ReloadKeymaps")
-#  	xbmc.executebuiltin("ReloadSkin()")
+ 
    	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
 	time.sleep(1)
 	xbmc.executebuiltin("Reboot")
@@ -236,8 +236,16 @@ def Config2():
     mydisplay = Config2Class()
     del mydisplay
  
+def forceRefresh():
+    mydisplay = forceRefreshClass()
+    del mydisplay
+ 
 def Firmware():
     mydisplay = FirmwareClass()
+    del mydisplay
+ 
+def OLDfirmware():
+    mydisplay = OLDfirmwareClass()
     del mydisplay
  
 def OpenElecTV():
@@ -246,7 +254,7 @@ def OpenElecTV():
  
  
 ########################################################################
-# This is where we start!
+# This is where we start! Copyright (C) XvBMC Nederland (R) Dutch - NL #
 ########################################################################
  
 showMenu()
