@@ -317,52 +317,25 @@ def indexsport():
     addDir('Sport365 - From ZemTV','',47,icon,fanart,"","","","","",)
     addDir('Wiz1','',61,icon,fanart,"","","","","",)
     addDir('GoATD','',62,icon,fanart,"","","","","",)
-    addDir('TheFeed2all.eu','',65,icon,fanart,"","","","","",)
+    addDir('Streamsarena.eu','',72,icon,fanart,"","","","","",)
+    addDir('Live9.net','',73,icon,fanart,"","","","","",)
     addDir('[COLOR orange][B]********* Special Live Sport Events for today *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
     addDir('[COLOR orange][B]******************** All time is CE *******************[/B][/COLOR]','',70,icon ,  fanart,'','','','')
     getData(base64.b64decode(ASBase5),'')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
     
-def Catfeed2all():
-        addDir('Football' ,'football.html',64,icon ,  FANART,'','','','')
-        addDir('AM. Football' ,'american-football.html',64,icon ,  FANART,'','','','')
-        addDir('Basketball' ,'basketball.html',64,icon ,  FANART,'','','','')
-        addDir('Boxing/WWE/UFC' ,'boxing-wwe-ufc.html',64,icon ,  FANART,'','','','')
-        addDir('Rugby' ,'rugby.html',64,icon ,  FANART,'','','','')
-        addDir('Ice Hockey' ,'ice-hockey.html',64,icon ,  FANART,'','','','')
-        addDir('Tennis' ,'tennis.html',64,icon ,  FANART,'','','','')
-        addDir('Motorsport' ,'motosport.html',64,icon ,  FANART,'','','','')
-        addDir('Golf' ,'golf.html',64,icon ,  FANART,'','','','')
-        addDir('Baseball' ,'baseball.html',64,icon ,  FANART,'','','','')
-        addDir('Darts' ,'darts.html',64,icon ,  FANART,'','','','')
-        addDir('Snooker' ,'snooker.html',64,icon ,  FANART,'','','','')
-        addDir('Handball' ,'handball.html',64,icon ,  FANART,'','','','')
-        addDir('Cricket' ,'cricket.html',64,icon ,  FANART,'','','','')
-        addDir('Aussie Rules' ,'aussie-rules.html',64,icon ,  FANART,'','','','')
-        addDir('Others' ,'others.html',64,icon ,  FANART,'','','','')
-	return
 
-def getfeedSchedule(url):
-    feedpage = getHtml('http://www.thefeed2all.eu/type/' + url)
-    match = re.compile('<span class=\".+?\">(.*?)</span> </span>(.*?)</a>.+?<a  href=\'(.*?)\' title=\'.+?\' target=.+?>Link 1</a>',re.DOTALL).findall(feedpage)
-    for tijd, wedstrijd,url in match:
-        try:
-           dt = datetime.strptime(tijd, "%H:%M")
-           dt = dt + timedelta(hours=2)
-           tijd = str(dt.hour).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
-        except :
-            pass
-        tekstregel = tijd+''+wedstrijd
-        url = 'http://www.thefeed2all.eu/' + url
-        addDir(tekstregel, url, 60, icon,fanart,"","","","","",isItFolder=False)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
-    
 
+
+
+	
 def playLiveResolver(url):
     import liveresolver
-    resolved = liveresolver.resolve(url)
+    resolved = liveresolver.resolve(url) 
     if resolved:
+        #if 'p2pcast' in resolved:
+        #    resolved = 'plugin://plugin.video.f4mTester/?streamtype=HLS&amp;url=' + urllib.quote_plus(resolved)
         xbmc.Player().play(resolved)
     else:
         xbmc.executebuiltin("XBMC.Notification(AwesomeStreams,No playable link found. - ,5000)")
@@ -373,9 +346,9 @@ def getgoatSchedule():
     goatpage = getHtml('http://goatd.net/')
     match = re.compile(r'<b>ET</b></td>\s+<td[^<]+><img src="([^"]+)".*?href="([^"]+)"[^>]+>([^<]+)<.*?<b>([^<]+)<.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(goatpage)
     for img, url, wedstrijd, tijd, tijdzone in match:
-        tekstregel = tijd + ' ' + tijdzone + ' - ' + wedstrijd
-        url = 'http://goatd.net/' + url
-        addDir(tekstregel, url, 60, img,"","","","","","",isItFolder=False)
+		tekstregel = '[COLOR orange]' + tijd + '[/COLOR]' + ' ' + tijdzone + ' - ' + wedstrijd
+		url = 'http://goatd.net/' + url
+		addDir(tekstregel, url, 60, img,"","","","","","",isItFolder=False)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
@@ -383,9 +356,28 @@ def getWizSchedule():
     wizpage = getHtml('http://www.wiz1.net/lag10_home.php')
     match = re.compile(r'(\d{2}:\d{2}) <font color="#5185C9"><b>([^<]+)</b></font> ([^<]+)<a href="([^"]+)"', re.DOTALL | re.IGNORECASE).findall(wizpage)
     for tijd, sport, wedstrijd, url in match:
-        tekstregel = tijd + ' - ' + sport + ' - ' + wedstrijd
+        tekstregel = '[COLOR orange]' + tijd + '[/COLOR]'+ ' - ' + sport + ' - ' + wedstrijd
         addDir(tekstregel, url, 60,"","","","","","","",isItFolder=False)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+	
+def getlive9Schedule():
+    arenapage = getHtml('http://live9.net/')
+    match = re.compile(r'(\d{2}:\d{2}) <font color="#ffea01"><b>([^<]+)</b></font> ([^<]+)<a href="([^"]+)"', re.DOTALL | re.IGNORECASE).findall(arenapage)
+    for tijd, sport, wedstrijd, url in match:
+        tekstregel = '[COLOR orange]' + tijd + '[/COLOR]' + ' - ' + sport + ' - ' + wedstrijd
+        url = url.replace("t/live","t/lives")
+        addDir(tekstregel, url, 60,"","","","","","",isItFolder=False)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))	
+
+	
+def getarenaSchedule():
+    arenapage = getHtml('http://www.streamsarena.eu/')
+    match = re.compile(r'(\d{2}:\d{2})([^"]+)  on <a href="../streams/stream([\d]+)', re.DOTALL | re.IGNORECASE).findall(arenapage)
+    for tijd, wedstrijd, url in match:
+        tekstregel = '[COLOR orange]'+ tijd + '[/COLOR]' + ' - ' + wedstrijd
+        url = 'http://www.streamsarena.eu/player/player%s.html' % url
+        addDir(tekstregel, url, 60,"","","","","","",isItFolder=False)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))		
 
 
 def getHtml(url, referer=None, hdr=None, data=None):
@@ -3005,7 +2997,6 @@ elif mode==47 :
     
 elif mode==48:
     url=base64.b64decode(url)
-    xbmc.log(url)
     playSports365(url.split('Sports365:')[1])
     	  	
 elif mode==53:
@@ -3021,16 +3012,18 @@ elif mode==61:
 elif mode==62:
     getgoatSchedule()
 
-elif mode==64:
-	getfeedSchedule(url)	
- 
-elif mode==65:
-    Catfeed2all()   
-
 if mode==70:
     addon_log("indexsport")
     indexsport()
 if mode==71:
     ASIndex()
+
+elif mode==72:
+    getarenaSchedule()
+    
+elif mode==73:
+    getlive9Schedule()
+	  
+	  
    
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
