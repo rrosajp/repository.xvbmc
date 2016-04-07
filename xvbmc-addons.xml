@@ -82,6 +82,27 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
+<addon id="plugin.video.carpool-karaoke"
+	name="Carpool Karaoke"
+	version="1.0.3"
+	provider-name="Scott Marten">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.0.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">The Late Late Show with James Corden</summary>
+    <description lang="en"> </description>
+    <platform>all</platform>
+    <forum>n/a</forum>
+    <website>n/a</website>
+  </extension>
+</addon>
+
 <addon id="plugin.video.dss"
        name="Dutch Sport Streams"
        version="5.2.0"
