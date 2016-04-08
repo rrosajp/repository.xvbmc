@@ -988,7 +988,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
 </addon>
 
-<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.01e" provider-name="XvBMC NL">
+<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.02.005" provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
 	<import addon="script.schoonmaak" version="1.10.00"/>
@@ -998,7 +998,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">XvBMC Nederland - Maintenance/update(r).</summary>
-    <description lang="en">XvBMC Maintenance ; Updates, tweaks, config's (v3-Jarvis)</description>
+    <description lang="en">XvBMC Maintenance ; Updates, tweaks, config's (v3 LibreELEC Jarvis)</description>
 	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
 	<platform>all</platform>
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
