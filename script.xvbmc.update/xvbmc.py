@@ -228,7 +228,7 @@ def subDEVmenu():
     # Create list of menu items                                                   #
     userchoice = []
     userchoice.append("XvBMC #DEV# Corner (Firmware - Cutting Edge)")
-    userchoice.append("XvBMC #DEV# Corner (Firmware - 4 april 2016)")
+    userchoice.append("XvBMC #DEV# Corner (Firmware - 8 april 2016)")
     userchoice.append("XvBMC #DEV# Corner (Firmware - XvBMC v3 RC4)")
     userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.1)")
     userchoice.append("Exit")
@@ -243,7 +243,7 @@ def subDEVmenu():
         FirmwareRecent()
     
     #    /storage/.kodi/addons/script.xvbmc.update/resources/firmwaretested.sh    #
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - 4 april 2016)":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - 8 april 2016)":
         FirmwareTested()
     
     #    /storage/.kodi/addons/script.xvbmc.update/resources/firmwareimage.sh     #
