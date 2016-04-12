@@ -300,8 +300,8 @@ def findStream(page) :
 def ASIndex():
     addon_log("ASIndex")
     addDir('[COLOR orange][B]********* Awesome Streams *********[/B][/COLOR]','',71,icon ,  fanart,'','','','')
-    addDir('News','News',46,icon ,  FANART,'','','','')
-    addDir('Privacy Policy','Privacy Policy',45,icon ,  FANART,'','','','')
+    addDir('News','News',46,icon ,  FANART,'','','','',isItFolder=False)
+    addDir('Privacy Policy','Privacy Policy',45,icon ,  FANART,'','','','',isItFolder=False)
     addDir('[COLOR orange][B]******** Adition Categories ********[/B][/COLOR]','',71,icon ,  fanart,'','','','')
     getData(base64.b64decode(ASBase),'')
     addDir('Live Sport','',70,icon ,  FANART,'','','','')
@@ -313,15 +313,15 @@ def ASIndex():
 
 def indexsport():
     addon_log("indexsport")
-    addDir('[COLOR orange][B]********* Extra Streams *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
+    addDir('[COLOR orange][B]******** Sport Agenda Highlighted Events for today *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
+    addDir('Sport Agenda Highlighted Events','',43,icon, FANART,'','','','',isItFolder=False)
+    addDir('[COLOR orange][B]****** Extra Streams ****** All time is CET GMT+2 ****[/B][/COLOR]','',70,icon ,  fanart,'','','','')
     addDir('Sport365 - From ZemTV','',47,icon,fanart,"","","","","",)
     addDir('Wiz1','',61,icon,fanart,"","","","","",)
     addDir('GoATD','',62,icon,fanart,"","","","","",)
     addDir('Streamsarena.eu','',72,icon,fanart,"","","","","",)
     addDir('Live9.net','',73,icon,fanart,"","","","","",)
-    addDir('[COLOR orange][B]********* Special Live Sport Events for today *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
-    addDir('[COLOR orange][B]******************** All time is CE *******************[/B][/COLOR]','',70,icon ,  fanart,'','','','')
-    getData(base64.b64decode(ASBase5),'')
+    addDir('[COLOR orange][B]**********************************************[/B][/COLOR]','',70,icon ,  fanart,'','','','')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
     
@@ -373,11 +373,19 @@ def getlive9Schedule():
 def getarenaSchedule():
     arenapage = getHtml('http://www.streamsarena.eu/')
     match = re.compile(r'(\d{2}:\d{2})([^"]+)  on <a href="../streams/stream([\d]+)', re.DOTALL | re.IGNORECASE).findall(arenapage)
-    for tijd, wedstrijd, url in match:
+    for tijd, wedstrijd,url in match:
+        try:
+           dt = datetime.strptime(tijd, "%H:%M")
+           dt = dt + timedelta(hours=-1)
+           tijd = str(dt.hour).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
+        except :
+            pass    
         tekstregel = '[COLOR orange]'+ tijd + '[/COLOR]' + ' - ' + wedstrijd
         url = 'http://www.streamsarena.eu/player/player%s.html' % url
         addDir(tekstregel, url, 60,"","","","","","",isItFolder=False)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))		
+
+    
 
 
 def getHtml(url, referer=None, hdr=None, data=None):
@@ -396,6 +404,23 @@ def getHtml(url, referer=None, hdr=None, data=None):
     response.close()
     return data    
 
+    
+def SportAgenda():
+    tekst = ''
+    txtagenda = getHtml('https://github.com/Awesomestreams/AwesomeStreams/raw/master/xml/agenda.txt')
+    for regel in txtagenda.splitlines():
+        try:
+            tijd, tijdz, wedstrijd, waar = regel.split(';')
+            tijd = '[COLOR orange]%s[/COLOR] - ' % tijd
+            tijdz = '[COLOR white]%s[/COLOR] - ' % tijdz
+            wedstrijd = '[COLOR orange]%s[/COLOR] - ' % wedstrijd
+            waar = '[COLOR white]%s[/COLOR]' % waar
+            tekst1 = tijd+tijdz+wedstrijd+waar+'\n\r'
+            tekst = tekst+tekst1
+        except: pass
+    showText('[COLOR orange][B]AwesomeStreams Agenda Highlighted Events[/B][/COLOR]', tekst)
+    
+    
 def News():
 	text = ''
 	twit = 'http://bit.ly/1VPcNkj'
@@ -2985,6 +3010,11 @@ elif mode==40:
     SearchChannels()
     SetViewThumbnail()
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+
+elif mode==43:
+    SportAgenda()
+        
 
 elif mode==45:
     Privacy_Policy()
