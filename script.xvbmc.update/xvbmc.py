@@ -266,7 +266,7 @@ class FirmwareRecentClass(xbmcgui.Window):
 class FirmwareTestedClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry advised Firmware','Flash 4 april 2016 PI firmware?'):
+    if dialog.yesno('XvBMC NL Raspberry advised Firmware','Flash 8 april 2016 PI firmware?'):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/firmwaretested.sh"
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')

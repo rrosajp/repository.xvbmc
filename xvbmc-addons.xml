@@ -899,8 +899,8 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.schoonmaak"
        name="Kodi Schoonmaak"
-       version="1.10.00"
-       provider-name="Raw Maintenance">
+       version="1.10.01"
+       provider-name="Raw Maintenance (XvBMC MOD)">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -909,8 +909,8 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary>Kodi Schoonmaak 1.10.00 / Raw Maintinance 0.1.10</summary>
-    <description>For support please visit www.no-issue.ca </description>
+    <summary>Kodi Schoonmaak 1.10.01 / Raw Maintinance 0.1.10</summary>
+    <description>For OFFICIAL RAW Maintenance support only:  please visit www.no-issue.ca </description>
     <language></language>
     <license></license>
     <source></source>
@@ -1003,10 +1003,10 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
 </addon>
 
-<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.02.005b" provider-name="XvBMC NL">
+<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.02.005c" provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-	<import addon="script.schoonmaak" version="1.10.00"/>
+	<import addon="script.schoonmaak" version="1.10.01"/>
   </requires>
    <extension point="xbmc.python.script" library="xvbmc.py">
    <provides>executable</provides>
