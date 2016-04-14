@@ -785,6 +785,21 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
+<addon id="script.openelec.raspberry.codec"
+       name="OpenELEC RPi Codec Config"
+       version="0.20.1"
+       provider-name="Scott Marten">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="os.openelec.tv" version="2.0" optional="false"/>
+  </requires>
+  <extension point="xbmc.service" library="service.py" start="startup"/>
+  <extension point="xbmc.python.script" library="default.py"/>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon id="script.openelec.rpi2.overclock.wizard"
        name="OpenELEC RPi2 Overclock Wizard"
        version="1.20.3"
