@@ -171,5 +171,48 @@ class NineMovies_Scraper(scraper.Scraper):
         for key in data:
             if not key.startswith('_'):
                 for i, c in enumerate(data[key]):
-                    n += ord(c) * (i + 2016 + len(data[key]))
+                    n += ord(c) * (i + 123456 + len(data[key]))
         return {'_token': hex(n)[2:]}
+
+    def __get_xtoken(self, referer):
+        url = urlparse.urljoin(self.base_url, 'fghost')
+        headers = {'Referer': referer}
+        html = self._http_get(url, headers=headers, cache_limit=.25)
+        log_utils.log(html)
+        match = re.search('in\s+(.*?)\)\s+ks', html)
+        k = self.__get_dict(match.group(1), html) if match else ''
+        match = re.search('data\[.*?]\s*=\s*([^\[]+)', html)
+        v = self.__get_dict(match.group(1), html) if match else ''
+        if k and v:
+            data = {}
+            l = 0
+            while l < len(k):
+                last_l = l
+                for i in k:
+                    if k[i] == l:
+                        data[k[i]] = v[i]
+                        l = len(data)
+                
+                if last_l == l:
+                    return
+                        
+            token = ''.join([str(data[key]) for key in data])
+            rt = str(len(token))
+            s = urlparse.urlparse(self.base_url).hostname
+            for i, c in enumerate(token):
+                rt += '.' + c
+                try: nc = str(ord(s[i]))
+                except: nc = str(random.randint(0, 5))
+                rt += '.' + nc
+            return rt
+    
+    def __get_dict(self, var, html):
+        log_utils.log(var)
+        match = re.search('\s+%s\s*=\s*({[^}]+})' % (var), html)
+        if match:
+            return eval(match.group(1))
+
+    @classmethod
+    def has_proxy(cls):
+        return True
+    

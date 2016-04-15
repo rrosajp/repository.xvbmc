@@ -99,17 +99,17 @@ def perform_auto_conf(responses):
         kodi.set_setting('sort6_field', '4')
 
     if responses[10]:
-        tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'DD.tv', 'NoobRoom',
-                 ['WatchHD', 'TVWTVS', 'MWM', '9Movies', '123Movies', 'niter.tv', 'HDMovie14', 'ororo.tv', 'm4ufree'],
-                 ['torba.se', 'StreamLord', 'CyberReel', 'tunemovie', 'MovieMax', 'MovieLocker', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'MovieXK'],
-                 ['PelisPedia', 'DayT.se', 'FardaDownload', 'PutMV', 'vivo.to', 'MiraDeTodo', 'FireMoviesHD', 'SeriesWatch'],
-                 ['SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
-                 ['DiziFilmHD', 'DL-Pars', 'DDLValley', '2DDL', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'TVRelease.Net', 'alluc.com'],
-                 ['IceFilms', 'Flixanity', 'Rainierland', 'WatchEpisodes', 'PrimeWire', 'tvonline', 'WatchSeries', 'Putlocker'],
-                 ['Ganool', 'MovieWatcher', 'WatchFree.to', 'pftv', 'streamallthis.is', 'afdah', 'SolarMovie'],
-                 ['UFlix.org', 'wso.ch', 'MovieSub', 'MovieHut', 'Watch8Now', 'yshows', 'iWatchOnline', 'MerDB'],
+        tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
+                 ['WatchHD', 'IFlix', 'MoviesPlanet', 'TVWTVS', 'MWM', '9Movies', '123Movies', 'niter.tv', 'HDMovie14', 'ororo.tv', 'm4ufree'],
+                 ['torba.se', 'StreamLord', 'CyberReel', 'tunemovie', 'MovieLocker', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'MovieXK'],
+                 ['Stage66', 'PelisPedia', 'DayT.se', 'FardaDownload', 'PutMV', 'vivo.to', 'MiraDeTodo', 'FireMoviesHD', 'SeriesWatch'],
+                 ['HEVCBluRay', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
+                 ['CloudMovie', 'DL-Pars', 'DDLValley', '2DDL', 'DDLSeries', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'TVRelease.Net'],
+                 ['IceFilms', 'Flixanity', 'Rainierland', 'WatchEpisodes', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries', 'WatchSeries', 'Putlocker'],
+                 ['Ganool', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K', 'afdah', 'SolarMovie'],
+                 ['Filmovizija', 'UFlix.org', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now', 'yshows', 'iWatchOnline'],
                  ['vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD', 'LosMovies'],
-                 ['stream-tv.co', 'clickplay.to', 'MintMovies', 'MovieNight', 'cmz', 'filmikz.ch', 'moviestorm.eu'],
+                 ['wmo.ch', 'stream-tv.co', 'clickplay.to', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu'],
                  ['TheExtopia', 'MovieTube', 'FilmStreaming.in', 'RLSSource.net']]
     
         sso = []

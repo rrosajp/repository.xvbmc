@@ -15,12 +15,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import base64
 from salts_lib import log_utils
+from salts_lib import scraper_utils
 import proxy
 
-class CyberReel_Proxy(proxy.Proxy):
+scraper_key = base64.b64decode('cGFzc180X25pbmU=')
+scraper_url = base64.b64decode('aHR0cDovL3Rrbm9ycmlzLm9mZnNob3JlcGFzdGViaW4uY29tL25pbmVtb3ZpZXNfc2NyYXBlci50eHQ=')
+file_name = 'ninemovies_scraper.py'
+
+class NineMovies_Proxy(proxy.Proxy):
     try:
-        from cyberreel_scraper import CyberReel_Scraper as real_scraper
+        scraper_utils.update_scraper(file_name, scraper_url, scraper_key)
+        from ninemovies_scraper import NineMovies_Scraper as real_scraper
     except Exception as e:
         real_scraper = None
         log_utils.log('import failed: %s' % (e), log_utils.LOGDEBUG)

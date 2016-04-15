@@ -149,7 +149,8 @@ def _released_key(item):
 def to_slug(username):
     username = username.strip()
     username = username.lower()
-    username = re.sub('[^a-z0-9]', '-', username)
+    username = re.sub('[^a-z0-9_]', '-', username)
+    username = re.sub('--+', '-', username)
     return username
 
 def sort_list(sort_key, sort_direction, list_data):
@@ -569,21 +570,6 @@ def format_episode_label(label, season, episode, srts):
         label += ')[/COLOR]'
     return label
 
-def get_force_title_list():
-    filter_str = kodi.get_setting('force_title_match')
-    filter_list = filter_str.split('|') if filter_str else []
-    return filter_list
-
-def get_progress_skip_list():
-    filter_str = kodi.get_setting('progress_skip_cache')
-    filter_list = filter_str.split('|') if filter_str else []
-    return filter_list
-
-def get_force_progress_list():
-    filter_str = kodi.get_setting('force_include_progress')
-    filter_list = filter_str.split('|') if filter_str else []
-    return filter_list
-
 def record_failures(fails, counts=None):
     if counts is None: counts = {}
 
@@ -609,11 +595,6 @@ def accumulate_setting(setting, addend=1):
     cur_value = int(cur_value) if cur_value else 0
     kodi.set_setting(setting, cur_value + addend)
 
-def show_requires_source(trakt_id):
-    show_str = kodi.get_setting('exists_list')
-    show_list = show_str.split('|')
-    return str(trakt_id) in show_list
-
 def format_time(seconds):
     minutes, seconds = divmod(seconds, 60)
     if minutes > 60:
@@ -627,14 +608,19 @@ def download_media(url, path, file_name):
         progress = int(kodi.get_setting('down_progress'))
         active = not progress == PROGRESS.OFF
         background = progress == PROGRESS.BACKGROUND
-        with kodi.ProgressDialog('Premiumize Cloud', i18n('downloading') % (file_name), background=background, active=active) as pd:
-            request = urllib2.Request(url)
-            request.add_header('User-Agent', USER_AGENT)
-            request.add_unredirected_header('Host', request.get_host())
+        with kodi.ProgressDialog(kodi.get_name(), i18n('downloading') % (file_name), background=background, active=active) as pd:
+            try:
+                headers = dict([item.split('=') for item in (url.split('|')[1]).split('&')])
+                for key in headers: headers[key] = urllib.unquote(headers[key])
+            except:
+                headers = {}
+            if 'User-Agent' not in headers: headers['User-Agent'] = USER_AGENT
+            request = urllib2.Request(url.split('|')[0], headers=headers)
             response = urllib2.urlopen(request)
-            content_length = 0
             if 'Content-Length' in response.info():
                 content_length = int(response.info()['Content-Length'])
+            else:
+                content_length = 0
     
             file_name = file_name.replace('.strm', get_extension(url, response))
             full_path = os.path.join(path, file_name)
@@ -645,8 +631,9 @@ def download_media(url, path, file_name):
                 try: xbmcvfs.mkdirs(path)
                 except: os.makedirs(path)
             except Exception as e:
-                log_utils.log('Dir Create Failed: %s' % (e), log_utils.LOGDEBUG)
+                log_utils.log('Path Create Failed: %s (%s)' % (e, path), log_utils.LOGDEBUG)
     
+            if not path.endswith(os.sep): path += os.sep
             if not xbmcvfs.exists(path):
                 raise Exception(i18n('failed_create_dir'))
             
@@ -783,3 +770,106 @@ def _byteify(data, ignore_dicts=False):
     if isinstance(data, dict) and not ignore_dicts:
         return dict([(_byteify(key, ignore_dicts=True), _byteify(value, ignore_dicts=True)) for key, value in data.iteritems()])
     return data
+
+def get_force_title_list():
+    return __get_list('force_title_match')
+
+def get_progress_skip_list():
+    return __get_list('progress_skip_cache')
+
+def get_force_progress_list():
+    return __get_list('force_include_progress')
+
+def get_min_rewatch_list():
+    return __get_list('rewatch_min_list')
+
+def get_max_rewatch_list():
+    return __get_list('rewatch_max_list')
+
+def show_requires_source(trakt_id):
+    return str(trakt_id) in __get_list('exists_list')
+
+def __get_list(setting):
+    filter_str = kodi.get_setting(setting)
+    filter_list = filter_str.split('|') if filter_str else []
+    return filter_list
+
+def get_next_rewatch_method(trakt_id):
+    rewatch_method = get_rewatch_method(trakt_id)
+    if rewatch_method == REWATCH_METHODS.LAST_WATCHED:
+        return i18n('least_watched_method'), REWATCH_METHODS.LEAST_WATCHED
+    elif rewatch_method == REWATCH_METHODS.LEAST_WATCHED:
+        return i18n('most_watched_method'), REWATCH_METHODS.MOST_WATCHED
+    else:
+        return i18n('last_watched_method'), REWATCH_METHODS.LAST_WATCHED
+    
+def get_rewatch_method(trakt_id):
+    if str(trakt_id) in get_min_rewatch_list():
+        return REWATCH_METHODS.LEAST_WATCHED
+    elif str(trakt_id) in get_max_rewatch_list():
+        return REWATCH_METHODS.MOST_WATCHED
+    else:
+        return REWATCH_METHODS.LAST_WATCHED
+
+def make_plays(history):
+    plays = {}
+    if 'seasons' in history:
+        for season in history['seasons']:
+            plays[season['number']] = {}
+            for episode in season['episodes']:
+                plays[season['number']][episode['number']] = episode['plays']
+    log_utils.log('Plays: %s' % (plays), log_utils.LOGDEBUG)
+    return plays
+    
+def get_next_rewatch(trakt_id, plays, progress):
+    rewatch_method = get_rewatch_method(trakt_id)
+    next_episode = None
+    pick_next = False
+    if rewatch_method == REWATCH_METHODS.LEAST_WATCHED:
+        min_plays = None
+        for season in progress['seasons']:
+            ep_plays = plays.get(season['number'], {})
+            for episode in season['episodes']:
+                if min_plays is None or ep_plays.get(episode['number'], 0) < min_plays:
+                    next_episode = {'season': season['number'], 'episode': episode['number']}
+                    min_plays = ep_plays.get(episode['number'], 0)
+                    log_utils.log('Min Episode: %s - %s' % (min_plays, next_episode), log_utils.LOGDEBUG)
+    elif rewatch_method == REWATCH_METHODS.MOST_WATCHED:
+        max_plays = None
+        for season in progress['seasons']:
+            ep_plays = plays.get(season['number'], {})
+            for episode in season['episodes']:
+                if max_plays is None or pick_next:
+                    next_episode = {'season': season['number'], 'episode': episode['number']}
+                    if max_plays is None:
+                        max_plays = 0
+                        first_episode = next_episode
+                    pick_next = False
+                    log_utils.log('Max Next Episode: %s' % (next_episode), log_utils.LOGDEBUG)
+                if ep_plays.get(episode['number'], 0) >= max_plays:
+                    pick_next = True
+                    max_plays = ep_plays.get(episode['number'], 0)
+                    log_utils.log('Max Episode: %sx%s = %s' % (season['number'], episode['number'], max_plays))
+            
+            if max_plays == ep_plays.get(episode['number'], 0):
+                next_episode = first_episode
+    else:
+        last_watched_at = progress['last_watched_at']
+        first = True
+        first_episode = None
+        for season in progress['seasons']:
+            for episode in season['episodes']:
+                if first:
+                    first_episode = {'season': season['number'], 'episode': episode['number']}
+                    first = False
+                    
+                if last_watched_at is None or pick_next:
+                    return {'season': season['number'], 'episode': episode['number']}
+                elif episode['last_watched_at'] == last_watched_at:
+                    log_utils.log('Last Watched: Season: %s - %s' % (season['number'], episode), log_utils.LOGDEBUG)
+                    pick_next = True
+        
+        if next_episode is None:
+            next_episode = first_episode
+    
+    return next_episode
