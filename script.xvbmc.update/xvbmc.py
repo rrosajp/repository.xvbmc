@@ -43,7 +43,7 @@ def showMenu():
     userchoice.append("XvBMC ServicePack (1 t/m ..) bulk pack")
     userchoice.append("XvBMC System/OS LibreELEC_v6.95.1")
     userchoice.append("XvBMC Refresh UpdateAddonRepos")
-    userchoice.append("XvBMC OverClock (Raspbery Pi)")
+    userchoice.append("XvBMC OverClock (raspberry Pi)")
     userchoice.append("XvBMC #DEV# Corner (Firmware-OpenELEC-etc)")
     userchoice.append("XvBMC Tweaking")
     userchoice.append("Exit")
@@ -70,7 +70,7 @@ def showMenu():
         forceRefresh()
     
     #    OCmenu  XvBMC Nederland                                                      #
-    elif userchoice[inputchoice] == "XvBMC OverClock (Raspbery Pi)":
+    elif userchoice[inputchoice] == "XvBMC OverClock (raspberry Pi)":
         subOCmenu()
     
     #    DEVmenu XvBMC Nederland                                                      #
