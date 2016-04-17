@@ -205,7 +205,7 @@ class Config1Class(xbmcgui.Window):
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')
  
-class Config1Class(xbmcgui.Window):
+class Config2Class(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL Raspberry Pi instellen','Turbo-overclock Raspberry Pi?'):
@@ -213,7 +213,7 @@ class Config1Class(xbmcgui.Window):
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')
  
-class Config2Class(xbmcgui.Window):
+class Config3Class(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL Raspberry Pi instellen','x265-overclock Raspberry Pi?'):
@@ -226,15 +226,15 @@ def Config0():
     del mydisplay
  
 def Config1():
-    mydisplay = Config0Class()
-    del mydisplay
- 
-def Config2():
     mydisplay = Config1Class()
     del mydisplay
  
-def Config3():
+def Config2():
     mydisplay = Config2Class()
+    del mydisplay
+ 
+def Config3():
+    mydisplay = Config3Class()
     del mydisplay
  
  
