@@ -1,0 +1,8 @@
+ChangeLog: 
+http://www.rieter.net/content/category/xot/changelog/ 
+
+Download: 
+http://www.rieter.net/content/xot/downloads/ 
+
+HowTo (install): 
+http://www.rieter.net/content/xot/troubleshooting/install/ 

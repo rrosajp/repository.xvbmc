@@ -304,33 +304,22 @@ def ASIndex():
     addDir('Privacy Policy','Privacy Policy',45,icon ,  FANART,'','','','',isItFolder=False)
     addDir('[COLOR orange][B]******** Adition Categories ********[/B][/COLOR]','',71,icon ,  fanart,'','','','')
     getData(base64.b64decode(ASBase),'')
-    addDir('Live Sport','',70,icon ,  FANART,'','','','')
+    addDir('Sport365 - From ZemTV','',47,icon,fanart,"","","","","",)
+    addDir('Wiz1','',61,icon,fanart,"","","","","",)
+    addDir('GoATD','',62,icon,fanart,"","","","","",)
+    addDir('Streamsarena.eu','',72,icon,fanart,"","","","","",)
+    addDir('Live9.net','',73,icon,fanart,"","","","","",)
+    addDir('[COLOR orange][B]********** All time is CET GMT+2 *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
+    addDir('Sport Agenda Highlighted Events','',43,icon, FANART,'','','','',isItFolder=False)
     addDir('[COLOR orange][B]****************************************[/B][/COLOR]','',71,icon ,  fanart,'','','','')
 
 
  
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
-def indexsport():
-    addon_log("indexsport")
-    addDir('[COLOR orange][B]******** Sport Agenda Highlighted Events for today *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
-    addDir('Sport Agenda Highlighted Events','',43,icon, FANART,'','','','',isItFolder=False)
-    addDir('[COLOR orange][B]****** Extra Streams ****** All time is CET GMT+2 ****[/B][/COLOR]','',70,icon ,  fanart,'','','','')
-    addDir('Sport365 - From ZemTV','',47,icon,fanart,"","","","","",)
-    addDir('Wiz1','',61,icon,fanart,"","","","","",)
-    addDir('GoATD','',62,icon,fanart,"","","","","",)
-    addDir('Streamsarena.eu','',72,icon,fanart,"","","","","",)
-    addDir('Live9.net','',73,icon,fanart,"","","","","",)
-    addDir('[COLOR orange][B]**********************************************[/B][/COLOR]','',70,icon ,  fanart,'','','','')
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
-
-    
-
-
-
 
 	
-def playLiveResolver(url):
+def playLiveResolver(url, name):
     import liveresolver
     resolved = liveresolver.resolve(url) 
     if resolved:
@@ -339,7 +328,9 @@ def playLiveResolver(url):
         xbmc.Player().play(resolved)
     else:
         xbmc.executebuiltin("XBMC.Notification(AwesomeStreams,No playable link found. - ,5000)")
-    xbmc.Player().play(resolved)
+    liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png",thumbnailImage="DefaultVideo.png")
+    liz.setInfo( type="Video", infoLabels={ "Title": name } )
+    xbmc.Player().play(resolved, liz)
     
 
 def getgoatSchedule():
@@ -3034,7 +3025,7 @@ elif mode==53:
     pluginquerybyJSON(url)
     
 elif mode==60:
-    playLiveResolver(url)
+    playLiveResolver(url, name)
 
 elif mode==61:
     getWizSchedule()
@@ -3042,9 +3033,6 @@ elif mode==61:
 elif mode==62:
     getgoatSchedule()
 
-if mode==70:
-    addon_log("indexsport")
-    indexsport()
 if mode==71:
     ASIndex()
 
