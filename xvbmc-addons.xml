@@ -633,13 +633,14 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id='script.module.libtorrent' version='1.0.8' name='python-libtorrent' provider-name='DiMartino, srg70, RussakHH, aisman'>
+<addon id='script.module.libtorrent' version='1.1.0' name='python-libtorrent' provider-name='DiMartino, srg70, RussakHH, aisman, inpos'>
   <requires>
     <import addon='xbmc.python' version='2.1.0'/>
   </requires>
   <extension point="xbmc.python.script" library="default.py">
     <provides>executable</provides>
   </extension>
+  <extension point="xbmc.python.module" library="python_libtorrent"/>
   <extension point='xbmc.addon.metadata'>
     <platform>all</platform>
     <summary lang='en'>script.module.libtorrent is a Kodi module that makes easy import of python-libtorrent for you.</summary>
@@ -1025,7 +1026,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
 </addon>
 
-<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.02.6951f" provider-name="XvBMC NL">
+<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.02.6951x" provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
 	<import addon="script.schoonmaak" version="1.10.01"/>

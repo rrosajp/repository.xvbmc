@@ -23,7 +23,8 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 
-from python_libtorrent import get_libtorrent, get_platform, log
+from python_libtorrent.python_libtorrent import get_libtorrent, log
+from python_libtorrent.platform_pulsar import get_platform
 import xbmcgui
 import xbmcaddon, xbmc
 
