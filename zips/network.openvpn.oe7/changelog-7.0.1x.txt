@@ -1,0 +1,15 @@
+7.0.1x
++ "os.openelec.tv version=7.0"(XvBMC-NL)
++ "addon id="network.openvpn.oe7"
+
+6.0.0
+- rebuild for OE6
+
+4.3.3
+- update to openvpn-2.3.6
+
+4.3.2
+- rebuild
+
+4.3.0
+- initial release

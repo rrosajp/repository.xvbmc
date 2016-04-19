@@ -1,5 +1,6 @@
-6.0.0c
-- rebuild for OE6 (XvBMC-NL: most compabtible edition v6.0.0c)
+7.0.1x
++ "os.openelec.tv version=7.0"(XvBMC-NL)
++ "addon id="network.openvpn.oe7"
 
 6.0.0
 - rebuild for OE6
