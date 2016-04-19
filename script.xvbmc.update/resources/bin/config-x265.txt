@@ -1,9 +1,12 @@
 # Config settings
 [all] 
-  gpu_mem=320
+  force_turbo=1
+
+  gpu_freq=333
+  gpu_mem=350
   gpu_mem_256=128
   gpu_mem_512=160
-  gpu_mem_1024=320
+  gpu_mem_1024=350
   
   over_voltage=4
   over_voltage_sdram=5
@@ -23,7 +26,7 @@
   hdmi_pixel_encoding=3
   
   disable_splash=1
-  max_usb_current=0
+  max_usb_current=1
   
 # decode_DTS=0x00000000
 # decode_DDP=0x00000000
@@ -36,16 +39,12 @@
   arm_freq=1064
   core_freq=560
   sdram_freq=550
-  gpu_freq=400
-  force_turbo=1
   dtparam=sd_overclock=79
   
   
 [pi3]
   
-  arm_freq=1350
-  core_freq=530
+  arm_freq=1300
+  core_freq=500
   sdram_freq=580
-  gpu_freq=500
-  force_turbo=1
   dtparam=sd_overclock=83 

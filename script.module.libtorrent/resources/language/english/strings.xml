@@ -13,17 +13,22 @@
 	<string id="1101">Linux 32-bit</string>
 	<string id="1102">Linux 64-bit</string>
 	<string id="1103">Linux ARM v7 (RPi 2)</string>
-	<string id="1104">Linux ARM v6 (RPi, not ready)</string>
+	<string id="1104">Linux ARM v6 (RPi)</string>
 	<string id="1105">Android ARM v7</string>
 	<string id="1106">Android 32-bit</string>
 	<string id="1107">OS X</string>
-	<string id="1108">Apple TV2 (not ready)</string>
-	<string id="1109">iOS (not ready)</string>
+	<string id="1108">Apple TV2</string>
+	<string id="1109">iOS</string>
+	<string id="1110">Linux MIPSEL (UCS2)</string>
+	<string id="1111">Linux MIPSEL (UCS4)</string>
+    <string id="1112">Linux ARM v8 64 (AARCH64)</string>
 	
 	<string id="1150">0.16.19</string>
 	<string id="1151">1.0.6</string>
 	<string id="1152">1.0.7</string>
-	<string id="1152">1.0.8</string>
+	<string id="1153">1.0.8</string>
+	<string id="1154">1.0.9</string>
+	<string id="1154">1.1.0</string>
 	
 	<string id="1010">TS Engine not running!</string>
 	<string id="1011">No answer</string>
