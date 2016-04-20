@@ -307,7 +307,7 @@ def ASIndex():
     addDir('Sport365 - From ZemTV','',47,icon,fanart,"","","","","",)
     addDir('Wiz1','',61,icon,fanart,"","","","","",)
     addDir('GoATD','',62,icon,fanart,"","","","","",)
-    addDir('Streamsarena.eu','',72,icon,fanart,"","","","","",)
+   # addDir('Streamsarena.eu','',72,icon,fanart,"","","","","",)
     addDir('Live9.net','',73,icon,fanart,"","","","","",)
     addDir('[COLOR orange][B]********** All time is CET GMT+2 *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
     addDir('Sport Agenda Highlighted Events','',43,icon, FANART,'','','','',isItFolder=False)
@@ -361,20 +361,20 @@ def getlive9Schedule():
     xbmcplugin.endOfDirectory(int(sys.argv[1]))	
 
 	
-def getarenaSchedule():
-    arenapage = getHtml('http://www.streamsarena.eu/')
-    match = re.compile(r'(\d{2}:\d{2})([^"]+)  on <a href="../streams/stream([\d]+)', re.DOTALL | re.IGNORECASE).findall(arenapage)
-    for tijd, wedstrijd,url in match:
-        try:
-           dt = datetime.strptime(tijd, "%H:%M")
-           dt = dt + timedelta(hours=-1)
-           tijd = str(dt.hour).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
-        except :
-            pass    
-        tekstregel = '[COLOR orange]'+ tijd + '[/COLOR]' + ' - ' + wedstrijd
-        url = 'http://www.streamsarena.eu/player/player%s.html' % url
-        addDir(tekstregel, url, 60,"","","","","","",isItFolder=False)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))		
+#def getarenaSchedule():
+#   arenapage = getHtml('http://www.streamsarena.eu/')
+#    match = re.compile(r'(\d{2}:\d{2})([^"]+)  on <a href="../streams/stream([\d]+)', re.DOTALL | re.IGNORECASE).findall(arenapage)
+#    for tijd, wedstrijd,url in match:
+#        try:
+#           dt = datetime.strptime(tijd, "%H:%M")
+#           dt = dt + timedelta(hours=-1)
+#           tijd = str(dt.hour).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
+#        except :
+#            pass    
+#        tekstregel = '[COLOR orange]'+ tijd + '[/COLOR]' + ' - ' + wedstrijd
+#        url = 'http://www.streamsarena.eu/player/player%s.html' % url
+#        addDir(tekstregel, url, 60,"","","","","","",isItFolder=False)
+#    xbmcplugin.endOfDirectory(int(sys.argv[1]))		
 
     
 
@@ -3036,8 +3036,8 @@ elif mode==62:
 if mode==71:
     ASIndex()
 
-elif mode==72:
-    getarenaSchedule()
+#elif mode==72:
+#    getarenaSchedule()
     
 elif mode==73:
     getlive9Schedule()

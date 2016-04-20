@@ -98,7 +98,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
-       version="1.0.27"
+       version="1.0.28"
        provider-name="AwesomeStreams">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -397,13 +397,14 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon
   id="plugin.video.SportsDevil"
-  version="2016.04.12.01NL"
+  version="2016.04.19.01"
   name="SportsDevil"
-  provider-name="MaxMustermann, Al101, Hubbab3, Sattekop">
+  provider-name="MaxMustermann, Al101, Hubbab3, Jairox, Sattekop">
   <requires>
    <import addon="xbmc.python" version="2.14.0"/>
    <import addon="script.module.requests" />
-   <import addon="script.module.pydevd" version="4.4.0" optional="true"/>
+   <import addon="script.module.livestreamer" />
+   <import addon="script.module.pydevd" optional="true"/>
   </requires>
   <extension
     point="xbmc.python.pluginsource"
