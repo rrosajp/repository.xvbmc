@@ -41,7 +41,7 @@ def showMenu():
     userchoice = []
     userchoice.append("XvBMC ServicePack (2 april)")
     userchoice.append("XvBMC ServicePack (1 t/m ..) bulk pack")
-    userchoice.append("XvBMC System/OS LibreELEC_v6.95.1")
+    userchoice.append("XvBMC System/OS LibreELEC_v6.95.2")
     userchoice.append("XvBMC Refresh UpdateAddonRepos")
     userchoice.append("XvBMC OverClock (raspberry Pi)")
     userchoice.append("XvBMC #DEV# Corner (Firmware-OpenELEC-etc)")
@@ -61,8 +61,8 @@ def showMenu():
     elif userchoice[inputchoice] == "XvBMC ServicePack (1 t/m ..) bulk pack":
         UpdateRollup()
     
-	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-6.95.1.tar                 #
-    elif userchoice[inputchoice] == "XvBMC System/OS LibreELEC_v6.95.1":
+	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-6.95.2.tar                 #
+    elif userchoice[inputchoice] == "XvBMC System/OS LibreELEC_v6.95.2":
         SystemOS()
     
     #    http://kodi.wiki/view/List_of_built-in_functions                             #
@@ -119,11 +119,11 @@ class UpdateRollupClass(xbmcgui.Window):
 class SystemOSClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL LibreELEC OS update','Preparing v6.95.1 and Reboot when done...'):
-        url = 'http://releases.libreelec.tv/LibreELEC-RPi2.arm-6.95.1.tar'
+    if dialog.yesno('XvBMC NL LibreELEC OS update','Preparing v6.95.2 and Reboot when done...'):
+        url = 'http://releases.libreelec.tv/LibreELEC-RPi2.arm-6.95.2.tar'
         path = xbmc.translatePath(os.path.join('/storage/.update/','')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
 #       path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
-        lib=os.path.join(path, 'libreelec6951.tar')
+        lib=os.path.join(path, 'libreelec6952.tar')
         DownloaderClass(url,lib)
  
    	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
