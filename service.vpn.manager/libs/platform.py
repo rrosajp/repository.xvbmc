@@ -19,6 +19,8 @@
 #    Platform specific calls used by VPN Manager for OpenVPN add-on.
 
 import os
+import shlex
+import subprocess
 import sys
 import xbmc
 import xbmcgui
@@ -35,7 +37,6 @@ platforms_str = ("Unknown", "Windows", "Linux, openvpn installed", "Linux, openv
 
 def fakeConnection():
     # Return True to fake out any calls to openVPN to change the network
-    if getPlatform() == platforms.WINDOWS: return True
     return False
 
     
@@ -45,11 +46,11 @@ def getPlatform():
     build_number = int(build[0:2])
     if sys.platform == "win32": return platforms.WINDOWS
     if sys.platform == "linux" or sys.platform == "linux2":
-        if build_number >= 15 and getAddonPath(True, "").startswith("/storage/.kodi/"):
+        if build_number == 15 and getAddonPath(True, "").startswith("/storage/.kodi/"):
             # For OE 6.0.0 (Kodi 15), openvpn is a separate install             
             return platforms.RPI
         else:
-            # Kodi 14 (and less?) installs and other Linux installs use the openvpn installed in usr/sbin
+            # Other OE versions and other Linux installs use the openvpn installed in usr/sbin
             return platforms.LINUX
             
     # **** ADD MORE PLATFORMS HERE ****
@@ -76,8 +77,14 @@ def getPlatformString():
 
 def getVPNLogFilePath():
     # Return the full filename for the VPN log file
+    # It's platform dependent, but can be forced to the Kodi log location
+    use_kodi_dir = xbmcaddon.Addon("service.vpn.manager").getSetting("openvpn_log_location")
     p = getPlatform()
+    if p == platforms.WINDOWS or use_kodi_dir == "true" :
+        # Putting this with the other logs on Windows
+        return xbmc.translatePath("special://logpath/openvpn.log")
     if p == platforms.LINUX or p == platforms.RPI:
+        # This should be a RAM drive so doesn't wear the media
         return "/run/openvpn.log"
         
     # **** ADD MORE PLATFORMS HERE ****
@@ -90,10 +97,15 @@ def stopVPN():
     if not fakeConnection():
         p = getPlatform()
         if p == platforms.LINUX or p == platforms.RPI:
-            command="killall -9 openvpn"            
+            command = "killall -9 openvpn"            
             if useSudo() : command = "sudo " + command
-            debugTrace("Stopping VPN with " + command)
+            debugTrace("(Linux) Stopping VPN with " + command)
             os.system(command)
+        if p == platforms.WINDOWS:
+            command = "taskkill /F /T /IM openvpn*"
+            debugTrace("(Windows) Stopping VPN with " + command)
+            args = shlex.split(command)
+            proc = subprocess.Popen(args, creationflags=subprocess.SW_HIDE, shell=True)
             
         # **** ADD MORE PLATFORMS HERE ****
         
@@ -107,14 +119,20 @@ def startVPN(vpn_profile):
         if p == platforms.RPI or p == platforms.LINUX:
             command=getOpenVPNPath() + " \"" + vpn_profile + "\" > " + getVPNLogFilePath() + " &"
             if useSudo() : command = "sudo " + command            
-            debugTrace("Starting VPN with " + command)
+            debugTrace("(Linux) Starting VPN with " + command)
             os.system(command)
+        if p == platforms.WINDOWS:   
+            command=getOpenVPNPath() + " \"" + vpn_profile + "\""
+            debugTrace("(Windows) Starting VPN with " + command)
+            args = shlex.split(command)
+            outfile = open(getVPNLogFilePath(),'w')
+            proc = subprocess.Popen(args, stdout=outfile, creationflags=subprocess.SW_HIDE, shell=True)
             
         # **** ADD MORE PLATFORMS HERE ****
         
     else:
         # This bit is just to help with debug during development.
-        command=getOpenVPNPath() + " \"" + vpn_profile + "\" > " + getVPNLogFilePath() + " &"
+        command=getOpenVPNPath() + " \"" + vpn_profile + "\" > " + getVPNLogFilePath()
         debugTrace("Faking starting VPN with " + command)
     return
 
@@ -130,14 +148,29 @@ def getOpenVPNPath():
         return getAddonPath(False, "network.openvpn/bin/openvpn")
     if p == platforms.LINUX:            
         return "/usr/sbin/openvpn"
+    if p == platforms.WINDOWS:
+        # No path specified as install will update command path
+        return "openvpn"
         
     # **** ADD MORE PLATFORMS HERE ****
     
     return
 
+
+def checkPlatform(addon):
+    if not fakeConnection():
+        p = getPlatform()
+        dialog_msg = ""
+        if p == platforms.UNKNOWN:
+            dialog_msg = addon.getAddonInfo("name") + " is not currently supported on this hardware platform."
+            xbmcgui.Dialog().ok(addon.getAddonInfo("name"), dialog_msg)
+            return False
+    return True
+
     
 def checkVPNInstall(addon):
-    # Check that openvpn is available otherwise generate an error message    
+    # Check that openvpn plugin exists (this was an issue with OE6), there's
+    # another check below that validates that the command actually works
     if not fakeConnection():
         p = getPlatform()
         dialog_msg = ""
@@ -150,16 +183,8 @@ def checkVPNInstall(addon):
                 version = version.replace(".", "")
                 if int(version) >= 600: return True
             dialog_msg = "OpenVPN executable not available.  Install the openvpn plugin, version 6.0.1 or greater from the OpenELEC unofficial repo."
-        if p == platforms.LINUX:
-            return True
-        
-        # **** ADD MORE PLATFORMS HERE ****
-
-        # Display error message
-        xbmcgui.Dialog().ok(addon.getAddonInfo("name"), dialog_msg)
-        return False        
-    else: return True
-    
+            # Display error message
+            xbmcgui.Dialog().ok(addon.getAddonInfo("name"), dialog_msg)
     return True
 
     
@@ -167,36 +192,45 @@ def checkVPNCommand(addon):
     # Issue the openvpn command and see if the output is a bunch of commands
     if not fakeConnection():
         p = getPlatform()
+        # Issue the openvpn command, expecting to get the options screen back
         if p == platforms.RPI or p == platforms.LINUX:
-            # Issue the openvpn command, expecting to get the options screen back
+            # Issue Linux command
             command = getOpenVPNPath() + " > " + getVPNLogFilePath() + " &"
+            if useSudo() : command = "sudo " + command
             infoTrace("platform.py", "Testing openvpn with : " + command)
             os.system(command)
-            xbmc.sleep(1000)
-            i = 0
-            # Waiting for the log file to appear
-            while not xbmcvfs.exists(getVPNLogFilePath()) and i < 10:
-                xbmc.sleep(1000)
-                i = i + 1
-            # If the log file appears, check it's what we expect
-            if xbmcvfs.exists(getVPNLogFilePath()):
-                log_file = open(getVPNLogFilePath(), 'r')
-                log_file_lines = log_file.readlines()
-                log_file.close()
-                i = 0
-                # Look for a phrase we'd expect to see if the call
-                # worked and the list of options was displayed
-                for line in log_file_lines:
-                    if "General Options" in line:
-                        return True
-                    i = i + 1
-                # Write the log file in case there's something in it
-                errorTrace("platform.py", "Ran openvpn command and it failed")
-                writeVPNLog()
-            else:
-                errorTrace("platform.py", "Ran openvpn command and VPN log didn't appear")
-                
+        elif p == platforms.WINDOWS:
+            # Issue Windows command
+            command=getOpenVPNPath()
+            args = shlex.split(command)
+            outfile = open(getVPNLogFilePath(),'w')
+            proc = subprocess.Popen(args, stdout=outfile, creationflags=subprocess.SW_HIDE, shell=True)
+            
         # **** ADD MORE PLATFORMS HERE ****
+                
+        # Waiting for the log file to appear            
+        xbmc.sleep(1000)
+        i = 0
+        while not xbmcvfs.exists(getVPNLogFilePath()) and i < 10:
+            xbmc.sleep(1000)
+            i = i + 1
+        # If the log file appears, check it's what we expect
+        if xbmcvfs.exists(getVPNLogFilePath()):
+            log_file = open(getVPNLogFilePath(), 'r')
+            log_file_lines = log_file.readlines()
+            log_file.close()
+            i = 0
+            # Look for a phrase we'd expect to see if the call
+            # worked and the list of options was displayed
+            for line in log_file_lines:
+                if "General Options" in line:
+                    return True
+                i = i + 1
+            # Write the log file in case there's something in it
+            errorTrace("platform.py", "Ran openvpn command and it failed")
+            writeVPNLog()
+        else:
+            errorTrace("platform.py", "Ran openvpn command and VPN log didn't appear")
         
         # Display an error message
         dialog_msg = "The OpenVPN executable isn't working.  Check the log, then from a command line prompt type 'openvpn' and fix any problems reported\n"
@@ -216,20 +250,35 @@ def isVPNTaskRunning():
     if p == platforms.LINUX or p == platforms.RPI:
         try:
             command = "pidof openvpn"
-            #if p == platforms.LINUX and use_sudo: command = "sudo " + command
+            if useSudo() : command = "sudo " + command
+            debugTrace("(Linux) Checking VPN task with " + command)
             pid = os.system(command)
             # This horrible call returns 0 if it finds a process, it's not returning the PID number
             if pid == 0 : return True
             return False
         except:
+            errorTrace("platform.py", "VPN task list failed")
             return False
-            
+    if p == platforms.WINDOWS:
+        try:
+            command = 'tasklist /FI "IMAGENAME eq OPENVPN.EXE"'
+            debugTrace("(Windows) Checking VPN task with " + command)
+            args = shlex.split(command)
+            out = subprocess.check_output(args, creationflags=subprocess.SW_HIDE, shell=True).strip()
+            if "openvpn.exe" in out:
+                return True
+            else:
+                return False
+        except:
+            errorTrace("platform.py", "VPN task list failed")
+            return False
+
     # **** ADD MORE PLATFORMS HERE ****
     
     return False
 
 
-connection_status = enum(UNKNOWN=0, CONNECTED=1, AUTH_FAILED=2, NETWORK_FAILED=3, TIMEOUT=4, ROUTE_FAILED=5, ERROR=6) 
+connection_status = enum(UNKNOWN=0, CONNECTED=1, AUTH_FAILED=2, NETWORK_FAILED=3, TIMEOUT=4, ROUTE_FAILED=5, ACCESS_DENIED=6, ERROR=7) 
     
 def getVPNConnectionStatus():
     # Open the openvpn output file and parse it for known phrases
@@ -238,10 +287,10 @@ def getVPNConnectionStatus():
     if fakeConnection(): return connection_status.UNKNOWN
 
     # **** ADD MORE PLATFORMS HERE ****
-    # Might not need to mess with this too much if the log output from openvpn is the same
+    # Might not need to mess with this too much if the log output from different platform openvpns are the same
     
     p = getPlatform()
-    if p == platforms.LINUX or p == platforms.RPI:
+    if p == platforms.LINUX or p == platforms.RPI or p == platforms.WINDOWS:
         path = getVPNLogFilePath()
         state = connection_status.UNKNOWN
         if xbmcvfs.exists(path):
@@ -258,6 +307,10 @@ def getVPNConnectionStatus():
                     state = connection_status.NETWORK_FAILED
                 if "Connection timed out" in line:
                     state = connection_status.TIMEOUT
+                if p == platforms.WINDOWS and "ROUTE" in line and "Access is denied" in line:
+                    # This is a Windows, not running Kodi as administrator error
+                    state = connection_status.ACCESS_DENIED
+                    break
                 #if "ERROR: Linux route" in line:
                     # state = connection_status.ROUTE_FAILED
                     # This tests for a Linux route failure, only it's commented out as

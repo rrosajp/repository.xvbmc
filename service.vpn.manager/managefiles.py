@@ -51,7 +51,7 @@ if action == "ovpn":
         #generateAll()
 
         # Reset the connection before we do anything else
-        if isVPNConnected(): resetVPNConnections(addon)            
+        resetVPNConnections(addon)            
         debugTrace("Deleting all generated ovpn files")
         # Delete the ovpn files and the generated flag file.
         removeGeneratedFiles()

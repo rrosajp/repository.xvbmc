@@ -165,6 +165,7 @@ if __name__ == '__main__':
     seconds_to_reboot_check = 0
     reboot_time = ""
     reboot_day = ""
+    last_file_check_time = 0
     
     last_cycle = ""
     delay = 5
@@ -290,6 +291,23 @@ if __name__ == '__main__':
                 reboot_timer = 0
                 # Assume the next check is in an hour
                 seconds_to_reboot_check = 3600
+                # Check reboot check file if there is one
+                reboot_file_name = addon.getSetting("reboot_file") 
+                if xbmcvfs.exists(reboot_file_name):
+                    stats = xbmcvfs.Stat(reboot_file_name)
+                    file_check_time = stats.st_mtime()
+                    if not file_check_time == last_file_check_time:
+                        if last_file_check_time == 0:
+                            # First check since reboot, just record the time
+                            last_file_check_time = file_check_time
+                        else:
+                            if addon.getSetting("reboot_file_enabled") == "true":
+                                if not xbmcgui.Dialog().yesno(addon_name, "System reboot about to happen because server rebooted.\nClick cancel within 30 seconds to abort.", "", "", "Reboot", "Cancel", 30000):
+                                    infoTrace("service.py", "Server rebooted, going down for a reboot")
+                                    xbmc.executebuiltin("Reboot")
+                                else:
+                                    infoTrace("service.py", "Server rebooted, system reboot aborted by user")
+                                    last_file_check_time = file_check_time
                 # Refresh the reboot timer if it's changed in the seconds
                 new_reboot_day = addon.getSetting("reboot_day")
                 new_reboot_time = addon.getSetting("reboot_time")
