@@ -31,23 +31,25 @@ from libs.common import getFriendlyProfileName
 
 def generateAll():
     infoTrace("generation.py", "Generating Location files")
+    generateBTGuard()
+    return
+    generateVPNUnlim()
+    generateHideMe()
+    generatePIA()
     generateLimeVPN()
     generateHideIPVPN()
-    return
     generateVyprVPN()
     generateIvacy()
     generateCyberGhost()
     generateTorGuard()
     generateibVPN()
     generatePP()    
-    generateHideMe()
     generateAirVPN()
     generatePureVPN()
     generateLiquidVPN()
     generatetigerVPN()
     generateHMA()    
-    generateIPVanish()
-    generatePIA()
+    generateIPVanish()    
     generateNordVPN()
 
 
@@ -64,6 +66,31 @@ def getProfileList(vpn_provider):
     return glob.glob(path)      
 
 
+def generateBTGuard():
+    # Data is stored as a bunch of ovpn files
+    # File name has location.  File has the server
+    profiles = getProfileList("BTGuard")
+    location_file = getLocations("BTGuard", "")
+    for profile in profiles:
+        if not "TCP" in profile:
+            geo = profile[profile.index("BTGuard ")+8:]
+            print geo + " " + profile
+            geo = geo.replace("- ","")
+            geo = geo.replace("(Fastest)", "Fastest")
+            geo = geo.replace(".ovpn", "")
+            profile_file = open(profile, 'r')
+            lines = profile_file.readlines()
+            profile_file.close()
+            for line in lines:
+                if line.startswith("remote "):
+                    _, server, port = line.split()  
+            output_line_udp = geo + " (UDP)," + server + "," + "udp,1194" + "\n"
+            output_line_tcp = geo + " (TCP)," + server + "," + "tcp,443" + "\n"
+            location_file.write(output_line_udp)
+            location_file.write(output_line_tcp)
+    location_file.close()    
+    
+    
 def generateLimeVPN():
     # Data is stored as a bunch of ovpn files
     # File name has the country, but needs translation, files have multiple servers/ports
@@ -267,7 +294,6 @@ def generatePP():
 def generateHideMe():
     # Data is stored in ovpn files with location info in Servers.txt
     location_file = getLocations("HideMe", "")
-    free_locations = [""]
     profiles = getProfileList("HideMe")
     for profile in profiles:
         profile_file = open(profile, 'r')
@@ -283,6 +309,23 @@ def generateHideMe():
         location_file.write(output_line)
     location_file.close()
     
+
+def generateVPNUnlim():
+    # Data is stored in ovpn files with location info in Servers.txt
+    location_file = getLocations("VPNUnlimited", "")
+    source_file = open(getAddonPath(True, "providers/VPNUnlimited/Servers.txt"), 'r')
+    servers = source_file.readlines()
+    source_file.close()
+    for entry in servers:
+        geo = entry[:entry.index(",")].strip()
+        server = entry[entry.index(",")+1:].strip()      
+        output_line_udp = geo + " (UDP)," + server + ",udp,443\n"
+        output_line_tcp = geo + " (TCP)," + server + ",tcp,80\n"
+        location_file.write(output_line_udp)
+        location_file.write(output_line_tcp) 
+    location_file.close()
+
+
     
 def generateAirVPN():
     # Data is stored in ovpn files

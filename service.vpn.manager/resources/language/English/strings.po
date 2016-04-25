@@ -300,11 +300,11 @@ msgid "Delete user key and cert files"
 msgstr ""
 
 msgctxt "#32104"
-msgid "Weekly system reboot"
+msgid "System reboot"
 msgstr ""
 
 msgctxt "#32105"
-msgid "Reboot day"
+msgid "Weekly reboot day"
 msgstr ""
 
 msgctxt "#32106"
@@ -340,18 +340,26 @@ msgid "Sunday"
 msgstr ""
 
 msgctxt "#32114"
-msgid "Reboot time (24h)"
+msgid "Weekly reboot time (24h)"
 msgstr ""
 
 msgctxt "#32115"
-msgid "Local file read speed test"
+msgid "Reboot if a remote server file changes"
 msgstr ""
 
 msgctxt "#32116"
-msgid "Source file (>50MB)"
+msgid "Remote server file"
 msgstr ""
 
 msgctxt "#32117"
+msgid "Local file read speed test"
+msgstr ""
+
+msgctxt "#32118"
+msgid "Source file (>50MB)"
+msgstr ""
+
+msgctxt "#32119"
 msgid "Run speed test"
 msgstr ""
 
@@ -383,39 +391,39 @@ msgid "OpenVPN"
 msgstr ""
 
 msgctxt "#32126"
-msgid "OpenVPN verb level (reset .ovpn files after updating)"
-msgstr ""
-
-msgctxt "#32127"
-msgid "0"
-msgstr ""
-
-msgctxt "#32128"
-msgid "1"
-msgstr ""
-
-msgctxt "#32129"
-msgid "2"
-msgstr ""
-
-msgctxt "#32130"
-msgid "3"
-msgstr ""
-
-msgctxt "#32131"
-msgid "4"
-msgstr ""
-
-msgctxt "#32132"
-msgid "5"
-msgstr ""
-
-msgctxt "#32133"
 msgid "View OpenVPN log file"
 msgstr ""
 
+msgctxt "#32127"
+msgid "OpenVPN verb level (reset .ovpn files after updating)"
+msgstr ""
+
+msgctxt "#32128"
+msgid "0"
+msgstr ""
+
+msgctxt "#32129"
+msgid "1"
+msgstr ""
+
+msgctxt "#32130"
+msgid "2"
+msgstr ""
+
+msgctxt "#32131"
+msgid "3"
+msgstr ""
+
+msgctxt "#32132"
+msgid "4"
+msgstr ""
+
+msgctxt "#32133"
+msgid "5"
+msgstr ""
+
 msgctxt "#32134"
-msgid "Use sudo with openvpn and killall"
+msgid "(Linux) Use sudo with openvpn and killall"
 msgstr ""
 
 msgctxt "#32135"
@@ -431,30 +439,34 @@ msgid "Never"
 msgstr ""
 
 msgctxt "#32138"
-msgid "Information Display"
+msgid "Always use Kodi log directory for OpenVPN log"
 msgstr ""
 
 msgctxt "#32139"
-msgid "Enable enhanced information menu option"
+msgid "Information Display"
 msgstr ""
 
 msgctxt "#32140"
-msgid "View system information window"
+msgid "Enable enhanced information menu option"
 msgstr ""
 
 msgctxt "#32141"
-msgid "Change IP location provider"
+msgid "View system information window"
 msgstr ""
 
 msgctxt "#32142"
-msgid "IP-API"
+msgid "Change IP location provider"
 msgstr ""
 
 msgctxt "#32143"
-msgid "IPInfoDB"
+msgid "IP-API"
 msgstr ""
 
 msgctxt "#32144"
+msgid "IPInfoDB"
+msgstr ""
+
+msgctxt "#32145"
 msgid "freegeoip.net"
 msgstr ""
 
@@ -466,69 +478,77 @@ msgid "AirVPN"
 msgstr ""
 
 msgctxt "#32202"
-msgid "CyberGhost"
+msgid "BTGuard"
 msgstr ""
 
 msgctxt "#32203"
-msgid "Hide.Me"
+msgid "CyberGhost"
 msgstr ""
 
 msgctxt "#32204"
-msgid "Hide My Ass"
+msgid "Hide.Me"
 msgstr ""
 
 msgctxt "#32205"
-msgid "HideIPVPN"
+msgid "Hide My Ass"
 msgstr ""
 
 msgctxt "#32206"
-msgid "Invisible Browsing VPN"
+msgid "HideIPVPN"
 msgstr ""
 
 msgctxt "#32207"
-msgid "IPVanish"
+msgid "Invisible Browsing VPN"
 msgstr ""
 
 msgctxt "#32208"
-msgid "Ivacy"
+msgid "IPVanish"
 msgstr ""
 
 msgctxt "#32209"
-msgid "LimeVPN"
+msgid "Ivacy"
 msgstr ""
 
 msgctxt "#32210"
-msgid "LiquidVPN"
+msgid "LimeVPN"
 msgstr ""
 
 msgctxt "#32211"
-msgid "NordVPN"
+msgid "LiquidVPN"
 msgstr ""
 
 msgctxt "#32212"
-msgid "Perfect Privacy"
+msgid "NordVPN"
 msgstr ""
 
 msgctxt "#32213"
-msgid "Private Internet Access"
+msgid "Perfect Privacy"
 msgstr ""
 
 msgctxt "#32214"
-msgid "PureVPN"
+msgid "Private Internet Access"
 msgstr ""
 
 msgctxt "#32215"
-msgid "tigerVPN"
+msgid "PureVPN"
 msgstr ""
 
 msgctxt "#32216"
-msgid "TorGuard"
+msgid "tigerVPN"
 msgstr ""
 
 msgctxt "#32217"
-msgid "User Defined"
+msgid "TorGuard"
 msgstr ""
 
 msgctxt "#32218"
+msgid "User Defined"
+msgstr ""
+
+msgctxt "#32219"
+msgid "VPN Unlimited"
+msgstr ""
+
+msgctxt "#32220"
 msgid "VyprVPN"
 msgstr ""

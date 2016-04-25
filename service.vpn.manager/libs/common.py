@@ -30,7 +30,7 @@ import glob
 import sys
 from libs.platform import getVPNLogFilePath, fakeConnection, isVPNTaskRunning, stopVPN, startVPN, getAddonPath, getSeparator, getUserDataPath
 from libs.platform import getVPNConnectionStatus, connection_status, getPlatform, platforms, writeVPNLog, checkVPNInstall, checkVPNCommand
-from libs.platform import getPlatformString
+from libs.platform import getPlatformString, checkPlatform, useSudo
 from libs.utility import debugTrace, infoTrace, errorTrace, ifDebug
 from libs.vpnproviders import getVPNLocation, getRegexPattern, getAddonList, provider_display, usesUserKeys, usesSingleKey, gotKeys
 from libs.vpnproviders import ovpnFilesAvailable, ovpnGenerated, fixOVPNFiles, getLocationFiles, removeGeneratedFiles, copyKeyAndCert
@@ -124,9 +124,11 @@ def getIPInfo(addon):
             # Got a response but couldn't format it.  No point retrying
             return source, "no info", "unknown", "unknown"
         elif ip == "error":
-            errorTrace("common.py", "Something bad happened when trying to get a response from iplocation.net " + isp)
+            debugTrace("Didn't get a good response from "  + source + ", retrying.")
             # Didn't get a valid response so want to retry three times in case service was busy
-            if retry == 2 : return source + " (not available)", "unknown", "unknown", "unknown"
+            if retry == 2 :
+                errorTrace("common.py", "Given up trying to get a response from "  + source)
+                return source + " (not available)", "unknown", "unknown", "unknown"
             xbmc.sleep(3000)            
         else:
             # Worked, exit loop
@@ -331,7 +333,7 @@ def getSystemData(addon, vpn, network, vpnm, system):
         lines.append("VPN Manager verison is " + addon.getAddonInfo("version"))
         lines.append("VPN Manager behaviour is " + getPlatformString())
         if getPlatform() == platforms.LINUX:
-            if getSudo():
+            if useSudo():
                 lines.append("VPN Manager is prefixing commands with sudo")
             else:
                 lines.append("VPN Manager is not using sudo")
@@ -690,9 +692,13 @@ def wizard():
     if xbmcgui.Dialog().yesno(addon_name, "No primary VPN connection has been set up.  Would you like to do this using the set up wizard or using the Settings dialog?", "", "", "Settings", "Wizard"):
         
         # Select the VPN provider
-        vpn = xbmcgui.Dialog().select("Select your VPN provider.", provider_display)
+        provider_list = list(provider_display)
+        provider_list.sort()
+        vpn = xbmcgui.Dialog().select("Select your VPN provider.", provider_list)
+        vpn = provider_display.index(provider_list[vpn])
         vpn_provider = provider_display[vpn]
-
+        
+        
         # Get the username and password
         vpn_username = ""
         vpn_password = ""
@@ -745,11 +751,13 @@ def connectVPN(connection_order, vpn_profile):
     addon.setSetting("vpn_wizard_run", "true")
 
     # Check openvpn installed and runs
-    if not addon.getSetting("checked_openvpn") == "true":        
-        if checkVPNInstall(addon): addon.setSetting("checked_openvpn", "true")
+    if not addon.getSetting("checked_openvpn") == "true":
+        debugTrace("Checking platform is valid and openvpn is installed")
+        if checkPlatform(addon) and checkVPNInstall(addon): addon.setSetting("checked_openvpn", "true")
         else: return
 
     if not addon.getSetting("ran_openvpn") == "true":
+        debugTrace("Checking openvpn can be run")
         stopVPN()    
         if checkVPNCommand(addon): addon.setSetting("ran_openvpn", "true")
         else: return
@@ -873,8 +881,8 @@ def connectVPN(connection_order, vpn_profile):
                 if locations[i] == "" : locations[i] = default_label
                 i = i + 1
             selected_profile = ""
-            if len(locations) == 0 and ovpnGenerated(getVPNLocation(vpn_provider)): 
-                errorTrace("common.py", "No LOCATIONS.txt files found in VPN directory.  Cannot generate ovpn files.")
+            if len(locations) == 0 and ovpnGenerated(getVPNLocation(vpn_provider)):
+                errorTrace("common.py", "No LOCATIONS.txt files found in VPN directory.  Cannot generate ovpn files for " + vpn_provider + ".")
             if len(locations) > 1:
                 selected_location = xbmcgui.Dialog().select("Select connections profile", locations)
                 selected_profile = locations[selected_location]
@@ -1003,7 +1011,7 @@ def connectVPN(connection_order, vpn_profile):
             
             i = 0
             # Bad network takes over a minute to spot so loop for a bit longer (each loop is 2 seconds)
-            loop_max = 38
+            loop_max = 37
             if fakeConnection(): loop_max = 2
             percent = 20
             while i <= loop_max:
@@ -1022,11 +1030,15 @@ def connectVPN(connection_order, vpn_profile):
     # Determine what happened during the connection attempt        
     if state == connection_status.CONNECTED :
         # Success, VPN connected! Display an updated progress window whilst we work out where we're connected to
-        progress_message = "Connected, restarting VPN monitor."
-        progress.update(97, progress_title, progress_message)
-        # Set the final message to indicate success
-        progress_message = "Connected, VPN monitor restarted."
+        progress_message = "Connected, checking location info."
+        progress.update(96, progress_title, progress_message)
         _, ip, country, isp = getIPInfo(addon)
+        # Indicate we're restarting the VPN monitor
+        progress_message = "Connected, restarting VPN Monitor"
+        progress.update(98, progress_title, progress_message)
+        xbmc.sleep(500)
+        # Set up final message
+        progress_message = "Connected, VPN monitor restarted."
         dialog_message = "Connected to a VPN in " + country + ".\nUsing profile " + ovpn_name + ".\nExternal IP address is " + ip + ".\nService Provider is " + isp + "."
         infoTrace("common.py", dialog_message)
         if ifDebug(): writeVPNLog()
@@ -1109,6 +1121,8 @@ def connectVPN(connection_order, vpn_profile):
                 dialog_message = "Error connecting to VPN, connection has timed out.\nTry using a different VPN profile or retry."
             elif state == connection_status.ROUTE_FAILED:
                 dialog_message = "Error connecting to VPN, could not update routing table.\nRetry and then check log."
+            elif state == connection_status.ACCESS_DENIED:
+                dialog_message = "Error connecting to VPN, could not update routing table.\nOn Windows, Kodi must be run as administrator."
             else:
                 dialog_message = "Error connecting to VPN, something unexpected happened.\nRetry to check openvpn operation and then check log."
                 addon.setSetting("ran_openvpn", "false")

@@ -1168,7 +1168,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="service.vpn.manager"
        name="VPN Manager for OpenVPN"
-       version="0.4.3"
+       version="0.4.8"
        provider-name="Zomboided">
   <requires>
     <import addon="xbmc.python" version="2.7.0"/>

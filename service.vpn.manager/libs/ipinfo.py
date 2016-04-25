@@ -56,7 +56,7 @@ def getIPInfoFrom(source):
                 return ip, country, region, city, isp
         else:            
             return "no info", "unknown location", "unknown location", "no matches", link
-    except:        
+    except:
         return "error", "error", "error", "call failed", link
 
 

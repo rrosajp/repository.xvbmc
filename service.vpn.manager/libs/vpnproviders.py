@@ -24,28 +24,28 @@ import xbmcvfs
 import xbmcaddon
 import glob
 from libs.utility import debugTrace, errorTrace, infoTrace
-from libs.platform import getAddonPath, getUserDataPath, fakeConnection, getSeparator
+from libs.platform import getAddonPath, getUserDataPath, fakeConnection, getSeparator, getPlatform, platforms
 
 
 # **** ADD MORE VPN PROVIDERS HERE ****
 # Display names for each of the providers (matching the guff in setup.xml)
-provider_display = ["Private Internet Access", "IPVanish", "VyperVPN", "Invisible Browsing VPN", "NordVPN", "tigerVPN", "Hide My Ass", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "Hide.Me", "Perfect Privacy", "TorGuard", "User Defined", "LimeVPN", "HideIPVPN"]
+provider_display = ["Private Internet Access", "IPVanish", "VyperVPN", "Invisible Browsing VPN", "NordVPN", "tigerVPN", "Hide My Ass", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "Perfect Privacy", "TorGuard", "User Defined", "LimeVPN", "HideIPVPN", "VPN Unlimited", "Hide.Me", "BTGuard"]
 
 # **** ADD MORE VPN PROVIDERS HERE ****
 # Directory names for each of the providers (in the root of the addon)
 # Must be in the same order as the provider display name above
-providers = ["PIA", "IPVanish", "VyprVPN", "ibVPN", "NordVPN", "tigerVPN", "HMA", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "HideMe", "PerfectPrivacy", "TorGuard", "UserDefined", "LimeVPN", "HideIPVPN"]
+providers = ["PIA", "IPVanish", "VyprVPN", "ibVPN", "NordVPN", "tigerVPN", "HMA", "PureVPN", "LiquidVPN", "AirVPN", "CyberGhost", "Ivacy", "PerfectPrivacy", "TorGuard", "UserDefined", "LimeVPN", "HideIPVPN", "VPNUnlimited", "HideMe", "BTGuard"]
 
 # **** ADD VPN PROVIDERS HERE IF THEY USE A KEY ****
 # List of providers which use user keys and certs, either a single one, or one per connection
 # Names must match the directory names as used in providers, just above
 providers_with_multiple_keys = ["PerfectPrivacy"]
-providers_with_single_keys = ["AirVPN", "CyberGhost", "HMA", "HideIPVPN"]
+providers_with_single_keys = ["AirVPN", "CyberGhost", "HMA", "HideIPVPN", "VPNUnlimited"]
 
 # *** ADD VPN PROVIDERS HERE IF THEY DON'T USE USERNAME AND PASSWORD ****
 # List of providers which don't use auth-user-pass.
 # Names must match the directory names as used in providers, just above
-providers_no_pass = ["AirVPN"]
+providers_no_pass = ["AirVPN", "VPNUnlimited"]
 
 
 # Leave this alone...it must match the text in providers
@@ -54,23 +54,29 @@ user_def_str = "UserDefined"
 def getAddonPathWrapper(path):
     # This function resets the VPN profiles to the standard VPN Manager install
     # location as per OpenELEC, or to the platform install location
-    force_default_install = fakeConnection()    
+    force_default_install = fakeConnection()
     if force_default_install:
         return "/storage/.kodi/addons/service.vpn.manager/" + path        
     else:
-        return getAddonPath(True, path)
+        if getPlatform() == platforms.WINDOWS:
+            return getAddonPath(True, path).replace("\\", "\\\\")
+        else:
+            return getAddonPath(True, path)
 
 
 def getUserDataPathWrapper(path):
     # This function resets the VPN profiles to the standard VPN Manager install
     # location as per OpenELEC, or to the platform install location
-    force_default_install = fakeConnection()    
+    force_default_install = fakeConnection()
     if force_default_install:
         return "/storage/.kodi/userdata/addon_data/service.vpn.manager/" + path        
     else:
-        return getUserDataPath(path)        
+        if getPlatform() == platforms.WINDOWS:
+            return getUserDataPath(path).replace("\\", "\\\\")
+        else:
+            return getUserDataPath(path)
         
-        
+                
 def getVPNLocation(vpn_provider):
     # This function translates between the display name and the directory name
     i=0
@@ -317,7 +323,7 @@ def generateOVPNFiles(vpn_provider, alternative_locations_name):
         locations_name = getAddonPath(True, vpn_provider + "/LOCATIONS.txt")
 
     try:
-        debugTrace("Opening locations file for " + vpn_provider + "/n" + locations_name)
+        debugTrace("Opening locations file for " + vpn_provider + "\n" + locations_name)
         locations_file = open(locations_name, 'r')
         debugTrace("Opened locations file for " + vpn_provider)
         locations = locations_file.readlines()
@@ -464,7 +470,7 @@ def updateVPNFiles(vpn_provider):
                 
                 # Update path to pass.txt
                 if not isUserDefined(vpn_provider) or addon.getSetting("user_def_credentials") == "true":
-                    if line.startswith("auth-user-pass "):
+                    if line.startswith("auth-user-pass"):
                         line = "auth-user-pass " + getAddonPathWrapper(vpn_provider + "/" + "pass.txt\n")
 
                 # Update port numbers

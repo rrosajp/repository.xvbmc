@@ -10,6 +10,8 @@ CA Toronto (UDP),ca-toronto.privateinternetaccess.com,udp,1194
 CA Toronto (TCP),ca-toronto.privateinternetaccess.com,tcp,443
 Denmark (UDP),denmark.privateinternetaccess.com,udp,1194
 Denmark (TCP),denmark.privateinternetaccess.com,tcp,443
+Finland (UDP),fi.privateinternetaccess.com,udp,1194
+Finland (TCP),fi.privateinternetaccess.com,tcp,443
 France (UDP),france.privateinternetaccess.com,udp,1194
 France (TCP),france.privateinternetaccess.com,tcp,443
 Germany (UDP),germany.privateinternetaccess.com,udp,1194
