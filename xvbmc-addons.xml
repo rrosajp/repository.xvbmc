@@ -52,7 +52,7 @@
 
 <addon id="network.openvpn.oe6"
        name="openvpn OE6"
-       version="6.0.1x"
+       version="6.0.10"
        provider-name="Stefan Saraev (seo at irc.freenode.net)">
   <requires>
     <import addon="os.openelec.tv" version="6.0"/>
@@ -75,7 +75,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="network.openvpn.oe7"
        name="openvpn OE7"
-       version="7.0.1x"
+       version="7.0.10"
        provider-name="Stefan Saraev (seo at irc.freenode.net)">
   <requires>
     <import addon="os.openelec.tv" version="7.0"/>

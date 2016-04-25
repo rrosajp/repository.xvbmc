@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="network.openvpn.oe7"
        name="openvpn OE7"
-       version="7.0.1x"
+       version="7.0.10"
        provider-name="Stefan Saraev (seo at irc.freenode.net)">
   <requires>
     <import addon="os.openelec.tv" version="7.0"/>
