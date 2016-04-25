@@ -45,7 +45,9 @@ class NoRedirection(urllib2.HTTPErrorProcessor):
    https_response = http_response
 
 ASBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL21hc3Rlci94bWwvSW5kZXgueG1s'
-ASBase5 ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL21hc3Rlci94bWwvTGl2ZVNwb3J0LnhtbA=='
+ASBase2 ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL21hc3Rlci94bWwvSW5kZXg1LnhtbA=='
+ASBase3 ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0F3ZXNvbWVzdHJlYW1zL0F3ZXNvbWVTdHJlYW1zL21hc3Rlci94bWwvSW5kZXg0LnhtbA=='
+
 
 
 
@@ -302,15 +304,16 @@ def ASIndex():
     addDir('[COLOR orange][B]********* Awesome Streams *********[/B][/COLOR]','',71,icon ,  fanart,'','','','')
     addDir('News','News',46,icon ,  FANART,'','','','',isItFolder=False)
     addDir('Privacy Policy','Privacy Policy',45,icon ,  FANART,'','','','',isItFolder=False)
-    addDir('[COLOR orange][B]******** Adition Categories ********[/B][/COLOR]','',71,icon ,  fanart,'','','','')
-    getData(base64.b64decode(ASBase),'')
+    addDir('[COLOR orange][B]******** Additional Categories ********[/B][/COLOR]','',71,icon ,  fanart,'','','','')
+    getData(base64.b64decode(ASBase3),'')
     addDir('Sport365 - From ZemTV','',47,icon,fanart,"","","","","",)
     addDir('Wiz1','',61,icon,fanart,"","","","","",)
     addDir('GoATD','',62,icon,fanart,"","","","","",)
-   # addDir('Streamsarena.eu','',72,icon,fanart,"","","","","",)
+    #addDir('WizhdSports','',72,icon,fanart,"","","","","",)
     addDir('Live9.net','',73,icon,fanart,"","","","","",)
     addDir('[COLOR orange][B]********** All time is CET GMT+2 *********[/B][/COLOR]','',70,icon ,  fanart,'','','','')
-    addDir('Sport Agenda Highlighted Events','',43,icon, FANART,'','','','',isItFolder=False)
+    addDir('Sport Agenda AwesomeStreams','',43,icon, FANART,'','','','',isItFolder=False)
+    getData(base64.b64decode(ASBase2),'')
     addDir('[COLOR orange][B]****************************************[/B][/COLOR]','',71,icon ,  fanart,'','','','')
 
 
@@ -335,7 +338,7 @@ def playLiveResolver(url, name):
 
 def getgoatSchedule():
     goatpage = getHtml('http://goatd.net/')
-    match = re.compile(r'<b>ET</b></td>\s+<td[^<]+><img src="([^"]+)".*?href="([^"]+)"[^>]+>([^<]+)<.*?<b>([^<]+)<.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(goatpage)
+    match = re.compile(r'<b>ET</b></td>\s+<td[^<]+><img src="([^"]+)".*?href="([^"]+)"[^>]+([^<]+)><.*?<b>([^<]+)<.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(goatpage)
     for img, url, wedstrijd, tijd, tijdzone in match:
 		tekstregel = '[COLOR orange]' + tijd + '[/COLOR]' + ' ' + tijdzone + ' - ' + wedstrijd
 		url = 'http://goatd.net/' + url
@@ -361,9 +364,9 @@ def getlive9Schedule():
     xbmcplugin.endOfDirectory(int(sys.argv[1]))	
 
 	
-#def getarenaSchedule():
-#   arenapage = getHtml('http://www.streamsarena.eu/')
-#    match = re.compile(r'(\d{2}:\d{2})([^"]+)  on <a href="../streams/stream([\d]+)', re.DOTALL | re.IGNORECASE).findall(arenapage)
+#def getwizhdSchedule():
+#    wizhdpage = getHtml('http://wizhdsports.com/index.html')
+#    match = re.compile("<div class="name">([^']+)(\d{2}:\d{2}) - (\d{2}:\d{2})[^']+'([^']+)'", re.DOTALL | re.IGNORECASE).findall(wizhdpage)
 #    for tijd, wedstrijd,url in match:
 #        try:
 #           dt = datetime.strptime(tijd, "%H:%M")
@@ -371,8 +374,7 @@ def getlive9Schedule():
 #           tijd = str(dt.hour).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
 #        except :
 #            pass    
-#        tekstregel = '[COLOR orange]'+ tijd + '[/COLOR]' + ' - ' + wedstrijd
-#        url = 'http://www.streamsarena.eu/player/player%s.html' % url
+#        tekstregel = '[COLOR orange]' + tijd + '[/COLOR]' + ' - ' + wedstrijd
 #        addDir(tekstregel, url, 60,"","","","","","",isItFolder=False)
 #    xbmcplugin.endOfDirectory(int(sys.argv[1]))		
 
@@ -3037,7 +3039,7 @@ if mode==71:
     ASIndex()
 
 #elif mode==72:
-#    getarenaSchedule()
+#   getwizhdSchedule()
     
 elif mode==73:
     getlive9Schedule()

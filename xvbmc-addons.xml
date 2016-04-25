@@ -98,7 +98,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
-       version="1.0.28"
+       version="1.0.29"
        provider-name="AwesomeStreams">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -870,12 +870,12 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
 </addon>
 
-<addon id="script.module.urlresolver" name="URLResolver" version="3.0.0" provider-name="Eldorado">
+<addon id="script.module.urlresolver" name="URLResolver" version="3.0.3" provider-name="Eldorado">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 	</requires>
 	<extension point="xbmc.python.module" library="lib" />
-	<extension point="xbmc.python.pluginsource" library="default.py" />
+	<extension point="xbmc.python.pluginsource" library="lib/default.py" />
 	<extension point="xbmc.addon.metadata">
 		<platform>all</platform>
 		<summary lang="en">Resolve common video host URL's to be playable in XBMC/Kodi.</summary>
