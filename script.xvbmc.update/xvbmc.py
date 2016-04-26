@@ -41,10 +41,9 @@ def showMenu():
     userchoice = []
     userchoice.append("XvBMC ServicePack (2 april)")
     userchoice.append("XvBMC ServicePack (1 t/m ..) bulk pack")
-    userchoice.append("XvBMC System/OS LibreELEC_v6.95.2")
     userchoice.append("XvBMC Refresh UpdateAddonRepos")
     userchoice.append("XvBMC OverClock (raspberry Pi)")
-    userchoice.append("XvBMC #DEV# Corner (Firmware-OpenELEC-etc)")
+    userchoice.append("XvBMC #DEV# Corner (Firmware-OS-etc)")
     userchoice.append("XvBMC Tweaking")
     userchoice.append("Exit")
     
@@ -61,10 +60,6 @@ def showMenu():
     elif userchoice[inputchoice] == "XvBMC ServicePack (1 t/m ..) bulk pack":
         UpdateRollup()
     
-	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-6.95.2.tar                 #
-    elif userchoice[inputchoice] == "XvBMC System/OS LibreELEC_v6.95.2":
-        SystemOS()
-    
     #    http://kodi.wiki/view/List_of_built-in_functions                             #
     elif userchoice[inputchoice] == "XvBMC Refresh UpdateAddonRepos":
         forceRefresh()
@@ -74,7 +69,7 @@ def showMenu():
         subOCmenu()
     
     #    DEVmenu XvBMC Nederland                                                      #
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware-OpenELEC-etc)":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware-OS-etc)":
         subDEVmenu()
     
     #    edit EPiC user preferences                                                   #
@@ -116,20 +111,6 @@ class UpdateRollupClass(xbmcgui.Window):
 	time.sleep(1)
    	xbmc.executebuiltin("Notification(XvBMC Nederland servicepack rollup,XvBMC updates rollup geslaagd...,5000,special://home/addons/script.xvbmc.update/icon.png)")
  
-class SystemOSClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL LibreELEC OS update','Preparing v6.95.2 and Reboot when done...'):
-        url = 'http://releases.libreelec.tv/LibreELEC-RPi2.arm-6.95.2.tar'
-        path = xbmc.translatePath(os.path.join('/storage/.update/','')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
-#       path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
-        lib=os.path.join(path, 'libreelec6952.tar')
-        DownloaderClass(url,lib)
- 
-   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
-	time.sleep(1)
-	xbmc.executebuiltin("Reboot")
- 
 class forceRefreshClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
@@ -144,10 +125,6 @@ def ServicePack():
  
 def UpdateRollup():
     mydisplay = UpdateRollupClass()
-    del mydisplay
- 
-def SystemOS():
-    mydisplay = SystemOSClass()
     del mydisplay
  
 def forceRefresh():
@@ -246,7 +223,8 @@ def subDEVmenu():
     userchoice = []
     userchoice.append("XvBMC #DEV# Corner (Firmware - Cutting Edge)")
     userchoice.append("XvBMC #DEV# Corner (Firmware - 12 april 2016)")
-    userchoice.append("XvBMC #DEV# Corner (Firmware - current v3 image)")
+    userchoice.append("XvBMC #DEV# Corner (Firmware - Current v3 image)")
+    userchoice.append("XvBMC #DEV# Corner (LibreELEC_arm-7.0.0)")
     userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.2)")
     userchoice.append("Exit")
     
@@ -264,8 +242,12 @@ def subDEVmenu():
         FirmwareTested()
     
     #    /storage/.kodi/addons/script.xvbmc.update/resources/firmwareimage.sh     #
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - current v3 image)":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - Current v3 image)":
         FirmwareImage()
+    
+	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.0.tar                 #
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (LibreELEC_arm-7.0.0)":
+        SystemOS()
     
     #    http://openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-6.95.2.tar         #
     elif userchoice[inputchoice] == "XvBMC #DEV# Corner (OpenELEC_arm-6.95.2)":
@@ -296,6 +278,20 @@ class FirmwareImageClass(xbmcgui.Window):
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')
  
+class SystemOSClass(xbmcgui.Window):
+  def __init__(self):
+    dialog = xbmcgui.Dialog()
+    if dialog.yesno('XvBMC NL LibreELEC OS update','Preparing v7.0.0 and Reboot when done...'):
+        url = 'http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.0.tar'
+        path = xbmc.translatePath(os.path.join('/storage/.update/','')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
+#       path = xbmc.translatePath(os.path.join('special://home',''))    # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
+        lib=os.path.join(path, 'libreelec700.tar')
+        DownloaderClass(url,lib)
+ 
+   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
+	time.sleep(1)
+	xbmc.executebuiltin("Reboot")
+ 
 class OpenElecTVClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
@@ -320,6 +316,10 @@ def FirmwareTested():
  
 def FirmwareImage():
     mydisplay = FirmwareImageClass()
+    del mydisplay
+ 
+def SystemOS():
+    mydisplay = SystemOSClass()
     del mydisplay
  
 def OpenElecTV():
