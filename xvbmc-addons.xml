@@ -50,52 +50,6 @@
     </extension>
 </addon>
 
-<addon id="network.openvpn.oe6"
-       name="openvpn OE6"
-       version="6.0.10"
-       provider-name="Stefan Saraev (seo at irc.freenode.net)">
-  <requires>
-    <import addon="os.openelec.tv" version="6.0"/>
-    <import addon="xbmc.python" version="2.1.0"/>
-  </requires>
-  <extension point="xbmc.python.script" library="default.py">
-    <provides></provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary>openvpn OE6: a full featured SSL VPN software solution that integrates OpenVPN server capabilities.</summary>
-    <description>
-openvpn OE6 binary is installed as /storage/.kodi/addons/network.openvpn/bin/openvpn.
-    </description>
-    <disclaimer>
-this is an unofficial addon. please don't ask for support in openelec forum / irc channel (XvBMC: OE6).
-    </disclaimer>
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="network.openvpn.oe7"
-       name="openvpn OE7"
-       version="7.0.10"
-       provider-name="Stefan Saraev (seo at irc.freenode.net)">
-  <requires>
-    <import addon="os.openelec.tv" version="7.0"/>
-    <import addon="xbmc.python" version="2.1.0"/>
-  </requires>
-  <extension point="xbmc.python.script" library="default.py">
-    <provides></provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary>openvpn OE7: a full featured SSL VPN software solution that integrates OpenVPN server capabilities.</summary>
-    <description>
-openvpn OE7 binary is installed as /storage/.kodi/addons/network.openvpn/bin/openvpn.
-    </description>
-    <disclaimer>
-this is an unofficial addon. please don't ask for support in openelec forum / irc channel (XvBMC: OE7).
-    </disclaimer>
-    <platform>all</platform>
-  </extension>
-</addon>
-
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
        version="1.0.29"
