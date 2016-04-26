@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cp -rav /storage/.kodi/addons/script.xvbmc.update/resources/bin/SettingsSystemInfo-x265.xml /storage/.kodi/addons/skin.nox4beginners/1080i/SettingsSystemInfo.xml
+
 mount -o remount,rw /flash/
 cp -rav /storage/.kodi/addons/script.xvbmc.update/resources/bin/config-x265.txt /flash/config.txt
  
