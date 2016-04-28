@@ -123,7 +123,7 @@ class MoviesPlanet_Scraper(scraper.Scraper):
         return results
 
     def _get_episode_url(self, show_url, video):
-        episode_pattern = 'href="([^"]+/season/%s/episode/%s/?)"' % (video.season, video.episode)
+        episode_pattern = 'href="([^"]+/season/0*%s/episode/0*%s/?)"' % (video.season, video.episode)
         return self._default_get_episode_url(show_url, video, episode_pattern)
 
     @classmethod

@@ -20,10 +20,7 @@ import re
 import urllib
 import urlparse
 import xbmcvfs
-# import xbmcgui
-# import xbmc
 import json
-# import time
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import log_utils
@@ -38,7 +35,8 @@ import scraper
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 BASE_URL = 'http://torba.se'
 BASE_URL2 = 'http://streamtorrent.tv'
-SEARCH_URL = '/search?title=%s&order=recent&_pjax=#films-pjax-container'
+SEARCH_URL = '/%s/autocomplete?order=relevance&title=%s'
+SEARCH_TYPES = {VIDEO_TYPES.MOVIE: 'movies', VIDEO_TYPES.TVSHOW: 'series'}
 TOR_URL = BASE_URL2 + '/api/torrent/%s.json'
 PL_URL = BASE_URL2 + '/api/torrent/%s/%s.m3u8'
 INTERVALS = 5
@@ -62,7 +60,7 @@ class TorbaSe_Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.MOVIE])
+        return frozenset([VIDEO_TYPES.MOVIE, VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE])
 
     @classmethod
     def get_name(cls):
@@ -118,7 +116,7 @@ class TorbaSe_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-            vid_link = dom_parser.parse_dom(html, 'a', {'class': 'video-play'}, 'href')
+            vid_link = dom_parser.parse_dom(html, 'a', {'class': '[^"]*video-play[^"]*'}, 'href')
             if vid_link:
                 i = vid_link[0].rfind('/')
                 if i > -1:
@@ -172,30 +170,33 @@ class TorbaSe_Scraper(scraper.Scraper):
     def get_url(self, video):
         return self._default_get_url(video)
 
+    def _get_episode_url(self, show_url, video):
+        url = urlparse.urljoin(self.base_url, show_url)
+        html = self._http_get(url, cache_limit=24)
+        fragment = dom_parser.parse_dom(html, 'ul', {'class': 'season-list'})
+        if fragment:
+            match = re.search('href="([^"]+)[^>]+>\s*season\s+%s\s*<' % (video.season), fragment[0], re.I)
+            if match:
+                season_url = match.group(1)
+                episode_pattern = 'href="([^"]*%s/%s/%s)"' % (show_url, video.season, video.episode)
+                title_pattern = 'href="(?P<url>[^"]+)"[^>]*>\s*<div class="series-item-title">(?P<title>[^<]+)'
+                return self._default_get_episode_url(season_url, video, episode_pattern, title_pattern)
+    
     def search(self, video_type, title, year, season=''):
         results = []
         search_url = urlparse.urljoin(self.base_url, SEARCH_URL)
-        search_url = search_url % (urllib.quote_plus(title))
+        search_url = search_url % (SEARCH_TYPES[video_type], urllib.quote_plus(title))
         html = self._http_get(search_url, headers=XHR, cache_limit=1)
-        for film in dom_parser.parse_dom(html, 'li', {'class': 'films-item'}):
-            match_url = dom_parser.parse_dom(film, 'a', ret='href')
-            match_title = dom_parser.parse_dom(film, 'div', {'class': 'films-item-title'})
-            match_year = dom_parser.parse_dom(film, 'div', {'class': 'films-item-year'})
-            if match_url and match_title:
-                match_url = match_url[0]
-                match_title = match_title[0]
-                match_title = re.sub('</?span>', '', match_title)
-                if match_year:
-                    match = re.search('(\d+)', match_year[0])
-                    if match:
-                        match_year = match.group(1)
-                    else:
-                        match_year = ''
-                else:
-                    match_year = ''
-                    
+        js_data = scraper_utils.parse_json(html, search_url)
+        for item in js_data:
+            if 'title' in item and 'link' in item:
+                match_title = item['title']
+                match_url = item['link']
+                match_year = str(item.get('year', ''))
                 if not year or not match_year or year == match_year:
-                    result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': match_url}
+                    result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                     results.append(result)
 
         return results
+                                         
+                                         

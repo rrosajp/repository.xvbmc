@@ -1728,7 +1728,7 @@ msgstr "Toon Instellingen"
 
 msgctxt "#30671"
 msgid "Show Anticipated"
-msgstr "Toon Verwacht"
+msgstr "Toon Verwachte"
 
 msgctxt "#30672"
 msgid "Default Sources View (0 = None)"

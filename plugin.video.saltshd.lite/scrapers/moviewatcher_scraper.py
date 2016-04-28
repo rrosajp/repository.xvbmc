@@ -79,10 +79,11 @@ class MovieWatcher_Scraper(scraper.Scraper):
                     stream_url = stream_url[0]
                     if 'webtracker' in stream_url: continue
                     host = urlparse.urlparse(stream_url).hostname
-                    quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
-                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': False}
-                    if size is not None: hoster['size'] = scraper_utils.format_size(size, 'B')
-                    hosters.append(hoster)
+                    if host:
+                        quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
+                        hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': False}
+                        if size is not None: hoster['size'] = scraper_utils.format_size(size, 'B')
+                        hosters.append(hoster)
         return hosters
 
     def get_url(self, video):

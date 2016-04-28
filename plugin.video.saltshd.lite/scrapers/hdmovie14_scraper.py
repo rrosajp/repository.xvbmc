@@ -95,7 +95,7 @@ class Flixanity_Scraper(scraper.Scraper):
             for item in js_data['results']:
                 if '/watch/' not in item['url'].lower(): continue
                 is_season = re.search('Season\s+(\d+)', item['titleNoFormatting'], re.IGNORECASE)
-                if not is_season and video_type == VIDEO_TYPES.MOVIE or is_season and VIDEO_TYPES.SEASON:
+                if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
                     match_title_year = item['titleNoFormatting']
                     match_title_year = re.sub('^Watch\s+', '', match_title_year)
                     match_url = item['url']

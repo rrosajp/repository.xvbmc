@@ -58,7 +58,7 @@ class WatchFree_Scraper(scraper.Scraper):
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
 
-            pattern = 'href="[^"]+gtfo=([^"]+)[^>]+>([^<]+)'
+            pattern = 'href="[^"]+gtfo=([^&"]+)[^>]+>([^<]+)'
             for match in re.finditer(pattern, html, re.DOTALL | re.I):
                 url, link_name = match.groups()
                 url = url.decode('base-64')

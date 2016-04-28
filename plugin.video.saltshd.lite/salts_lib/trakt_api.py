@@ -163,7 +163,7 @@ class Trakt_API():
 
     def get_recent(self, section, date, page=None):
         url = '/%s/updates/%s' % (TRAKT_SECTIONS[section], date)
-        params = {'extended': 'full,images', 'limit': 59}
+        params = {'extended': 'full,images', 'limit': self.list_size}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
