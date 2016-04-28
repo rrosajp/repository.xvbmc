@@ -347,7 +347,6 @@ class Scraper(object):
         return html
 
     def _set_cookies(self, base_url, cookies):
-        log_utils.log(cookies)
         cookie_file = os.path.join(COOKIEPATH, '%s_cookies.lwp' % (self.get_name()))
         cj = cookielib.LWPCookieJar(cookie_file)
         try: cj.load(ignore_discard=True)
@@ -384,6 +383,7 @@ class Scraper(object):
         return {'recaptcha_challenge_field': match.group(1), 'recaptcha_response_field': solution}
 
     def _default_get_episode_url(self, show_url, video, episode_pattern, title_pattern='', airdate_pattern='', data=None, headers=None, method=None):
+        if isinstance(show_url, unicode): show_url = show_url.encode('utf-8')
         log_utils.log('Default Episode Url: |%s|%s|%s|%s|' % (self.base_url, show_url, str(video), data), log_utils.LOGDEBUG)
         if not show_url.startswith('http'):
             url = urlparse.urljoin(self.base_url, show_url)
@@ -448,9 +448,16 @@ class Scraper(object):
             try: filter_days = int(kodi.get_setting('%s-filter' % (self.get_name())))
             except ValueError: filter_days = 0
             if filter_days and date_format and 'date' in post_data:
+                post_data['date'] = post_data['date'].strip()
                 filter_days = datetime.timedelta(days=filter_days)
                 try: post_date = datetime.datetime.strptime(post_data['date'], date_format).date()
-                except TypeError: post_date = datetime.datetime(*(time.strptime(post_data['date'], date_format)[0:6])).date()
+                except TypeError:
+                    try:
+                        post_date = datetime.datetime(*(time.strptime(post_data['date'], date_format)[0:6])).date()
+                    except Exception as e:
+                        log_utils.log('Failed date Check in %s: |%s|%s|%s|' % (self.get_name(), post_data['date'], date_format, e), log_utils.LOGWARNING)
+                        post_date = today
+                        
                 if today - post_date > filter_days:
                     continue
 

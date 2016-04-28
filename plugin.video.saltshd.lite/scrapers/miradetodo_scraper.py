@@ -63,9 +63,15 @@ class MiraDetodo_Scraper(scraper.Scraper):
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
             for fragment in dom_parser.parse_dom(html, 'div', {'class': 'movieplay'}):
+                log_utils.log(fragment)
                 iframe_url = dom_parser.parse_dom(fragment, 'iframe', ret='src')
                 if iframe_url:
                     iframe_url = iframe_url[0]
+                    log_utils.log(iframe_url)
+                    if not iframe_url.startswith('http'):
+                        iframe_url = dom_parser.parse_dom(fragment, 'iframe', ret='data-lazy-src')
+                        iframe_url = iframe_url[0]
+                    log_utils.log(iframe_url)
                     sources = {}
                     if 'miradetodo' in iframe_url:
                         direct = True
@@ -78,6 +84,7 @@ class MiraDetodo_Scraper(scraper.Scraper):
                         host = urlparse.urlparse(iframe_url).hostname
                         sources = {iframe_url: scraper_utils.get_quality(video, host, QUALITIES.HIGH)}
                         
+                    log_utils.log(sources)
                     for source in sources:
                         stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
                         host = self._get_direct_hostname(source)

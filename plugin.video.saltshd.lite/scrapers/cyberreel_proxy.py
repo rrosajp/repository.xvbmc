@@ -18,9 +18,9 @@
 from salts_lib import log_utils
 import proxy
 
-class TheExtopia_Proxy(proxy.Proxy):
+class CyberReel_Proxy(proxy.Proxy):
     try:
-        from theextopia_scraper import TheExtopia_Scraper as real_scraper
+        from cyberreel_scraper import CyberReel_Scraper as real_scraper
     except Exception as e:
         real_scraper = None
         log_utils.log('import failed: %s' % (e), log_utils.LOGDEBUG)

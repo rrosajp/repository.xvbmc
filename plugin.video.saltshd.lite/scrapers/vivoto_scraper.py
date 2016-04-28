@@ -171,7 +171,7 @@ class VivoTo_Scraper(scraper.Scraper):
                     match_url = match_url[0]
                     match_title = re.sub('</?strong>', '', match_title[0])
                     is_season = re.search('Season\s+(\d+)$', match_title, re.I)
-                    if not is_season and video_type == VIDEO_TYPES.MOVIE or is_season and VIDEO_TYPES.SEASON:
+                    if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
                         if video_type == VIDEO_TYPES.MOVIE:
                             if match_year:
                                 match_year = match_year[0]

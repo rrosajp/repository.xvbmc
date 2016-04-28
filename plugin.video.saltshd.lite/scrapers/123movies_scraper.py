@@ -65,6 +65,7 @@ class One23Movies_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             html = self.__get_source_page(source_url)
             sources = {}
+            page_url = urlparse.urljoin(self.base_url, source_url)
             for match in re.finditer('''loadEpisode\(\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'\s*\).*?class="btn-eps[^>]*>([^<]+)''', html, re.DOTALL):
                 link_type, link_id, hash_id, q_str = match.groups()
                 pattern = 'Episode\s+%s(:|$| )' % (video.episode)
@@ -76,19 +77,23 @@ class One23Movies_Scraper(scraper.Scraper):
                     sources.update(self.__get_link_from_json(url, q_str))
                 else:
                     media_url = PLAYLIST_URL2 % (link_id, hash_id)
-                    url = urlparse.urljoin(self.base_url, source_url)
-                    headers = {'Referer': url}
+                    headers = {'Referer': page_url}
                     url = urlparse.urljoin(self.base_url, media_url)
                     xml = self._http_get(url, headers=headers, cache_limit=.5)
-                    sources.update(self.__get_links_from_xml(xml, video))
+                    sources.update(self.__get_links_from_xml(xml, video, page_url))
             
         for source in sources:
             if not source.lower().startswith('http'): continue
             if sources[source]['direct']:
                 host = self._get_direct_hostname(source)
+                if host != 'gvideo':
+                    stream_url = source + '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), page_url)
+                else:
+                    stream_url = source
             else:
                 host = urlparse.urlparse(source).hostname
-            hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': sources[source]['quality'], 'views': None, 'rating': None, 'url': source, 'direct': sources[source]['direct']}
+                stream_url = source
+            hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': sources[source]['quality'], 'views': None, 'rating': None, 'url': stream_url, 'direct': sources[source]['direct']}
             hosters.append(hoster)
         return hosters
 
@@ -101,7 +106,7 @@ class One23Movies_Scraper(scraper.Scraper):
             sources[js_result['embed_url']] = {'quality': quality, 'direct': False}
         return sources
     
-    def __get_links_from_xml(self, xml, video):
+    def __get_links_from_xml(self, xml, video, page_url):
         sources = {}
         try:
             root = ET.fromstring(xml)
