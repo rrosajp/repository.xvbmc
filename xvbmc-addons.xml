@@ -50,30 +50,6 @@
     </extension>
 </addon>
 
-<addon id="network.openvpn"
-       name="openvpn"
-       version="7.0.1"
-       provider-name="Stefan Saraev (seo at irc.freenode.net)">
-  <requires>
-    <import addon="os.openelec.tv" version="7.0"/>
-    <import addon="xbmc.python" version="2.1.0"/>
-
-  </requires>
-  <extension point="xbmc.python.script" library="default.py">
-    <provides></provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary>openvpn: a full featured SSL VPN software solution that integrates OpenVPN server capabilities.</summary>
-    <description>
-openvpn binary is installed as /storage/.kodi/addons/network.openvpn/bin/openvpn
-    </description>
-    <disclaimer>
-this is an unofficial addon. please don't ask for support in openelec forum / irc channel
-    </disclaimer>
-    <platform>all</platform>
-  </extension>
-</addon>
-
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
        version="1.0.29"
@@ -917,20 +893,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <description>This Kodi add-on for OpenELEC allows Raspberry Pi settings such as overclocking to be configured without having to manually edit /flash/config.txt.</description>
     <disclaimer>This add-on has the potential to void the warranty of your Raspberry Pi2. Use at your own risk!</disclaimer>
     <license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
-  </extension>
-</addon>
-
-<addon id="script.openvpn" name="OpenVPN (alternative)" version="2.1.0" provider-name="brianhornsby">
-	<requires>
-		<import addon="xbmc.python" version="2.1.0"/>
-		<import addon="script.module.beautifulsoup" version="3.0.8"/>
-	</requires>
-	<extension point="xbmc.python.script" library="default.py"/>
-	<extension point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<summary lang="en">OpenVPN addon for XBMC.</summary>
-		<description lang="en">This addon allows you to set up a number of OpenVPN configurations, which you can then run from XBMC.
-For more information on setting up this addon see http://brianhornsby.com/xbmc_plugins/openvpn</description>
   </extension>
 </addon>
 
