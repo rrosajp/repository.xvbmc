@@ -1,4 +1,7 @@
-[B]Version 3.02[/B][I].700x[/I]
+[B]Version 3.02[/B][I].700sp1[/I]
+ + ServicePack 01 (01-05-2016)
+
+[B]Version 3.02[/B][I].700[/I]
  + LibreELEC (Jarvis 16.1-final) 7.0.0
  - LibreELEC (Jarvis 16.1-RC2) v6.95.1 [superseded]
 
