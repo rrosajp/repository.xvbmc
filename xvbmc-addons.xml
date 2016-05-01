@@ -919,6 +919,20 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
+<addon id="script.openvpn" name="OpenVPN (alternative)" version="2.1.0" provider-name="brianhornsby">
+	<requires>
+		<import addon="xbmc.python" version="2.1.0"/>
+		<import addon="script.module.beautifulsoup" version="3.0.8"/>
+	</requires>
+	<extension point="xbmc.python.script" library="default.py"/>
+	<extension point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<summary lang="en">OpenVPN addon for XBMC.</summary>
+		<description lang="en">This addon allows you to set up a number of OpenVPN configurations, which you can then run from XBMC.
+For more information on setting up this addon see http://brianhornsby.com/xbmc_plugins/openvpn</description>
+  </extension>
+</addon>
+
 <addon id="script.pinsentry" name="PinSentry" version="1.2.0" provider-name="robwebset">
 	<requires>
 		<import addon="xbmc.python" version="2.14.0"/>
@@ -1089,7 +1103,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.02.700" provider-name="XvBMC NL">
+<addon id="script.xvbmc.update" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  Maintenance[COLOR red]/update[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.02.700sp1" provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
 	<import addon="script.schoonmaak" version="1.10.01"/>

@@ -39,8 +39,8 @@ def showMenu():
     
     # Create list of menu items                                                       #
     userchoice = []
-    userchoice.append("XvBMC ServicePack (2 april)")
-    userchoice.append("XvBMC ServicePack (1 t/m ..) bulk pack")
+    userchoice.append("XvBMC ServicePack 01 (01-05-2016)")
+    userchoice.append("XvBMC ServicePack (00 t/m 01) bulk pack")
     userchoice.append("XvBMC Refresh UpdateAddonRepos")
     userchoice.append("XvBMC OverClock (raspberry Pi)")
     userchoice.append("XvBMC #DEV# Corner (Firmware-OS-etc)")
@@ -53,11 +53,11 @@ def showMenu():
     # Process menu actions
     
     #  https://archive.org/download/XvBMC/servicepack.zip                             #
-    if userchoice[inputchoice] == "XvBMC ServicePack (2 april)":
+    if userchoice[inputchoice] == "XvBMC ServicePack 01 (01-05-2016)":
         ServicePack()
     
     #    https://archive.org/download/XvBMC/updaterollup.zip                          #
-    elif userchoice[inputchoice] == "XvBMC ServicePack (1 t/m ..) bulk pack":
+    elif userchoice[inputchoice] == "XvBMC ServicePack (00 t/m 01) bulk pack":
         UpdateRollup()
     
     #    http://kodi.wiki/view/List_of_built-in_functions                             #
@@ -81,7 +81,7 @@ class ServicePackClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?'):
-        url = 'https://github.com/XvBMC/repository.xvbmc/blob/master/zips/update/servicepack.zip?raw=true'
+        url = 'https://github.com/XvBMC/repository.xvbmc/blob/master/zips/update/sp/v3/20160501sp01/servicepack.zip?raw=true'
         path = xbmc.translatePath(os.path.join('special://home/addons/','packages')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
 #       path = xbmc.translatePath(os.path.join('special://home',''))                 # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
         lib=os.path.join(path, 'update.zip')
@@ -98,7 +98,7 @@ class UpdateRollupClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?'):
-        url = 'https://github.com/XvBMC/repository.xvbmc/blob/master/zips/update/updaterollup.zip?raw=true'
+        url = 'https://github.com/XvBMC/repository.xvbmc/blob/master/zips/update/sp/v3/20160501sp01/updaterollup.zip?raw=true'
         path = xbmc.translatePath(os.path.join('special://home/addons/','packages')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
 #       path = xbmc.translatePath(os.path.join('special://home',''))                 # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
         lib=os.path.join(path, 'update.zip')
