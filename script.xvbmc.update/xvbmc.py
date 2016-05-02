@@ -92,7 +92,9 @@ class ServicePackClass(xbmcgui.Window):
 #  	xbmc.executebuiltin("ReloadKeymaps")
    	xbmc.executebuiltin("ReloadSkin()")
 	time.sleep(1)
-   	xbmc.executebuiltin("Notification(XvBMC Nederland last servicepack,XvBMC updates geslaagd...,5000,special://home/addons/script.xvbmc.update/icon.png)")
+   	xbmc.executebuiltin("Notification(XvBMC Nederland last servicepack,Finished!...REBOOT in 10 seconds...,9000,special://home/addons/script.xvbmc.update/icon.png)")
+	time.sleep(1)
+	xbmc.executebuiltin("Reboot")
  
 class UpdateRollupClass(xbmcgui.Window):
   def __init__(self):
@@ -109,7 +111,9 @@ class UpdateRollupClass(xbmcgui.Window):
 #  	xbmc.executebuiltin("ReloadKeymaps")
    	xbmc.executebuiltin("ReloadSkin()")
 	time.sleep(1)
-   	xbmc.executebuiltin("Notification(XvBMC Nederland servicepack rollup,XvBMC updates rollup geslaagd...,5000,special://home/addons/script.xvbmc.update/icon.png)")
+   	xbmc.executebuiltin("Notification(XvBMC Nederland servicepack rollup,Finished!...REBOOT in 10 seconds...,9000,special://home/addons/script.xvbmc.update/icon.png)")
+	time.sleep(1)
+	xbmc.executebuiltin("Reboot")
  
 class forceRefreshClass(xbmcgui.Window):
   def __init__(self):
