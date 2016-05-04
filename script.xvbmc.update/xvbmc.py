@@ -13,6 +13,9 @@ import time
  
 # Set the addon environment
 addon = xbmcaddon.Addon('script.xvbmc.update')
+
+# Refresh addon environment
+# xbmc.executebuiltin("UpdateLocalAddons")
  
  
 def DownloaderClass(url,dest):
@@ -81,46 +84,50 @@ class ServicePackClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?'):
-        url = 'https://github.com/XvBMC/repository.xvbmc/blob/master/zips/update/sp/v3/20160501sp01/servicepack.zip?raw=true'
+        url = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/update/sp/01-servicepack.zip'
         path = xbmc.translatePath(os.path.join('special://home/addons/','packages')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
-#       path = xbmc.translatePath(os.path.join('special://home',''))                 # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
         lib=os.path.join(path, 'update.zip')
         DownloaderClass(url,lib)
         addonfolder = xbmc.translatePath(os.path.join('special://home',''))
         xbmc.executebuiltin("XBMC.Extract(%s,%s)"%(lib,addonfolder))
  
-#  	xbmc.executebuiltin("ReloadKeymaps")
-   	xbmc.executebuiltin("ReloadSkin()")
 	time.sleep(1)
-   	xbmc.executebuiltin("Notification(XvBMC Nederland last servicepack,Finished!...REBOOT in 10 seconds...,9000,special://home/addons/script.xvbmc.update/icon.png)")
-	time.sleep(1)
-	xbmc.executebuiltin("Reboot")
+	xbmc.executebuiltin("Notification(XvBMC Nederland last servicepack,ServicePack update finished!,6000,special://home/addons/script.xvbmc.update/icon.png)")
+	xbmc.executebuiltin("UpdateLocalAddons")
+	xbmc.executebuiltin("UpdateAddonRepos")
+#	xbmc.executebuiltin("ReloadSkin()")
+#	xbmc.executebuiltin("LoadProfile(Master user,)")
+#	time.sleep(1)
+#	xbmc.executebuiltin("Reboot")
  
 class UpdateRollupClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?'):
-        url = 'https://github.com/XvBMC/repository.xvbmc/blob/master/zips/update/sp/v3/20160501sp01/updaterollup.zip?raw=true'
+	xbmc.executebuiltin("UpdateLocalAddons")
+        url = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/update/sp/01-sp-rollup.zip'
         path = xbmc.translatePath(os.path.join('special://home/addons/','packages')) # Raspberry  # (XvBMC Nederland : https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/) #
-#       path = xbmc.translatePath(os.path.join('special://home',''))                 # Standalone # (XvBMC Nederland : https://www.fb.com/groups/XvBMCnederland/)               #
         lib=os.path.join(path, 'update.zip')
         DownloaderClass(url,lib)
         addonfolder = xbmc.translatePath(os.path.join('special://home',''))
         xbmc.executebuiltin("XBMC.Extract(%s,%s)"%(lib,addonfolder))
- 
-#  	xbmc.executebuiltin("ReloadKeymaps")
-   	xbmc.executebuiltin("ReloadSkin()")
-	time.sleep(1)
-   	xbmc.executebuiltin("Notification(XvBMC Nederland servicepack rollup,Finished!...REBOOT in 10 seconds...,9000,special://home/addons/script.xvbmc.update/icon.png)")
-	time.sleep(1)
-	xbmc.executebuiltin("Reboot")
+
+ 	time.sleep(1)
+	xbmc.executebuiltin("Notification(XvBMC Nederland servicepack rollup,ServicePack bulk update finished!,7000,special://home/addons/script.xvbmc.update/icon.png)")
+	xbmc.executebuiltin("UpdateLocalAddons")
+	xbmc.executebuiltin("UpdateAddonRepos")
+#	xbmc.executebuiltin("ReloadSkin()")
+#	xbmc.executebuiltin("LoadProfile(Master user,)")
+#	time.sleep(1)
+#	xbmc.executebuiltin("Reboot")
  
 class forceRefreshClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    xbmc.executebuiltin("UpdateAddonRepos")
-    dialog.ok('XvBMC Nederland Maintenance', 'De addons worden vernieuwd...')
     xbmc.executebuiltin("UpdateLocalAddons")
+    dialog.ok('XvBMC Nederland Maintenance', 'De addons worden vernieuwd...')
+    xbmc.executebuiltin("UpdateAddonRepos")
+    time.sleep(1)
     xbmc.executebuiltin("ReloadSkin()")
  
 def ServicePack():
@@ -158,7 +165,7 @@ def subOCmenu():
         Config0()
     
     #    /storage/.kodi/addons/script.xvbmc.update/resources/bin/config-high.txt       #
-    if userchoice[inputchoice] == "XvBMC Overclock Pi - High":
+    elif userchoice[inputchoice] == "XvBMC Overclock Pi - High":
         Config1()
 	
     #    /storage/.kodi/addons/script.xvbmc.update/resources/bin/config-turbo.txt      #
