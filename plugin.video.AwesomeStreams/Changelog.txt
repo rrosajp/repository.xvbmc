@@ -23,3 +23,6 @@ V1.0.26 Added Sportagenda Highlighted Events in Livesports
 V1.0.27 Moved Extra streams to Index, Added Stream info to player
 V1.0.28 removed StreamsArena for now
 V1.0.29 Readded Dutch IPTV and moved SportCenterHD to the Agenda Section
+V1.0.30 Fixed Goatd.net, Removed Wiz.net and Liv9.net Moved  all Iptv under category (Sport) IPTV, 
+	removed Awesome Sport agenda, Sport Agenda SportCenterHD is now the main agenda.
+V1.0.31 Fixed Live9.net, Fixed Wiz1.net.        

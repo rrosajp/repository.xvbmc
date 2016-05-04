@@ -75,7 +75,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.AwesomeStreams"
        name="AwesomeStreams"
-       version="1.0.29"
+       version="1.0.31"
        provider-name="AwesomeStreams">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -332,7 +332,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
 </addon>
 
-<addon id="plugin.video.quasar" name="Quasar" version="0.9.33" provider-name="scakemyer">
+<addon id="plugin.video.quasar" name="Quasar" version="0.9.34" provider-name="scakemyer">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
