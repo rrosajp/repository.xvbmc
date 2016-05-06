@@ -28,7 +28,7 @@ import scraper
 
 
 BASE_URL = 'http://m4ufree.info/'
-AJAX_URL = '/ajax.php?action=ts-ajax&p=%s'
+AJAX_URL = '/demo.php?v=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class M4UFree_Scraper(scraper.Scraper):
@@ -74,31 +74,45 @@ class M4UFree_Scraper(scraper.Scraper):
                 url = match.group(1)
                 html = self._http_get(url, cache_limit=.5)
             
-            sources = self.__get_sources(html, url)
-            
-            match = re.search('href="([^"]+)[^>]*>\s*<button', html)
-            if match:
-                html = self._http_get(match.group(1), cache_limit=.5)
-                sources.update(self.__get_sources(html, url))
+            sources = self.__get_sources(html)
+            for link in dom_parser.parse_dom(html, 'span', {'class': '[^"]*btn-eps[^"]*'}, ret='link'):
+                ajax_url = AJAX_URL % (link)
+                ajax_url = urlparse.urljoin(self.base_url, ajax_url)
+                headers = XHR
+                headers['Referer'] = url
+                html = self._http_get(ajax_url, headers=headers, cache_limit=.5)
+                sources.update(self.__get_sources(html))
             
             for source in sources:
-                host = self._get_direct_hostname(source)
+                if sources[source]['direct']:
+                    host = self._get_direct_hostname(source)
+                else:
+                    host = urlparse.urlparse(source).hostname
                 stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+                direct = sources[source]['direct']
                 quality = sources[source]['quality']
-                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': True}
+                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': direct}
                 hosters.append(hoster)
 
         return hosters
-
-    def __get_sources(self, html, page_url):
+    
+    def __get_sources(self, html):
         sources = {}
-        for link in dom_parser.parse_dom(html, 'span', {'class': '[^"]*btn-eps[^"]*'}, ret='data-link'):
-            ajax_url = AJAX_URL % (link)
-            ajax_url = urlparse.urljoin(self.base_url, ajax_url)
-            headers = XHR
-            headers['Referer'] = page_url
-            html = self._http_get(ajax_url, headers=headers, cache_limit=.5)
-            sources.update(self._parse_sources_list(html))
+        for source in dom_parser.parse_dom(html, 'source', {'type': 'video/mp4'}, ret='src') + dom_parser.parse_dom(html, 'iframe', ret='src'):
+            if self.base_url in source:
+                redir_url = self._http_get(source, allow_redirect=False, method='HEAD', cache_limit=0)
+                if redir_url.startswith('http'):
+                    source = redir_url
+            
+            if self._get_direct_hostname(source) == 'gvideo':
+                quality = scraper_utils.gv_get_quality(source)
+                direct = True
+            else:
+                quality = QUALITIES.HD720
+                direct = False
+            
+            sources[source] = {'quality': quality, 'direct': direct}
+        
         return sources
     
     def get_url(self, video):

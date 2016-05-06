@@ -29,7 +29,7 @@ from salts_lib.kodi import i18n
 import scraper
 
 
-BASE_URL = 'http://myvideolinks.xyz'
+BASE_URL = 'http://download.myvideolinks.xyz'
 
 class MyVidLinks_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -123,6 +123,6 @@ class MyVidLinks_Scraper(scraper.Scraper):
         search_url = urlparse.urljoin(self.base_url, '/?s=')
         search_url += urllib.quote_plus(title)
         html = self._http_get(search_url, cache_limit=1)
-        pattern = '<h\d+>.*?<a\s+href="(?P<url>[^"]*/(?P<date>\d{4}/\d{2}/\d{2})/[^"]*)"\s+rel="bookmark"\s+title="(?:Permanent Link to )?(?P<post_title>[^"]+)'
-        date_format = '%Y/%m/%d'
+        pattern = 'class="post-title">\s*<h\d+>\s*<a\s+href="(?P<url>[^"]*)"[^>]+title="(?:Permanent Link to )?(?P<post_title>[^"]+).*?class="post-date"><img[^>]+>(?:&nbsp;)*(?P<date>[^@]+)'
+        date_format = '%b %d, %Y'
         return self._blog_proc_results(html, pattern, date_format, video_type, title, year)

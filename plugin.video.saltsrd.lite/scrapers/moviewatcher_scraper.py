@@ -18,6 +18,7 @@
 import re
 import urlparse
 import urllib
+import base64
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import log_utils
@@ -63,13 +64,14 @@ class MovieWatcher_Scraper(scraper.Scraper):
             html = self._http_get(page_url, cache_limit=.25)
             for item in dom_parser.parse_dom(html, 'div', {'class': 'stream-table__row'}):
                 stream_url = dom_parser.parse_dom(item, 'a', ret='href')
-                match = re.search('<span[^>]*>\s*Views:\s*</span>\s*(\d+)', item, re.I)
+                    
+                match = re.search('Views:\s*(?:</span>)?\s*(\d+)', item, re.I)
                 if match:
                     views = match.group(1)
                 else:
                     views = None
                     
-                match = re.search('<span[^>]*>\s*Size:\s*</span>\s*(\d+)', item, re.I)
+                match = re.search('Size:\s*(?:</span>)?\s*(\d+)', item, re.I)
                 if match:
                     size = int(match.group(1)) * 1024 * 1024
                 else:
@@ -77,12 +79,16 @@ class MovieWatcher_Scraper(scraper.Scraper):
                     
                 if stream_url:
                     stream_url = stream_url[0]
-                    if 'webtracker' in stream_url: continue
+                    match = re.search('/redirect/(.*)', stream_url)
+                    if match:
+                        stream_url = base64.decodestring(urllib.unquote(match.group(1)))
+                        
                     host = urlparse.urlparse(stream_url).hostname
-                    quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
-                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': False}
-                    if size is not None: hoster['size'] = scraper_utils.format_size(size, 'B')
-                    hosters.append(hoster)
+                    if host:
+                        quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
+                        hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': False}
+                        if size is not None: hoster['size'] = scraper_utils.format_size(size, 'B')
+                        hosters.append(hoster)
         return hosters
 
     def get_url(self, video):

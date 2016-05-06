@@ -27,9 +27,9 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
-BASE_URL = 'http://stage66.tv'
+BASE_URL = 'http://vu45.com'
 
-class Stage66_Scraper(scraper.Scraper):
+class VU45_Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -42,13 +42,13 @@ class Stage66_Scraper(scraper.Scraper):
 
     @classmethod
     def get_name(cls):
-        return 'Stage66'
+        return 'vu45'
 
     def resolve_link(self, link):
-        if 'player.php' in link:
-            stream_url = self.__get_links(link)
-            if stream_url:
-                return stream_url[0]
+        if 'watch.php' in link:
+            _direct, sources = self.__get_links(link)
+            if sources:
+                return sources[0]
         else:
             return link
 
@@ -60,7 +60,7 @@ class Stage66_Scraper(scraper.Scraper):
         sources = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
+            html = self._http_get(url, cache_limit=2)
             fragment = dom_parser.parse_dom(html, 'div', {'id': 'player-container'})
             if fragment:
                 iframe_urls = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
@@ -72,21 +72,19 @@ class Stage66_Scraper(scraper.Scraper):
                         continue  # skip multipart
                     else:
                         multipart = False
-                        
-                    for stream_url in self.__get_links(iframe_url):
+                    
+                    direct, streams = self.__get_links(iframe_url)
+                    for stream_url in streams:
                         if stream_url:
-                            host = self._get_direct_hostname(stream_url)
-                            if host == 'gvideo':
-                                quality = scraper_utils.gv_get_quality(stream_url)
-                                direct = True
-                            else:
-                                direct = False
-                                host = urlparse.urlparse(stream_url).hostname
-                                match = re.search('\((\d+)p\)', label)
-                                if match:
-                                    quality = scraper_utils.height_get_quality(match.group(1))
+                            if direct:
+                                host = self._get_direct_hostname(stream_url)
+                                if host == 'gvideo':
+                                    quality = scraper_utils.gv_get_quality(stream_url)
                                 else:
-                                    quality = QUALITIES.HIGH
+                                    quality = QUALITIES.HD720
+                            else:
+                                host = urlparse.urlparse(stream_url).hostname
+                                quality = QUALITIES.HIGH
                                 
                             stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
                             source = {'multi-part': multipart, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': direct}
@@ -96,18 +94,25 @@ class Stage66_Scraper(scraper.Scraper):
 
     def __get_links(self, iframe_url):
         sources = []
-        html = self._http_get(iframe_url, cache_limit=1)
+        direct = True
+        html = self._http_get(iframe_url, cache_limit=2)
         iframe_url2 = dom_parser.parse_dom(html, 'iframe', ret='src')
         if iframe_url2 and 'token=&' not in iframe_url2[0]:
-            html = self._http_get(iframe_url2[0], allow_redirect=False, cache_limit=1)
-            if html.startswith('http'):
-                sources += [html]
-            elif 'fmt_stream_map' in html:
-                sources += self._parse_google(iframe_url2[0])
+            html = self._http_get(iframe_url2[0], cache_limit=2)
+            if 'fmt_stream_map' in html:
+                sources = self._parse_gdocs(iframe_url2[0])
+                direct = True
             else:
-                sources += [source for source in dom_parser.parse_dom(html, 'source', {'type': 'video[^"]*'}, ret='src') if source]
+                sources = dom_parser.parse_dom(html, 'source', {'type': 'video[^"]*'}, ret='src')
+                direct = True
+            
+            if not sources:
+                match = re.search('proxy\.link=([^&"]+)', html)
+                if match:
+                    sources = [match.group(1)]
+                    direct = False
                     
-        return sources
+        return direct, sources
         
     def get_url(self, video):
         return self._default_get_url(video)
@@ -116,24 +121,26 @@ class Stage66_Scraper(scraper.Scraper):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/?s=%s' % (urllib.quote_plus(title)))
         html = self._http_get(search_url, cache_limit=8)
-        for movie in dom_parser.parse_dom(html, 'div', {'class': 'movie'}):
-            match = re.search('href="([^"]+)', movie)
-            if match:
-                match_url = match.group(1)
-                match_title_year = dom_parser.parse_dom(movie, 'img', ret='alt')
-                if match_title_year:
-                    match_title_year = match_title_year[0]
-                    match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
-                    if match:
-                        match_title, match_year = match.groups()
-                    else:
-                        match_title = match_title_year
-                        match_year = dom_parser.parse_dom(movie, 'div', {'class': 'year'})
-                        try: match_year = match_year[0]
-                        except: match_year = ''
-                        
-                    if not year or not match_year or year == match_year:
-                        result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
-                        results.append(result)
+        fragment = dom_parser.parse_dom(html, 'div', {'id': 'box_movies'})
+        if fragment:
+            for movie in dom_parser.parse_dom(fragment[0], 'div', {'class': 'movie'}):
+                match = re.search('href="([^"]+)', movie)
+                if match:
+                    match_url = match.group(1)
+                    match_title_year = dom_parser.parse_dom(movie, 'img', ret='alt')
+                    if match_title_year:
+                        match_title_year = match_title_year[0]
+                        match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
+                        if match:
+                            match_title, match_year = match.groups()
+                        else:
+                            match_title = match_title_year
+                            match_year = dom_parser.parse_dom(movie, 'div', {'class': 'year'})
+                            try: match_year = match_year[0]
+                            except: match_year = ''
+                            
+                        if not year or not match_year or year == match_year:
+                            result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                            results.append(result)
 
         return results
