@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="network.openvpn"
-       name="openvpn"
+       name="OpenVPN (Isengard)"
        version="2016.05.01.600"
        provider-name="Stefan Saraev (seo at irc.freenode.net)">
   <requires>
