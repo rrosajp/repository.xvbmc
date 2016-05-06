@@ -311,3 +311,11 @@ class Premiumize_Scraper(scraper.Scraper):
             js_result = {}
             
         return js_result
+
+    def _http_get(self, url, data=None, headers=None, allow_redirect=True, cache_limit=8):
+        # return all uncached blank pages if no user or pass
+        if not self.username or not self.password:
+            return ''
+
+        return super(self.__class__, self)._http_get(url, data=data, headers=headers, allow_redirect=allow_redirect, cache_limit=cache_limit)
+        

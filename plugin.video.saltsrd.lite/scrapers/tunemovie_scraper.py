@@ -171,7 +171,7 @@ class TuneMovie_Scraper(scraper.Scraper):
             if match_title and url:
                 match_title, url = match_title[0], url[0]
                 is_season = re.search('Season\s+(\d+)$', match_title, re.I)
-                if not is_season and video_type == VIDEO_TYPES.MOVIE or is_season and VIDEO_TYPES.SEASON:
+                if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
                     match_year = ''
                     if video_type == VIDEO_TYPES.MOVIE:
                         match_year = dom_parser.parse_dom(thumb, 'div', {'class': '[^"]*status-year[^"]*'})

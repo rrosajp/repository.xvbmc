@@ -123,7 +123,7 @@ class View47_Scraper(scraper.Scraper):
                 match_url = match_url[0]
                 match_title = match_title[0]
                 is_season = re.search('S(?:eason\s+)?(\d+)$', match_title, re.I)
-                if not is_season and video_type == VIDEO_TYPES.MOVIE or is_season and VIDEO_TYPES.SEASON:
+                if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
                     if video_type == VIDEO_TYPES.MOVIE:
                         if year_frag:
                             match_year = year_frag[0]

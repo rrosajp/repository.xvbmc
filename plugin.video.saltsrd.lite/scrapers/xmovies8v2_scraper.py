@@ -112,7 +112,7 @@ class XMovies8V2_Scraper(scraper.Scraper):
                     url, match_title_year = match.groups()
                     match_title_year = match_title_year.strip()
                     is_season = re.search(season_pattern, match_title_year, re.I)
-                    if not is_season and video_type == VIDEO_TYPES.MOVIE or is_season and VIDEO_TYPES.SEASON:
+                    if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
                         matches.append((url, match_title_year, is_season))
         
         for url, match_title_year, is_season in matches:

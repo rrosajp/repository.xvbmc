@@ -28,8 +28,8 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
 BASE_URL = 'http://www.pelispedia.tv'
-PK_URL = '/Pe_Player_Html5/pk/pk/plugins/protected.php'
-GK_URL = '/Pe_flv_flsh/plugins/gkpluginsphp.php'
+PK_URL = '/Pe_Player_Html5/pk/pk_2/plugins/protected.php'
+GK_URL = '/Pe_flsh/plugins/gkpluginsphp.php'
 DEL_LIST = ['sub', 'id']
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
@@ -183,20 +183,24 @@ class PelisPedia_Scraper(scraper.Scraper):
     def __movie_search(self, title, year):
         results = []
         search_title = re.sub("[^A-Za-z0-9. ]", "", title)
-        url = '/api/search.php?q=%s' % (urllib.quote_plus(search_title))
+        url = '/buscar/?s=%s' % (urllib.quote_plus(search_title))
         url = urlparse.urljoin(self.base_url, url)
         html = self._http_get(url, cache_limit=24)
-        js_data = scraper_utils.parse_json(html, url)
-        if 'hits' in js_data and 'hits' in js_data['hits']:
-            for item in js_data['hits']['hits']:
-                if '_id' in item and '_source' in item and 'title' in item['_source']:
-                    match_url = '/pelicula/%s' % (item['_id'])
-                    match_title = item['_source']['title']
+        for item in dom_parser.parse_dom(html, 'li', {'class': '[^"]*bpM12[^"}*'}):
+            match_url = re.search('href="([^"]+)', item)
+            match_title = dom_parser.parse_dom(item, 'span', {'class': 'dBlock'})
+            if match_url and match_title:
+                match_url = match_url.group(1)
+                match_title = match_title[0]
+                match = re.search('<span>\s*\((\d{4})\)\s*</span>', item)
+                if match:
+                    match_year = match.group(1)
+                else:
                     match_year = ''
                     
-                    if (not year or not match_year or year == match_year):
-                        result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
-                        results.append(result)
+                if (not year or not match_year or year == match_year):
+                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                    results.append(result)
         return results
                         
             

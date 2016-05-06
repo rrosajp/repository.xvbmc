@@ -29,7 +29,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.kodi import i18n
 import scraper
 
-BASE_URL = 'http://twoddl.org'
+BASE_URL = 'http://2ddl.cc'
 CATEGORIES = {VIDEO_TYPES.MOVIE: '/category/movies/', VIDEO_TYPES.TVSHOW: '/category/tv-shows/'}
 EXCLUDE_LINKS = ['adf.ly', '2ddl.link']
 
@@ -59,7 +59,7 @@ class TwoDDL_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
+            html = self._http_get(url, require_debrid=True, cache_limit=.5)
             if video.video_type == VIDEO_TYPES.MOVIE:
                 pattern = '<singlelink>(.*?)(?=<hr\s*/>|download>|thanks_button_div)'
             else:
@@ -108,23 +108,24 @@ class TwoDDL_Scraper(scraper.Scraper):
         too_old = False
         while page_url and not too_old:
             url = urlparse.urljoin(self.base_url, page_url[0])
-            html = self._http_get(url, cache_limit=1)
-            headings = re.findall('<h2>\s*<a\s+href="([^"]+)[^>]+>(.*?)</a>', html)
+            html = self._http_get(url, require_debrid=True, cache_limit=1)
             posts = dom_parser.parse_dom(html, 'div', {'id': 'post-\d+'})
-            for heading, post in zip(headings, posts):
+            for post in posts:
                 if self.__too_old(post):
                     too_old = True
                     break
                 if CATEGORIES[VIDEO_TYPES.TVSHOW] in post and show_url in post:
-                    url, title = heading
-                    if not force_title:
-                        if re.search(sxe, title) or (airdate_pattern and re.search(airdate_pattern, title)):
-                            return scraper_utils.pathify_url(url)
-                    else:
-                        if title_fallback and norm_title:
-                            match = re.search('</strong>(.*?)</p>', post)
-                            if match and norm_title == scraper_utils.normalize_title(match.group(1)):
+                    match = re.search('<a\s+href="([^"]+)[^>]+>(.*?)</a>', post)
+                    if match:
+                        url, title = match.groups()
+                        if not force_title:
+                            if re.search(sxe, title) or (airdate_pattern and re.search(airdate_pattern, title)):
                                 return scraper_utils.pathify_url(url)
+                        else:
+                            if title_fallback and norm_title:
+                                match = re.search('</strong>(.*?)</p>', post)
+                                if match and norm_title == scraper_utils.normalize_title(match.group(1)):
+                                    return scraper_utils.pathify_url(url)
                 
             page_url = dom_parser.parse_dom(html, 'a', {'class': 'nextpostslink'}, ret='href')
     
@@ -132,7 +133,7 @@ class TwoDDL_Scraper(scraper.Scraper):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search/')
         search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=1)
+        html = self._http_get(search_url, require_debrid=True, cache_limit=1)
         if video_type == VIDEO_TYPES.TVSHOW:
             seen_urls = {}
             for post in dom_parser.parse_dom(html, 'div', {'id': 'post-\d+'}):

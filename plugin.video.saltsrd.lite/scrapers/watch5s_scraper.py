@@ -29,14 +29,12 @@ import scraper
 import xml.etree.ElementTree as ET
 
 
-BASE_URL = 'http://123movies.to'
-PLAYLIST_URL1 = 'movie/loadEmbed/%s'
-PLAYLIST_URL2 = '/ajax/load_episode/%s/%s'
-SL_URL = '/ajax/get_episodes/%s/%s'
+BASE_URL = 'http://watch5s.com/'
+LINK_URL = '/player/'
 Q_MAP = {'TS': QUALITIES.LOW, 'CAM': QUALITIES.LOW, 'HDTS': QUALITIES.LOW, 'HD-720P': QUALITIES.HD720}
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class One23Movies_Scraper(scraper.Scraper):
+class Watch5s_Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -49,7 +47,7 @@ class One23Movies_Scraper(scraper.Scraper):
 
     @classmethod
     def get_name(cls):
-        return '123Movies'
+        return 'Watch5s'
 
     def resolve_link(self, link):
         return link
@@ -63,25 +61,39 @@ class One23Movies_Scraper(scraper.Scraper):
         hosters = []
         sources = {}
         if source_url and source_url != FORCE_NO_MATCH:
-            html = self.__get_source_page(source_url)
-            sources = {}
             page_url = urlparse.urljoin(self.base_url, source_url)
-            for match in re.finditer('''loadEpisode\(\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'\s*\).*?class="btn-eps[^>]*>([^<]+)''', html, re.DOTALL):
-                link_type, link_id, hash_id, q_str = match.groups()
-                pattern = 'Episode\s+%s(:|$| )' % (video.episode)
-                if video.video_type == VIDEO_TYPES.EPISODE and not re.search(pattern, q_str):
-                    continue
-                
-                if link_type in ['12', '13', '14']:
-                    url = urlparse.urljoin(self.base_url, PLAYLIST_URL1 % (link_id))
-                    sources.update(self.__get_link_from_json(url, q_str))
-                else:
-                    media_url = PLAYLIST_URL2 % (link_id, hash_id)
-                    headers = {'Referer': page_url}
-                    url = urlparse.urljoin(self.base_url, media_url)
-                    xml = self._http_get(url, headers=headers, cache_limit=.5)
-                    sources.update(self.__get_links_from_xml(xml, video, page_url))
-            
+            html = self._http_get(page_url, cache_limit=1)
+            match = re.search("filmInfo\.filmIMAGE\s*=\s*'([^']+)", html, re.I)
+            film_image = match.group(1) if match else ''
+            match = re.search("filmInfo\.filmID\s*=\s*'([^']+)", html, re.I)
+            film_id = match.group(1) if match else ''
+            if film_image and film_id:
+                for item in dom_parser.parse_dom(html, 'div', {'class': 'les-content'}):
+                    button_labels = dom_parser.parse_dom(item, 'a', {'class': '[^"]*btn-eps[^"]*'})
+                    servers = dom_parser.parse_dom(item, 'a', ret='episode-sv')
+                    ep_ids = dom_parser.parse_dom(item, 'a', ret='episode-id')
+                    referers = dom_parser.parse_dom(item, 'a', ret='href')
+                    for label, ep_sv, ep_id, referer in zip(button_labels, servers, ep_ids, referers):
+                        if video.video_type == VIDEO_TYPES.EPISODE:
+                            try: ep_num = int(label)
+                            except: ep_num = 0
+                            if ep_num != int(video.episode):
+                                continue
+                            
+                        headers = XHR
+                        headers['Referer'] = urlparse.urljoin(self.base_url, referer)
+                        link_url = urlparse.urljoin(self.base_url, LINK_URL)
+                        data = {'epSV': ep_sv, 'epID': ep_id, 'filmID': film_id, 'filmIMAGE': film_image}
+                        html = self._http_get(link_url, data=data, headers=headers, cache_limit=.5)
+                        iframe_url = dom_parser.parse_dom(html, 'iframe', ret='src')
+                        if iframe_url:
+                            quality = Q_MAP.get(label, QUALITIES.HIGH)
+                            sources.update({iframe_url[0]: {'quality': quality, 'direct': False}})
+                        else:
+                            match = re.search('var\s+url_playlist\s*=\s*"([^"]+)', html)
+                            if match:
+                                sources.update(self.__get_links_from_xml(match.group(1), headers, label))
+        
         for source in sources:
             if not source.lower().startswith('http'): continue
             if sources[source]['direct']:
@@ -97,21 +109,12 @@ class One23Movies_Scraper(scraper.Scraper):
             hosters.append(hoster)
         return hosters
 
-    def __get_link_from_json(self, url, q_str):
-        sources = {}
-        html = self._http_get(url, cache_limit=.5)
-        js_result = scraper_utils.parse_json(html, url)
-        if 'embed_url' in js_result:
-            quality = Q_MAP.get(q_str.upper(), QUALITIES.HIGH)
-            sources[js_result['embed_url']] = {'quality': quality, 'direct': False}
-        return sources
-    
-    def __get_links_from_xml(self, xml, video, page_url):
+    def __get_links_from_xml(self, xml_url, headers, button_label):
         sources = {}
         try:
+            xml = self._http_get(xml_url, headers=headers, cache_limit=.25)
             root = ET.fromstring(xml)
             for item in root.findall('.//item'):
-                title = item.find('title').text
                 for source in item.findall('{http://rss.jwpcdn.com/}source'):
                     stream_url = source.get('file')
                     label = source.get('label')
@@ -120,61 +123,56 @@ class One23Movies_Scraper(scraper.Scraper):
                     elif label:
                         quality = scraper_utils.height_get_quality(label)
                     else:
-                        quality = scraper_utils.blog_get_quality(video, title, '')
+                        quality = Q_MAP.get(button_label, QUALITIES.HIGH)
                     sources[stream_url] = {'quality': quality, 'direct': True}
                     log_utils.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
         except Exception as e:
-            log_utils.log('Exception during 123Movies XML Parse: %s' % (e), log_utils.LOGWARNING)
+            log_utils.log('Exception during Watch5s XML Parse: %s' % (e), log_utils.LOGWARNING)
 
         return sources
     
-    def __get_source_page(self, source_url):
-        html = ''
-        url = urlparse.urljoin(self.base_url, source_url)
-        page_html = self._http_get(url, cache_limit=8)
-        movie_id = dom_parser.parse_dom(page_html, 'div', {'id': 'media-player'}, 'movie-id')
-        token = dom_parser.parse_dom(page_html, 'div', {'id': 'media-player'}, 'player-token')
-        if movie_id and token:
-            server_url = SL_URL % (movie_id[0], token[0])
-            headers = XHR
-            headers['Referer'] = url
-            url = urlparse.urljoin(self.base_url, server_url)
-            html = self._http_get(url, headers=headers, cache_limit=8)
-        return html
-
     def get_url(self, video):
         return self._default_get_url(video)
 
     def _get_episode_url(self, season_url, video):
-        html = self.__get_source_page(season_url)
-        if re.search('title\s*=\s*"Episode\s+%s(:|"| )' % (video.episode), html, re.I):
-            return season_url
+        url = urlparse.urljoin(self.base_url, season_url)
+        html = self._http_get(url, cache_limit=8)
+        for label in dom_parser.parse_dom(html, 'a', {'class': '[^"]*btn-eps[^"]*'}):
+            try: ep_num = int(label)
+            except: ep_num = 0
+            if int(video.episode) == ep_num:
+                return season_url
     
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/movie/search/')
-        title = re.sub('[^A-Za-z0-9 ]', '', title)
+        search_url = urlparse.urljoin(self.base_url, '/search/?q=')
         search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=1)
+        html = self._http_get(search_url, cache_limit=8)
         results = []
         for item in dom_parser.parse_dom(html, 'div', {'class': 'ml-item'}):
             match_title = dom_parser.parse_dom(item, 'span', {'class': 'mli-info'})
             match_url = re.search('href="([^"]+)', item, re.DOTALL)
-            match_year = re.search('class="jt-info">(\d{4})<', item)
+            year_frag = dom_parser.parse_dom(item, 'img', ret='alt')
             is_episodes = dom_parser.parse_dom(item, 'span', {'class': 'mli-eps'})
             
             if (video_type == VIDEO_TYPES.MOVIE and not is_episodes) or (video_type == VIDEO_TYPES.SEASON and is_episodes):
                 if match_title and match_url:
+                    match_url = match_url.group(1)
                     match_title = match_title[0]
                     match_title = re.sub('</?h2>', '', match_title)
                     match_title = re.sub('\s+\d{4}$', '', match_title)
                     if video_type == VIDEO_TYPES.SEASON:
                         if season and not re.search('Season\s+%s$' % (season), match_title): continue
                         
-                    url = urlparse.urljoin(match_url.group(1), 'watching.html')
-                    match_year = match_year.group(1) if match_year else ''
+                    if not match_url.endswith('/'): match_url += '/'
+                    match_url = urlparse.urljoin(match_url, 'watch/')
+                    match_year = ''
+                    if video_type == VIDEO_TYPES.MOVIE and year_frag:
+                        match = re.search('\s*-\s*(\d{4})$', year_frag[0])
+                        if match:
+                            match_year = match.group(1)
     
                     if not year or not match_year or year == match_year:
-                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(url)}
+                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                         results.append(result)
 
         return results

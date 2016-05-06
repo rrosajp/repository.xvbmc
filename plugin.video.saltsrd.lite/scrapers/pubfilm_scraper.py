@@ -155,7 +155,7 @@ class PubFilm_Scraper(scraper.Scraper):
             if match:
                 match_url, match_title_year = match.groups()
                 is_season = re.search('Season\s+(\d+)$', match_title_year, re.I)
-                if not is_season and video_type == VIDEO_TYPES.MOVIE or is_season and VIDEO_TYPES.SEASON:
+                if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
                     match_year = ''
                     if video_type == VIDEO_TYPES.SEASON:
                         match_title = match_title_year

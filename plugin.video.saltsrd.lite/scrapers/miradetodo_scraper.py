@@ -66,6 +66,9 @@ class MiraDetodo_Scraper(scraper.Scraper):
                 iframe_url = dom_parser.parse_dom(fragment, 'iframe', ret='src')
                 if iframe_url:
                     iframe_url = iframe_url[0]
+                    if not iframe_url.startswith('http'):
+                        iframe_url = dom_parser.parse_dom(fragment, 'iframe', ret='data-lazy-src')
+                        iframe_url = iframe_url[0]
                     sources = {}
                     if 'miradetodo' in iframe_url:
                         direct = True

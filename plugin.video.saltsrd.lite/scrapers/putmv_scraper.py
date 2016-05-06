@@ -134,7 +134,7 @@ class PutMV_Scraper(scraper.Scraper):
                 if match:
                     url, match_title = match.groups()
                     is_season = re.search('\s+-\s+[Ss](\d+)$', match_title)
-                    if not is_season and video_type == VIDEO_TYPES.MOVIE or is_season and VIDEO_TYPES.SEASON:
+                    if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
                         match_year = ''
                         if video_type == VIDEO_TYPES.MOVIE:
                             for info_frag in dom_parser.parse_dom(item, 'p', {'class': 'info'}):
