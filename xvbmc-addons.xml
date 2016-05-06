@@ -51,7 +51,7 @@
 </addon>
 
 <addon id="network.openvpn"
-       name="openvpn"
+       name="OpenVPN (Isengard)"
        version="2016.05.01.600"
        provider-name="Stefan Saraev (seo at irc.freenode.net)">
   <requires>
