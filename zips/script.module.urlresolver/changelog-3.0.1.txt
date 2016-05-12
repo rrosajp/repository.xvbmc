@@ -1,3 +1,7 @@
+[B]3.0.1[/B]
+- Eldorados/script.module.urlresolver : Bump to 3.0.1
++ https://github.com/Eldorados/script.module.urlresolver
+
 [B]Version 2.10.0[/B]
 - Code Base Changes:
     - Removed dependency in addon.xml for Youtube, Gotham users would not be able to install as official youtube addon only exists in Helix+ repo
