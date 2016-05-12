@@ -505,7 +505,7 @@ Alle inhoud is copyright van hun respectievelijke eigenaars.</description>
 
 <addon id="plugin.video.wildhitz"
        name="WildHitz"
-       version="0.0.3"
+       version="0.1.0"
        provider-name="DSS">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>

@@ -8,11 +8,12 @@ import xbmcaddon
 import xbmcvfs
 import xml.etree.ElementTree as ET
 import random
+import base64
+from operator import itemgetter
+import traceback,cookielib
 
-
-
-          
-
+wildlink = base64.b64decode('aHR0cDovL3dpbGRoaXR6LnJyLmtwbnN0cmVhbWluZy5ubC9obHMvdm9kL3dpbGRoaXR6L21wNHMv')          
+wildqt = base64.b64decode('LzcyMHAyMDAwLm1wNA==')
     
 addon = xbmcaddon.Addon('plugin.video.wildhitz')
 addonname = addon.getAddonInfo('name')
@@ -109,23 +110,43 @@ def GetHTML(url):
     response.close()
     return link
 
-
+def sorted_nicely( l ): 
+    """ Sort the given iterable in the way that humans expect.""" 
+    convert = lambda text: int(text) if text.isdigit() else text 
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key[1]) ] 
+    return sorted(l, key = alphanum_key) 
 
 
 def Addtypes():
-   addDir('Playlist' ,'playlist',2,icon ,  FANART,'','','','')
-   addDir('Weekendmix' ,'weekendmix',3,icon ,  FANART,'','','','')
+   addDir('Live On Air' ,playlist,2,icon ,  FANART,'','','','')
+   addDir('Weekend Mix' ,'weekendmix',3,icon ,  FANART,'','','','')
+   addDir('Daily Mix' ,'dailymix',5,icon ,  FANART,'','','','')
    addDir('Top 3' ,'top3',4,icon ,  FANART,'','','','')
+   addDir('Playlist' ,'top3',6,icon ,  FANART,'','','','')
+   addDir('VideoClips' ,'jukebox',8,icon ,  FANART,'','','','')
 
 
-def Wildhitz_playlist():
+
+def Addplaylist():
+   i= 1
+   while True:
+      url = 'http://wildhitz.nl/jw/playlist.'+str(i)+'.jw5.rss'
+      title = 'Playlist - '+str(i)
+      try:
+         read = GetHTML(url)
+         addDir(title ,url,2,icon ,  FANART,'','','','')
+      except:
+         break
+      i=i+1
+         
+
+
+def Wildhitz_playlist(url):
    pl=xbmc.PlayList(1)
    pl.clear()
-   xml = make_request(playlist)
-   #xml = filter(lambda x: not x.isspace(), xml)
+   xml = make_request(url)
    xml = re.compile(xml_regex, re.DOTALL).findall(xml)
    for title, url in xml:
-      #if title != "  -  ":
       listitem = xbmcgui.ListItem('WildHitz - '+title,thumbnailImage=icon)
       xbmc.PlayList(1).add(url, listitem)
    xbmc.Player().play(pl)
@@ -135,10 +156,8 @@ def Wildhitz_top3():
    pl=xbmc.PlayList(1)
    pl.clear()
    xml = make_request(top3)
-   #xml = filter(lambda x: not x.isspace(), xml)
    xml = re.compile(xml_regex, re.DOTALL).findall(xml)
    for title, url in xml:
-      #if title != "  -  ":
       listitem = xbmcgui.ListItem('WildHitz - '+title,thumbnailImage=icon)
       xbmc.PlayList(1).add(url, listitem)
    xbmc.Player().play(pl)
@@ -146,8 +165,74 @@ def Wildhitz_top3():
 
 
 
+
+def CatJukebox():
+   addDir('1..9' ,'1',7,icon ,  FANART,'','','','')
+   addDir('A' ,'a',7,icon ,  FANART,'','','','')
+   addDir('B' ,'b',7,icon ,  FANART,'','','','')
+   addDir('C' ,'c',7,icon ,  FANART,'','','','')
+   addDir('D' ,'d',7,icon ,  FANART,'','','','')
+   addDir('E' ,'e',7,icon ,  FANART,'','','','')
+   addDir('F' ,'f',7,icon ,  FANART,'','','','')
+   addDir('G' ,'g',7,icon ,  FANART,'','','','')
+   addDir('H' ,'h',7,icon ,  FANART,'','','','')
+   addDir('I' ,'i',7,icon ,  FANART,'','','','')
+   addDir('J' ,'j',7,icon ,  FANART,'','','','')
+   addDir('K' ,'k',7,icon ,  FANART,'','','','')
+   addDir('L' ,'l',7,icon ,  FANART,'','','','')
+   addDir('M' ,'m',7,icon ,  FANART,'','','','')
+   addDir('N' ,'n',7,icon ,  FANART,'','','','')
+   addDir('O' ,'o',7,icon ,  FANART,'','','','')
+   addDir('P' ,'p',7,icon ,  FANART,'','','','')
+   addDir('Q' ,'q',7,icon ,  FANART,'','','','')
+   addDir('R' ,'r',7,icon ,  FANART,'','','','')
+   addDir('S' ,'s',7,icon ,  FANART,'','','','')
+   addDir('T' ,'t',7,icon ,  FANART,'','','','')
+   addDir('U' ,'u',7,icon ,  FANART,'','','','')
+   addDir('V' ,'v',7,icon ,  FANART,'','','','')
+   addDir('W' ,'w',7,icon ,  FANART,'','','','')
+   addDir('Y' ,'x',7,icon ,  FANART,'','','','')
+   addDir('Y' ,'y',7,icon ,  FANART,'','','','')
+   addDir('Z' ,'z',7,icon ,  FANART,'','','','')
+   
+   
+
+
+
+def Jukebox(cat):
+   url = base64.b64decode('aHR0cDovL2RjdHYuY29tbHUuY29tL3htbC93aWxkamIueG1s')
+   content = make_request(url)
+   root = ET.fromstring(content)
+   items = root.findall('item')
+   for item in items:
+      title = item.find('title').text
+      link = item.find('url').text
+      title = base64.b64decode(title).title()
+      link = wildlink+base64.b64decode(link)+wildqt
+      title2 = title[:1]
+      if title2.lower() == cat:
+         addDir(title ,link,10,icon ,  FANART,'','','','')
+      else:
+         title3 = title[:1]
+         if  title3.isdigit():
+            title3 = '1'
+            if title3 == cat:
+               addDir(title ,link,10,icon ,  FANART,'','','','')
+
+
+
 def Weekendmix():
    url = 'http://pastebin.com/raw/C0H0i8f9'
+   content = make_request(url)
+   root = ET.fromstring(content)
+   items = root.findall('item')
+   for item in items:
+      title = item.find('title').text
+      link = item.find('link').text
+      addDir(title ,link,10,icon ,  FANART,'','','','')
+
+def Dailymix():
+   url = 'http://pastebin.com/raw/Sv1vLn0X'
    content = make_request(url)
    root = ET.fromstring(content)
    items = root.findall('item')
@@ -290,30 +375,31 @@ except:
 print 	mode,url,linkType
 
 try:
-	if mode==None or url==None or len(url)<1:
-		print "InAddTypes"
-		Addtypes()
-        elif mode==2 :
-		Wildhitz_playlist()
-        elif mode==3 :
-		Weekendmix()
-        elif mode==4 :
-		Wildhitz_top3()
+   if mode==None or url==None or len(url)<1:
+      print "InAddTypes"
+      Addtypes()
+   elif mode==2 :
+      Wildhitz_playlist(url)
+   elif mode==3 :
+      Weekendmix()
+   elif mode==4 :
+      Wildhitz_top3()
+   elif mode==5 :
+      Dailymix()
+   elif mode==6 :
+      Addplaylist()
+   elif mode==7 :
+      Jukebox(url)
+   elif mode==8 :
+      CatJukebox()
+   elif mode==10 :
+      playmix(name,url)
 
-	elif mode==6 :
-		keyboard(url)
-	elif mode==10 :
-		playmix(name,url)  		
-		
 
-      
-
-    
-	
 
 except:
-	print 'somethingwrong'
-	traceback.print_exc(file=sys.stdout)
+   print 'somethingwrong'
+   traceback.print_exc(file=sys.stdout)
 	
 
 		
