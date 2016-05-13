@@ -107,11 +107,11 @@ def get_params():
 #						Work Functions
 #######################################################################
 def setupCacheEntries():
-    entries = 5 #make sure this refelcts the amount of entries you have
-    dialogName = ["MP3 Streams", "4oD", "BBC iPlayer", "Simple Downloader", "ITV"]
-    pathName = ["special://profile/addon_data/plugin.audio.mp3streams/temp_dl", "special://profile/addon_data/plugin.video.4od/cache",
-					"special://profile/addon_data/plugin.video.iplayer/iplayer_http_cache","special://profile/addon_data/script.module.simple.downloader",
-                    "special://profile/addon_data/plugin.video.itv/Images"]
+    entries = 6 #make sure this refelcts the amount of entries you have
+    dialogName = ["MP3 Streams", "Quasar", "SportsDevil", "Simple Downloader", "Spotitube", "Kmediatorrent"]
+    pathName = ["special://profile/addon_data/plugin.audio.mp3streams/temp_dl", "special://profile/addon_data/plugin.video.quasar/cache",
+                "special://profile/addon_data/plugin.video.SportsDevil/cache","special://profile/addon_data/script.module.simple.downloader",
+                "special://profile/addon_data/plugin.video.spotitube/cache","special://profile/addon_data/plugin.video.kmediatorrent/cache"]
                     
     cacheEntries = []
     
