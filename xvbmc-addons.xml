@@ -1170,7 +1170,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.schoonmaak"
        name="Kodi Schoonmaak"
-       version="1.10.01"
+       version="1.10.02"
        provider-name="Raw Maintenance (XvBMC MOD)">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -1180,7 +1180,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary>Kodi Schoonmaak 1.10.01 / Raw Maintinance 0.1.10</summary>
+    <summary>Kodi Schoonmaak 1.10.02 / Raw Maintinance 0.1.10</summary>
     <description>For OFFICIAL RAW Maintenance support only:  please visit www.no-issue.ca </description>
     <language></language>
     <license></license>
