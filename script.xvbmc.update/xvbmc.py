@@ -238,7 +238,7 @@ def subDEVmenu():
     userchoice.append("XvBMC #DEV# Corner (Firmware - 12 april 2016)")
     userchoice.append("XvBMC #DEV# Corner (Firmware - Current v3 image)")
     userchoice.append("XvBMC #DEV# Corner (LibreELEC_arm-7.0.0)")
-    userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.2)")
+    userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.3)")
     userchoice.append("Exit")
     
     # Display the menu
