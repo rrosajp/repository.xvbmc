@@ -43,8 +43,8 @@ def showMenu():
     
     # Create list of menu items
     userchoice = []
-    userchoice.append("XvBMC ServicePack 01 (01-05-2016)")
-    userchoice.append("XvBMC ServicePack (00 t/m 01) bulk pack")
+    userchoice.append("XvBMC ServicePack 02 (15-05-2016)")
+    userchoice.append("XvBMC ServicePack (00 t/m 02) bulk pack")
     userchoice.append("XvBMC Refresh UpdateAddonRepos")
     userchoice.append("XvBMC OverClock (raspberry Pi)")
     userchoice.append("XvBMC #DEV# Corner (Firmware-OS-etc)")
@@ -56,12 +56,12 @@ def showMenu():
                                            userchoice)
     # Process menu actions
     
-    #	\update\sp\01-servicepack.zip
-    if userchoice[inputchoice] == "XvBMC ServicePack 01 (01-05-2016)":
+    #	\update\sp\02-servicepack.zip
+    if userchoice[inputchoice] == "XvBMC ServicePack 02 (15-05-2016)":
         ServicePack()
     
-    #	\update\sp\01-sp-rollup.zip
-    elif userchoice[inputchoice] == "XvBMC ServicePack (00 t/m 01) bulk pack":
+    #	\update\sp\02-sp-rollup.zip
+    elif userchoice[inputchoice] == "XvBMC ServicePack (00 t/m 02) bulk pack":
         UpdateRollup()
     
     #	http://kodi.wiki/view/List_of_built-in_functions
@@ -86,7 +86,7 @@ class ServicePackClass(xbmcgui.Window):
     dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?'):
 
-        url = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/update/sp/01-servicepack.zip'
+        url = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/update/sp/02-servicepack.zip'
         path = xbmc.translatePath(os.path.join('special://home/addons/','packages'))
         lib=os.path.join(path, 'update.zip')
         DownloaderClass(url,lib)
@@ -107,7 +107,7 @@ class UpdateRollupClass(xbmcgui.Window):
     dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?'):
 
-        url = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/update/sp/01-sp-rollup.zip'
+        url = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/update/sp/02-sp-rollup.zip'
         path = xbmc.translatePath(os.path.join('special://home/addons/','packages'))
         lib=os.path.join(path, 'update.zip')
         DownloaderClass(url,lib)
