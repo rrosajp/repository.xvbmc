@@ -85,7 +85,7 @@ class KiwiHD_Scraper(scraper.Scraper):
         return self._default_get_url(video)
     
     def _get_episode_url(self, season_url, video):
-        episode_pattern = 'href="([^"]*-ep-0*%s_[^"]*)' % (video.episode)
+        episode_pattern = 'href="([^"]*-ep-0*%s[._][^"]*)' % (video.episode)
         return self._default_get_episode_url(season_url, video, episode_pattern)
     
     def search(self, video_type, title, year, season=''):
@@ -106,7 +106,6 @@ class KiwiHD_Scraper(scraper.Scraper):
             if match_url and match_title_year:
                 is_season = re.search('season\s+(\d+)', match_title_year, re.I)
                 has_episodes = dom_parser.parse_dom(item, 'a', {'class': 'adf'})
-                log_utils.log(has_episodes)
                 has_episodes = True if has_episodes and '01' in has_episodes[0] else False
                 if (not is_season and video_type == VIDEO_TYPES.MOVIE) or ((has_episodes or is_season) and video_type == VIDEO_TYPES.SEASON):
                     if video_type == VIDEO_TYPES.MOVIE:

@@ -25,11 +25,13 @@ from salts_lib import scraper_utils
 from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
+from salts_lib.constants import QUALITIES
 import scraper
 
 
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 BASE_URL = 'http://xmovies8.tv'
+PLAYER_URL = '/ajax/movie/load_player'
 
 class XMovies8V2_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -55,17 +57,46 @@ class XMovies8V2_Scraper(scraper.Scraper):
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
+        sources = {}
         if source_url and source_url != FORCE_NO_MATCH:
-            html = self.__get_embedded_page(source_url)
-            fragment = dom_parser.parse_dom(html, 'div', {'class': '[^"]*download[^"]*'})
-            if fragment:
-                page_url = urlparse.urljoin(self.base_url, source_url)
-                for match in re.finditer('href="([^"]+)[^>]+>([^<]+)', fragment[0]):
-                    stream_url, label = match.groups()
-                    quality = scraper_utils.height_get_quality(label)
-                    stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), urllib.quote(page_url))
-                    hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                    hosters.append(hoster)
+            page_url = urlparse.urljoin(self.base_url, source_url)
+            html = self._http_get(page_url, cache_limit=.5)
+            players = list(set(re.findall("load_player\(\s*'([^']+)'\s*,\s*'?(\d+)\s*'?", html)))
+            player_url = urlparse.urljoin(self.base_url, PLAYER_URL)
+            for link_id, height in players:
+                headers = XHR
+                headers['Referer'] = page_url
+                data = {'id': link_id, 'quality': height}
+                html = self._http_get(player_url, data=data, headers=headers, cache_limit=.5)
+                iframe_url = dom_parser.parse_dom(html, 'iframe', {'class': 'frame-player\d*'}, ret='src')
+                if iframe_url:
+                    iframe_url = iframe_url[0]
+                    if 'player.php' in iframe_url:
+                        iframe_url = urlparse.urljoin(self.base_url, iframe_url)
+                        video_url = dom_parser.parse_dom(html, 'input', {'type': 'hidden'}, ret='value')
+                        if video_url:
+                            headers = {'Referer': iframe_url}
+                            html = self._http_get(video_url[0], headers=headers, allow_redirect=False, method='HEAD', cache_limit=.25)
+                            if html.startswith('http'):
+                                if self._get_direct_hostname(html) == 'gvideo':
+                                    quality = scraper_utils.gv_get_quality(html)
+                                else:
+                                    quality = scraper_utils.height_get_quality(height)
+                                sources[html] = {'quality': quality, 'direct': True}
+                                
+                    else:
+                        sources[iframe_url] = {'quality': QUALITIES.HIGH, 'direct': False}
+                    
+            for source in sources:
+                direct = sources[source]['direct']
+                quality = sources[source]['quality']
+                if direct:
+                    host = self._get_direct_hostname(source)
+                else:
+                    host = urlparse.urlparse(source).hostname
+                stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': direct}
+                hosters.append(hoster)
             
         return hosters
 
@@ -73,65 +104,32 @@ class XMovies8V2_Scraper(scraper.Scraper):
         return self._default_get_url(video)
     
     def _get_episode_url(self, season_url, video):
-        html = self.__get_embedded_page(season_url)
-        fragment = dom_parser.parse_dom(html, 'ul', {'class': 'movie-parts'})
-        if fragment:
-            match = re.search('href="([^"]+)[^>]*>\s*%s\s*<' % (video.episode), fragment[0])
-            if match:
-                return match.group(1)
+        episode_pattern = 'href="([^"]+)[^>]+class="[^"]*btn-episode[^>]*>%s<' % (video.episode)
+        return self._default_get_episode_url(season_url, video, episode_pattern)
 
-    def __get_embedded_page(self, page_url):
-        url = urlparse.urljoin(self.base_url, page_url)
-        html = self._http_get(url, cache_limit=.5)
-        match = re.search('''ajax\({\s*url\s*:\s*['"]([^'"]+).*?data\s*:\s*['"]([^'"]+)''', html, re.DOTALL)
-        if match:
-            url, data = match.groups()
-            html = self._http_get(url, data=data, headers=XHR, cache_limit=.5)
-            return html
-        else:
-            return ''
-    
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/?s=%s' % urllib.quote_plus(title))
-        html = self._http_get(search_url, allow_redirect=False, cache_limit=.25)
+        search_url = urlparse.urljoin(self.base_url, '/movies/search?s=%s' % urllib.quote_plus(title))
+        html = self._http_get(search_url, cache_limit=8)
         results = []
-        matches = []
-        season_pattern = '(.*?)\s*-?\s*Season\s+(\d+)'
-        if html.startswith('http://') and '/movie/' in html:
-            url = html
-            html = self._http_get(html, allow_redirect=False, cache_limit=.25)
-            title = dom_parser.parse_dom(html, 'h1')
-            if title:
-                match_title_year = title[0]
-                is_season = re.search(season_pattern, match_title_year, re.I)
-                matches.append((url, match_title_year, is_season))
-        else:
-            for result in dom_parser.parse_dom(html, 'div', {'class': 'info'}):
-                match = re.search('href="([^"]+)"[^>]*>([^<]+)', result, re.DOTALL)
-                if match:
-                    url, match_title_year = match.groups()
-                    match_title_year = match_title_year.strip()
-                    is_season = re.search(season_pattern, match_title_year, re.I)
-                    if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
-                        matches.append((url, match_title_year, is_season))
-        
-        for url, match_title_year, is_season in matches:
-            match_year = ''
-            if video_type == VIDEO_TYPES.MOVIE:
-                match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
-                if match:
-                    match_title, match_year = match.groups()
-                else:
+        titles = dom_parser.parse_dom(html, 'a', {'class': 'movie-item-link'}, ret='title')
+        links = dom_parser.parse_dom(html, 'a', {'class': 'movie-item-link'}, ret='href')
+        for match_title_year, match_url in zip(titles, links):
+            is_season = re.search('Season\s+(\d+)', match_title_year)
+            if (video_type == VIDEO_TYPES.MOVIE and not is_season) or (video_type == VIDEO_TYPES.SEASON and is_season):
+                match_year = ''
+                if video_type == VIDEO_TYPES.SEASON:
                     match_title = match_title_year
-            else:
-                if is_season:
-                    match_title = '%s - Season %s' % (is_season.groups())
-                    if season and int(is_season.group(2)) != int(season):
+                    if season and int(is_season.group(1)) != int(season):
                         continue
                 else:
-                    match_title = match_title_year
+                    match = re.search('(.*?)\s+(\d{4})$', match_title_year)
+                    if match:
+                        match_title, match_year = match.groups()
+                    else:
+                        match_title = match_title_year
+                        match_year = ''
     
-            if not year or not match_year or year == match_year:
-                result = {'url': scraper_utils.pathify_url(url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
-                results.append(result)
+                if not year or not match_year or year == match_year:
+                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                    results.append(result)
         return results

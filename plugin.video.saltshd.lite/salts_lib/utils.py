@@ -63,13 +63,14 @@ def make_info(item, show=None, people=None):
     # log_utils.log('Making Info: Item: %s' % (item), xbmc.LOGDEBUG)
     info = {}
     info['title'] = item['title']
+    info['mediatype'] = 'tvshow' if 'aired_episodes' in item else 'movie'
     if 'overview' in item: info['plot'] = info['plotoutline'] = item['overview']
     if 'runtime' in item and item['runtime'] is not None: info['duration'] = item['runtime'] * 60
     if 'certification' in item: info['mpaa'] = item['certification']
     if 'year' in item: info['year'] = item['year']
-    if 'season' in item: info['season'] = item['season']  # needs check
-    if 'episode' in item: info['episode'] = item['episode']  # needs check
-    if 'number' in item: info['episode'] = item['number']  # needs check
+    if 'season' in item: info['season'] = item['season']
+    if 'episode' in item: info['episode'] = item['episode']
+    if 'number' in item: info['episode'] = item['number']
     if 'genres' in item:
         genres = dict((genre['slug'], genre['name']) for genre in trakt_api.get_genres(SECTIONS.TV))
         genres.update(dict((genre['slug'], genre['name']) for genre in trakt_api.get_genres(SECTIONS.MOVIES)))
@@ -100,6 +101,7 @@ def make_info(item, show=None, people=None):
     if 'network' in show: info['studio'] = show['network']
     if 'status' in show: info['status'] = show['status']
     if 'trailer' in show and show['trailer']: info['trailer'] = utils2.make_trailer(show['trailer'])
+    if show is not None: info['mediatype'] = 'episode'
     info.update(utils2.make_ids(show))
     info.update(utils2.make_people(people))
     return info

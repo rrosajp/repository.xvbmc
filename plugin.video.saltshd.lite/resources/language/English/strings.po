@@ -1082,6 +1082,14 @@ msgctxt "#30277"
 msgid "Set as Watch It Again List"
 msgstr ""
 
+msgctxt "#30278"
+msgid "Playback only allowed from Library & SALTS"
+msgstr ""
+
+msgctxt "#30279"
+msgid "Maximum Allowed Size (GB) (0 = No Limit)"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""

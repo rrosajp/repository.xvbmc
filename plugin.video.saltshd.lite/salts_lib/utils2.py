@@ -450,7 +450,7 @@ def scraper_enabled(name):
     # return true if setting exists and set to true, or setting doesn't exist (i.e. '')
     return kodi.get_setting('%s-enable' % (name)) in ('true', '')
 
-def set_view(content, set_sort):
+def set_view(content, set_sort=False):
     # set content type so library shows more views and info
     if content:
         kodi.set_content(content)

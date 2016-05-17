@@ -114,13 +114,11 @@ class MovieSub_Scraper(scraper.Scraper):
                 headers['Referer'] = page_url
                 url = urlparse.urljoin(self.__get_base_url(video_type), LINK_URL)
                 html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
-                log_utils.log(html)
                 js_data = scraper_utils.parse_json(html, url)
                 if 's' in js_data and isinstance(js_data['s'], basestring):
                     url = urlparse.urljoin(self.__get_base_url(video_type), LINK_URL3)
                     url = url % (js_data['s'])
                     html = self._http_get(url, headers=headers, cache_limit=0)
-                    log_utils.log(html)
                     js_data = scraper_utils.parse_json(html, url)
                     if 'data' in js_data:
                         if isinstance(js_data['data'], basestring):

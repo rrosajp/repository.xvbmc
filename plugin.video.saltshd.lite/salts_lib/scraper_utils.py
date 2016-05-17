@@ -325,6 +325,10 @@ def cleanse_title(text):
             except KeyError:
                 pass
         return text
+    
+    if isinstance(text, str):
+        try: text = text.decode('utf-8')
+        except: pass
     return re.sub("&#?\w+;", fixup, text.strip())
 
 def update_scraper(file_name, scraper_url, scraper_key):

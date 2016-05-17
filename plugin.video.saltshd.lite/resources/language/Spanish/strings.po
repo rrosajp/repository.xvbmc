@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2016-03-28 12:07+0000\n"
-"Last-Translator: Achaw Gomez <achaw.ar@gmail.com>\n"
+"PO-Revision-Date: 2016-05-06 02:47+0000\n"
+"Last-Translator: tknorris\n"
 "Language-Team: Spanish (http://www.transifex.com/tv-addons/salts/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +67,7 @@ msgstr "Eliminar url(s) cacheadas"
 
 msgctxt "#30012"
 msgid "Trending %s"
-msgstr "Tendencias de %s"
+msgstr "Tendencia de %s"
 
 msgctxt "#30013"
 msgid "Popular %s"
@@ -1061,6 +1061,14 @@ msgctxt "#30271"
 msgid "[/COLOR] from any device on the same network as this device."
 msgstr "desde cualquier dispositivo conectado a la misma red que este."
 
+msgctxt "#30273"
+msgid "Pick a list to use for Watch It Again"
+msgstr "Elige una lista para usar con Mirar de Nuevo"
+
+msgctxt "#30277"
+msgid "Set as Watch It Again List"
+msgstr "Configurar como lista de Mirar de Nuevo"
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr "Tema:"
@@ -1159,7 +1167,7 @@ msgstr "Emitidos Anteriormente"
 
 msgctxt "#30524"
 msgid "Show Trending"
-msgstr "Mostrar Tendencias"
+msgstr "Mostrar Tendencia"
 
 msgctxt "#30525"
 msgid "Show Popular"
@@ -1617,6 +1625,10 @@ msgctxt "#30652"
 msgid "Show Debrid Supported Sources in Green"
 msgstr "Mostrar fuentes soportadas por Debrid en verde"
 
+msgctxt "#30654"
+msgid "6th Sort Key Order"
+msgstr "6to orden de clasificación de key"
+
 msgctxt "#30655"
 msgid "Debrid"
 msgstr "Debrid"
@@ -1700,4 +1712,32 @@ msgstr "Modo Offline del API de Trakt"
 msgctxt "#30675"
 msgid "Torba IP Authorization"
 msgstr "Autorización de IP de Torba"
+
+msgctxt "#30676"
+msgid "Machine Speed"
+msgstr "Velocidad de Equipo"
+
+msgctxt "#30677"
+msgid "Automatic"
+msgstr "Automático"
+
+msgctxt "#30678"
+msgid "Very Slow"
+msgstr "Muy Lento"
+
+msgctxt "#30679"
+msgid "Slow"
+msgstr "Lento"
+
+msgctxt "#30680"
+msgid "Medium"
+msgstr "Medio"
+
+msgctxt "#30681"
+msgid "Fast"
+msgstr "Rapido"
+
+msgctxt "#30682"
+msgid "Very Fast"
+msgstr "Muy Rapido"
 
