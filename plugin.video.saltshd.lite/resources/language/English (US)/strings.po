@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2016-03-23 08:14+0000\n"
+"PO-Revision-Date: 2016-05-06 02:48+0000\n"
 "Last-Translator: tknorris\n"
 "Language-Team: English (United States) (http://www.transifex.com/tv-addons/salts/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -1052,6 +1052,42 @@ msgctxt "#30269"
 msgid "Authorization was Rejected"
 msgstr "Authorization was Rejected"
 
+msgctxt "#30270"
+msgid "To watch this video scan the QR Code below or visit [COLOR blue]"
+msgstr "To watch this video scan the QR Code below or visit [COLOR blue]"
+
+msgctxt "#30271"
+msgid "[/COLOR] from any device on the same network as this device."
+msgstr "[/COLOR] from any device on the same network as this device."
+
+msgctxt "#30272"
+msgid "Watch It Again"
+msgstr "Watch It Again"
+
+msgctxt "#30273"
+msgid "Pick a list to use for Watch It Again"
+msgstr "Pick a list to use for Watch It Again"
+
+msgctxt "#30274"
+msgid "Use Least Watched Method"
+msgstr "Use Least Watched Method"
+
+msgctxt "#30275"
+msgid "Use Most Watched Method"
+msgstr "Use Most Watched Method"
+
+msgctxt "#30276"
+msgid "Use Last Watched Method"
+msgstr "Use Last Watched Method"
+
+msgctxt "#30277"
+msgid "Set as Watch It Again List"
+msgstr "Set as Watch It Again List"
+
+msgctxt "#30278"
+msgid "Playback only allowed from Library & SALTS"
+msgstr "Playback only allowed from Library & SALTS"
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr "Addon Theme"
@@ -1739,4 +1775,40 @@ msgstr "Scraper Last Update"
 msgctxt "#30674"
 msgid "Trakt API Offline Mode"
 msgstr "Trakt API Offline Mode"
+
+msgctxt "#30675"
+msgid "Torba IP Authorization"
+msgstr "Torba IP Authorization"
+
+msgctxt "#30676"
+msgid "Machine Speed"
+msgstr "Machine Speed"
+
+msgctxt "#30677"
+msgid "Automatic"
+msgstr "Automatic"
+
+msgctxt "#30678"
+msgid "Very Slow"
+msgstr "Very Slow"
+
+msgctxt "#30679"
+msgid "Slow"
+msgstr "Slow"
+
+msgctxt "#30680"
+msgid "Medium"
+msgstr "Medium"
+
+msgctxt "#30681"
+msgid "Fast"
+msgstr "Fast"
+
+msgctxt "#30682"
+msgid "Very Fast"
+msgstr "Very Fast"
+
+msgctxt "#30683"
+msgid "Show Watch It Again"
+msgstr "Show Watch It Again"
 

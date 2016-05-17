@@ -30,7 +30,7 @@ import xml.etree.ElementTree as ET
 
 
 BASE_URL = 'http://123movies.to'
-PLAYLIST_URL1 = 'movie/loadEmbed/%s'
+PLAYLIST_URL1 = '/ajax/load_embed/%s'
 PLAYLIST_URL2 = '/ajax/load_episode/%s/%s'
 SL_URL = '/ajax/get_episodes/%s/%s'
 Q_MAP = {'TS': QUALITIES.LOW, 'CAM': QUALITIES.LOW, 'HDTS': QUALITIES.LOW, 'HD-720P': QUALITIES.HD720}
@@ -76,11 +76,8 @@ class One23Movies_Scraper(scraper.Scraper):
                     url = urlparse.urljoin(self.base_url, PLAYLIST_URL1 % (link_id))
                     sources.update(self.__get_link_from_json(url, q_str))
                 else:
-                    media_url = PLAYLIST_URL2 % (link_id, hash_id)
-                    headers = {'Referer': page_url}
-                    url = urlparse.urljoin(self.base_url, media_url)
-                    xml = self._http_get(url, headers=headers, cache_limit=.5)
-                    sources.update(self.__get_links_from_xml(xml, video, page_url))
+                    url = urlparse.urljoin(self.base_url, PLAYLIST_URL2 % (link_id, hash_id))
+                    sources.update(self.__get_links_from_xml(url, video, page_url))
             
         for source in sources:
             if not source.lower().startswith('http'): continue
@@ -106,9 +103,11 @@ class One23Movies_Scraper(scraper.Scraper):
             sources[js_result['embed_url']] = {'quality': quality, 'direct': False}
         return sources
     
-    def __get_links_from_xml(self, xml, video, page_url):
+    def __get_links_from_xml(self, url, video, page_url):
         sources = {}
         try:
+            headers = {'Referer': page_url}
+            xml = self._http_get(url, headers=headers, cache_limit=.5)
             root = ET.fromstring(xml)
             for item in root.findall('.//item'):
                 title = item.find('title').text

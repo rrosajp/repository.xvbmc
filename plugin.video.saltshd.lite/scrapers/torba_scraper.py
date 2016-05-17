@@ -20,7 +20,6 @@ import re
 import urllib
 import urlparse
 import xbmcvfs
-import json
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import log_utils
@@ -29,6 +28,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib import gui_utils
+from salts_lib import utils2
 import scraper
 
 
@@ -101,7 +101,7 @@ class TorbaSe_Scraper(scraper.Scraper):
         headers = {'User-Agent': KODI_UA}
         html = self._http_get(self.auth_url, headers=headers, cache_limit=0)
         try:
-            js_data = json.loads(html)
+            js_data = utils2.json_loads_as_str(html)
             return False, js_data
         except:
             return True, html

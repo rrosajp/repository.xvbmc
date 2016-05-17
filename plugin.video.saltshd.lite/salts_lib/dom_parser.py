@@ -50,7 +50,7 @@ def _getDOMContent(html, name, match, ret):
     return result
 
 def _getDOMAttributes(match, name, ret):
-    pattern = '''<%s [^>]*%s\s*=\s*(?:(['"])(.*?)\\1|([^'"].*?)(?:>|\s))''' % (name, ret)
+    pattern = '''<%s[^>]* %s\s*=\s*(?:(['"])(.*?)\\1|([^'"].*?)(?:>|\s))''' % (name, ret)
     results = re.findall(pattern, match, re.I | re.M | re.S)
     return [result[1] if result[1] else result[2] for result in results]
 
