@@ -29,7 +29,7 @@ import scraper
 import xml.etree.ElementTree as ET
 
 
-BASE_URL = 'http://watch5s.com/'
+BASE_URL = 'http://watch5s.com'
 LINK_URL = '/player/'
 Q_MAP = {'TS': QUALITIES.LOW, 'CAM': QUALITIES.LOW, 'HDTS': QUALITIES.LOW, 'HD-720P': QUALITIES.HD720}
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
@@ -74,11 +74,8 @@ class Watch5s_Scraper(scraper.Scraper):
                     ep_ids = dom_parser.parse_dom(item, 'a', ret='episode-id')
                     referers = dom_parser.parse_dom(item, 'a', ret='href')
                     for label, ep_sv, ep_id, referer in zip(button_labels, servers, ep_ids, referers):
-                        if video.video_type == VIDEO_TYPES.EPISODE:
-                            try: ep_num = int(label)
-                            except: ep_num = 0
-                            if ep_num != int(video.episode):
-                                continue
+                        if video.video_type == VIDEO_TYPES.EPISODE and not self.__find_episode(video, label):
+                            continue
                             
                         headers = XHR
                         headers['Referer'] = urlparse.urljoin(self.base_url, referer)
@@ -138,11 +135,18 @@ class Watch5s_Scraper(scraper.Scraper):
         url = urlparse.urljoin(self.base_url, season_url)
         html = self._http_get(url, cache_limit=8)
         for label in dom_parser.parse_dom(html, 'a', {'class': '[^"]*btn-eps[^"]*'}):
-            try: ep_num = int(label)
-            except: ep_num = 0
-            if int(video.episode) == ep_num:
+            if self.__find_episode(video, label):
                 return season_url
     
+    def __find_episode(self, video, label):
+        match = re.search('Ep(?:isode)?\s+(\d+)', label, re.I)
+        if match:
+            ep_num = match.group(1)
+            try: ep_num = int(ep_num)
+            except: ep_num = 0
+            if int(video.episode) == ep_num:
+                return label
+        
     def search(self, video_type, title, year, season=''):
         search_url = urlparse.urljoin(self.base_url, '/search/?q=')
         search_url += urllib.quote_plus(title)

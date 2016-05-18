@@ -99,18 +99,18 @@ def perform_auto_conf(responses):
         kodi.set_setting('sort6_field', '4')
 
     if responses[10]:
-        tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'DD.tv', 'NoobRoom',
-                 ['WatchHD', 'TVWTVS', 'MWM', '9Movies', '123Movies', 'niter.tv', 'HDMovie14', 'ororo.tv', 'm4ufree'],
-                 ['torba.se', 'StreamLord', 'CyberReel', 'tunemovie', 'MovieMax', 'MovieLocker', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'MovieXK'],
-                 ['PelisPedia', 'DayT.se', 'FardaDownload', 'PutMV', 'vivo.to', 'MiraDeTodo', 'FireMoviesHD', 'SeriesWatch'],
-                 ['SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
-                 ['DiziFilmHD', 'DL-Pars', 'DDLValley', '2DDL', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'TVRelease.Net', 'alluc.com'],
-                 ['IceFilms', 'Flixanity', 'Rainierland', 'WatchEpisodes', 'PrimeWire', 'tvonline', 'WatchSeries', 'Putlocker'],
-                 ['Ganool', 'MovieWatcher', 'WatchFree.to', 'pftv', 'streamallthis.is', 'afdah', 'SolarMovie'],
-                 ['UFlix.org', 'wso.ch', 'MovieSub', 'MovieHut', 'Watch8Now', 'yshows', 'iWatchOnline', 'MerDB'],
+        tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
+                 ['IFlix', 'torba.se', 'MoviesPlanet', 'TVWTVS', 'MWM', '9Movies', '123Movies', 'niter.tv', 'HDMovie14', 'ororo.tv', 'm4ufree'],
+                 ['WatchHD', 'StreamLord', 'CyberReel', 'tunemovie', 'MovieLocker', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD'],
+                 ['MovieXK', 'Stage66', 'PelisPedia', 'DayT.se', 'FardaDownload', 'vu45', 'PutMV', 'PirateJunkies', 'FireMoviesHD', 'SeriesWatch'],
+                 ['HEVCBluRay', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
+                 ['vivo.to', 'CloudMovie', 'DDLValley', '2DDL', 'DDLSeries', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net'],
+                 ['IceFilms', 'Flixanity', 'Watch5s', 'Rainierland', 'WatchEpisodes', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries', 'WatchSeries'],
+                 ['RLSeries', 'Putlocker', 'Ganool', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K', 'afdah', 'SolarMovie'],
+                 ['MiraDeTodo', 'Filmovizija', 'UFlix.org', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now', 'yshows', 'iWatchOnline'],
                  ['vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD', 'LosMovies'],
-                 ['stream-tv.co', 'clickplay.to', 'MintMovies', 'MovieNight', 'cmz', 'filmikz.ch', 'moviestorm.eu'],
-                 ['TheExtopia', 'MovieTube', 'FilmStreaming.in', 'RLSSource.net']]
+                 ['wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu', 'clickplay.to'],
+                 ['MovieTube', 'FilmStreaming.in']]
     
         sso = []
         random_sso = kodi.get_setting('random_sso') == 'true'
@@ -197,67 +197,20 @@ def do_auto_config():
     ACTION_BACK = 92
     CONTINUE_BUTTON = 200
     CANCEL_BUTTON = 201
+    RADIO_BUTTONS = range(302, 315)
 
-    starty = 60
-    posx = 30
-    gap = 35
-    RADIO_BUTTONS = [
-        i18n('set_trakt_timeout'),
-        i18n('set_cal_start'),
-        i18n('set_cal_airtime'),
-        i18n('set_scraper_timeout'),
-        i18n('set_wl_mne'),
-        i18n('set_test_direct'),
-        i18n('set_filter_unusable'),
-        i18n('set_show_debrid'),
-        i18n('set_no_limit'),
-        i18n('set_source_sort'),
-        i18n('set_sso'),
-        i18n('set_reset_url'),
-        i18n('select_all_none')]
-    
     class AutoConfDialog(xbmcgui.WindowXMLDialog):
         def onInit(self):
             log_utils.log('onInit:', log_utils.LOGDEBUG)
             self.OK = False
-            self.radio_buttons = []
-            posy = starty
-            for label in RADIO_BUTTONS:
-                self.radio_buttons.append(self.__get_radio_button(posx, posy, label))
-                posy += gap
             
             try: responses = json.loads(kodi.get_setting('prev_responses'))
-            except: responses = [True] * len(self.radio_buttons)
-            if len(responses) < len(self.radio_buttons):
-                responses += [True] * (len(self.radio_buttons) - len(responses))
-            
-            self.addControls(self.radio_buttons)
-            last_button = None
-            for response, radio_button in zip(responses, self.radio_buttons):
-                radio_button.setSelected(response)
-                if last_button is not None:
-                    radio_button.controlUp(last_button)
-                    radio_button.controlLeft(last_button)
-                    last_button.controlDown(radio_button)
-                    last_button.controlRight(radio_button)
-                last_button = radio_button
-
-            continue_ctrl = self.getControl(CONTINUE_BUTTON)
-            cancel_ctrl = self.getControl(CANCEL_BUTTON)
-            self.radio_buttons[0].controlUp(cancel_ctrl)
-            self.radio_buttons[0].controlLeft(cancel_ctrl)
-            self.radio_buttons[-1].controlDown(continue_ctrl)
-            self.radio_buttons[-1].controlRight(continue_ctrl)
-            continue_ctrl.controlUp(self.radio_buttons[-1])
-            continue_ctrl.controlLeft(self.radio_buttons[-1])
-            cancel_ctrl.controlDown(self.radio_buttons[0])
-            cancel_ctrl.controlRight(self.radio_buttons[0])
-            
-        def __get_radio_button(self, x, y, label):
-            kwargs = {'font': 'font12', 'focusTexture': 'button-focus2.png', 'noFocusTexture': 'button-nofocus.png', 'focusOnTexture': 'radiobutton-focus.png',
-                      'noFocusOnTexture': 'radiobutton-focus.png', 'focusOffTexture': 'radiobutton-nofocus.png', 'noFocusOffTexture': 'radiobutton-nofocus.png'}
-            temp = xbmcgui.ControlRadioButton(x, y, 450, 30, label, **kwargs)
-            return temp
+            except: responses = [True] * len(RADIO_BUTTONS)
+            if len(responses) < len(RADIO_BUTTONS):
+                responses += [True] * (len(RADIO_BUTTONS) - len(responses))
+                
+            for button, response in zip(RADIO_BUTTONS, responses):
+                self.getControl(button).setSelected(response)
             
         def onAction(self, action):
             # log_utils.log('Action: %s' % (action.getId()), log_utils.LOGDEBUG)
@@ -275,10 +228,11 @@ def do_auto_config():
         def onClick(self, control):
             # log_utils.log('onClick: %s' % (control), log_utils.LOGDEBUG)
             focus_button = self.getControl(control)
-            if focus_button == self.radio_buttons[-1]:
+            if focus_button.getId() == RADIO_BUTTONS[-1]:
                 all_status = focus_button.isSelected()
-                for button in self.radio_buttons:
-                    button.setSelected(all_status)
+                log_utils.log(all_status)
+                for button in RADIO_BUTTONS:
+                    self.getControl(button).setSelected(all_status)
             
             if control == CONTINUE_BUTTON:
                 self.OK = True
@@ -290,7 +244,7 @@ def do_auto_config():
                 self.close()
         
         def get_responses(self):
-            return [bool(button.isSelected()) for button in self.radio_buttons]
+            return [bool(self.getControl(button).isSelected()) for button in RADIO_BUTTONS]
 
     dialog = AutoConfDialog('AutoConfDialog.xml', kodi.get_path())
     dialog.doModal()
