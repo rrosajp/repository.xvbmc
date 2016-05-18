@@ -44,6 +44,8 @@ class Furk_Scraper(scraper.Scraper):
         self.username = kodi.get_setting('%s-username' % (self.get_name()))
         self.password = kodi.get_setting('%s-password' % (self.get_name()))
         self.max_results = int(kodi.get_setting('%s-result_limit' % (self.get_name())))
+        self.max_gb = kodi.get_setting('%s-size_limit' % (self.get_name()))
+        self.max_bytes = int(self.max_gb) * 1024 * 1024 * 1024
 
     @classmethod
     def provides(cls):
@@ -161,10 +163,15 @@ class Furk_Scraper(scraper.Scraper):
                         quality = QUALITIES.HIGH
                     
                 if 'url_pls' in item:
+                    size_gb = scraper_utils.format_size(int(item['size']), 'B')
+                    if self.max_bytes and int(item['size']) > self.max_bytes:
+                        log_utils.log('Result skipped, Too big: |%s| - %s (%s) > %s (%sGB)' % (item['name'], item['size'], size_gb, self.max_bytes, self.max_gb))
+                        continue
+
                     stream_url = item['url_pls']
                     host = self._get_direct_hostname(stream_url)
                     hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'host': host, 'quality': quality, 'direct': True}
-                    hoster['size'] = scraper_utils.format_size(int(item['size']), 'B')
+                    hoster['size'] = size_gb
                     hoster['extra'] = item['name']
                     hosters.append(hoster)
                 else:
@@ -199,6 +206,7 @@ class Furk_Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-4,true)"/>' % (name, i18n('username')))
         settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-5,true)"/>' % (name, i18n('password')))
         settings.append('         <setting id="%s-result_limit" label="     %s" type="slider" default="10" range="10,100" option="int" visible="eq(-6,true)"/>' % (name, i18n('result_limit')))
+        settings.append('         <setting id="%s-size_limit" label="     %s" type="slider" default="0" range="0,50" option="int" visible="eq(-7,true)"/>' % (name, i18n('size_limit')))
         return settings
 
     def _http_get(self, url, data=None, retry=True, allow_redirect=True, cache_limit=8):

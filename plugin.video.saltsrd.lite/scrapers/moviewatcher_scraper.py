@@ -105,6 +105,29 @@ class MovieWatcher_Scraper(scraper.Scraper):
             return self._default_get_episode_url(season_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year, season=''):
+        if video_type == VIDEO_TYPES.MOVIE:
+            return self.__movie_search(title, year)
+        else:
+            return self.__tv_search(title, year)
+
+    def __to_slug(self, title):
+        slug = title.lower()
+        slug = re.sub('[^A-Za-z0-9 -]', ' ', slug)
+        slug = re.sub('\s\s+', ' ', slug)
+        slug = re.sub(' ', '-', slug)
+        return slug
+        
+    def __tv_search(self, title, year):
+        results = []
+        check_url = '/tv-series/%s' % (self.__to_slug(title))
+        check_url = urlparse.urljoin(self.base_url, check_url)
+        html = self._http_get(check_url, cache_limit=48)
+        if html:
+            result = {'url': scraper_utils.pathify_url(check_url), 'title': scraper_utils.cleanse_title(title), 'year': ''}
+            results.append(result)
+        return results
+        
+    def __movie_search(self, title, year):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search?q=')
         search_url += urllib.quote_plus(title)
@@ -117,8 +140,6 @@ class MovieWatcher_Scraper(scraper.Scraper):
             if match_url and match_title:
                 match_url = match_url[0]
                 match_title = match_title[0]
-                if VIDEO_TYPES == VIDEO_TYPES.TVSHOW and '/tv-series/' not in match_url:
-                    continue
                 
                 if match_year:
                     match_year = match_year[0]
@@ -130,3 +151,4 @@ class MovieWatcher_Scraper(scraper.Scraper):
                     results.append(result)
 
         return results
+        

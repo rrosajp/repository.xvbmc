@@ -16,13 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urllib2
 import urlparse
-
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import scraper_utils
+from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
@@ -65,7 +64,8 @@ class Vidics_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
+            headers = {'Referer': self.base_url}
+            html = self._http_get(url, headers=headers, cache_limit=.5)
 
             fragments = dom_parser.parse_dom(html, 'div', {'class': 'lang'})
             if fragments:
@@ -81,7 +81,7 @@ class Vidics_Scraper(scraper.Scraper):
     def search(self, video_type, title, year, season=''):
         search_url = '/Category-FilmsAndTV/Genre-Any/Letter-Any/ByPopularity/1/Search-%s.htm' % (title)
         search_url = urlparse.urljoin(self.base_url, search_url)
-        html = self._http_get(search_url, cache_limit=.25)
+        html = self._http_get(search_url, cache_limit=8)
 
         results = []
         for result in dom_parser.parse_dom(html, 'div', {'class': 'searchResult'}):
@@ -103,4 +103,5 @@ class Vidics_Scraper(scraper.Scraper):
         episode_pattern = 'href="(/Serie/[^-]+-Season-%s-Episode-%s)' % (video.season, video.episode)
         title_pattern = 'class="episode"\s+href="(?P<url>[^"]+).*?class="episode_title">\s*-\s*(?P<title>.*?) \('
         airdate_pattern = 'class="episode"\s+(?:style="[^"]+")?\s+href="([^"]+)(?:[^>]+>){2}[^<]+\s+\({year} {month_name} {p_day}\)'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern, airdate_pattern)
+        headers = {'Referer': self.base_url}
+        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern, airdate_pattern, headers=headers)

@@ -85,7 +85,7 @@ class KiwiHD_Scraper(scraper.Scraper):
         return self._default_get_url(video)
     
     def _get_episode_url(self, season_url, video):
-        episode_pattern = 'href="([^"]*-ep-0*%s_[^"]*)' % (video.episode)
+        episode_pattern = 'href="([^"]*-ep-0*%s[._][^"]*)' % (video.episode)
         return self._default_get_episode_url(season_url, video, episode_pattern)
     
     def search(self, video_type, title, year, season=''):

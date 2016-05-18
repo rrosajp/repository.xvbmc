@@ -53,6 +53,8 @@ class Service(xbmc.Player):
         self.win.clearProperty('salts.playing.srt')
         self.win.clearProperty('salts.playing.trakt_resume')
         self.win.clearProperty('salts.playing.salts_resume')
+        self.win.clearProperty('salts.playing.library')
+        self._from_library = False
         self.tracked = False
         self._totalTime = 999999
         self.trakt_id = None
@@ -69,6 +71,7 @@ class Service(xbmc.Player):
         srt_path = self.win.getProperty('salts.playing.srt')
         trakt_resume = self.win.getProperty('salts.playing.trakt_resume')
         salts_resume = self.win.getProperty('salts.playing.salts_resume')
+        self._from_library = self.win.getProperty('salts.playing.library') == 'True'
         if playing:   # Playback is ours
             log_utils.log('Service: tracking progress...', log_utils.LOGNOTICE)
             self.tracked = True
@@ -119,7 +122,7 @@ class Service(xbmc.Player):
                     log_utils.log('Service: Setting bookmark on |%s|%s|%s| to %s seconds' % (self.trakt_id, self.season, self.episode, playedTime), log_utils.LOGDEBUG)
                     db_connection.set_bookmark(self.trakt_id, playedTime, self.season, self.episode)
                     
-                if percent_played >= 75:
+                if percent_played >= 75 and self._from_library:
                     if xbmc.getCondVisibility('System.HasAddon(script.trakt)'):
                         run = 'RunScript(script.trakt, action=sync, silent=True)'
                         xbmc.executebuiltin(run)
