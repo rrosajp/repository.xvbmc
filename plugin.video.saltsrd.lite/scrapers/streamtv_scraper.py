@@ -72,7 +72,7 @@ class StreamTV_Scraper(scraper.Scraper):
     def __get_base_ep_url(self, video):
         temp_video = copy.copy(video)
         temp_video.video_type = VIDEO_TYPES.TVSHOW
-        url = urlparse.urljoin(self.base_url, self.get_url(video))
+        url = urlparse.urljoin(self.base_url, self.get_url(temp_video))
         html = self._http_get(url, cache_limit=8)
         match = re.search('href="([^"]+[sS]\d+-?[eE]\d+[^"]+)', html)
         if match:

@@ -29,7 +29,7 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 
-BASE_URL = 'http://www.moviexk.net'
+BASE_URL = 'http://moviexk.org'
 
 class MoxieXK_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -76,7 +76,7 @@ class MoxieXK_Scraper(scraper.Scraper):
             for match in re.finditer('''<source[^>]+src=['"]([^'"]+)([^>]+)''', html):
                 stream_url, extra = match.groups()
                 if 'video.php' in stream_url:
-                    redir_url = self._http_get(stream_url, allow_redirect=False, method='HEAD', cache_limit=.25)
+                    redir_url = self._http_get(stream_url, allow_redirect=False, method='HEAD', cache_limit=0)
                     if redir_url.startswith('http'): stream_url = redir_url
                 
                 host = self._get_direct_hostname(stream_url)
@@ -90,7 +90,7 @@ class MoxieXK_Scraper(scraper.Scraper):
                     else:
                         quality = QUALITIES.HIGH
                 
-                stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
+                stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), url)
                 source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
                 sources.append(source)
 
@@ -104,7 +104,7 @@ class MoxieXK_Scraper(scraper.Scraper):
             if q in episodes:
                 return episodes[q]
             
-        if len(episodes) > 0:
+        if episodes:
             return episodes.items()[0][1]
         
     def __get_episodes(self, html):
@@ -159,5 +159,5 @@ class MoxieXK_Scraper(scraper.Scraper):
         if fragment:
             show_url = dom_parser.parse_dom(fragment[0], 'a', ret='href')
             if show_url:
-                episode_pattern = '<a[^>]+href="([^"]+)[^>]+>[Ee][Pp]\s*[Ss]0*%s-E?p?0*%s\s*<' % (video.season, video.episode)
+                episode_pattern = '<a[^>]+href="([^"]+)[^>]+>[Ee][Pp]\s*(?:[Ss]0*%s-)?E?p?0*%s\s*<' % (video.season, video.episode)
                 return self._default_get_episode_url(show_url[0], video, episode_pattern)

@@ -21,6 +21,7 @@ import urlparse
 
 from salts_lib import kodi
 from salts_lib import scraper_utils
+from salts_lib import dom_parser
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
@@ -84,18 +85,26 @@ class MovieNight_Scraper(scraper.Scraper):
     def search(self, video_type, title, year, season=''):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/?s=%s' % (urllib.quote_plus(title)))
-        html = self._http_get(search_url, cache_limit=.25)
-        for match in re.finditer('class="home_post_cont.*?href="([^"]+).*?/&quot;&gt;(.*?)&lt;', html, re.DOTALL):
-            link, match_title_year = match.groups()
-            match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)', match_title_year)
+        html = self._http_get(search_url, cache_limit=4)
+        for movie in dom_parser.parse_dom(html, 'div', {'class': 'movie'}):
+            match = re.search('href="([^"]+)', movie)
             if match:
-                match_title, match_year = match.groups()
-            else:
-                match_title = match_title_year
-                match_year = ''
-
-            if not year or not match_year or year == match_year:
-                result = {'url': scraper_utils.pathify_url(link), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
-                results.append(result)
+                match_url = match.group(1)
+                if re.search('season-\d+-episode\d+', match_url): continue
+                match_title_year = dom_parser.parse_dom(movie, 'img', ret='alt')
+                if match_title_year:
+                    match_title_year = match_title_year[0]
+                    match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
+                    if match:
+                        match_title, match_year = match.groups()
+                    else:
+                        match_title = match_title_year
+                        match_year = dom_parser.parse_dom(movie, 'div', {'class': 'year'})
+                        try: match_year = match_year[0]
+                        except: match_year = ''
+                        
+                    if not year or not match_year or year == match_year:
+                        result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                        results.append(result)
 
         return results
