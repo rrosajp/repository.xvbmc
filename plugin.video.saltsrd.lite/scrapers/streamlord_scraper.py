@@ -126,8 +126,8 @@ class StreamLord_Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        url = urlparse.urljoin(self.base_url, '/search.html')
-        data = {'search': title}
+        url = urlparse.urljoin(self.base_url, '/search2.php')
+        data = {'searchapi': title}
         headers = {'Referer': self.base_url}
         html = self._http_get(url, data=data, headers=headers, cache_limit=2)
         if video_type == VIDEO_TYPES.MOVIE:

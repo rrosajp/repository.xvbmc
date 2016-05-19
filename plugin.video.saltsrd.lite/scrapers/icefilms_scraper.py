@@ -59,7 +59,7 @@ class IceFilms_Scraper(scraper.Scraper):
         list_url = LIST_URL % (data['t'][0])
         headers = {'Referer': list_url}
         html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
-        match = re.search('url=(.*)', html)
+        match = re.search('url=(http.*)', html)
         if match:
             url = urllib.unquote_plus(match.group(1))
             return url
