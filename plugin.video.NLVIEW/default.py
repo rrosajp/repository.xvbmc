@@ -28,7 +28,7 @@ except:
 import SimpleDownloader as downloader
 import time
 import random
-import utils, xite, voetbalhighlights, foxsports, ziggosporttotaal
+import utils, xite, voetbalhighlights, foxsports, ziggosporttotaal, streamfoot, tpsoccerstreams
 
 xbmcplugin.setContent(utils.addon_handle, 'movies')
 addon = xbmcaddon.Addon(id=utils.__scriptid__)
@@ -56,12 +56,12 @@ class NoRedirection(urllib2.HTTPErrorProcessor):
        return response
    https_response = http_response
 
-NLVBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Rva2kxL3JlcG8vbWFzdGVyL05MVmlldyUyMFhNTC9pbmRleC54bWw='
-NLVBase2  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Rva2kxL3JlcG8vbWFzdGVyL05MVmlldyUyMFhNTC9pbmRleDIueG1s'
-SportBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Rva2kxL3JlcG8vbWFzdGVyL05MVmlldyUyMFhNTC9zcG9ydC54bWw='
-LiveSportBase  ='aHR0cDovL3htbC5kb2tpdHYubmwvbGl2ZXNwb3J0LnhtbA=='
-BvlsBase  ='aHR0cDovL3htbC5kb2tpdHYubmwvdm9ldGJhbC54bWw='
-MuziekBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Rva2kxL3JlcG8vbWFzdGVyL05MVmlldyUyMFhNTC9tdXppZWsueG1s'
+NLVBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL05MVmlld0plcm9lbi9OTFZpZXctUmVwb3NpdG9yeS9tYXN0ZXIvTkxWaWV3JTIwWE1ML2luZGV4LnhtbA=='
+NLVBase2  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL05MVmlld0plcm9lbi9OTFZpZXctUmVwb3NpdG9yeS9tYXN0ZXIvTkxWaWV3JTIwWE1ML2luZGV4Mi54bWw='
+SportBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL05MVmlld0plcm9lbi9OTFZpZXctUmVwb3NpdG9yeS9tYXN0ZXIvTkxWaWV3JTIwWE1ML3Nwb3J0LnhtbA=='
+LiveSportBase  ='aHR0cDovL3Bhc3RlYmluLmNvbS9yYXcvMWNhenNuN3Q='
+BvlsBase  ='aHR0cDovL3Bhc3RlYmluLmNvbS9yYXcvelhrbjY0aUw='
+MuziekBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL05MVmlld0plcm9lbi9OTFZpZXctUmVwb3NpdG9yeS9tYXN0ZXIvTkxWaWV3JTIwWE1ML211emllay54bWw='
 
 
 
@@ -119,17 +119,17 @@ def Colored(text = '', colorid = '', isBold = False):
 def AddSports365Channels(url=None):
     errored=True
     import live365
-    addDir(Colored("Alle tijden zijn lokaal.",'lime') ,"" ,0 ,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/sport365.png',fanart,"","","","","",isItFolder=False)		#name,url,mode,icon
+    addDir(Colored("Alle tijden zijn lokaal.",'lime') ,"" ,0 ,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/sport365.png',fanart,"","","","","",isItFolder=False)        #name,url,mode,icon
     videos=live365.getLinks()
     for nm,link,active in videos:
         if active:
            
-            addDir(Colored(nm  ,'none') ,link,48 ,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/sport365.png',fanart,"","","","","",isItFolder=False)
+            addDir(Colored(nm  ,'none') ,link,48 ,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/sport365.png',fanart,"","","","","",isItFolder=False)
         else:
-            addDir("[COLOR red][B]X[/B] [/COLOR]"+Colored(nm ,'none') ,"",0 ,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/sport365.png',fanart,"","","","","",isItFolder=False)
+            addDir("[COLOR red][B]X[/B] [/COLOR]"+Colored(nm ,'none') ,"",0 ,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/sport365.png',fanart,"","","","","",isItFolder=False)
         errored=False
     if errored:
-       if RefreshResources([('live365.py','https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/live365.py')]):
+       if RefreshResources([('live365.py','https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/live365.py')]):
             dialog = xbmcgui.Dialog()
             ok = dialog.ok('XBMC', 'No Links, so updated files dyamically, try again, just in case!')           
             print 'Updated files'
@@ -144,14 +144,14 @@ def playSports365(url):
     #    print   "playing stream name: " + str(name) 
         xbmc.Player(  ).play( urlToPlay, listitem)  
     else:
-       if RefreshResources([('live365.py','https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/live365.py')]):
+       if RefreshResources([('live365.py','https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/live365.py')]):
             dialog = xbmcgui.Dialog()
             ok = dialog.ok('XBMC', 'No Links, so updated files dyamically, try again, just in case!')           
             print 'Updated files'
-    return	
+    return    
     
 def RefreshResources(resources):
-#	print Fromurl
+#    print Fromurl
     pDialog = xbmcgui.DialogProgress()
     ret = pDialog.create('XBMC', 'checking Updates...')
     totalFile=len(resources)
@@ -305,51 +305,47 @@ def makeRequest(url, headers=None):
 
 
 def NLVIndex():
-    xbmc.executebuiltin("Container.SetViewMode(500)")
     addon_log("NLVIndex")
     getData(base64.b64decode(NLVBase),'')
-    addDir('[B]Sport[/B]','',70,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/sport.png' ,  fanart,'','','','')
-    addDir('[B]Muziek[/B]','',75,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/muziek.png' ,  fanart,'','','','')
+    addDir('[B]Sport[/B]','',70,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/sport.png' ,  fanart,'','','','')
+    addDir('[B]Muziek[/B]','',75,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/muziek.png' ,  fanart,'','','','')
     getData(base64.b64decode(NLVBase2),'')
-    addDir('[B]DOKI Nieuws[/B]','News',46,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/nieuws.png',  FANART,'','','','',isItFolder=False)
-    addDir('[B]Informatie[/B]','Privacy Policy',45,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/informatie.png',fanart,'','','','',isItFolder=False)	
+    addDir('[B]Nieuws[/B]','News',46,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/nieuws.png',  FANART,'','','','',isItFolder=False)
+    addDir('[B]Informatie[/B]','Privacy Policy',45,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/informatie.png',fanart,'','','','',isItFolder=False)    
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def indexsport():
-    xbmc.executebuiltin("Container.SetViewMode(50)")
     addon_log("indexsport")
-    addDir('Live Sport','',72,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/livesport.png',fanart,"","","","","",)
-    addDir('Voetbal Samenvattingen','http://footyroom.com/',223,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/samenvatting.png' ,  fanart,'','','','')
-    addDir('FOX Sports','http://www.foxsports.nl/video/',227,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fs.png' ,  fanart,'','','','')
-    addDir('Ziggo Sport Totaal','http://www.ziggosporttotaal.nl/video/',232,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/zst.png' ,  fanart,'','','','')
-    #addDir('Sport365 - From ZemTV','',47,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/sport365.png',fanart,"","","","","",)
+    addDir('Live Sport','',72,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/livesport.png',fanart,"","","","","",)
+    addDir('Voetbal Samenvattingen','http://footyroom.com/',223,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/samenvatting.png' ,  fanart,'','','','')
+    addDir('FOX Sports','http://www.foxsports.nl/video/',227,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/fs.png' ,  fanart,'','','','')
+    addDir('Ziggo Sport Totaal','http://www.ziggosporttotaal.nl/video/',232,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/zst.png' ,  fanart,'','','','')
+    #addDir('Sport365 - From ZemTV','',47,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/sport365.png',fanart,"","","","","",)
     #addDir('Wiz1.net','',61,icon,fanart,"","","","","",)
-    #addDir('Goatd.net','',62,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/goatd.png',fanart,"","","","","",)
+    #addDir('Goatd.net','',62,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/goatd.png',fanart,"","","","","",)
     getData(base64.b64decode(SportBase),'')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def indexlivesport():
-    xbmc.executebuiltin("Container.SetViewMode(500)")
     addon_log("indexlivesport")
-    addDir('[COLOR lime][B]########## Extra Streams ##########[/B][/COLOR]','',72,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/livesport.png',fanart,"","","","","",)	
-    addDir('BVLS2016.sc','',63,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/bvls.png',fanart,"","","","","",)
-    addDir('Sport365 - From ZemTV','',47,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/sport365.png',fanart,"","","","","",)
-    #addDir('Streamsarena.eu','',76,icon,fanart,"","","","","",)
-    addDir('Goatd.net','',62,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/goatd.png',fanart,"","","","","",)			
+    addDir('[COLOR lime][B]########## Extra Streams ##########[/B][/COLOR]','',72,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/livesport.png',fanart,"","","","","",)    
+    addDir('BVLS2016.sc','',63,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/bvls.png',fanart,"","","","","",)
+    addDir('Sport365 - From ZemTV','',47,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/sport365.png',fanart,"","","","","",)
+    addDir('TPSoccer.net','',76,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/tp.png',fanart,"","","","","",)
+    addDir('Stream-foot.tv','',240,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/s-f.png',fanart,"","","","","",)
+    addDir('Goatd.net','',62,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/goatd.png',fanart,"","","","","",)            
     getData(base64.b64decode(LiveSportBase),'')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def indexbvls():
-    xbmc.executebuiltin("Container.SetViewMode(500)")
     addon_log("indexbvls")
     getData(base64.b64decode(BvlsBase),'')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def indexmuziek():
-    xbmc.executebuiltin("Container.SetViewMode(50)")
     addon_log("indexmuziek")
     getData(base64.b64decode(MuziekBase),'')
-    addDir('XITE','http://xite.nl/videos/1',221,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/xite.png' ,  fanart,'','','','')
+    addDir('XITE','http://xite.nl/videos/1',221,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/xite.png' ,  fanart,'','','','')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
@@ -374,7 +370,7 @@ def getlive9Schedule():
         tekstregel = '[COLOR lime]' + tijd + '[/COLOR]' + ' - ' + sport + ' - ' + wedstrijd
         url = url.replace("t/live","t/lives")
         addDir(tekstregel, url, 60,icon,fanart,"","","","",isItFolder=False)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))	
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))    
     
 
 def getWizSchedule():
@@ -385,10 +381,12 @@ def getWizSchedule():
         addDir(tekstregel, url, 60,icon,fanart,"","","","","",isItFolder=False)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
+    
 def getgoatSchedule():
-    goatpage = getHtml('http://goatd.net/')
+    goatsport=''
+    goatpage = bitly.OPEN_URL2('http://goatd.net/','http://goatd.net/',bitly.getUserAgent())
     match = re.compile(r'<b>ET</b></td>\s+<td[^<]+><img src="([^"]+)".*?href="([^"]+)"[^>]+>([^<]+)<.*?<b>([^<]+)<.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(goatpage)
-    for img, url, wedstrijd, tijd, tijdzone in match:
+    for img, url, wedstrijd, tijd, zone in match:
         try:
             sport = re.compile('http://.*?/.*?/.*?/.*?/.*?/.*?/(.*?).gif', re.DOTALL | re.IGNORECASE).findall(img)
             if sport > 0 :
@@ -396,25 +394,30 @@ def getgoatSchedule():
                     goatsport = re.sub("[^A-Za-z]", "", goatsport) 
         except:
             pass
-	tekstregel = '' + '' + goatsport + ' - ' + '[COLOR lime]'+ tijd + '[/COLOR]' + ' - ' + wedstrijd
-	url = 'http://goatd.net/' + url
-	addDir(tekstregel, url, 60, 'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/goatd.png',fanart,"","","","","",isItFolder=False)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        url = 'http://goatd.net/' + url
+        addDir(''+goatsport+' '+'[COLOR lime]'+tijd+'[/COLOR]'' - '+ wedstrijd,url,60,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/goatd.png' ,  FANART,'','','','')
+
+
+def striphtml(data):
+    p = re.compile(r'<.*?>')
+    return p.sub('', data)
     
 def getbvlsSchedule():
     bvlspage = getHtml('http://www.bvls2016.sc/')
-    datum = re.compile('<div class="date_time" id="date_time"><span id="next_mes" style="color: #000000; font-size: 24px;"><span style="text-decoration: underline;"><b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(bvlspage)[0]
-    addDir(datum,'',74,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/bvls.png',fanart,"","","","","")
+    datum = re.compile('<div class="date_time" id="date_time">.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(bvlspage)[0]
+    addDir(datum,'',74,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/bvls.png',fanart,"","","","","")
     
-    match = re.compile('<span class="time" style="color: #000000; font-family: sans-serif; font-size: 15px;">(.*?)<HR', re.DOTALL | re.IGNORECASE).findall(bvlspage)
+    match = re.compile(r'(<p>(?:<b>)?<span class="time".*?</p>)\s+(?:<HR|<div)', re.DOTALL | re.IGNORECASE).findall(bvlspage)
     for wedstrijd in match:
-        eggs = re.compile('([^<]+)<', re.DOTALL | re.IGNORECASE).findall(wedstrijd)[0]
-        addDir(eggs,'',74,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/bvls.png',fanart,"","","","","",)
+        eggs = re.compile("(<p>.*?)<a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)[0]
+        eggs = striphtml(eggs).replace('\n','')
+        addDir(eggs,'',74,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/bvls.png',fanart,"","","","","",)
         try:
-            streams = re.compile("<a[^<]+<b>([^<]+)<", re.DOTALL | re.IGNORECASE).findall(wedstrijd)
+            streams = re.compile("<a[^>]+>(.*?)</a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)
             for stream in streams:
+                stream = striphtml(stream)
                 tekstregel = '             [COLOR lime]' + stream + ' [/COLOR] '
-                addDir(tekstregel,'',74,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/bvls.png',fanart,"","","","","",)
+                addDir(tekstregel,'',74,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/bvls.png',fanart,"","","","","",)
         except: pass
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
@@ -426,6 +429,16 @@ def getbvlsSchedule():
 #        url = 'http://www.streamsarena.eu/player/player%s.html' % url
 #        addDir(tekstregel, url, 60,"","","","","","",isItFolder=False)
 #    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def gettpsoccerSchedule():
+    tpsoccerpage = getHtml('http://www.bpro.site/p/guide.html')
+    match = re.compile(r'<div style="background:#115e8a;border:3px solid #ccc;padding:4px 4px;">(.*?)</span></strong></span></span></div>', re.DOTALL | re.IGNORECASE).findall(tpsoccerpage)
+    for schema in match:
+        schema = striphtml(schema)
+        schema = utils.cleantext(schema).replace('&nbsp;','').replace('&bull;','-')
+        tekstregel = schema
+        addDir(tekstregel, 'http://www.tpsoccer.net/', 243,'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/tp.png',fanart,"","","","",isItFolder=True)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
 #def getwizhdSchedule():
@@ -440,7 +453,7 @@ def getbvlsSchedule():
 #            pass    
 #        tekstregel = '[COLOR lime]' + tijd + '[/COLOR]' + ' - ' + wedstrijd
 #        addDir(tekstregel, url, 60,"","","","","","",isItFolder=False)
-#    xbmcplugin.endOfDirectory(int(sys.argv[1]))		
+#    xbmcplugin.endOfDirectory(int(sys.argv[1]))        
 
 def getHtml(url, referer=None, hdr=None, data=None):
     USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
@@ -456,11 +469,11 @@ def getHtml(url, referer=None, hdr=None, data=None):
     response = urllib2.urlopen(req, timeout=60)
     data = response.read()    
     response.close()
-    return data    	
+    return data        
     
 def News():
     text = ''
-    twit = 'https://raw.githubusercontent.com/doki1/dokitvnl/master/DOKI%20Tools%20XML/DOKINieuws.xml'
+    twit = 'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/Nieuws.xml'
     req = urllib2.Request(twit)
     req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
     response = urllib2.urlopen(req)
@@ -476,13 +489,13 @@ def News():
         status = status.replace('&amp;','')
         dte = '[COLOR lime][B]'+dte+'[/B][/COLOR]'
         text = text+dte+'\n'+status+'\n'+'\n'
-    showText('[COLOR lime][B]DOKI Nieuws[/B][/COLOR]', text)
+    showText('[COLOR lime][B]Nieuws[/B][/COLOR]', text)
 
 
 
 def Privacy_Policy():
     text = ''
-    twit = 'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/informatie.xml'
+    twit = 'https://raw.githubusercontent.com/NLViewJeroen/NLView-Repository/master/NLView%20XML/informatie.xml'
     req = urllib2.Request(twit)
     req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
     response = urllib2.urlopen(req)
@@ -554,7 +567,7 @@ def getData(url,fanart):
     #print type(soup)
     if isinstance(soup,BeautifulSOAP):
         if len(soup('layoutype')) < 1:
-            SetViewLayout = "List"	    
+            SetViewLayout = "List"        
 
         if len(soup('channels')) > 0:
             channels = soup('channel')
@@ -755,7 +768,7 @@ def FindFirstPattern(text,pattern):
 
 def regex_get_all(text, start_with, end_with):
     r = re.findall("(?i)(" + start_with + "[\S\s]+?" + end_with + ")", text)
-    return r				
+    return r                
 
 def regex_from_to(text, from_string, to_string, excluding=True):
     if excluding:
@@ -848,7 +861,7 @@ def getItems(items,fanart):
                     for i in item('npo'):
                         if not i.string is None:
                             npo = streamNpo(i.string)
-                    url.append(npo)	
+                    url.append(npo)    
                 elif len(item('bvls')) >0:
                     for i in item('bvls'):
                         if not i.string == None:
@@ -862,7 +875,7 @@ def getItems(items,fanart):
                                 color = 'none'
                             name='[COLOR '+color+']' + title + '[/COLOR]' 
                             bvls = streamUrl
-                            url.append(bvls)													
+                            url.append(bvls)                                                    
                 elif len(item('ytch')) >0:
                     for i in item('ytch'):
                         thumbnail = item('thumbnail')[0].string
@@ -1016,7 +1029,7 @@ def getItems(items,fanart):
                         addDir(name.encode('utf-8'),ext_url[0],53,thumbnail,fanart,desc,genre,date,None,'source')
                     elif url[0].find('sublink') > 0:
                         addDir(name.encode('utf-8'),url[0],30,thumbnail,fanart,desc,regexs,'','','')
-                        addDir(name.encode('utf-8'),url[0],30,thumbnail,fanart,desc,genre,date,'sublink')				
+                        addDir(name.encode('utf-8'),url[0],30,thumbnail,fanart,desc,genre,date,'sublink')                
                     else: 
                         addLink(url[0],name.encode('utf-8', 'ignore'),thumbnail,fanart,desc,genre,date,True,None,regexs,total)
 
@@ -1102,7 +1115,7 @@ def parse_regex(reg_item):
                             if not regexs[i('name')[0].string]['cookiejar']:
                                 regexs[i('name')[0].string]['cookiejar']=''
                         except:
-                            addon_log("Regex: -- Not a cookieJar")							
+                            addon_log("Regex: -- Not a cookieJar")                            
                         try:
                             regexs[i('name')[0].string]['setcookie'] = i('setcookie')[0].string
                         except:
@@ -1119,7 +1132,7 @@ def parse_regex(reg_item):
                         #try:
                         #    regexs[i('name')[0].string]['ignorecache'] = i('ignorecache')[0].string
                         #except:
-                        #    addon_log("Regex: -- no ignorecache")			
+                        #    addon_log("Regex: -- no ignorecache")            
 
                     regexs = urllib.quote(repr(regexs))
                     return regexs
@@ -1495,7 +1508,7 @@ def get_packed_iphonetv_url(page_data):
     s=page_data
     while 'geh(' in s:
         if s.startswith('lol('): s=s[5:-1]
-#		print 's is ',s
+#        print 's is ',s
         s=re.compile('"(.*?)"').findall(s)[0]
         s=  base64.b64decode(s)
         s=urllib.unquote(s)
@@ -2425,7 +2438,10 @@ addon_log("Name: "+str(name))
 
 if mode is None:
     addon_log("Index")
-    NLVIndex()	
+    if not addon.getSetting('policy1.0.5') == 'true':
+        Privacy_Policy()
+        addon.setSetting('policy1.0.5','true')
+    NLVIndex()
 
 elif mode==1:
     addon_log("getData")
@@ -2566,8 +2582,8 @@ if mode==75:
 elif mode==73:
     getlive9Schedule()
     
-#elif mode==76:
-#    getarenaSchedule()
+elif mode==76:
+    gettpsoccerSchedule()
     
 elif mode == 220: xite.Main()
 elif mode == 221: xite.List(url)
@@ -2589,5 +2605,10 @@ elif mode == 236: ziggosporttotaal.Playvid(url, name)
 elif mode == 237: foxsports.MainSamenvattingen()
 elif mode == 238: foxsports.MainDoelpunten()
 elif mode == 239: foxsports.MainInterviews()
+elif mode == 240: streamfoot.Main()
+elif mode == 241: streamfoot.List(url)
+elif mode == 242: tpsoccerstreams.Main()
+elif mode == 243: tpsoccerstreams.List(url)
+elif mode == 300: utils.playyt(url, name)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
