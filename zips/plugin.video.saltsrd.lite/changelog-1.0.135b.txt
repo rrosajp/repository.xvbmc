@@ -1,4 +1,8 @@
-Version 1.0.[B]135[/B] EPiC Real-Debrid
+Version 1.0.135[B]b[/B] EPiC Real-Debrid
++ All Kudos -2- TKnorris (Y)
+- Remove WatchHD scraper
+
+Version 1.0.135[B]a[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
 - Fix Icefilms resolve
 - More fixes, see: v2.0.43
