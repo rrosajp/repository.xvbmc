@@ -237,7 +237,7 @@ def subDEVmenu():
     userchoice.append("XvBMC #DEV# Corner (Firmware - Cutting Edge)")
     userchoice.append("XvBMC #DEV# Corner (Firmware - 12 april 2016)")
     userchoice.append("XvBMC #DEV# Corner (Firmware - Current v3 image)")
-    userchoice.append("XvBMC #DEV# Corner (LibreELEC_arm-7.0.0)")
+    userchoice.append("XvBMC #DEV# Corner (LibreELEC_arm-7.0.1)")
     userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.3)")
     userchoice.append("Exit")
     
@@ -258,8 +258,8 @@ def subDEVmenu():
     elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - Current v3 image)":
         FirmwareImage()
     
-	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.0.tar
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (LibreELEC_arm-7.0.0)":
+	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.1.tar
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (LibreELEC_arm-7.0.1)":
         SystemOS()
     
     #    http://openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-6.95.3.tar
@@ -294,11 +294,11 @@ class FirmwareImageClass(xbmcgui.Window):
 class SystemOSClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL LibreELEC OS update','Preparing v7.0.0 and Reboot when done...'):
+    if dialog.yesno('XvBMC NL LibreELEC OS update','Preparing v7.0.1 and Reboot when done...'):
 
-        url = 'http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.0.tar'
+        url = 'http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.1.tar'
         path = xbmc.translatePath(os.path.join('/storage/.update/',''))
-        lib=os.path.join(path, 'libreelec700.tar')
+        lib=os.path.join(path, 'libreelec701.tar')
         DownloaderClass(url,lib)
 
 	time.sleep(1)

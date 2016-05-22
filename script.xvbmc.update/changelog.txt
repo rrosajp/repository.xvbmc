@@ -1,3 +1,6 @@
+[B]Version 3.[/B][I].06[/I]
+ + LibreELEC (Jarvis 16.1-final) 7.0.1 MR
+
 [B]Version 3.[/B][I].05[/I]
  + ServicePack 02 (15-05-2016)
 
