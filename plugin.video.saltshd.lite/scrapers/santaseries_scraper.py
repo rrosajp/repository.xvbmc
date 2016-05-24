@@ -75,9 +75,6 @@ class SantaSeries_Scraper(scraper.Scraper):
                         hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]*-season-%s-episode-%s(?!\d)[^"]*)' % (video.season, video.episode)
         return self._default_get_episode_url(show_url, video, episode_pattern)

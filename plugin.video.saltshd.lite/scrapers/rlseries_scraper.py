@@ -66,9 +66,6 @@ class RLSeries_Scraper(scraper.Scraper):
                     hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, season_url, video):
         episode_pattern = 'href="([^"]*episode-%s-[^"]*)' % (video.episode)
         title_pattern = '<a[^>]*href="(?P<url>[^"]+)[^>]+title="Episode\s+\d+:\s*(?P<title>[^"]+)'

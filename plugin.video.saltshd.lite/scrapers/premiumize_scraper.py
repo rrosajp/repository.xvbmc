@@ -209,9 +209,6 @@ class Premiumize_Scraper(scraper.Scraper):
                 new_data['hashes'] = dict((hash_id.lower(), hash_data['hashes'][hash_id]) for hash_id in hash_data['hashes'])
         return new_data
     
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         result = self.__find_episode(show_url, video)
         if result:

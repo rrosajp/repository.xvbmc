@@ -1,5 +1,5 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.salts
+# Addon id: plugin.video.saltshd.lite
 # Addon Provider: TV Addons
 msgid ""
 msgstr ""
@@ -1090,6 +1090,10 @@ msgctxt "#30279"
 msgid "Maximum Allowed Size (GB) (0 = No Limit)"
 msgstr ""
 
+msgctxt "#30280"
+msgid "Show Episode Airtime in My Next Episodes"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""
@@ -1835,5 +1839,9 @@ msgstr ""
 
 msgctxt "#30683"
 msgid "Show Watch It Again"
+msgstr ""
+
+msgctxt "#30684"
+msgid "Show air time in MNE"
 msgstr ""
 

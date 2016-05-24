@@ -454,7 +454,6 @@ def set_view(content, set_sort=False):
     # set content type so library shows more views and info
     if content:
         kodi.set_content(content)
-        # xbmcplugin.setContent(int(sys.argv[1]), content)
 
     view = kodi.get_setting('%s_view' % (content))
     if view != '0':
@@ -487,9 +486,9 @@ def make_day(date):
 
     return date
 
-def make_time(utc_ts):
+def make_time(utc_ts, setting):
     local_time = time.localtime(utc_ts)
-    if kodi.get_setting('calendar_time') == '1':
+    if kodi.get_setting(setting) == '1':
         time_format = '%H:%M'
         time_str = time.strftime(time_format, local_time)
     else:

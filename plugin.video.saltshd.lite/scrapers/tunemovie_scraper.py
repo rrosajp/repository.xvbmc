@@ -153,9 +153,6 @@ class TuneMovie_Scraper(scraper.Scraper):
                 
         return sources
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, season_url, video):
         episode_pattern = 'class="[^"]*episode_series_link[^"]*"\s+href="([^"]+)[^>]*>\s*%s\s*<' % (video.episode)
         return self._default_get_episode_url(season_url, video, episode_pattern)

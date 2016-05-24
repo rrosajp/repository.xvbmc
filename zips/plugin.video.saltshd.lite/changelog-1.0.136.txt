@@ -1,3 +1,6 @@
+[B]Version 1.0.136[/B]
++ see below ;-P (scrapers+fixes)
+
 [B]Version 2.0.44[/B]
 - Add option to show Air Time on MNE
 - Fix Diziay scraper

@@ -100,9 +100,6 @@ class XMovies8V2_Scraper(scraper.Scraper):
             
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-    
     def _get_episode_url(self, season_url, video):
         episode_pattern = 'href="([^"]+)[^>]+class="[^"]*btn-episode[^>]*>%s<' % (video.episode)
         return self._default_get_episode_url(season_url, video, episode_pattern)

@@ -83,9 +83,6 @@ class PirateJunkies_Scraper(scraper.Scraper):
                     hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         results = []
         norm_title = scraper_utils.normalize_title(title)

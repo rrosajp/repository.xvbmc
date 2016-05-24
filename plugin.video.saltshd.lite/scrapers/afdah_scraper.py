@@ -19,7 +19,7 @@ import re
 import string
 import urllib
 import urlparse
-
+from salts_lib import log_utils
 from salts_lib import kodi
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -76,7 +76,7 @@ class Afdah_Scraper(scraper.Scraper):
                     plaintext = embed_html
                 hosters += self._get_links(plaintext)
             
-            pattern = 'href="([^"]+)".*play_video.gif'
+            pattern = 'href="([^"]+)"[^>]*><[^>]+play_video.gif'
             for match in re.finditer(pattern, html, re.I):
                 url = match.group(1)
                 host = urlparse.urlparse(url).hostname
@@ -99,9 +99,6 @@ class Afdah_Scraper(scraper.Scraper):
         alphabet = lower + lower.upper()
         shifted = lower_trans + lower_trans.upper()
         return plaintext.translate(string.maketrans(alphabet, shifted))
-
-    def get_url(self, video):
-        return self._default_get_url(video)
 
     def search(self, video_type, title, year, season=''):
         search_url = urlparse.urljoin(self.base_url, '/wp-content/themes/afdah/ajax-search.php')

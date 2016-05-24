@@ -72,7 +72,7 @@ class StreamTV_Scraper(scraper.Scraper):
     def __get_base_ep_url(self, video):
         temp_video = copy.copy(video)
         temp_video.video_type = VIDEO_TYPES.TVSHOW
-        url = urlparse.urljoin(self.base_url, self.get_url(video))
+        url = urlparse.urljoin(self.base_url, self.get_url(temp_video))
         html = self._http_get(url, cache_limit=8)
         match = re.search('href="([^"]+[sS]\d+-?[eE]\d+[^"]+)', html)
         if match:
@@ -80,9 +80,6 @@ class StreamTV_Scraper(scraper.Scraper):
         else:
             return DEF_EP_URL
         
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+s%d-?e%d[^"]+)' % (int(video.season), int(video.episode))
         title_pattern = 'href="(?P<url>[^"]+)"\s+rel="nofollow.*</a>(?P<title>[^<]+)'

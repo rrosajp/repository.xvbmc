@@ -83,9 +83,6 @@ class OroroTV_Scraper(scraper.Scraper):
                 hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'data-href="([^"]+)[^>]*class="[^"]*episode[^"]*"\s+href="#%s-%s"' % (video.season, video.episode)
         title_pattern = 'data-href="(?P<url>[^"]+)[^>]+class="[^"]*episode[^"]*[^>]+>.\d+\s+(?P<title>[^<]+)'

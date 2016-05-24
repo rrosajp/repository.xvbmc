@@ -115,7 +115,7 @@ def browse_menu(section):
     if utils2.menu_on('search'): add_search_item({'mode': MODES.SAVED_SEARCHES, 'section': section}, i18n('saved_searches'), utils2.art(section_params['search_img']), MODES.CLEAR_SAVED)
     if OFFLINE:
         kodi.notify(msg='[COLOR blue]***[/COLOR][COLOR red] %s [/COLOR][COLOR blue]***[/COLOR]' % (i18n('trakt_api_offline')))
-    utils2.set_view(CONTENT_TYPES.FILES)
+    kodi.set_content(CONTENT_TYPES.FILES)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.SHOW_BOOKMARKS, ['section'])
@@ -186,7 +186,7 @@ def browse_urls():
         else:
             label = url[0]
         kodi.create_item({'mode': MODES.DELETE_URL, 'url': url[0], 'data': url[1]}, label, thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
-    utils2.set_view(CONTENT_TYPES.FILES)
+    kodi.set_content(CONTENT_TYPES.FILES)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.DELETE_URL, ['url'], ['data'])
@@ -353,7 +353,7 @@ def scraper_settings():
         queries = {'mode': MODES.TOGGLE_SCRAPER, 'name': name}
         kodi.create_item(queries, label, thumb=utils2.art('scraper.png'), fanart=utils2.art('fanart.jpg'), is_folder=False,
                          is_playable=False, menu_items=menu_items, replace_menu=True)
-    utils2.set_view(CONTENT_TYPES.FILES)
+    kodi.set_content(CONTENT_TYPES.FILES)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.RESET_REL_URLS, ['name'])
@@ -852,6 +852,10 @@ def show_progress():
                 show = episode['show']
                 fanart = show['images']['fanart']['full']
                 date = utils2.make_day(utils2.make_air_date(episode['episode']['first_aired']))
+                if kodi.get_setting('mne_time') != '0':
+                    date_time = '%s@%s' % (date, utils2.make_time(first_aired_utc, 'mne_time'))
+                else:
+                    date_time = date
     
                 menu_items = []
                 queries = {'mode': MODES.SEASONS, 'trakt_id': show['ids']['trakt'], 'fanart': fanart, 'title': show['title'], 'year': show['year']}
@@ -859,7 +863,7 @@ def show_progress():
     
                 liz, liz_url = make_episode_item(show, episode['episode'], show_subs=False, menu_items=menu_items)
                 label = liz.getLabel()
-                label = '[[COLOR deeppink]%s[/COLOR]] %s - %s' % (date, show['title'], label)
+                label = '[[COLOR deeppink]%s[/COLOR]] %s - %s' % (date_time, show['title'], label)
                 liz.setLabel(label)
     
                 xbmcplugin.addDirectoryItem(int(sys.argv[1]), liz_url, liz, isFolder=folder)
@@ -2104,7 +2108,7 @@ def make_dir_from_cal(mode, start_date, days):
 
         date = utils2.make_day(datetime.date.fromtimestamp(utc_secs).isoformat())
         if kodi.get_setting('calendar_time') != '0':
-            date_time = '%s@%s' % (date, utils2.make_time(utc_secs))
+            date_time = '%s@%s' % (date, utils2.make_time(utc_secs, 'calendar_time'))
         else:
             date_time = date
 

@@ -59,7 +59,7 @@ class IceFilms_Scraper(scraper.Scraper):
         list_url = LIST_URL % (data['t'][0])
         headers = {'Referer': list_url}
         html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
-        match = re.search('url=(.*)', html)
+        match = re.search('url=(http.*)', html)
         if match:
             url = urllib.unquote_plus(match.group(1))
             return url
@@ -116,9 +116,6 @@ class IceFilms_Scraper(scraper.Scraper):
             except Exception as e:
                 log_utils.log('Failure (%s) during icefilms get sources: |%s|' % (str(e), video), log_utils.LOGWARNING)
         return sources
-
-    def get_url(self, video):
-        return self._default_get_url(video)
 
     def search(self, video_type, title, year, season=''):
         if video_type == VIDEO_TYPES.MOVIE:

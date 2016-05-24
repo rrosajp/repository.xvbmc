@@ -77,9 +77,6 @@ class Watch8Now_Scraper(scraper.Scraper):
 
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+[sS]%s[eE]%s\.html)"' % (video.season, video.episode)
         title_pattern = 'href="(?P<url>[^"]+[sS]\d+[eE]\d+\.html)"(?:[^>]+>){6}(?P<title>[^<]+)'
