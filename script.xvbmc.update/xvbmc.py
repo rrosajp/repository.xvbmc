@@ -235,7 +235,7 @@ def subDEVmenu():
     # Create list of menu items
     userchoice = []
     userchoice.append("XvBMC #DEV# Corner (Firmware - Cutting Edge)")
-    userchoice.append("XvBMC #DEV# Corner (Firmware - 12 april 2016)")
+    userchoice.append("XvBMC #DEV# Corner (Firmware - 20 may 2016)")
     userchoice.append("XvBMC #DEV# Corner (Firmware - Current v3 image)")
     userchoice.append("XvBMC #DEV# Corner (LibreELEC_arm-7.0.1)")
     userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.3)")
@@ -251,7 +251,7 @@ def subDEVmenu():
         FirmwareRecent()
     
     #    /storage/.kodi/addons/script.xvbmc.update/resources/firmwaretested.sh
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - 12 april 2016)":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - 20 may 2016)":
         FirmwareTested()
     
     #    /storage/.kodi/addons/script.xvbmc.update/resources/firmwareimage.sh
@@ -278,7 +278,7 @@ class FirmwareRecentClass(xbmcgui.Window):
 class FirmwareTestedClass(xbmcgui.Window):
   def __init__(self):
     dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry advised Firmware','Flash 12 april 2016 PI firmware?'):
+    if dialog.yesno('XvBMC NL Raspberry advised Firmware','Flash 20 may 2016 PI firmware?'):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/firmwaretested.sh"
 	os.system(bashCommand)
 	#~ xbmc.executebuiltin('ReloadSkin()')
