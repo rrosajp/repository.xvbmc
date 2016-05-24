@@ -19,6 +19,7 @@ import urlparse
 import re
 import scraper
 import urllib
+import base64
 from salts_lib import scraper_utils
 from salts_lib import kodi
 from salts_lib import dom_parser
@@ -32,6 +33,7 @@ PK_URL = '/Pe_Player_Html5/pk/pk_2/plugins/protected.php'
 GK_URL = '/Pe_flsh/plugins/gkpluginsphp.php'
 DEL_LIST = ['sub', 'id']
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
+MOVIE_SEARCH_URL = 'aHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vY3VzdG9tc2VhcmNoL3YxZWxlbWVudD9rZXk9QUl6YVN5Q1ZBWGlVelJZc01MMVB2NlJ3U0cxZ3VubU1pa1R6UXFZJnJzej1maWx0ZXJlZF9jc2UmbnVtPTEwJmhsPWVuJmN4PTAxMzA0MzU4NDUzMDg1NzU4NzM4MTpkcGR2Y3FlbGt3dyZnb29nbGVob3N0PXd3dy5nb29nbGUuY29tJnE9JXM='
 
 class PelisPedia_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -102,7 +104,7 @@ class PelisPedia_Scraper(scraper.Scraper):
                 html = self._http_get(url, headers=XHR, data=data, cache_limit=.5)
                 js_data = scraper_utils.parse_json(html, url)
                 for item in js_data:
-                    if 'url' in item:
+                    if 'url' in item and item['url']:
                         if 'width' in item and item['width']:
                             quality = scraper_utils.width_get_quality(item['width'])
                         elif 'height' in item and item['height']:
@@ -130,13 +132,11 @@ class PelisPedia_Scraper(scraper.Scraper):
                     sources = {js_result['link']: QUALITIES.HD720}
                 
                 for source in sources:
-                    hoster = {'multi-part': False, 'url': source, 'class': self, 'quality': sources[source], 'host': self._get_direct_hostname(source), 'rating': None, 'views': None, 'direct': True}
-                    hosters.append(hoster)
+                    if source:
+                        hoster = {'multi-part': False, 'url': source, 'class': self, 'quality': sources[source], 'host': self._get_direct_hostname(source), 'rating': None, 'views': None, 'direct': True}
+                        hosters.append(hoster)
         return hosters
         
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+-season-%s-episode-%s[^\d"]*)' % (video.season, video.episode)
         title_pattern = 'href="(?P<url>[^"]+-season-\d+-episode-\d+[^"]*).*?<span[^>]*class="[^"]*ml5[^"]*">(?P<title>[^<]+)'
@@ -182,25 +182,25 @@ class PelisPedia_Scraper(scraper.Scraper):
 
     def __movie_search(self, title, year):
         results = []
-        search_title = re.sub("[^A-Za-z0-9. ]", "", title)
-        url = '/buscar/?s=%s' % (urllib.quote_plus(search_title))
-        url = urlparse.urljoin(self.base_url, url)
-        html = self._http_get(url, cache_limit=24)
-        for item in dom_parser.parse_dom(html, 'li', {'class': '[^"]*bpM12[^"}*'}):
-            match_url = re.search('href="([^"]+)', item)
-            match_title = dom_parser.parse_dom(item, 'span', {'class': 'dBlock'})
-            if match_url and match_title:
-                match_url = match_url.group(1)
-                match_title = match_title[0]
-                match = re.search('<span>\s*\((\d{4})\)\s*</span>', item)
+        search_url = base64.decodestring(MOVIE_SEARCH_URL) % (urllib.quote_plus(title))
+        html = self._http_get(search_url, cache_limit=1)
+        js_data = scraper_utils.parse_json(html)
+        if 'results' in js_data:
+            norm_title = scraper_utils.normalize_title(title)
+            for item in js_data['results']:
+                match_url = urllib.unquote(item['url'])
+                if '/pelicula/' not in match_url: continue
+                match_title_year = item['titleNoFormatting']
+                match_title_year = re.sub('^Ver\s+', '', match_title_year)
+                match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)', match_title_year)
                 if match:
-                    match_year = match.group(1)
+                    match_title, match_year = match.groups()
                 else:
+                    match_title = match_title_year
                     match_year = ''
-                    
-                if (not year or not match_year or year == match_year):
-                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                
+                if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
+                    result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                     results.append(result)
+        
         return results
-                        
-            

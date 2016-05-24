@@ -115,9 +115,6 @@ class M4UFree_Scraper(scraper.Scraper):
         
         return sources
     
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         results = []
         title = re.sub('[^A-Za-z0-9 ]', '', title)

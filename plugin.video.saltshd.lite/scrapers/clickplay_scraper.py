@@ -98,9 +98,6 @@ class ClickPlay_Scraper(scraper.Scraper):
                 
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         season_url = show_url + 'season-%d/' % (int(video.season))
         episode_pattern = 'href="([^"]+/season-%d/episode-%d-[^"]+)' % (int(video.season), int(video.episode))

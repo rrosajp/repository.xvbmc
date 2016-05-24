@@ -128,9 +128,6 @@ class PubFilm_Scraper(scraper.Scraper):
                     sources[stream_url] = {'quality': quality, 'direct': True}
         return sources
         
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, season_url, video):
         url = urlparse.urljoin(self.base_url, season_url)
         html = self._http_get(url, cache_limit=8)

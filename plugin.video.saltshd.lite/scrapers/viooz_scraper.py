@@ -85,9 +85,6 @@ class VioozAc_Scraper(scraper.Scraper):
 
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         search_url = urlparse.urljoin(self.base_url, '/search?q=')
         search_url += urllib.quote_plus(title)

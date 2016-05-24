@@ -43,12 +43,17 @@ INTERVALS = 5
 EXPIRE_DURATION = 5 * 60
 KODI_UA = 'Lavf/56.40.101'
 M3U8_PATH = os.path.join(kodi.translate_path(kodi.get_profile()), 'torbase.m3u8')
-M3U8_TEMPLATE = [
+M3U8_TEMPLATES = [[
     '#EXTM3U',
     '#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="{audio_group}",DEFAULT=YES,AUTOSELECT=YES,NAME="Stream 1",URI="{audio_stream}"',
     '',
     '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH={bandwidth},NAME="{stream_name}",AUDIO="{audio_group}"',
-    '{video_stream}']
+    '{video_stream}'], [
+    '#EXTM3U',
+    '',
+    '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH={bandwidth},NAME="{stream_name}"',
+    '{video_stream}']]
+                  
 
 class TorbaSe_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -73,10 +78,20 @@ class TorbaSe_Scraper(scraper.Scraper):
             query = dict([(key, query[key][0]) if query[key] else (key, '') for key in query])
             if 'video_stream' in query:
                 if self.__authorize_ip(query['video_stream']):
-                    f = xbmcvfs.File(M3U8_PATH, 'w')
-                    for line in M3U8_TEMPLATE:
-                        line = line.format(**query)
-                        f.write(line + '\n')
+                    for template in M3U8_TEMPLATES:
+                        f = xbmcvfs.File(M3U8_PATH, 'w')
+                        try:
+                            for line in template:
+                                    line = line.format(**query)
+                                    f.write(line + '\n')
+                            else:
+                                break
+                        except:
+                            log_utils.log('Unusable line in Torba M3U8: |%s|%s|' % (line, query), log_utils.LOGWARNING)
+                    else:
+                        log_utils.log('No usable M3U8 Template Found for link: %s' % (link), log_utils.LOGWARNING)
+                        return
+                        
                     f.close()
                     return M3U8_PATH
         except Exception as e:
@@ -167,9 +182,6 @@ class TorbaSe_Scraper(scraper.Scraper):
                 
         return sources
         
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         url = urlparse.urljoin(self.base_url, show_url)
         html = self._http_get(url, cache_limit=24)

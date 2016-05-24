@@ -143,27 +143,27 @@ class Trakt_API():
 
     def get_trending(self, section, page=None):
         url = '/%s/trending' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': 99}
+        params = {'extended': 'full,images', 'limit': 69}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
 
     def get_anticipated(self, section, page=None):
         url = '/%s/anticipated' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': 99}
+        params = {'extended': 'full,images', 'limit': 69}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
 
     def get_popular(self, section, page=None):
         url = '/%s/popular' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': 99}
+        params = {'extended': 'full,images', 'limit': 69}
         if page: params['page'] = page
         return self.__call_trakt(url, params=params)
 
     def get_recent(self, section, date, page=None):
         url = '/%s/updates/%s' % (TRAKT_SECTIONS[section], date)
-        params = {'extended': 'full,images', 'limit': 99}
+        params = {'extended': 'full,images', 'limit': 69}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]

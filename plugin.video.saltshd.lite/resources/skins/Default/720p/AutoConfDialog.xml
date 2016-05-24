@@ -4,7 +4,7 @@
     <coordinates>
         <system>1</system>
         <posx>385</posx>
-        <posy>60</posy>
+        <posy>35</posy>
     </coordinates>
     <controls>
         <control type="group">
@@ -13,7 +13,7 @@
                 <posx>0</posx>
                 <posy>0</posy>
                 <width>510</width>
-                <height>600</height>
+                <height>650</height>
                 <texture border="40">DialogBack2.png</texture>
             </control>
             <control type="image">
@@ -31,7 +31,7 @@
                 <width>450</width>
                 <height>30</height>
                 <font>font13_title</font>
-                <label>$ADDON[plugin.video.salts 30666]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30666]</label>
                 <align>center</align>
                 <aligny>center</aligny>
                 <textcolor>darkorange</textcolor>
@@ -70,7 +70,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30232]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30232]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -81,7 +81,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30233]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30233]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -92,7 +92,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30234]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30234]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -103,7 +103,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30235]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30235]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -114,7 +114,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30236]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30236]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -125,7 +125,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30237]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30237]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -136,7 +136,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30238]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30238]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -147,7 +147,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30239]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30239]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -158,7 +158,7 @@
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
                 <radioposx>380</radioposx>
-                <label>$ADDON[plugin.video.salts 30240]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30240]</label>
                 <font>font12</font>
                 <include>DefaultSettingButton</include>
             </control>
@@ -168,7 +168,7 @@
                 <textwidth>470</textwidth>
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
-                <label>$ADDON[plugin.video.salts 30241]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30241]</label>
                 <font>font12</font>
                 <radioposx>380</radioposx>
                 <include>DefaultSettingButton</include>
@@ -179,7 +179,7 @@
                 <textwidth>470</textwidth>
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
-                <label>$ADDON[plugin.video.salts 30242]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30242]</label>
                 <font>font12</font>
                 <radioposx>380</radioposx>
                 <include>DefaultSettingButton</include>
@@ -190,7 +190,7 @@
                 <textwidth>470</textwidth>
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
-                <label>$ADDON[plugin.video.salts 30243]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30243]</label>
                 <font>font12</font>
                 <radioposx>380</radioposx>
                 <include>DefaultSettingButton</include>
@@ -201,7 +201,18 @@
                 <textwidth>470</textwidth>
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
-                <label>$ADDON[plugin.video.salts 30244]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30280]</label>
+                <font>font12</font>
+                <radioposx>380</radioposx>
+                <include>DefaultSettingButton</include>
+            </control>
+            <control type="radiobutton" id="315">
+                <width>470</width>
+                <height>40</height>
+                <textwidth>470</textwidth>
+                <textoffsetx>10</textoffsetx>
+                <radioheight>45</radioheight>
+                <label>$ADDON[plugin.video.saltshd.lite 30244]</label>
                 <font>font12</font>
                 <radioposx>380</radioposx>
                 <include>DefaultSettingButton</include>
@@ -211,12 +222,12 @@
             <control type="button" id="200">
                 <description>Continue Button</description>
                 <posx>30</posx>
-                <posy>510</posy>
+                <posy>550</posy>
                 <width>220</width>
                 <height>90</height>
                 <align>center</align>
                 <aligny>center</aligny>
-                <label>$ADDON[plugin.video.salts 30667]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30667]</label>
                 <font>font12_title</font>
                 <textoffsetx>10</textoffsetx>
                 <onup>9000</onup>
@@ -227,12 +238,12 @@
             <control type="button" id="201">
                 <description>Cancel Button</description>
                 <posx>260</posx>
-                <posy>510</posy>
+                <posy>550</posy>
                 <width>220</width>
                 <height>90</height>
                 <align>center</align>
                 <aligny>center</aligny>
-                <label>$ADDON[plugin.video.salts 30668]</label>
+                <label>$ADDON[plugin.video.saltshd.lite 30668]</label>
                 <font>font12_title</font>
                 <textoffsetx>10</textoffsetx>
                 <onup>200</onup>

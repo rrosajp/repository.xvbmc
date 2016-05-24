@@ -141,7 +141,6 @@ class Scraper(object):
         """
         raise NotImplementedError
 
-    @abc.abstractmethod
     def get_url(self, video):
         """
         Must return a url for the site this scraper is associated with that is related to this video.
@@ -156,7 +155,7 @@ class Scraper(object):
 
         * Generally speaking, domain should not be included
         """
-        raise NotImplementedError
+        return self._default_get_url(video)
 
     @abc.abstractmethod
     def search(self, video_type, title, year, season=''):
@@ -199,41 +198,36 @@ class Scraper(object):
     def _default_get_url(self, video):
         url = None
         self.create_db_connection()
+        temp_video_type = video.video_type
         if video.video_type == VIDEO_TYPES.EPISODE:
             if VIDEO_TYPES.TVSHOW in self.provides():
                 temp_video_type = VIDEO_TYPES.TVSHOW
-            else:
+            elif VIDEO_TYPES.SEASON in self.provides():
                 temp_video_type = VIDEO_TYPES.SEASON
-        else:
-            temp_video_type = video.video_type
 
-        if temp_video_type == VIDEO_TYPES.SEASON:
-            season = video.season
-        else:
-            season = ''
-            
-        result = self.db_connection.get_related_url(temp_video_type, video.title, video.year, self.get_name(), season)
-        if result:
-            url = result[0][0]
-            log_utils.log('Got local related url: |%s|%s|%s|%s|%s|%s|' % (temp_video_type, video.title, video.year, season, self.get_name(), url), log_utils.LOGDEBUG)
-        else:
-            results = self.search(temp_video_type, video.title, video.year, season)
-            if results:
-                url = results[0]['url']
-                self.db_connection.set_related_url(temp_video_type, video.title, video.year, self.get_name(), url, season)
+        season = video.season if temp_video_type == VIDEO_TYPES.SEASON else ''
+        if temp_video_type != VIDEO_TYPES.EPISODE:
+            result = self.db_connection.get_related_url(temp_video_type, video.title, video.year, self.get_name(), season)
+            if result:
+                url = result[0][0]
+                log_utils.log('Got local related url: |%s|%s|%s|%s|%s|%s|' % (temp_video_type, video.title, video.year, season, self.get_name(), url), log_utils.LOGDEBUG)
+            else:
+                results = self.search(temp_video_type, video.title, video.year, season)
+                if results:
+                    url = results[0]['url']
+                    self.db_connection.set_related_url(temp_video_type, video.title, video.year, self.get_name(), url, season)
 
         if isinstance(url, unicode): url = url.encode('utf-8')
         if video.video_type == VIDEO_TYPES.EPISODE:
             if url == FORCE_NO_MATCH:
                 url = None
-            elif url:
+            elif url or temp_video_type == VIDEO_TYPES.EPISODE:
                 result = self.db_connection.get_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, self.get_name(), video.season, video.episode)
                 if result:
                     url = result[0][0]
                     log_utils.log('Got local related url: |%s|%s|%s|' % (video, self.get_name(), url), log_utils.LOGDEBUG)
                 else:
-                    landing_url = url
-                    url = self._get_episode_url(landing_url, video)
+                    url = self._get_episode_url(url, video)
                     if url:
                         self.db_connection.set_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, self.get_name(), url, video.season, video.episode)
 
