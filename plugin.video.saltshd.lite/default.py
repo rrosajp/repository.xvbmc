@@ -1058,9 +1058,7 @@ def browse_episodes(trakt_id, season):
 @url_dispatcher.register(MODES.DOWNLOAD_SOURCE, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate', 'dialog'])
 @url_dispatcher.register(MODES.AUTOPLAY, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate', 'dialog'])
 def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', ep_title='', ep_airdate='', dialog=None):
-    if xbmc.getInfoLabel('Container.PluginName') not in ['', 'plugin.video.saltshd.lite']:
-        kodi.notify(msg=i18n('playback_limited'))
-        return False
+    
     
     timeout = max_timeout = int(kodi.get_setting('source_timeout'))
     if max_timeout == 0: timeout = None
