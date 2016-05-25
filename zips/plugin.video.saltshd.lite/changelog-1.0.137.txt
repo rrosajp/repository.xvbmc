@@ -1,5 +1,5 @@
 [B]Version 1.0.137[/B]
-+ see below ;-P (fix metaliQ)
++ see below ;-P (fix metaliQ + NLview)
 
 [B]Version 1.0.136[/B]
 + see below ;-P (scrapers+fixes)
