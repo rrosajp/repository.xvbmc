@@ -536,6 +536,19 @@ Alle inhoud is copyright van hun respectievelijke eigenaars.</description>
 	</extension>
 </addon>
 
+<addon id="repo.natko1412" name="natko1412 repo" version="2.0.0" provider-name="natko1412">
+<extension point="xbmc.addon.repository" name="Natko's Addon Repository">
+<info compressed="false">https://offshoregit.com/natko1412/addons.xml</info>
+<checksum>https://offshoregit.com/natko1412/addons.xml.md5</checksum>
+<datadir zip="true">https://offshoregit.com/natko1412/zips/</datadir>
+</extension>
+<extension point="xbmc.addon.metadata">
+<summary>Install all of Natko's Addons</summary>
+<description>Download and install addons by natko1412. For support visit XBMC thread on forum.hr</description>
+<platform>all</platform>
+</extension>
+</addon>
+
     <addon id="repository.dokinl" name="[B][COLOR lime]D[/COLOR]OKI[COLOR lime]TV[/COLOR].NL [COLOR lime]R[/COLOR]epository[/B]" version="1.0.2" provider-name="DOKITV.NL">
         <requires>
             <import addon="xbmc.addon" version="12.0.0"/>
@@ -600,19 +613,6 @@ Alle inhoud is copyright van hun respectievelijke eigenaars.</description>
             <description>Download and install addons for the KAOSbox (www.kaosbox.tv)</description>
             <platform>all</platform>
     </extension>
-</addon>
-
-<addon id="repo.natko1412" name="natko1412 repo" version="2.0.0" provider-name="natko1412">
-<extension point="xbmc.addon.repository" name="Natko's Addon Repository">
-<info compressed="false">https://offshoregit.com/natko1412/addons.xml</info>
-<checksum>https://offshoregit.com/natko1412/addons.xml.md5</checksum>
-<datadir zip="true">https://offshoregit.com/natko1412/zips/</datadir>
-</extension>
-<extension point="xbmc.addon.metadata">
-<summary>Install all of Natko's Addons</summary>
-<description>Download and install addons by natko1412. For support visit XBMC thread on forum.hr</description>
-<platform>all</platform>
-</extension>
 </addon>
 
     <addon id="repository.NLVIEW" name="[B][COLOR lime]NL[/COLOR][COLOR white]View[/COLOR][/B]" version="1.0.1" provider-name="NLView">
