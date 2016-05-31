@@ -81,9 +81,6 @@ class Rainierland_Scraper(scraper.Scraper):
                     hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         for page_num in xrange(1, PAGE_LIMIT + 1):
             if page_num > 1:

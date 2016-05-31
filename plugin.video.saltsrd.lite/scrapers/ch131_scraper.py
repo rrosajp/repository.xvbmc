@@ -65,9 +65,6 @@ class CH131_Scraper(scraper.Scraper):
 
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+[sS](?:eason-)?0?%s-?[eE](?:pisode-)?0?%s-[^"]+)' % (video.season, video.episode)
         title_pattern = 'href="(?P<url>[^"]+season-\d+-episode-\d+-[^"]+)[^>]+>[^<]+Season \d+ Episode \d (?P<title>[^<]+)'

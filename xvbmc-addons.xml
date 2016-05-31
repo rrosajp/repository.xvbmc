@@ -355,7 +355,7 @@ Special greetz to DOKI!</description>
 	</extension>
 </addon>
 
-<addon id="plugin.video.saltsrd.lite" version="1.0.135b" name="Salts RD Lite" provider-name="TKnorris">
+<addon id="plugin.video.saltsrd.lite" version="1.0.137" name="Salts RD Lite" provider-name="TKnorris (XvBMC-NL MOD)">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
 		<import addon="repository.xvbmc" version="3.0.1"/>
@@ -367,8 +367,8 @@ Special greetz to DOKI!</description>
     </extension>
      <extension point="xbmc.service" library="service.py" start="startup"/>
     <extension point="xbmc.addon.metadata">
-        <summary>Stream video from many difference sources with RD</summary>
-        <description>This is the MOD version of Salts by Scott Marten + EPiC. (Credits -2- TKnorris of course)</description>
+        <summary>Stream video from many difference sources with EPiC SALTs RD Lite</summary>
+        <description>This is the MOD version of SALTs by EPiC + Scott Marten (Credits -2- TKnorris obviously).</description>
         <platform>all</platform>
         <website>http://tvaddons.ag/</website>
 		<forum>https://www.facebook.com/groups/XvBMCnederland/</forum>

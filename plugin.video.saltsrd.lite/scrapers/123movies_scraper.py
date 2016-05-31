@@ -141,9 +141,6 @@ class One23Movies_Scraper(scraper.Scraper):
             html = self._http_get(url, headers=headers, cache_limit=8)
         return html
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, season_url, video):
         html = self.__get_source_page(season_url)
         if re.search('title\s*=\s*"Episode\s+%s(:|"| )' % (video.episode), html, re.I):

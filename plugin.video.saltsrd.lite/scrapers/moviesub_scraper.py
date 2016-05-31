@@ -136,9 +136,6 @@ class MovieSub_Scraper(scraper.Scraper):
                     
         return sources
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, season_url, video):
         season_url = urlparse.urljoin(self.__get_base_url(video.video_type), season_url)
         episode_pattern = 'href="([^"]+)[^>]*title="Watch\s+Episode\s+\d+[^>]*>%s<' % (video.episode)

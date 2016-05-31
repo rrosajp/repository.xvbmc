@@ -87,9 +87,6 @@ class Stream_Scraper(scraper.Scraper):
                 hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+s%02de%02d\.html)"\s+class="la"' % (int(video.season), int(video.episode))
         return self._default_get_episode_url(show_url, video, episode_pattern, '')

@@ -108,9 +108,6 @@ class StreamLord_Scraper(scraper.Scraper):
         if fragment:
             return fragment[0]
     
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="(episode[^"]*-[Ss]%02d[Ee]%02d-[^"]+)' % (int(video.season), int(video.episode))
         title_pattern = 'class="head".*?</span>(?P<title>.*?)</a>.*?href="(?P<url>[^"]+)'

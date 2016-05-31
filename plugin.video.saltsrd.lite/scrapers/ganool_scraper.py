@@ -91,9 +91,6 @@ class Ganool_Scraper(scraper.Scraper):
                 if match:
                     return match.group(1)
     
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         results = []
         search_title = re.sub(r'[^a-zA-Z0-9\s]+', ' ', title).lower().strip()

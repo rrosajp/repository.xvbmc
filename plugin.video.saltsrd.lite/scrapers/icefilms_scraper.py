@@ -117,9 +117,6 @@ class IceFilms_Scraper(scraper.Scraper):
                 log_utils.log('Failure (%s) during icefilms get sources: |%s|' % (str(e), video), log_utils.LOGWARNING)
         return sources
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         if video_type == VIDEO_TYPES.MOVIE:
             url = urlparse.urljoin(self.base_url, '/movies/a-z/')

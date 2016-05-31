@@ -131,7 +131,7 @@ class PremiumizeV2_Scraper(scraper.Scraper):
             return QUALITIES.HIGH
         
     def get_url(self, video):
-        url = self._default_get_url(video)
+        url = super(self.__class__, self).get_url(video)
         if url is None and video.video_type == VIDEO_TYPES.EPISODE:
             return self.__find_episodes(video)
         return url

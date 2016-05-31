@@ -99,9 +99,6 @@ class NoobRoom_Scraper(scraper.Scraper):
                     hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = "%sx%02d\s*-\s*.*?href='([^']+)" % (video.season, int(video.episode))
         title_pattern = "\d+x\d+\s*-\s*.*?href='(?P<url>[^']+)'>(?P<title>[^<]+)"

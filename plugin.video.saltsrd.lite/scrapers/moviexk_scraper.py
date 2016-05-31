@@ -113,9 +113,6 @@ class MoxieXK_Scraper(scraper.Scraper):
         urls = dom_parser.parse_dom(html, 'a', {'data-type': 'watch'}, ret='href')
         return dict(zip(labels, urls))
         
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search/')

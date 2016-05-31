@@ -85,9 +85,6 @@ class TwoDDL_Scraper(scraper.Scraper):
                 
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     @classmethod
     def get_settings(cls):
         settings = super(cls, cls).get_settings()

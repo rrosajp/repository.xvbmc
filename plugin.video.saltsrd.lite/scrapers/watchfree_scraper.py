@@ -74,9 +74,6 @@ class WatchFree_Scraper(scraper.Scraper):
 
         return sources
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         if video_type == VIDEO_TYPES.MOVIE:
             section = '1'

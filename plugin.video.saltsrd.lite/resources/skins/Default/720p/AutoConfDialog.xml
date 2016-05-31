@@ -4,7 +4,7 @@
     <coordinates>
         <system>1</system>
         <posx>385</posx>
-        <posy>60</posy>
+        <posy>35</posy>
     </coordinates>
     <controls>
         <control type="group">
@@ -13,7 +13,7 @@
                 <posx>0</posx>
                 <posy>0</posy>
                 <width>510</width>
-                <height>600</height>
+                <height>650</height>
                 <texture border="40">DialogBack2.png</texture>
             </control>
             <control type="image">
@@ -201,6 +201,17 @@
                 <textwidth>470</textwidth>
                 <textoffsetx>10</textoffsetx>
                 <radioheight>45</radioheight>
+                <label>$ADDON[plugin.video.saltsrd.lite 30280]</label>
+                <font>font12</font>
+                <radioposx>380</radioposx>
+                <include>DefaultSettingButton</include>
+            </control>
+            <control type="radiobutton" id="315">
+                <width>470</width>
+                <height>40</height>
+                <textwidth>470</textwidth>
+                <textoffsetx>10</textoffsetx>
+                <radioheight>45</radioheight>
                 <label>$ADDON[plugin.video.saltsrd.lite 30244]</label>
                 <font>font12</font>
                 <radioposx>380</radioposx>
@@ -211,7 +222,7 @@
             <control type="button" id="200">
                 <description>Continue Button</description>
                 <posx>30</posx>
-                <posy>510</posy>
+                <posy>550</posy>
                 <width>220</width>
                 <height>90</height>
                 <align>center</align>
@@ -227,7 +238,7 @@
             <control type="button" id="201">
                 <description>Cancel Button</description>
                 <posx>260</posx>
-                <posy>510</posy>
+                <posy>550</posy>
                 <width>220</width>
                 <height>90</height>
                 <align>center</align>

@@ -66,9 +66,6 @@ class TVOnlineTW_Scraper(scraper.Scraper):
     
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = '''href=['"]([^'"]+/season-%s-episode-%s/?)''' % (video.season, video.episode)
         title_pattern = '''href=['"](?P<url>[^'"]+/season-\d+-episode-\d+/?).*?>\s*\d+\s*-\s*(?P<title>.*?)</a>'''
