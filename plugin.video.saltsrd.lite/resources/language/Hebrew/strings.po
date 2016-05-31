@@ -1,5 +1,5 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.salts
+# Addon id: plugin.video.saltshd.lite
 # Addon Provider: TV Addons
 # Translators:
 # lidor malich <lidormalich@gmail.com>, 2015

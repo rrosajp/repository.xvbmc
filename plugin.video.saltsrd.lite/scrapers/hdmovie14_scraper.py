@@ -76,9 +76,6 @@ class Flixanity_Scraper(scraper.Scraper):
 
         return sources
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         results = self.__search(video_type, title, year, season)
         if not results:

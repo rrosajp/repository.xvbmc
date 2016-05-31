@@ -286,6 +286,5 @@ STRINGS = {
     'last_watched_method': 30276,
     'set_rewatch_list': 30277,
     'playback_limited': 30278,
-    'size_limit': 30279,
-    'include_transcodes': 30281
+    'size_limit': 30279
 }

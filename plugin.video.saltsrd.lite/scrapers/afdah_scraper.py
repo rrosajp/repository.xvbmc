@@ -100,9 +100,6 @@ class Afdah_Scraper(scraper.Scraper):
         shifted = lower_trans + lower_trans.upper()
         return plaintext.translate(string.maketrans(alphabet, shifted))
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         search_url = urlparse.urljoin(self.base_url, '/wp-content/themes/afdah/ajax-search.php')
         data = {'search': title, 'type': 'title'}

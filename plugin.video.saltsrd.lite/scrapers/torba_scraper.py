@@ -182,9 +182,6 @@ class TorbaSe_Scraper(scraper.Scraper):
                 
         return sources
         
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         url = urlparse.urljoin(self.base_url, show_url)
         html = self._http_get(url, cache_limit=24)

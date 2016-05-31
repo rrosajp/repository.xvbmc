@@ -126,9 +126,6 @@ class IWatchOnline_Scraper(scraper.Scraper):
             # print '%s, %s, %s, %s' % (num, unit, mult, age)
         return age
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def search(self, video_type, title, year, season=''):
         search_url = urlparse.urljoin(self.base_url, '/advance-search')
         if video_type == VIDEO_TYPES.MOVIE:

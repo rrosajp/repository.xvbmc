@@ -91,9 +91,6 @@ class MovieWatcher_Scraper(scraper.Scraper):
                         hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         show_url = urlparse.urljoin(self.base_url, show_url)
         html = self._http_get(show_url, cache_limit=24)

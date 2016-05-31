@@ -76,7 +76,7 @@ def auth_trakt():
 
 def perform_auto_conf(responses):
     length = len(responses)
-    TOTAL = 12
+    TOTAL = 13
     if length < TOTAL:
         responses += [True] * (TOTAL - length)
         
@@ -101,7 +101,7 @@ def perform_auto_conf(responses):
     if responses[10]:
         tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
                  ['IFlix', 'torba.se', 'MoviesPlanet', 'TVWTVS', 'MWM', '9Movies', '123Movies', 'niter.tv', 'HDMovie14', 'ororo.tv', 'm4ufree'],
-                 ['WatchHD', 'StreamLord', 'CyberReel', 'tunemovie', 'MovieLocker', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD'],
+                 ['StreamLord', 'CyberReel', 'tunemovie', 'MovieLocker', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD'],
                  ['MovieXK', 'Stage66', 'PelisPedia', 'DayT.se', 'FardaDownload', 'vu45', 'PutMV', 'PirateJunkies', 'FireMoviesHD', 'SeriesWatch'],
                  ['HEVCBluRay', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
                  ['vivo.to', 'CloudMovie', 'DDLValley', '2DDL', 'DDLSeries', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net'],
@@ -124,6 +124,7 @@ def perform_auto_conf(responses):
         kodi.set_setting('source_sort_order', '|'.join(sso))
     
     if responses[11]: reset_base_url()
+    if responses[12]: kodi.set_setting('mne_time', '2')
     trigger = [False, True, False, True, False, True, True, False, True, False, False, False]
     if all([t == r for t, r in zip(trigger, responses)]):
         kodi.set_setting('scraper_download', 'true')
@@ -197,7 +198,7 @@ def do_auto_config():
     ACTION_BACK = 92
     CONTINUE_BUTTON = 200
     CANCEL_BUTTON = 201
-    RADIO_BUTTONS = range(302, 315)
+    RADIO_BUTTONS = range(302, 316)
 
     class AutoConfDialog(xbmcgui.WindowXMLDialog):
         def onInit(self):

@@ -72,9 +72,6 @@ class WSO_Scraper(scraper.Scraper):
                 hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = "href='([^']*([Ss]%02d[Ee]%02d|-%sx%s-|-season-%s-episode-%s(?!\d))[^']*)"  \
             % (int(video.season), int(video.episode), video.season, video.episode, video.season, video.episode)

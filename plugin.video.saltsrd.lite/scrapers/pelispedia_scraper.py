@@ -137,9 +137,6 @@ class PelisPedia_Scraper(scraper.Scraper):
                         hosters.append(hoster)
         return hosters
         
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+-season-%s-episode-%s[^\d"]*)' % (video.season, video.episode)
         title_pattern = 'href="(?P<url>[^"]+-season-\d+-episode-\d+[^"]*).*?<span[^>]*class="[^"]*ml5[^"]*">(?P<title>[^<]+)'

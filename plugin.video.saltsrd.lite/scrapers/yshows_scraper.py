@@ -72,9 +72,6 @@ class YShows_Scraper(scraper.Scraper):
                     hosters.append(hoster)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+-[sS]%s[Ee]%s[^"]+)' % (video.season, video.episode)
         title_pattern = 'href="(?P<url>[^"]+[Ss]\d+-?[Ee]\d+[^"]+).*?Episode\s+\d+\s*:\s*(?P<title>[^<]+)'

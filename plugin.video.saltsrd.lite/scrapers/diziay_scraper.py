@@ -26,11 +26,13 @@ from salts_lib import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
+from salts_lib.constants import QUALITIES
 import scraper
 
 
 BASE_URL = 'http://diziay.com'
 SEASON_URL = '/posts/filmgonder.php?action=sezongets'
+AJAX_URL = 'http://dizipas.org/player/ajax.php?dizi=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Diziay_Scraper(scraper.Scraper):
@@ -84,6 +86,7 @@ class Diziay_Scraper(scraper.Scraper):
                         sources.append(stream_url)
                         
                     sources += self.__get_hex_sources(html)
+                    sources += self.__get_linked(html)
                     
                     for source in sources:
                             if self._get_direct_hostname(source) == 'gvideo':
@@ -93,6 +96,19 @@ class Diziay_Scraper(scraper.Scraper):
     
         return hosters
 
+    def __get_linked(self, html):
+        sources = []
+        match = re.search('dizi=([^"]+)', html)
+        if match:
+            ajax_url = AJAX_URL % (match.group(1))
+            html = self._http_get(ajax_url, headers=XHR, cache_limit=.5)
+            js_result = scraper_utils.parse_json(html, ajax_url)
+            if 'success' in js_result:
+                for source in js_result['success']:
+                    if 'src' in source:
+                        sources.append(source['src'])
+        return sources
+    
     def __get_hex_sources(self, html):
         sources = []
         match = re.search("document\.write\('(.*?)'\)", html)
@@ -109,9 +125,6 @@ class Diziay_Scraper(scraper.Scraper):
         for cookie in cj:
             cookies[cookie.name] = cookie.value
         return cookies
-
-    def get_url(self, video):
-        return self._default_get_url(video)
 
     def _get_episode_url(self, show_url, video):
         url = urlparse.urljoin(self.base_url, show_url)

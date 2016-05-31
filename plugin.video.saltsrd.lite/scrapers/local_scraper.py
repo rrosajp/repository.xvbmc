@@ -76,9 +76,6 @@ class Local_Scraper(scraper.Scraper):
                 hosters.append(host)
         return hosters
 
-    def get_url(self, video):
-        return self._default_get_url(video)
-
     def _get_episode_url(self, show_url, video):
         params = urlparse.parse_qs(show_url)
         cmd = '{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %s, "season": %s, "filter": {"field": "%s", "operator": "is", "value": "%s"}, \
