@@ -1,4 +1,4 @@
-Version 1.0.[B]137/B] EPiC Real-Debrid
+Version 1.0.[B]137[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
 - Salts HD Lite .137 "engine"
 - *code*cosmetics* & SALTs fixes up to v2.0.45

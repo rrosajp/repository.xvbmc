@@ -1,4 +1,4 @@
-[B]Version 3.[/B][I].04[/I]
+[B]Version 3[/B][I].04[/I]
  + *code*cosmetics*
  + OpenELEC-RPi2.arm-6.95.3.tar
  - OpenELEC-RPi2.arm-6.95.2.tar [superseded]
