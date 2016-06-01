@@ -302,7 +302,7 @@ class SystemOSClass(xbmcgui.Window):
         DownloaderClass(url,lib)
 
 	time.sleep(1)
-   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
+   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 9 seconds...,9000,special://home/addons/script.xvbmc.update/icon.png)")
 	xbmc.executebuiltin("Reboot")
  
 class OpenElecTVClass(xbmcgui.Window):
@@ -316,7 +316,7 @@ class OpenElecTVClass(xbmcgui.Window):
         DownloaderClass(url,lib)
 
 	time.sleep(1)		
-   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 5 seconds...,5000,special://home/addons/script.xvbmc.update/icon.png)")
+   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 9 seconds...,9000,special://home/addons/script.xvbmc.update/icon.png)")
 	xbmc.executebuiltin("Reboot")
  
 def FirmwareRecent():
