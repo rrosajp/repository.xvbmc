@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.schoonmaak"
-       name="Kodi Schoonmaak"
+       name="Kodi Schoonmaak XvBMC"
        version="1.10.02"
        provider-name="Raw Maintenance (XvBMC MOD)">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
+	<import addon="script.xvbmc.update" optional="true" />
+	<import addon="repository.xvbmc" version="3.0.1"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary>Kodi Schoonmaak 1.10.02 / Raw Maintinance 0.1.10</summary>
+    <summary>Kodi Schoonmaak 1.10.02 / Raw Maintenance 0.1.10</summary>
     <description>For OFFICIAL RAW Maintenance support only:  please visit www.no-issue.ca </description>
     <language></language>
     <license></license>
