@@ -1,4 +1,5 @@
-#   script.schoonmaak
+#   script.schoonmaak (Kodi Schoonmaak XvBMC / Raw Maintenance No-Issue)
+#
 #   Copyright (C) 2015
 #
 #   This program is free software: you can redistribute it and/or modify
