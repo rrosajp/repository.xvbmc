@@ -1228,7 +1228,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 	<import addon="script.schoonmaak" optional="true" />
 	<import addon="script.xvbmc.update" optional="true" />
 	<import addon="repository.xvbmc" version="3.0.1"/>
-	<import addon="os.openelec.tv" />
+	<import addon="os.openelec.tv" version="6.0"/>
   </requires>
    <extension point="xbmc.python.script" library="XvBMC.py">
    <provides>executable</provides>
