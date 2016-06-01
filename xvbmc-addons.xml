@@ -132,11 +132,12 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     </extension>
 </addon>
 
-<addon id="plugin.video.genesis" name="Specto EPiC Genesis FORK"  version="2016.03.26xvbmc" provider-name="mrknow (+EPiC *fork* -4- XvBMC)" >
+<addon id="plugin.video.genesis" name="Specto EPiC Genesis FORK (EOL)" version="2016.06.01.1" provider-name="mrknow (EPiC XvBMC *fork*)" >
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
+		<import addon="repository.xvbmc" version="3.0.1" />
 		<import addon="script.module.requests" version="1.0.0" />
-		<import addon="script.module.metahandler" optional="true" />
+		<import addon="script.module.metahandler" />
 		<import addon="plugin.video.youtube" optional="true" />
 
 	</requires>
@@ -145,9 +146,9 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 	<extension point="xbmc.service" library="service.py" start="startup" />
 	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Mrknow fork of GENESiS (XvBMC TiP: USE Salts HD/RD Lite 'fork' INSTEAD!) Trakt+RealDebrid *UNDER CONSTRUCTION*</summary>
-		<description lang="en">Mrknow Specto-fork of GENESiS; *official Specto support* @ https://github.com/mrknow/filmkodi/issues (XvBMC TiP: USE Salts HD/RD Lite 'fork' INSTEAD!) Trakt+RealDebrid *UNDER CONSTRUCTION*</description>
-		<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon. The author does not have any affiliation with the content provider. (XvBMC TiP: USE Salts HD/RD Lite 'fork' INSTEAD!) Trakt+RealDebrid *UNDER CONSTRUCTION*</disclaimer>
+		<summary lang="en">Mrknow fork of GENESiS ; EPiC fork *now* End-Of-Life (XvBMC TiP: USE Salts HD/RD Lite)</summary>
+		<description lang="en">Mrknow Specto-fork of GENESiS; *official Specto support* @ https://github.com/mrknow/filmkodi/issues (XvBMC TiP: USE Salts HD/RD Lite) EPiC fork *now* End-Of-Life</description>
+		<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon. The author does not have any affiliation with the content provider. (XvBMC TiP: USE Salts HD/RD Lite) EPiC fork *now* End-Of-Life.</disclaimer>
 		<forum>https://github.com/mrknow/filmkodi/issues</forum>
 		<source>http://filmkodi.com/repository/</source>
 		<website>http://filmkodi.com/en/wtyczka-specto-fork-genesis/</website>
