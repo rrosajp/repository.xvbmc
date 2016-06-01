@@ -1225,6 +1225,10 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
     <import addon="script.module.simplejson" version="2.0.10"/>
+	<import addon="script.schoonmaak" optional="true" />
+	<import addon="script.xvbmc.update" optional="true" />
+	<import addon="repository.xvbmc" version="3.0.1"/>
+	<import addon="os.openelec.tv" />
   </requires>
    <extension point="xbmc.python.script" library="XvBMC.py">
    <provides>executable</provides>
