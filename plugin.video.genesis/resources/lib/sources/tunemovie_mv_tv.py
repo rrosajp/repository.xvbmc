@@ -31,11 +31,12 @@ from resources.lib import resolvers
 class source:
     def __init__(self):
         self.base_link = 'http://tunemovie.is'
-        self.search_link = '/search/%s.html'
+        self.search_link = '/search-movies/%s.html'
         self.search_mv_link = '/search-movies/%s.html'
         #http://tunemovie.is/search-movies/The+Hateful+Eight.html
 
     def get_movie(self, imdb, title, year):
+
         try:
             query = self.search_mv_link % (urllib.quote_plus(title))
             query = urlparse.urljoin(self.base_link, query)
@@ -144,7 +145,7 @@ class source:
                         for u in url: sources.append({'source': 'GVideo', 'quality': u['quality'], 'provider': 'Tunemovie', 'url': u['url']})
 
                     elif host in hostDict:
-                        raise Exception()
+                        #raise Exception()
                         sources.append({'source': host, 'quality': 'SD', 'provider': 'Tunemovie', 'url': url})
 
                 except:

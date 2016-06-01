@@ -41,7 +41,7 @@ ANDROID_USER_AGENT = 'Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) A
 #SMU_USER_AGENT = 'URLResolver for Kodi/%s' % (addon_version)
 
 def request(url, close=True, error=False, proxy=None, post=None, headers=None, mobile=False, safe=False, referer=None, cookie=None, output='', timeout='30'):
-    #control.log("#CLIENT#  request - 1 -%s  OUTPUT %s" % (url,output))
+    #control.log("#CLIENT#  request - 1 -%s  OUTPUT %s | POST %s" % (url,output,post))
     try:
         html=''
         handlers = []
@@ -49,7 +49,7 @@ def request(url, close=True, error=False, proxy=None, post=None, headers=None, m
             handlers += [urllib2.ProxyHandler({'http':'%s' % (proxy)}), urllib2.HTTPHandler]
             opener = urllib2.build_opener(*handlers)
             opener = urllib2.install_opener(opener)
-        if output == 'cookie' or not close == True:
+        if output == 'cookie' or output == 'extended' or not close == True:
             import cookielib
             cookies = cookielib.LWPCookieJar()
             handlers += [urllib2.HTTPHandler(), urllib2.HTTPSHandler(), urllib2.HTTPCookieProcessor(cookies)]
@@ -98,12 +98,18 @@ def request(url, close=True, error=False, proxy=None, post=None, headers=None, m
         if post is None:
             request = urllib2.Request(url, headers=headers)
         else:
-            request = urllib2.Request(url, urllib.urlencode(post), headers=headers)
-            #control.log("POST DATA %s" % post)
+            if 'Content-Type' in headers:
+                if headers['Content-Type'] == 'application/json':
+                    request = urllib2.Request(url, post, headers=headers)
+                else:
+                    request = urllib2.Request(url, urllib.urlencode(post), headers=headers)
+            else:
+                request = urllib2.Request(url, urllib.urlencode(post), headers=headers)
+            control.log("POST DATA %s" % post)
         try:
             response = urllib2.urlopen(request, timeout=int(timeout))
         except urllib2.HTTPError as response:
-            control.log("#CLIENT#  request - 4 - code: %s   url:%s response:%s" % (str(response.code ),url,response))
+            #control.log("#CLIENT#  request - 4 - code: %s   url:%s response:%s" % (str(response.code ),url,response))
             if error == False: return
             #moje = response
             #control.log("### CLIENT CLIENT %s" % response)
@@ -125,6 +131,16 @@ def request(url, close=True, error=False, proxy=None, post=None, headers=None, m
             content = int(response.headers['Content-Length'])
             if content < (2048 * 1024): return
             result = response.read(16 * 1024)
+        elif output == 'title':
+            result = response.read(1 * 1024)
+            result = parseDOM(result, 'title')[0]
+        elif output == 'extended':
+            cookie = []
+            for c in cookies: cookie.append('%s=%s' % (c.name, c.value))
+            cookie = "; ".join(cookie)
+            content = response.headers
+            result = response.read()
+            return (result, headers, content, cookie)
         elif output == 'geturl':
             result = response.geturl()
         elif output == 'response2':
@@ -262,6 +278,14 @@ def replaceHTMLCodes(txt):
     txt = txt.replace("&amp;", "&")
     return txt
 
+def cleanHTMLCodes(txt):
+    txt = txt.replace("'", "")
+    txt = re.sub("(&#[0-9]+)([^;^0-9]+)", "\\1;\\2", txt)
+    txt = HTMLParser.HTMLParser().unescape(txt)
+    txt = txt.replace("&quot;", "\"")
+    txt = txt.replace("&amp;", "&")
+
+    return txt
 
 def agent():
     return randomagent()
@@ -299,3 +323,14 @@ def googletag(url):
         return [{'quality': 'SD', 'url': url}]
     else:
         return []
+
+def file_quality_openload(url):
+    try:
+        if '1080' in url:
+            return {'quality': '1080p'}
+        elif '720' in url:
+            return {'quality': 'HD'}
+        else:
+            return {'quality': 'SD'}
+    except:
+        return {'quality': 'SD', 'url': url}

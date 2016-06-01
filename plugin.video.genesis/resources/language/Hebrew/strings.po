@@ -1,6 +1,6 @@
-# Addon Name: Genesis
-# Addon id: plugin.video.specto
-# Addon Provider: Genesis
+# Addon Name: EPiC Genesis
+# Addon id: plugin.video.Genesis
+# Addon Provider: Genesis fork Specto by MrKnow
 # Translators:
 # Translators:
 # Translators:

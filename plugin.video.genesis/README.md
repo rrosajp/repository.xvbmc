@@ -1,10 +1,10 @@
-===========================
-Specto fork of EPiC GENESiS
-===========================
+======================
+Specto
+======================
 
 About
 -----
-Mrknow's *fork* of GENESiS
+Mrknow fork of *****
 
 
 About
