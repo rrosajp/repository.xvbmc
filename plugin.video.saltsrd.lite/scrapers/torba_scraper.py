@@ -25,7 +25,6 @@ from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
-from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib import gui_utils
 from salts_lib import utils2
@@ -38,21 +37,14 @@ BASE_URL2 = 'http://streamtorrent.tv'
 SEARCH_URL = '/%s/autocomplete?order=relevance&title=%s'
 SEARCH_TYPES = {VIDEO_TYPES.MOVIE: 'movies', VIDEO_TYPES.TVSHOW: 'series'}
 TOR_URL = BASE_URL2 + '/api/torrent/%s.json'
-PL_URL = BASE_URL2 + '/api/torrent/%s/%s.m3u8'
-INTERVALS = 5
-EXPIRE_DURATION = 5 * 60
-KODI_UA = 'Lavf/56.40.101'
+PL_URL = BASE_URL2 + '/api/torrent/%s/%s.m3u8?json=true'
 M3U8_PATH = os.path.join(kodi.translate_path(kodi.get_profile()), 'torbase.m3u8')
-M3U8_TEMPLATES = [[
+M3U8_TEMPLATE = [
     '#EXTM3U',
-    '#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="{audio_group}",DEFAULT=YES,AUTOSELECT=YES,NAME="Stream 1",URI="{audio_stream}"',
+    '#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",DEFAULT=YES,AUTOSELECT=YES,NAME="Stream 1",URI="{audio_stream}"',
     '',
-    '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH={bandwidth},NAME="{stream_name}",AUDIO="{audio_group}"',
-    '{video_stream}'], [
-    '#EXTM3U',
-    '',
-    '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH={bandwidth},NAME="{stream_name}"',
-    '{video_stream}']]
+    '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=0,NAME="{stream_name}",AUDIO="audio"',
+    '{video_stream}']
                   
 
 class TorbaSe_Scraper(scraper.Scraper):
@@ -76,24 +68,21 @@ class TorbaSe_Scraper(scraper.Scraper):
             xbmcvfs.delete(M3U8_PATH)
             query = urlparse.parse_qs(link)
             query = dict([(key, query[key][0]) if query[key] else (key, '') for key in query])
-            if 'video_stream' in query:
-                if self.__authorize_ip(query['video_stream']):
-                    for template in M3U8_TEMPLATES:
-                        f = xbmcvfs.File(M3U8_PATH, 'w')
-                        try:
-                            for line in template:
-                                    line = line.format(**query)
-                                    f.write(line + '\n')
-                            else:
-                                break
-                        except:
-                            log_utils.log('Unusable line in Torba M3U8: |%s|%s|' % (line, query), log_utils.LOGWARNING)
-                    else:
-                        log_utils.log('No usable M3U8 Template Found for link: %s' % (link), log_utils.LOGWARNING)
-                        return
-                        
-                    f.close()
-                    return M3U8_PATH
+            if 'vid_id' in query and 'stream_id' in query and 'height' in query:
+                auth_url = PL_URL % (query['vid_id'], query['stream_id'])
+                result = self.__authorize_ip(auth_url)
+                if result:
+                    key = '%sp' % (query['height'])
+                    if key in result:
+                        if 'audio' in result:
+                            streams = {'audio_stream': result['audio'], 'stream_name': key, 'video_stream': result[key]}
+                            f = xbmcvfs.File(M3U8_PATH, 'w')
+                            for line in M3U8_TEMPLATE:
+                                line = line.format(**streams)
+                                f.write(line + '\n')
+                            return M3U8_PATH
+                        else:
+                            return result[key]
         except Exception as e:
             log_utils.log('Failure during torba resolver: %s' % (e), log_utils.LOGWARNING)
 
@@ -113,13 +102,12 @@ class TorbaSe_Scraper(scraper.Scraper):
         if not self.auth_url:
             return True, None
         
-        headers = {'User-Agent': KODI_UA}
-        html = self._http_get(self.auth_url, headers=headers, cache_limit=0)
-        try:
-            js_data = utils2.json_loads_as_str(html)
-            return False, js_data
-        except:
-            return True, html
+        js_data = utils2.json_loads_as_str(self._http_get(self.auth_url, cache_limit=0))
+        if 'url' in js_data:
+            authorized = False
+        else:
+            authorized = True
+        return authorized, js_data
     
     def format_source_label(self, item):
         label = '[%s] %s' % (item['quality'], item['host'])
@@ -136,52 +124,27 @@ class TorbaSe_Scraper(scraper.Scraper):
                 i = vid_link[0].rfind('/')
                 if i > -1:
                     vid_id = vid_link[0][i + 1:]
-                    stream_id = self.__get_stream_id(vid_id)
-                    if stream_id:
-                        pl_url = PL_URL % (vid_id, stream_id)
-                        playlist = self._http_get(pl_url, cache_limit=.25)
-                        sources = self.__get_streams_from_m3u8(playlist.split('\n'), BASE_URL2, vid_id, stream_id)
-                        for source in sources:
-                            hoster = {'multi-part': False, 'host': self._get_direct_hostname(source), 'class': self, 'quality': sources[source], 'views': None, 'rating': None, 'url': source, 'direct': True}
-                            hosters.append(hoster)
+                    sources = self.__get_streams(vid_id)
+                    for height in sources:
+                        stream_url = urllib.urlencode({'height': height, 'stream_id': sources[height], 'vid_id': vid_id})
+                        quality = scraper_utils.height_get_quality(height)
+                        hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                        hosters.append(hoster)
                 
         return hosters
 
-    def __get_stream_id(self, vid_id):
+    def __get_streams(self, vid_id):
+        sources = {}
         tor_url = TOR_URL % (vid_id)
         html = self._http_get(tor_url, cache_limit=.5)
         js_data = scraper_utils.parse_json(html, tor_url)
         if 'files' in js_data:
             for file_info in js_data['files']:
                 if 'streams' in file_info and file_info['streams']:
-                    return file_info['_id']
-    
-    def __get_streams_from_m3u8(self, playlist, st_url, vid_id, stream_id):
-        sources = {}
-        quality = QUALITIES.HIGH
-        audio_group = ''
-        audio_stream = ''
-        stream_name = 'Unknown'
-        bandwidth = 0
-        for line in playlist:
-            if line.startswith('#EXT-X-MEDIA'):
-                match = re.search('GROUP-ID="([^"]+).*?URI="([^"]+)', line)
-                if match:
-                    audio_group, audio_stream = match.groups()
-            if line.startswith('#EXT-X-STREAM-INF'):
-                match = re.search('BANDWIDTH=(\d+).*?NAME="(\d+p)', line)
-                if match:
-                    bandwidth, stream_name = match.groups()
-                    quality = scraper_utils.height_get_quality(stream_name)
-            elif line.endswith('m3u8'):
-                stream_url = urlparse.urljoin(st_url, line)
-                query = {'audio_group': audio_group, 'audio_stream': audio_stream, 'stream_name': stream_name, 'bandwidth': bandwidth, 'video_stream': stream_url,
-                         'vid_id': vid_id, 'stream_id': stream_id}
-                stream_url = urllib.urlencode(query)
-                sources[stream_url] = quality
-                
+                    for stream in file_info['streams']:
+                        sources[stream['height']] = file_info['_id']
         return sources
-        
+    
     def _get_episode_url(self, show_url, video):
         url = urlparse.urljoin(self.base_url, show_url)
         html = self._http_get(url, cache_limit=24)
@@ -210,5 +173,3 @@ class TorbaSe_Scraper(scraper.Scraper):
                     results.append(result)
 
         return results
-                                         
-                                         

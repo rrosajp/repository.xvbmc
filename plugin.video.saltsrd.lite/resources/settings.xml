@@ -113,7 +113,7 @@
                  default="special://userdata/addon_data/plugin.video.saltsrd.lite/Download/TVShows" enable="eq(-2,true)"/>
         <setting id="movie-download-folder" type="folder" label="30577"
                  default="special://userdata/addon_data/plugin.video.saltsrd.lite/Download/Movies" enable="eq(-3,true)"/>
-        <setting id="source_timeout" type="slider" label="30578" default="16" range="0,60" option="int"/>
+        <setting id="source_timeout" type="slider" label="30578" default="19" range="0,60" option="int"/>
         <setting id="source_results" type="number" label="30579" default="0"/>
         <setting id="filter_unusable" type="bool" label="30580" default="false"/>
         <setting id="show_debrid" type="bool" label="30652" default="true"/>

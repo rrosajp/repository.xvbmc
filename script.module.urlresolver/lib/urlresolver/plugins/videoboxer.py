@@ -1,4 +1,7 @@
 """
+    OVERALL CREDIT TO:
+        t0mm0, Eldorado, VOINAGE, BSTRDMKR, tknorris, smokdpi, TheHighway
+
     urlresolver XBMC Addon
     Copyright (C) 2011 t0mm0
 
@@ -17,40 +20,43 @@
 """
 
 import re
-from lib import jsunpack
+import urllib
 from urlresolver import common
 from urlresolver.resolver import UrlResolver, ResolverError
 
-class VidUpResolver(UrlResolver):
-    name = "vidup"
-    domains = ["vidup.org", "vidup.me"]
-    pattern = '(?://|\.)(vidup.(?:me|org))/(?:embed-)?([0-9a-zA-Z]+)'
+class VideoBoxerResolver(UrlResolver):
+    name = "videoboxer.co"
+    domains = ['videoboxer.co']
+    pattern = '(?://|\.)(videoboxer\.co)/(?:watch|embed)/([a-zA-Z0-9]+)'
+    header = {"User-Agent": common.OPERA_USER_AGENT}
 
     def __init__(self):
         self.net = common.Net()
 
     def get_media_url(self, host, media_id):
         web_url = self.get_url(host, media_id)
-        html = self.net.http_GET(web_url).content
-        best_stream_url = ''
-        max_quality = 0
-        for match in re.finditer('(eval\(function.*?)</script>', html, re.DOTALL):
-            js_data = jsunpack.unpack(match.group(1))
-            js_data = js_data.replace("\\'", "'")
-            r = re.findall(r"label\s*:\s*'([^']+)p'\s*,\s*file\s*:\s*'([^']+)", js_data)
-            if r:
-                for quality, stream_url in r:
-                    if int(quality) >= max_quality:
-                        best_stream_url = stream_url
-                        max_quality = int(quality)
+        response = self.net.http_GET(web_url)
+        html = response.content
 
-            if best_stream_url:
-                return best_stream_url
+        if html:
+            try:
+                source = re.search('file:"(.*?)"', html).group(1)
+                source = source + '|' + urllib.urlencode(self.header)
+                '''headers = dict(response._response.info().items())
+                if 'set-cookie' in headers: 
+                    cookie = urllib.urlencode({'Cookie': headers['set-cookie']})
+                    source = '%s&%s' % (source, cookie)'''
 
-            raise ResolverError('File Not Found or removed')
+                return source
+                
+            except:
+                raise ResolverError('No playable video found.')
+
+        else: 
+            raise ResolverError('No playable video found.')
 
     def get_url(self, host, media_id):
-        return 'http://vidup.me/embed-%s.html' % media_id
+        return 'http://%s/embed/%s' % (host, media_id)
 
     def get_host_and_id(self, url):
         r = re.search(self.pattern, url)
@@ -58,6 +64,3 @@ class VidUpResolver(UrlResolver):
             return r.groups()
         else:
             return False
-
-    def valid_url(self, url, host):
-        return re.search(self.pattern, url) or self.name in host
