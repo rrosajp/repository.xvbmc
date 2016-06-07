@@ -18,8 +18,8 @@ def resolve(url):
         except: host = 'sawlive.tv'
 
         headers={'User-Agent': client.agent(),'Host': host, 'Referer': referer, 'Connection': 'keep-alive'}
-        
-        result = client.request(page, referer=referer)
+
+        result = client.request(page, referer=referer, headers = headers)
         
         unpacked = ''
         packed = result.split('\n')
@@ -29,32 +29,22 @@ def resolve(url):
             except:
                 pass
         result += unpacked
-        result = urllib.unquote_plus(result)
-        rplcs = re.findall(';.+?=(.+?).replace\([\"\'](.+?)[\"\']\s*,\s*[\"\']([^\"\']*)[\"\']',result)
-        url = client.parseDOM(result, 'iframe', ret='src')[-1]
-        url = url.replace(' ', '').replace('+','')
-        var = re.compile('var\s(.+?)\s*=\s*[\'\"](.+?)[\'\"]').findall(result)
-        for i in range(100):
-            for v in var: result = result.replace(" %s " % v[0], ' %s '%v[1])
-        var = re.compile('var\s(.+?)\s*=\s*[\'\"](.+?)[\'\"]').findall(result)
-        var_dict = dict(var)
-
-        for v in var:
-            if '+' in v[1]:
-                ss = v[1].rstrip('+').replace('"+','').split('+')
-                sg = v[1].rstrip('+').replace('"+','')
-                for s in ss:
-                    sg = sg.replace(s, var_dict[s])
-                var_dict[v[0]]=sg.replace('+','')
-                
-        for i in range(100):
-            for v in var_dict.keys(): url = url.replace("'%s'" % v, var_dict[v])
-            for v in var_dict.keys(): url = url.replace("(%s)" % v, "(%s)" % var_dict[v])
+        result = decryptionUtils.doDemystify(result)
         
-        url = url.replace(' ', '').replace('+','').replace('"','').replace('\'','')
-        for r in rplcs:
-            url = url.replace(r[1],r[2])
-        result = client.request(url, headers = headers, mobile=True)
+        result = urllib.unquote_plus(result)
+        try:
+            url = client.parseDOM(result, 'iframe', ret='src')[-1]
+        except:
+            result = unpacked
+            url = client.parseDOM(result, 'iframe', ret='src')[-1]
+            var = re.compile('var\s(.+?)\s*=\s*[\'\"](.+?)[\'\"]').findall(result)
+            var_dict = dict(var)       
+         
+            for v in var_dict.keys():
+                url = url.replace(v,var_dict[v])
+            url = url.replace('\'','').replace('\"','').replace('+','').replace(' ','')
+
+        result = client.request(url, headers = headers)
         unpacked = ''
         packed = result.split('\n')
         for i in packed:

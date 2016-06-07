@@ -68,7 +68,7 @@ class One23Movies_Scraper(scraper.Scraper):
             page_url = urlparse.urljoin(self.base_url, source_url)
             for match in re.finditer('''loadEpisode\(\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'\s*\).*?class="btn-eps[^>]*>([^<]+)''', html, re.DOTALL):
                 link_type, link_id, hash_id, q_str = match.groups()
-                pattern = 'Episode\s+%s(:|$| )' % (video.episode)
+                pattern = 'Episode\s+0*%s(:|$| )' % (video.episode)
                 if video.video_type == VIDEO_TYPES.EPISODE and not re.search(pattern, q_str):
                     continue
                 
@@ -143,7 +143,7 @@ class One23Movies_Scraper(scraper.Scraper):
 
     def _get_episode_url(self, season_url, video):
         html = self.__get_source_page(season_url)
-        if re.search('title\s*=\s*"Episode\s+%s(:|"| )' % (video.episode), html, re.I):
+        if re.search('title\s*=\s*"Episode\s+0*%s(:|"| )' % (video.episode), html, re.I):
             return season_url
     
     def search(self, video_type, title, year, season=''):

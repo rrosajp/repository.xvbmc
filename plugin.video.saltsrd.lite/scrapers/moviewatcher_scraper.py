@@ -84,11 +84,10 @@ class MovieWatcher_Scraper(scraper.Scraper):
                         stream_url = base64.decodestring(urllib.unquote(match.group(1)))
                         
                     host = urlparse.urlparse(stream_url).hostname
-                    if host:
-                        quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
-                        hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': False}
-                        if size is not None: hoster['size'] = scraper_utils.format_size(size, 'B')
-                        hosters.append(hoster)
+                    quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': False}
+                    if size is not None: hoster['size'] = scraper_utils.format_size(size, 'B')
+                    hosters.append(hoster)
         return hosters
 
     def _get_episode_url(self, show_url, video):

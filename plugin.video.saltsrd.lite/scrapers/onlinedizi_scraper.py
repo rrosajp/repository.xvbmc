@@ -17,6 +17,7 @@
 """
 import re
 import urlparse
+import urllib
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import log_utils
@@ -54,6 +55,7 @@ class OnlineDizi_Scraper(scraper.Scraper):
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
+        sources = []
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=.25)
@@ -72,9 +74,19 @@ class OnlineDizi_Scraper(scraper.Scraper):
                             if iframe_url:
                                 html = self._http_get(iframe_url[0], allow_redirect=False, method='HEAD', cache_limit=.25)
                                 if html.startswith('http'):
-                                    stream_url = html
+                                    sources.append(html)
+                                    
+                            for match in re.finditer('"((?:\\\\x[A-Fa-f0-9]+)+)"', html):
+                                s = match.group(1).replace('\\x', '').decode('hex')
+                                if s.startswith('http'):
+                                    s = urllib.unquote(s)
+                                    match = re.search('videoPlayerMetadata&mid=(\d+)', s)
+                                    if match:
+                                        s = 'http://ok.ru/video/%s' % (match.group(1))
+                                    sources.append(s)
+                            
+                            for stream_url in sources:
                                     host = urlparse.urlparse(stream_url).hostname
-                                    stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
                                     quality = QUALITIES.HIGH
                                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
                                     hosters.append(hoster)

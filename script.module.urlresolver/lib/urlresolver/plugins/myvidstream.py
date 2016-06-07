@@ -1,5 +1,5 @@
 """
-grifthost urlresolver plugin
+myvidstream urlresolver plugin
 Copyright (C) 2015 tknorris
 
 This program is free software: you can redistribute it and/or modify
@@ -18,16 +18,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import re
 from lib import jsunpack
-from lib import helpers
 from urlresolver import common
 from urlresolver.resolver import UrlResolver, ResolverError
 
 MAX_TRIES = 3
 
-class TwentyFourUploadingResolver(UrlResolver):
-    name = "24uploading"
-    domains = ["24uploading.com"]
-    pattern = '(?://|\.)(24uploading\.com)/([0-9a-zA-Z/]+)'
+class myVidStream(UrlResolver):
+    name = "myvidstream"
+    domains = ["myvidstream.net"]
+    pattern = '(?://|\.)(myvidstream\.net)/(?:embed-)?([0-9a-zA-Z]+)'
 
     def __init__(self):
         self.net = common.Net()
@@ -38,24 +37,23 @@ class TwentyFourUploadingResolver(UrlResolver):
 
         tries = 0
         while tries < MAX_TRIES:
-            data = helpers.get_hidden(html)
-            data['method_free'] = 'Free Download'
-            html = self.net.http_POST(web_url, form_data=data).content
+            data = {}
+
             for match in re.finditer('(eval\(function.*?)</script>', html, re.DOTALL):
                 js_data = jsunpack.unpack(match.group(1))
                 js_data = js_data.replace('\\\'', '\'')
 
-                match2 = re.search("\"html5\".*?file\s*:\s*'([^']+)", js_data)
+                match2 = re.search("\('file','([^']+)", js_data)
                 if match2:
                     stream_url = match2.group(1)
-                    return stream_url
+                    return stream_url.replace(" ", "%20")
 
             tries += 1
 
-        raise ResolverError('Unable to resolve 24uploading link. Filelink not found.')
+        raise ResolverError('Unable to resolve myvidstream link. Filelink not found.')
 
     def get_url(self, host, media_id):
-        return 'http://24uploading.com/%s' % (media_id)
+        return 'http://%s/embed-%s.html' % (host, media_id)
 
     def get_host_and_id(self, url):
         r = re.search(self.pattern, url)
@@ -63,6 +61,3 @@ class TwentyFourUploadingResolver(UrlResolver):
             return r.groups()
         else:
             return False
-
-    def valid_url(self, url, host):
-        return re.search(self.pattern, url) or self.name in host

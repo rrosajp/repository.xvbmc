@@ -356,7 +356,7 @@ Special greetz to DOKI!</description>
 	</extension>
 </addon>
 
-<addon id="plugin.video.saltsrd.lite" version="1.0.137" name="Salts RD Lite" provider-name="TKnorris (XvBMC-NL MOD)">
+<addon id="plugin.video.saltsrd.lite" version="1.0.137a" name="Salts RD Lite" provider-name="TKnorris (XvBMC-NL MOD)">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
 		<import addon="repository.xvbmc" version="3.0.1"/>
@@ -368,8 +368,8 @@ Special greetz to DOKI!</description>
     </extension>
      <extension point="xbmc.service" library="service.py" start="startup"/>
     <extension point="xbmc.addon.metadata">
-        <summary>Stream video from many difference sources with EPiC SALTs RD Lite</summary>
-        <description>This is the MOD version of SALTs by EPiC + Scott Marten (Credits -2- TKnorris obviously).</description>
+        <summary>Stream video from many difference sources with EPiC SALTs RD Lite (RealDebrid)</summary>
+        <description>This is the MOD version of SALTs by EPiC + Scott Marten (Credits -2- TKnorris obviously) -4- RealDebrid usage.</description>
         <platform>all</platform>
         <website>http://tvaddons.ag/</website>
 		<forum>https://www.facebook.com/groups/XvBMCnederland/</forum>
@@ -378,9 +378,9 @@ Special greetz to DOKI!</description>
 
 <addon
   id="plugin.video.SportsDevil"
-  version="2016.05.16.NL1"
+  version="2016.06.02.NL2"
   name="SportsDevil"
-  provider-name="MaxMustermann, Al101, Hubbab3, Sattekop">
+  provider-name="MaxMustermann, Al101, Hubbab3, Jairox, Sattekop">
   <requires>
    <import addon="xbmc.python" version="2.14.0"/>
    <import addon="script.module.simplejson" />
@@ -767,7 +767,7 @@ Addons Included
 
 <addon id="script.module.liveresolver"
      name="LiveResolver"
-     version="0.1.34"
+     version="0.1.37"
      provider-name="natko1412">
   <requires>
     <import addon="xbmc.python" version="2.1.0" />
@@ -981,7 +981,7 @@ Addons Included
   </extension>
 </addon>
 
-<addon id="script.module.urlresolver" name="URLResolver" version="3.0.6" provider-name="Eldorado">
+<addon id="script.module.urlresolver" name="URLResolver" version="3.0.12" provider-name="Eldorado">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 	</requires>

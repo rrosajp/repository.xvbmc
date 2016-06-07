@@ -84,10 +84,8 @@ class Movie25_Scraper(scraper.Scraper):
                     if match:
                         stream_url = base64.b64decode(match.group(1))
                     host = urlparse.urlparse(stream_url).hostname
-                    
-                    if host:
-                        hoster = {'multi-part': False, 'host': host, 'class': self, 'url': stream_url, 'quality': scraper_utils.get_quality(video, host, quality), 'rating': None, 'views': None, 'direct': False}
-                        hosters.append(hoster)
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'url': stream_url, 'quality': scraper_utils.get_quality(video, host, quality), 'rating': None, 'views': None, 'direct': False}
+                    hosters.append(hoster)
         return hosters
 
     def search(self, video_type, title, year, season=''):

@@ -1,3 +1,3 @@
-[B]v2.0.0[/B]
-- initial release
+[B]v1.34[/B]
+- initial release @XvBMC
 + https://offshoregit.com/natko1412/zips/
