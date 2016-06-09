@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.nl-viewer2" name="[COLOR FF3C6689]NL[/COLOR] Viewer V2" version="1.0.5"
+<addon id="plugin.video.nl-viewer2" name="[COLOR FF3C6689]NL[/COLOR] Viewer V2" version="1.0.5a"
        provider-name="Scott Marten">
     <requires>
         <import addon="xbmc.python" version="2.12.0"/>
-        <import addon="script.module.mctools" optional="false"/>
+		<import addon="repository.xvbmc" version="3.0.1"/>
+        <import addon="script.module.mctools" version="1.3.6" optional="false"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>video</provides>
