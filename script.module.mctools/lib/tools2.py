@@ -838,7 +838,7 @@ class TvShow():
         import urllib
 
         browser.get('http://localhost:65251/shows/search?q=%s' % urllib.quote(name))
-        sleep(0.2)
+        sleep(1.5)
         response = browser.get('http://localhost:65251/shows/search?q=%s' % urllib.quote(name))
         if response.status_code == requests.codes.ok:
             data = response.json()
@@ -852,7 +852,7 @@ class TvShow():
             if dataShow is not None:
                 self.code = dataShow['path'].replace('plugin://plugin.video.quasar/show/', '').replace(
                     '/seasons', '')
-                sleep(0.2)
+                sleep(0.5)
                 response = browser.get('http://localhost:65251/show/%s/seasons' % self.code)
                 data = {}
                 try:
@@ -865,7 +865,7 @@ class TvShow():
                 seasons.sort()
                 episodes = {}
                 for season in seasons:
-                    sleep(0.2)
+                    sleep(0.5)
                     response = browser.get('http://localhost:65251/show/%s/season/%s/episodes' % (self.code, season))
                     data = response.json()
                     episodes[season] = len(data['items'])
@@ -901,7 +901,7 @@ class TvShowCode():
             del episodes[lastSeason]
         for season in seasons:
             if not episodes.has_key(season):
-                sleep(0.2)
+                sleep(0.5)
                 response = browser.get('http://localhost:65251/show/%s/season/%s/episodes' % (self.code, season))
                 data = response.json()
                 episodes[season] = len(data['items'])
@@ -927,7 +927,7 @@ class Movie():
         else:
             yearMovie = None
         browser.get('http://localhost:65251/movies/search?q=%s' % urllib.quote(name))  # avoid not info
-        sleep(1.0)
+        sleep(1.5)
         response = browser.get('http://localhost:65251/movies/search?q=%s' % urllib.quote(name))
         if response.status_code == requests.codes.ok:
             data = response.json()
