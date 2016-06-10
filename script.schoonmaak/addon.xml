@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.schoonmaak"
-       name="Kodi Schoonmaak XvBMC"
-       version="1.10.02"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR white]Raw[/COLOR] Maintenance [I] ([COLOR green]kodi schoonmaak[/COLOR])[/I]"
+       version="1.10.03"
        provider-name="Raw Maintenance (XvBMC MOD)">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -13,7 +13,7 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary>Kodi Schoonmaak 1.10.02 / Raw Maintenance 0.1.10</summary>
+    <summary>Kodi Schoonmaak 1.10.03 / Raw Maintenance 0.1.10</summary>
     <description>For OFFICIAL RAW Maintenance support only:  please visit www.no-issue.ca </description>
     <language></language>
     <license></license>

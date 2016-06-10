@@ -1096,8 +1096,8 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 </addon>
 
 <addon id="script.schoonmaak"
-       name="Kodi Schoonmaak XvBMC"
-       version="1.10.02"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR white]Raw[/COLOR] Maintenance [I] ([COLOR green]kodi schoonmaak[/COLOR])[/I]"
+       version="1.10.03"
        provider-name="Raw Maintenance (XvBMC MOD)">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -1109,7 +1109,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary>Kodi Schoonmaak 1.10.02 / Raw Maintenance 0.1.10</summary>
+    <summary>Kodi Schoonmaak 1.10.03 / Raw Maintenance 0.1.10</summary>
     <description>For OFFICIAL RAW Maintenance support only:  please visit www.no-issue.ca </description>
     <language></language>
     <license></license>
@@ -1288,5 +1288,19 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
     <summary lang="en">Configure and manage VPN connections using openVPN</summary>
     <description lang="en">Establish a connection to a VPN provider and automatically switch VPN locations based on the add-on being used.  Also supports automatic reconnect and connection at boot time.  And with some simple configuring (see README and remote.xml file in add-on directory), you can cycle through VPN connections using a remote button.</description>
   </extension>
+</addon>
+
+<addon id="xbmc.python" version="2.25.0" provider-name="Team Kodi">
+  <backwards-compatibility abi="2.1.0"/>
+  <requires>
+    <import addon="xbmc.core" version="0.1.0"/>
+  </requires>
+  <extension-point id="script" schema="script.xsd"/>
+  <extension-point id="subtitles" schema="script.xsd"/>
+  <extension-point id="lyrics" schema="script.xsd"/>
+  <extension-point id="weather" schema="script.xsd"/>
+  <extension-point id="library" schema="script.xsd"/>
+  <extension-point id="plugin" schema="pluginsource.xsd"/>
+  <extension-point id="context.item" schema="contextitem.xsd"/>
 </addon>
 </addons>
