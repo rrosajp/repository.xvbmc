@@ -379,7 +379,7 @@ Special greetz to DOKI!</description>
 
 <addon
   id="plugin.video.SportsDevilNL"
-  version="2016.06.08.NL"
+  version="2016.06.08.NLv3"
   name="SportsDevilNL (XvBMC)"
   provider-name="Hubbab3, Jairox, Sattekop, EPiC XvBMC, MaxMustermann, Al101">
   <requires>
