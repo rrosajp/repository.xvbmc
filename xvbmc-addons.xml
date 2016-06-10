@@ -237,6 +237,30 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
+<addon id="plugin.video.nlv3" name="NL viewer V3" version="1.2.5"
+       provider-name="Scott Marten">
+    <requires>
+        <import addon="xbmc.python" version="2.12.0"/>
+        <import addon="repository.xvbmc" version="3.0.1"/>
+        <import addon="script.module.mctools" version="1.3.6"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="main.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.service" library="service.py" start="login">
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en">NL Movies</summary>
+        <description lang="en">This Add-on is a viewer for NL Movies</description>
+        <language></language>
+        <platform>all</platform>
+        <forum></forum>
+        <disclaimer lang="en">It is just for educational purpose[CR]Check if it is illegal in your country to use.
+        </disclaimer>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+    </extension>
+</addon>
+
 <addon id="plugin.video.NLVIEW"
        name="[COLOR lime][B]NL[/B][/COLOR]View"
        version="1.0.5"
