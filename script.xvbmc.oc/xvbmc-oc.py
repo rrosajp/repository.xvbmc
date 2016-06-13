@@ -11,7 +11,6 @@ import os
 import time
 
 # import xbmcaddon
- 
 # Set the addon environment
 # addon = xbmcaddon.Addon('script.xvbmc.oc')
 
