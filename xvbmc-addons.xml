@@ -1231,7 +1231,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 <addon id="script.xvbmc.dev" name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.01" provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-	<import addon="script.xvbmc.update" version="3.08" optional="true"/>
+	<import addon="script.xvbmc.update" optional="true"/>
 	<import addon="repository.xvbmc" version="3.0.1"/>
 <!-- <import addon="os.openelec.tv" version="7.0" /> -->
   </requires>
@@ -1253,7 +1253,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 <addon id="script.xvbmc.oc" name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]OverClock[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.01" provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-	<import addon="script.xvbmc.update" version="3.08" optional="true"/>
+	<import addon="script.xvbmc.update" optional="true"/>
 	<import addon="repository.xvbmc" version="3.0.1"/>
 <!-- <import addon="os.openelec.tv" version="7.0" /> -->
   </requires>
