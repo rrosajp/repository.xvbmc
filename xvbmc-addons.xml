@@ -1228,20 +1228,41 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
 </addon>
 
-<addon id="script.xvbmc.oc" name=" [COLOR lime][B]X[/B][/COLOR]vBMC  [COLOR red]OverClock[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.00" provider-name="XvBMC NL">
+<addon id="script.xvbmc.dev" name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.01" provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-	<import addon="script.schoonmaak" optional="true" />
-	<import addon="script.xvbmc.update" version="3.07"/>
+	<import addon="script.xvbmc.update" version="3.08" optional="true"/>
 	<import addon="repository.xvbmc" version="3.0.1"/>
-	<import addon="os.openelec.tv" version="7.0" />
+<!-- <import addon="os.openelec.tv" version="7.0" /> -->
   </requires>
-   <extension point="xbmc.python.script" library="xvbmc.py">
+   <extension point="xbmc.python.script" library="xvbmc-dev.py">
    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC Nederland - OverClock Tool (v3)</summary>
-    <description lang="en">XvBMC OverClock ; LibreELEC + OpenElec (XvBMC-NL v3)</description>
+    <summary lang="en">XvBMC Nederland - #DEV# Corner (v3)</summary>
+    <description lang="en">XvBMC #DEV# ; Raspberry Firmware &amp; LibreELEC + OpenElec OS-updates (XvBMC-NL v3)</description>
+	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
+	<platform>all</platform>
+	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+	<forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
+	<website>https://www.facebook.com/groups/XvBMCnederland/</website>
+	<source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+  </extension>
+</addon>
+
+<addon id="script.xvbmc.oc" name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]OverClock[/COLOR] [I][COLOR green] v3[/COLOR][/I]" version="3.01" provider-name="XvBMC NL">
+  <requires>
+    <import addon="xbmc.python" version="2.14.0"/>
+	<import addon="script.xvbmc.update" version="3.08" optional="true"/>
+	<import addon="repository.xvbmc" version="3.0.1"/>
+<!-- <import addon="os.openelec.tv" version="7.0" /> -->
+  </requires>
+   <extension point="xbmc.python.script" library="xvbmc-oc.py">
+   <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">XvBMC Nederland - OverClock Tool (v3) Raspberry Pi</summary>
+    <description lang="en">XvBMC OverClock ; LibreELEC + OpenElec (XvBMC-NL v3) Raspberry Pi</description>
 	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
 	<platform>all</platform>
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
