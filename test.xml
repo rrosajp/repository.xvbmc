@@ -1,63 +1,20 @@
-<title>
-[COLOR lime][I]Doki Update 05-06-2016 is online.[/I][/COLOR]
-Toegevoegd :
-- DOKI TUBE
-- Evolve
-- Khaoz TV
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
 
-Verwijderd :
-- Lily Sport
+<channel>
+  <title>W3Schools Home Page</title>
+  <link>http://www.w3schools.com</link>
+  <description>Free web building tutorials</description>
+  <item>
+    <title>RSS Tutorial</title>
+    <link>http://www.w3schools.com/xml/xml_rss.asp</link>
+    <description>New RSS tutorial on W3Schools</description>
+  </item>
+  <item>
+    <title>XML Tutorial</title>
+    <link>http://www.w3schools.com/xml</link>
+    <description>New XML tutorial on W3Schools</description>
+  </item>
+</channel>
 
-Skin : 
-- Subtitle sync knop toegevoegd
-- Films is veranderd in Films & Series
-
-Bug Fix :
-
-- 3D vraag uitgeschakeld
-- Video weergave normaal
-</title><pubDate>Zondag, 05 Juni 2016 23:00:00 +0200</pubDate>
-<title>
-[COLOR lime][I]Doki versie 01-06-2016 is online.[/I][/COLOR]
-Wat is er nieuw ?
-Een nieuwe look en een paar nieuwe addons!
-De android APK en de standalone worden zo snel mogelijk bijgewerkt!
-</title><pubDate>Zaterdag, 01 Juni 2016 23:00:00 +0200</pubDate>
-<title>[COLOR lime][I]DOKI Update: 22-04-2016[/I][/COLOR]
-DOKI Onderhoud (meerdere onderhoudsadd-ons samengevoegd in een DOKI stijl) toegevoegd
-Bulldog Streams toegevoegd
-Movie Vault toegevoegd
-We Watch Wresteling toegevoegd
-DutchMusic toegevoegd
-Navi-X toegevoegd
-Xo1000Sports toegevoegd
-MTV UK toegevoegd
-Diverse onnodige add-ons verwijderd
-</title><pubDate>Vrijdag, 22 April 2016 23:41:00 +0200</pubDate>
-<title>
-[COLOR lime][I]Nieuwe add-on: DutchMusic[/I][/COLOR]
-Er is  een nieuwe add-on met nederlandstalige muziek: DutchMusic.
- 
-Wat kan je met de add-on?
-• Een YouTube playlist afspelen (in shuffle) met meer als 900 nummers, die dagelijks word aangevuld met extra nummers.
-• Muziek zoeken via Sterren.nl
-• Video’s van Sterren.nl, TV Oranje en Hart voor Muziek afspelen.
-• De Oranje Top 30 bekijken/beluisteren
-• RADIONL TV en de Truckers Top 12 bekijken
-• Radiozenders beluisteren
-• …
- 
-De add-on is te downloaden via de DOKI Repository of: http://repo.dutchmusic.ml/.
-</title><pubDate>Vrijdag, 22 April 2016 20:00:00 +0200</pubDate>
-<title>
-[COLOR lime][I]DOKI Update: 04-04-2016[/I][/COLOR]
-•Sportmix toegevoegd
-•Chris Valentine (Muziek add-on) toegevoegd
-•AresFootball toegevoegd
-•Football Today toegevoegd
-•Football Replays toegevoegd
-•Watch1080p toegevoegd
-•Add-on voor het weerbericht toegevoegd
-•Alle add-ons in de build zijn geupdate naar de laatste versie
-•Updateprobleem is opgelost
-</title><pubDate>Zondag, 17 April 2016 00:00:00 +0200</pubDate>
+</rss> 
