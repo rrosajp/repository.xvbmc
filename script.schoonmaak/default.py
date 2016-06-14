@@ -61,16 +61,21 @@ class cacheEntry:
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Build Purge', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]C[/B]lear Cache','url', 2,os.path.join(mediaPath, "cache.png"))
-	addItem('[B]D[/B]elete Thumbnails', 'url', 3,os.path.join(mediaPath, "thumbs.png"))
-	addItem('Kodi [B]Versie[/B]', 'url', 4,os.path.join(mediaPath, "kmbroom.png"))	
-	addItem('[B]P[/B]urge Packages', 'url', 5,os.path.join(mediaPath, "packages.png"))
-	addItem('[COLOR red]Refresh[/COLOR] [B]A[/B]ddons+[B]R[/B]epos', 'url', 6,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]R[/B]emove addons.db', 'url', 7,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Update & Development Tool', 'url', 8,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]K[/B]ill [B]Kodi[/B]', 'url', 9,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]Back[/B]', 'url', 10,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]C[/B]lear [COLOR white]Cache[/COLOR]','url', 1,os.path.join(mediaPath, "cache.png"))
+	addItem('[B]D[/B]elete [COLOR white]Thumbnails[/COLOR]', 'url', 2,os.path.join(mediaPath, "thumbs.png"))
+	addItem('[B]K[/B]ill kodi (force close)', 'url', 3,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]K[/B]odi versie (WhoAmI)', 'url', 4,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('Over [B][COLOR lime]XvBMC-NL[/COLOR][/B] (about)', 'url', 5,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]P[/B]urge [COLOR white]Packages[/COLOR]', 'url', 6,os.path.join(mediaPath, "packages.png"))
+	addItem('[COLOR red]Refresh[/COLOR] [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 7,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]R[/B]emove addons.db', 'url', 8,os.path.join(mediaPath, "thumbs.png"))
+	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Build Purge (cleanup image)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Update & Development Tool', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]S[/B]alts [B]HD Lite [/B]- flush cache', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]S[/B]alts [B]HD Lite [/B]- reset db', 'url', 12,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]S[/B]alts [B]RD Lite [/B]- flush cache', 'url', 13,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]S[/B]alts [B]RD Lite [/B]- reset db', 'url', 14,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]Back[/B]', 'url', 15,os.path.join(mediaPath, "kmbroom.png"))
 
 
 #######################################################################
@@ -527,6 +532,72 @@ def platform():
         return 'ios'
 
 
+def AboutXvBMC():
+	text = ''
+	twit = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/readme.xml'
+	req = urllib2.Request(twit)
+	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+	response = urllib2.urlopen(req)
+	link=response.read()
+	response.close()
+	match=re.compile("<title>(.+?)</title><pubDate>(.+?)</pubDate>",re.DOTALL).findall(link)
+	for status, dte in match:
+	    try:
+			    status = status.decode('ascii', 'ignore')
+	    except:
+			    status = status.decode('utf-8','ignore')
+	    dte = dte[:-15]
+	    status = status.replace('&amp;','')
+	    dte = '[COLOR lime][B]'+dte+'[/B][/COLOR]'
+	    text = text+dte+'\n'+status+'\n'+'\n'
+	infoTXT('[COLOR lime]Over XvBMC Nederland[/COLOR]', text)	
+
+def infoTXT(heading, text):
+    id = 10147
+    xbmc.executebuiltin('ActivateWindow(%d)' % id)
+    xbmc.sleep(100)
+    win = xbmcgui.Window(id)
+    retry = 50
+    while (retry > 0):
+	try:
+	    xbmc.sleep(10)
+	    retry -= 1
+	    win.getControl(1).setLabel(heading)
+	    win.getControl(5).setText(text)
+	    return
+	except:
+	    pass
+
+
+def HDflush():
+#	xbmc.executebuiltin('UpdateLocalAddons')
+    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.saltshd.lite')))
+    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.saltshd.lite/?mode=flush_cache)")
+    else:
+		dialog.ok("XvBMC Nederland", 'Salts HD Lite bevindt zich niet op uw systeem','', '(...Salts HD Lite not found...)')
+
+def HDreset():
+#	xbmc.executebuiltin('UpdateLocalAddons')
+    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.saltshd.lite')))
+    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.saltshd.lite/?mode=reset_db)")
+    else:
+		dialog.ok("XvBMC Nederland", 'Salts HD Lite bevindt zich niet op uw systeem','', '(...Salts HD Lite not found...)')
+
+def RDflush():
+#	xbmc.executebuiltin('UpdateLocalAddons')
+    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.saltsrd.lite')))
+    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=flush_cache)")
+    else:
+		dialog.ok("XvBMC Nederland", 'Salts RD Lite bevindt zich niet op uw systeem','', '(...Salts RD Lite not found...)')
+
+def RDreset():
+#	xbmc.executebuiltin('UpdateLocalAddons')
+    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.saltsrd.lite')))
+    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=reset_db)")
+    else:
+		dialog.ok("XvBMC Nederland", 'Salts RD Lite bevindt zich niet op uw systeem','', '(...Salts RD Lite not found...)')
+
+
 def closeandexit():
 #	http://kodi.wiki/view/Keyboard.xml
 	xbmc.executebuiltin('Action(back)')
@@ -563,33 +634,48 @@ if mode==None or url==None or len(url)<1:
 	mainMenu()
 
 elif mode==1:
-	purgeOld()
-
-elif mode==2:
 	clearCache()
 
-elif mode==3:
+elif mode==2:
 	deleteThumbnails()
+
+elif mode==3:
+	killKodi()
 
 elif mode==4:
 	KODIVERSION(url)
 
-elif mode==5:
-	purgePackages()
+elif mode==5:	
+	AboutXvBMC()
 
 elif mode==6:
-    forceRefresh()
+	purgePackages()
 
 elif mode==7:
-    AddonsDatabaseRemoval()
+    forceRefresh()
 
 elif mode==8:
-    xvbmcupdater(url)
+    AddonsDatabaseRemoval()
 
 elif mode==9:
-	killKodi()
+	purgeOld()
 
 elif mode==10:
+    xvbmcupdater(url)
+
+elif mode==11:
+    HDflush()
+
+elif mode==12:
+    HDreset()
+
+elif mode==13:
+    RDflush()
+
+elif mode==14:
+    RDreset()
+
+elif mode==15:
 	closeandexit()
 
 
