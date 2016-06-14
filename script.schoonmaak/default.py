@@ -1,3 +1,9 @@
+#!/usr/bin/python
+ 
+"""
+	IF you copy/paste 'script.schoonmaak' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
+"""
+
 #   script.Schoonmaak (Kodi Schoonmaak XvBMC / Raw Maintenance No-Issue)
 #
 #   Copyright (C) 2016
@@ -16,11 +22,16 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import urllib,urllib2,re,uuid, time
-import xbmcgui,xbmcplugin
-import os,xbmc,shutil
+import re,urllib,urllib2,uuid
+import xbmc,xbmcgui,xbmcplugin
+import os,shutil,time
+import downloader
+import extract
 import sqlite3
 
+# import xbmcaddon
+# Set the addon environment                  #
+# addon = xbmcaddon.Addon('script.schoonmaak')
 
 #                  ProgTitle="XvBMC Raw Maintenance"                  #
 thumbnailPath = xbmc.translatePath('special://thumbnails');
@@ -30,6 +41,7 @@ addonPath = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'add
 mediaPath = os.path.join(addonPath, 'media')
 databasePath = xbmc.translatePath('special://database')
 dialog = xbmcgui.Dialog()
+base='https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/'
 #                  ProgTitle="XvBMC Raw Maintenance"                  #
 
 
@@ -48,14 +60,17 @@ class cacheEntry:
 #######################################################################
 
 def mainMenu():
-	xbmc.executebuiltin("Container.SetViewMode(500)")
-	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Build Purge', 'url', 1,os.path.join(mediaPath, "packages.png"))
+	xbmc.executebuiltin("Container.SetViewMode(51)")
+	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Build Purge', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B]C[/B]lear Cache','url', 2,os.path.join(mediaPath, "cache.png"))
 	addItem('[B]D[/B]elete Thumbnails', 'url', 3,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B]P[/B]urge Packages', 'url', 4,os.path.join(mediaPath, "packages.png"))
-	addItem('[B]R[/B]emove addons.db', 'url', 5,os.path.join(mediaPath, "thumbs.png"))
+	addItem('Kodi [B]Versie[/B]', 'url', 4,os.path.join(mediaPath, "kmbroom.png"))	
+	addItem('[B]P[/B]urge Packages', 'url', 5,os.path.join(mediaPath, "packages.png"))
 	addItem('[COLOR red]Refresh[/COLOR] [B]A[/B]ddons+[B]R[/B]epos', 'url', 6,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('Kodi [B]Versie[/B]', 'url', 7,os.path.join(mediaPath, "kmbroom.png"))	
+	addItem('[B]R[/B]emove addons.db', 'url', 7,os.path.join(mediaPath, "thumbs.png"))
+	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Update & Development Tool', 'url', 8,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]K[/B]ill [B]Kodi[/B]', 'url', 9,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]Back[/B]', 'url', 10,os.path.join(mediaPath, "kmbroom.png"))
 
 
 #######################################################################
@@ -110,8 +125,9 @@ def get_params():
 #######################################################################
 #						Work Functions
 #######################################################################
+
 def setupCacheEntries():
-    entries = 7 #make sure this refelcts the amount of entries you have
+    entries = 7 #make sure this reflects the amount of entries you have
     dialogName = ["MP3 Streams", "Quasar", "SportsDevil", "SportsDevilNL", "Simple Downloader", "Spotitube", "Kmediatorrent"]
     pathName = ["special://profile/addon_data/plugin.audio.mp3streams/temp_dl",
 				"special://profile/addon_data/plugin.video.quasar/cache",
@@ -129,7 +145,7 @@ def setupCacheEntries():
     return cacheEntries
 
 def setupXvbmcEntries():
-    entries = 4 #make sure this refelcts the amount of entries you have
+    entries = 4 #make sure this reflects the amount of entries you have
     dialogName = ["NLview", "SportsDevil", "NLviewRepo", "TVaddons.nl"]
     pathName = ["special://home/addons/plugin.video.NLVIEW",
 				"special://home/addons/plugin.video.SportsDevil",
@@ -145,14 +161,13 @@ def setupXvbmcEntries():
 
 
 def clearCache():
-    
     if os.path.exists(cachePath)==True:    
         for root, dirs, files in os.walk(cachePath):
             file_count = 0
             file_count += len(files)
             if file_count > 0:
 
-                
+                #  dialog = xbmcgui.Dialog()
                 if dialog.yesno("Delete Cache Files", str(file_count) + " files found", "Do you want to delete them?"):
                 
                     for f in files:
@@ -174,7 +189,7 @@ def clearCache():
             file_count = 0
             file_count += len(files)
             if file_count > 0:
-                
+                #  dialog = xbmcgui.Dialog()
                 if dialog.yesno("Delete Temp Files", str(file_count) + " files found", "Do you want to delete them?"):
                     for f in files:
                         try:
@@ -199,7 +214,7 @@ def clearCache():
         
             if file_count > 0:
 
-                
+                #  dialog = xbmcgui.Dialog()
                 if dialog.yesno("Delete ATV2 Cache Files", str(file_count) + " files found in 'Other'", "Do you want to delete them?"):
                 
                     for f in files:
@@ -217,7 +232,7 @@ def clearCache():
         
             if file_count > 0:
 
-                
+                #  dialog = xbmcgui.Dialog()
                 if dialog.yesno("Delete ATV2 Cache Files", str(file_count) + " files found in 'LocalAndRental'", "Do you want to delete them?"):
                 
                     for f in files:
@@ -238,7 +253,7 @@ def clearCache():
                 file_count += len(files)
                 if file_count > 0:
 
-                    
+                    #  dialog = xbmcgui.Dialog()
                    #if dialog.yesno("Raw Manager",str(file_count) + "%s cache files found"%(entry.name), "Do you want to delete them?"):
                     if dialog.yesno("XvBMC Raw Manager","%s cache files found"%(entry.name), "Do you want to delete them?"):
                         for f in files:
@@ -255,9 +270,8 @@ def clearCache():
     
     
 def deleteThumbnails():
-    
     if os.path.exists(thumbnailPath)==True:  
-            
+            #  dialog = xbmcgui.Dialog()
             if dialog.yesno("Delete Thumbnails", "This option deletes all thumbnails", "Are you sure you want to do this?"):
                 for root, dirs, files in os.walk(thumbnailPath):
                     file_count = 0
@@ -310,9 +324,8 @@ def forceRefresh():
 
 
 def purgePackages():
-    
     purgePath = xbmc.translatePath('special://home/addons/packages')
-    
+    #  dialog = xbmcgui.Dialog()
     for root, dirs, files in os.walk(purgePath):
             file_count = 0
             file_count += len(files)
@@ -367,6 +380,7 @@ def purgeOld():
                     shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','repository.tvaddons.nl')), ignore_errors=True)
 
                     dialog.ok("XvBMC-NL Purge", "Crap Purge all done...")
+                    xbmc.executebuiltin("UpdateLocalAddons")
                 except:
                 #   dialog.ok("XvBMC-NL Purge", "Done Purging all your CRAP...")					
                     pass
@@ -400,7 +414,123 @@ def AddonsDatabaseRemoval():
         dialog.ok("XvBMC Raw Maintenance", "Please reboot your system to rebuild addons database...")
     else:
         dialog.ok("XvBMC Raw Maintenance", "Removal failed!", "try manual remove, see http://kodi.wiki/view/Database_version")
-	
+
+
+def xvbmcupdater(url):
+#	xbmc.executebuiltin('UpdateLocalAddons')
+    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.update')))
+    if pluginpath: xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
+    else:
+		url=base+'script.xvbmc.update/script.xvbmc.update-3.08.zip'
+		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+		dp = xbmcgui.DialogProgress()
+		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
+		lib=os.path.join(path, 'script.xvbmc.update-3.08.zip')
+		try:
+			os.remove(lib)
+		except:
+			pass
+		downloader.download(url, lib, dp)
+		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
+		time.sleep(3)
+		dp.update(0,"", "Extracting ZiP Please Wait...")
+		print '=== EXCTRACTING XvBMC.Updater ==='
+		extract.all(lib,addonfolder,dp)
+	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
+		xbmc.executebuiltin("UpdateLocalAddons")
+	#   xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.xvbmc.update/xvbmc.py)')
+		xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
+
+
+###############################################################
+###FORCE CLOSE KODI - ANDROID ONLY WORKS IF ROOTED#############
+###############################################################
+def killKodi():
+    choice = xbmcgui.Dialog().yesno('Force Close Kodi', 'You are about to close Kodi', 'Would you like to continue?', nolabel='No, Cancel',yeslabel='Yes, Close')
+    if choice == 0:
+        return
+    elif choice == 1:
+        pass
+    myplatform = platform()
+    print "Platform: " + str(myplatform)
+    if myplatform == 'osx': # OSX
+        print "############   try osx force close  #################"
+        try: os.system('killall -9 XBMC')
+        except: pass
+        try: os.system('killall -9 Kodi')
+        except: pass
+        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message it means the force close", "was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.",'')
+    elif myplatform == 'linux': #Linux
+        print "############   try linux force close  #################"
+        try: os.system('killall XBMC')
+        except: pass
+        try: os.system('killall Kodi')
+        except: pass
+        try: os.system('killall -9 xbmc.bin')
+        except: pass
+        try: os.system('killall -9 kodi.bin')
+        except: pass
+        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message it means the force close", "was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.",'')
+    elif myplatform == 'android': # Android  
+        print "############   try android force close  #################"
+        try: os.system('adb shell am force-stop org.xbmc.kodi')
+        except: pass
+        try: os.system('adb shell am force-stop org.kodi')
+        except: pass
+        try: os.system('adb shell am force-stop org.xbmc.xbmc')
+        except: pass
+        try: os.system('adb shell am force-stop org.xbmc')
+        except: pass        
+        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "Your system has been detected as Android, you ", "[COLOR=yellow][B]MUST[/COLOR][/B] force close XBMC/Kodi. [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.","Either close using Task Manager (If unsure pull the plug).")
+    elif myplatform == 'windows': # Windows
+        print "############   try windows force close  #################"
+        try:
+            os.system('@ECHO off')
+            os.system('tskill XBMC.exe')
+        except: pass
+        try:
+            os.system('@ECHO off')
+            os.system('tskill Kodi.exe')
+        except: pass
+        try:
+            os.system('@ECHO off')
+            os.system('TASKKILL /im Kodi.exe /f')
+        except: pass
+        try:
+            os.system('@ECHO off')
+            os.system('TASKKILL /im XBMC.exe /f')
+        except: pass
+        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message it means the force close", "was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.","Use task manager and NOT ALT F4")
+    else: #ATV
+        print "############   try atv force close  #################"
+        try: os.system('killall AppleTV')
+        except: pass
+        print "############   try raspbmc force close  #################" #OSMC / Raspbmc
+        try: os.system('sudo initctl stop kodi')
+        except: pass
+        try: os.system('sudo initctl stop xbmc')
+        except: pass
+        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message it means the force close", "was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit via the menu.","Your platform could not be detected so just pull the power cable.")    
+        
+def platform():
+    if xbmc.getCondVisibility('system.platform.android'):
+        return 'android'
+    elif xbmc.getCondVisibility('system.platform.linux'):
+        return 'linux'
+    elif xbmc.getCondVisibility('system.platform.windows'):
+        return 'windows'
+    elif xbmc.getCondVisibility('system.platform.osx'):
+        return 'osx'
+    elif xbmc.getCondVisibility('system.platform.atv2'):
+        return 'atv2'
+    elif xbmc.getCondVisibility('system.platform.ios'):
+        return 'ios'
+
+
+def closeandexit():
+#	http://kodi.wiki/view/Keyboard.xml
+	xbmc.executebuiltin('Action(back)')
+
 
 #######################################################################
 #						START MAIN
@@ -430,28 +560,37 @@ except:
 		pass
 
 if mode==None or url==None or len(url)<1:
-        mainMenu()
+	mainMenu()
 
 elif mode==1:
-		purgeOld()
+	purgeOld()
 
 elif mode==2:
-		clearCache()
+	clearCache()
 
 elif mode==3:
-        deleteThumbnails()
+	deleteThumbnails()
 
 elif mode==4:
-		purgePackages()
+	KODIVERSION(url)
 
 elif mode==5:
-    AddonsDatabaseRemoval()
+	purgePackages()
 
 elif mode==6:
     forceRefresh()
 
 elif mode==7:
-		KODIVERSION(url)
+    AddonsDatabaseRemoval()
+
+elif mode==8:
+    xvbmcupdater(url)
+
+elif mode==9:
+	killKodi()
+
+elif mode==10:
+	closeandexit()
 
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

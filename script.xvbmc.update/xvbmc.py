@@ -3,346 +3,346 @@
 """
 	IF you copy/paste 'script.xvbmc.update' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
 """
- 
-import xbmc, xbmcgui
-import shutil
-import urllib2,urllib
-import os
-import time
+
+#   script.xvbmc.update (XvBMC Update & Development 'Nederland')
+#
+#   Copyright (C) 2016
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+import re,urllib,urllib2,uuid
+import xbmc,xbmcgui,xbmcplugin
+import os,shutil,time
+import downloader
+import extract
 
 # import xbmcaddon
- 
-# Set the addon environment
+# Set the addon environment                    #
 # addon = xbmcaddon.Addon('script.xvbmc.update')
 
-# Refresh addon environment
-# xbmc.executebuiltin("UpdateLocalAddons")
- 
- 
-def DownloaderClass(url,dest):
-    dp = xbmcgui.DialogProgress()
-    dp.create('XvBMC Nederland - Maintenance','XvBMC-NL: doing some VOODOO...','')
-    urllib.urlretrieve(url,dest,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))
+
+#                  ProgTitle="XvBMC Update+Development"               #
+thumbnailPath = xbmc.translatePath('special://thumbnails');
+cachePath = os.path.join(xbmc.translatePath('special://home'), 'cache')
+tempPath = xbmc.translatePath('special://temp')
+addonPath = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'addons'),'script.xvbmc.update')
+mediaPath = os.path.join(addonPath, 'media')
+databasePath = xbmc.translatePath('special://database')
+dialog = xbmcgui.Dialog()
+base='https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/'
+#                  ProgTitle="XvBMC Update+Development"               #
+
+
+#######################################################################
+#                       CLASSES
+#######################################################################
+
+class cacheEntry:
+    def __init__(self, namei, pathi):
+        self.name = namei
+        self.path = pathi
+
+
+#######################################################################
+#						Define DL
+#######################################################################
+
+#	def DownloaderClass(url,dest):
+#	    dp = xbmcgui.DialogProgress()
+#	    dp.create('XvBMC Nederland - Updater','XvBMC-NL: doing some VOODOO...','')
+#	    urllib.urlretrieve(url,dest,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))
   
-def _pbhook(numblocks, blocksize, filesize, url=None,dp=None):
-    try:
-        percent = min((numblocks*blocksize*100)/filesize, 100)
-        print 'Gedownload:'+str(percent)+'%'
-        dp.update(percent)
-    except:
-        percent = 100
-        dp.update(percent)
-    if dp.iscanceled(): 
-        print 'Download Geannuleerd'
-        dp.close()
- 
- 
- 
-def showMenu():
-    '''Set up our XvBMC Main-Menu'''
-    
-    # Create list of menu items
-    userchoice = []
-    userchoice.append("XvBMC ServicePack 02 (15-05-2016)")
-    userchoice.append("XvBMC ServicePack (00 t/m 02) bulk pack")
-    userchoice.append("XvBMC Refresh UpdateAddonRepos")
-    userchoice.append("XvBMC OverClock (raspberry Pi)")
-    userchoice.append("XvBMC #DEV# Corner (Firmware-OS-etc)")
-    userchoice.append("XvBMC Tweaking")
-    userchoice.append("Exit")
-    
-    # Display the menu
-    inputchoice = xbmcgui.Dialog().select("XvBMC Nederland Maintenance", 
-                                           userchoice)
-    # Process menu actions
-    
-    #	\update\sp\02-servicepack.zip
-    if userchoice[inputchoice] == "XvBMC ServicePack 02 (15-05-2016)":
-        ServicePack()
-    
-    #	\update\sp\02-sp-rollup.zip
-    elif userchoice[inputchoice] == "XvBMC ServicePack (00 t/m 02) bulk pack":
-        UpdateRollup()
-    
-    #	http://kodi.wiki/view/List_of_built-in_functions
-    elif userchoice[inputchoice] == "XvBMC Refresh UpdateAddonRepos":
-        forceRefresh()
-    
-    #	OCmenu  XvBMC Nederland
-    elif userchoice[inputchoice] == "XvBMC OverClock (raspberry Pi)":
-        subOCmenu()
-    
-    #	DEVmenu XvBMC Nederland
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware-OS-etc)":
-        subDEVmenu()
-    
-    #	edit EPiC user preferences
-    elif userchoice[inputchoice] == "XvBMC Tweaking":
-        xbmcgui.Dialog().ok("XvBMC NL Tweaks", "EPiC XvBMC Tweaking bitches...", "Coming soon to a theater near you ;-P")
- 
- 
-class ServicePackClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?'):
+#	def _pbhook(numblocks, blocksize, filesize, url=None,dp=None):
+#	    try:
+#	        percent = min((numblocks*blocksize*100)/filesize, 100)
+#	        print 'Gedownload:'+str(percent)+'%'
+#	        dp.update(percent)
+#	    except:
+#	        percent = 100
+#	        dp.update(percent)
+#	    if dp.iscanceled(): 
+#	        print 'Download Geannuleerd' #	raise Exception("Canceled")
+#	        dp.close()
 
-        url = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/update/sp/02-servicepack.zip'
-        path = xbmc.translatePath(os.path.join('special://home/addons/','packages'))
-        lib=os.path.join(path, 'update.zip')
-        DownloaderClass(url,lib)
-        addonfolder = xbmc.translatePath(os.path.join('special://home',''))
-        xbmc.executebuiltin("XBMC.Extract(%s,%s)"%(lib,addonfolder))
+#######################################################################
+#						Define Menus
+#######################################################################
 
-	time.sleep(1)
-	xbmc.executebuiltin("Notification(XvBMC-NL ServicePack-update finished,een REBOOT is soms wenselijk...,9000,special://home/addons/script.xvbmc.update/icon.png)")
-	xbmc.executebuiltin("UpdateLocalAddons")
-	xbmc.executebuiltin("UpdateAddonRepos")
-#	xbmc.executebuiltin("ReloadSkin()")
-#	xbmc.executebuiltin("LoadProfile(Master user,)")
-#	time.sleep(1)
-#	xbmc.executebuiltin("Reboot")
- 
-class UpdateRollupClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?'):
+def mainMenu():
+	xbmc.executebuiltin("Container.SetViewMode(51)")
+	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack 02 (15-05-2016)', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack (00 t/m 02) bulk pack','url', 2,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]Refresh[/B] Addons[B]+[/B]Repos', 'url', 3,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [B]Pi[/B] **only**)', 'url', 4,os.path.join(mediaPath, "dev.png"))	
+	addItem('XvBMC [B]#DEV#[/B] Corner (Firmware-OS-etc)', 'url', 5,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]T[/B]weaking', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC Raw [B]M[/B]aintenance Tool ([B]k[/B]odi [B]s[/B]choonmaak)', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]Back[/B]', 'url', 8,os.path.join(mediaPath, "dev.png"))
 
-        url = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/update/sp/02-sp-rollup.zip'
-        path = xbmc.translatePath(os.path.join('special://home/addons/','packages'))
-        lib=os.path.join(path, 'update.zip')
-        DownloaderClass(url,lib)
-        addonfolder = xbmc.translatePath(os.path.join('special://home',''))
-        xbmc.executebuiltin("XBMC.Extract(%s,%s)"%(lib,addonfolder))
 
- 	time.sleep(1)
-	xbmc.executebuiltin("Notification(XvBMC-NL ServicePack-rollup finished,een REBOOT is soms wenselijk...,9000,special://home/addons/script.xvbmc.update/icon.png)")
-	xbmc.executebuiltin("UpdateLocalAddons")
-	xbmc.executebuiltin("UpdateAddonRepos")
-#	xbmc.executebuiltin("ReloadSkin()")
-#	xbmc.executebuiltin("LoadProfile(Master user,)")
-#	time.sleep(1)
-#	xbmc.executebuiltin("Reboot")
- 
-class forceRefreshClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    xbmc.executebuiltin("UpdateLocalAddons")
-    dialog.ok('XvBMC Nederland Maintenance', 'De addons worden vernieuwd...')
-    xbmc.executebuiltin("UpdateAddonRepos")
-    time.sleep(1)
-    xbmc.executebuiltin("ReloadSkin()")
- 
-def ServicePack():
-    mydisplay = ServicePackClass()
-    del mydisplay
- 
-def UpdateRollup():
-    mydisplay = UpdateRollupClass()
-    del mydisplay
- 
-def forceRefresh():
-    mydisplay = forceRefreshClass()
-    del mydisplay
- 
- 
- 
-def subOCmenu():
-    '''Set up our XvBMC OC-Menu'''
-    
-    # Create list of menu items
-    userchoice = []
-    userchoice.append("XvBMC Overclock Pi - none")
-    userchoice.append("XvBMC Overclock Pi - High")
-    userchoice.append("XvBMC Overclock Pi - Turbo")
-    userchoice.append("XvBMC Overclock Pi - Max")
-    userchoice.append("Exit")
-    
-    # Display the menu
-    inputchoice = xbmcgui.Dialog().select("XvBMC Nederland #OVERCLOCK# Menu", 
-                                           userchoice)
-    # Process menu actions
-    
-    #    /storage/.kodi/addons/script.xvbmc.update/resources/data/config-noclock.txt
-    if userchoice[inputchoice] == "XvBMC Overclock Pi - none":
-        Config0()
-    
-    #    /storage/.kodi/addons/script.xvbmc.update/resources/data/config-high.txt
-    elif userchoice[inputchoice] == "XvBMC Overclock Pi - High":
-        Config1()
+#######################################################################
+#						Add to menus
+#######################################################################
+
+def addLink(name,url,iconimage):
+	ok=True
+	liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
+	liz.setInfo( type="Video", infoLabels={ "Title": name } )
+	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
+	return ok
+
+def addDir(name,url,mode,iconimage):
+	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
+	ok=True
+	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setInfo( type="Video", infoLabels={ "Title": name } )
+	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+	return ok
 	
-    #    /storage/.kodi/addons/script.xvbmc.update/resources/data/config-turbo.txt
-    elif userchoice[inputchoice] == "XvBMC Overclock Pi - Turbo":
-        Config2()
-    
-    #    /storage/.kodi/addons/script.xvbmc.update/resources/data/config-x265.txt
-    elif userchoice[inputchoice] == "XvBMC Overclock Pi - Max":
-        Config3()
- 
- 
-class Config0Class(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry Pi instellen','default-clock Raspberry Pi?'):
-        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/config0.sh"
-	os.system(bashCommand)
-	#~ xbmc.executebuiltin('ReloadSkin()')
- 
-class Config1Class(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry Pi instellen','High-overclock Raspberry Pi?'):
-        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/config1.sh"
-	os.system(bashCommand)
-	#~ xbmc.executebuiltin('ReloadSkin()')
- 
-class Config2Class(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry Pi instellen','Turbo-overclock Raspberry Pi?'):
-        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/config2.sh"
-	os.system(bashCommand)
-	#~ xbmc.executebuiltin('ReloadSkin()')
- 
-class Config3Class(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry Pi instellen','Max-overclock Raspberry Pi?'):
-        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/config3.sh"
-	os.system(bashCommand)
-	#~ xbmc.executebuiltin('ReloadSkin()')
- 
-def Config0():
-    mydisplay = Config0Class()
-    del mydisplay
- 
-def Config1():
-    mydisplay = Config1Class()
-    del mydisplay
- 
-def Config2():
-    mydisplay = Config2Class()
-    del mydisplay
- 
-def Config3():
-    mydisplay = Config3Class()
-    del mydisplay
- 
- 
- 
-def subDEVmenu():
-    '''Set up our XvBMC DEV-Menu'''
-    
-    # Create list of menu items
-    userchoice = []
-    userchoice.append("XvBMC #DEV# Corner (Firmware - Cutting Edge)")
-    userchoice.append("XvBMC #DEV# Corner (Firmware - 20 may 2016)")
-    userchoice.append("XvBMC #DEV# Corner (Firmware - Current v3 image)")
-    userchoice.append("XvBMC #DEV# Corner (LibreELEC_arm-7.0.1)")
-    userchoice.append("XvBMC #DEV# Corner (OpenELEC_arm-6.95.3)")
-    userchoice.append("Exit")
-    
-    # Display the menu
-    inputchoice = xbmcgui.Dialog().select("XvBMC Nederland #DEV# Menu", 
-                                           userchoice)
-    # Process menu actions
-    
-    #  /storage/.kodi/addons/script.xvbmc.update/resources/firmwarerecent.sh
-    if userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - Cutting Edge)":
-        FirmwareRecent()
-    
-    #    /storage/.kodi/addons/script.xvbmc.update/resources/firmwaretested.sh
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - 20 may 2016)":
-        FirmwareTested()
-    
-    #    /storage/.kodi/addons/script.xvbmc.update/resources/firmwareimage.sh
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (Firmware - Current v3 image)":
-        FirmwareImage()
-    
-	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.1.tar
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (LibreELEC_arm-7.0.1)":
-        SystemOS()
-    
-    #    http://openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-6.95.3.tar
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner (OpenELEC_arm-6.95.3)":
-        OpenElecTV()
- 
- 
-class FirmwareRecentClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry current firmware','Update -2- Most Recent PI firmware?'):
-        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/firmwarerecent.sh"
-	os.system(bashCommand)
-	#~ xbmc.executebuiltin('ReloadSkin()')
- 
-class FirmwareTestedClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry advised Firmware','Flash 20 may 2016 PI firmware?'):
-        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/firmwaretested.sh"
-	os.system(bashCommand)
-	#~ xbmc.executebuiltin('ReloadSkin()')
- 
-class FirmwareImageClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry Firmware Reset','RE-Flash XvBMC most recent v3 PI firmware?'):
-        bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.update/resources/firmwareimage.sh"
-	os.system(bashCommand)
-	#~ xbmc.executebuiltin('ReloadSkin()')
- 
-class SystemOSClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL LibreELEC OS update','Preparing v7.0.1 and Reboot when done...'):
+def addItem(name,url,mode,iconimage):
+	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
+	ok=True
+	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
+	liz.setInfo( type="Video", infoLabels={ "Title": name } )
+	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)
+	return ok
 
-        url = 'http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.1.tar'
-        path = xbmc.translatePath(os.path.join('/storage/.update/',''))
-        lib=os.path.join(path, 'libreelec701.tar')
-        DownloaderClass(url,lib)
+#######################################################################
+#						Parses Choice
+#######################################################################
+      
+def get_params():
+	param=[]
+	paramstring=sys.argv[2]
+	if len(paramstring)>=2:
+			params=sys.argv[2]
+			cleanedparams=params.replace('?','')
+			if (params[len(params)-1]=='/'):
+					params=params[0:len(params)-2]
+			pairsofparams=cleanedparams.split('&')
+			param={}
+			for i in range(len(pairsofparams)):
+					splitparams={}
+					splitparams=pairsofparams[i].split('=')
+					if (len(splitparams))==2:
+							param[splitparams[0]]=splitparams[1]
+							
+	return param   
 
-	time.sleep(1)
-   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 9 seconds...,9000,special://home/addons/script.xvbmc.update/icon.png)")
-	xbmc.executebuiltin("Reboot")
- 
-class OpenElecTVClass(xbmcgui.Window):
-  def __init__(self):
-    dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL OpenELEC OS update','Preparing arm-6.95.3 and Reboot when done...'):
+#######################################################################
+#						Work Functions
+#######################################################################
 
-        url = 'http://openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-6.95.3.tar'
-        path = xbmc.translatePath(os.path.join('/storage/.update/',''))
-        lib=os.path.join(path, 'openelec6953.tar')
-        DownloaderClass(url,lib)
+def ServicePack(url):
+#	\update\sp\02-servicepack.zip
+    #  dialog = xbmcgui.Dialog()
+    if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?'):
+		url=base+'update/sp/02-servicepack.zip'
+		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+		dp = xbmcgui.DialogProgress()
+		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
+		lib=os.path.join(path, 'update.zip')
+		try:
+			os.remove(lib)
+		except:
+			pass
+		downloader.download(url, lib, dp)
+		addonfolder = xbmc.translatePath(os.path.join('special://','home'))
+		time.sleep(3)
+		dp.update(0,"", "Extracting ZiP Please Wait...")
+		print '=== EXCTRACTING ServicePack ==='
+		extract.all(lib,addonfolder,dp)
+		#	dialog = xbmcgui.Dialog()
+		dialog.ok("XvBMC-NL ServicePack-update finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
+		xbmc.executebuiltin("UpdateLocalAddons")
+		xbmc.executebuiltin("UpdateAddonRepos")
 
-	time.sleep(1)		
-   	xbmc.executebuiltin("Notification(XvBMC SYSTEM update done,Reboot in 9 seconds...,9000,special://home/addons/script.xvbmc.update/icon.png)")
-	xbmc.executebuiltin("Reboot")
- 
-def FirmwareRecent():
-    mydisplay = FirmwareRecentClass()
-    del mydisplay
- 
-def FirmwareTested():
-    mydisplay = FirmwareTestedClass()
-    del mydisplay
- 
-def FirmwareImage():
-    mydisplay = FirmwareImageClass()
-    del mydisplay
- 
-def SystemOS():
-    mydisplay = SystemOSClass()
-    del mydisplay
- 
-def OpenElecTV():
-    mydisplay = OpenElecTVClass()
-    del mydisplay
- 
- 
- 
-########################################################################
-# This is where we start! Copyright (C) XvBMC Nederland (R) Dutch - NL #
-########################################################################
- 
-showMenu()
+def UpdateRollup(url):
+#	\update\sp\02-sp-rollup.zip
+    #  dialog = xbmcgui.Dialog()
+    if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?'):
+		url=base+'update/sp/02-sp-rollup.zip'
+		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+		dp = xbmcgui.DialogProgress()
+		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
+		lib=os.path.join(path, 'update.zip')
+		try:
+			os.remove(lib)
+		except:
+			pass
+		downloader.download(url, lib, dp)
+		addonfolder = xbmc.translatePath(os.path.join('special://','home'))
+		time.sleep(3)
+		dp.update(0,"", "Extracting ZiP Please Wait...")
+		print '=== EXCTRACTING Roll-Up ==='
+		extract.all(lib,addonfolder,dp)
+		#	dialog = xbmcgui.Dialog()
+		dialog.ok("XvBMC-NL ServicePack-rollup finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
+		xbmc.executebuiltin("UpdateLocalAddons")
+		xbmc.executebuiltin("UpdateAddonRepos")
+
+
+def forceRefresh():
+#	http://kodi.wiki/view/List_of_built-in_functions
+	xbmc.executebuiltin('UpdateLocalAddons')
+	dialog.ok("XvBMC Nederland", "Force Refresh Repos and Update LocalAddons")
+	xbmc.executebuiltin("UpdateAddonRepos")
+#	xbmc.executebuiltin("ReloadSkin()")
+
+
+def xvbmcOverclock(url):
+#	OCmenu  XvBMC Nederland
+    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.oc')))
+    if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.oc)")
+    else:
+		url=base+'script.xvbmc.oc/script.xvbmc.oc-3.01.zip'
+		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+		dp = xbmcgui.DialogProgress()
+		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
+		lib=os.path.join(path, 'script.xvbmc.oc-3.01.zip')
+		try:
+			os.remove(lib)
+		except:
+			pass
+		downloader.download(url, lib, dp)
+		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
+		time.sleep(3)
+		dp.update(0,"", "Extracting ZiP Please Wait...")
+		print '=== EXCTRACTING Kodi.Schoonmaak ==='
+		extract.all(lib,addonfolder,dp)
+	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
+		xbmc.executebuiltin("UpdateLocalAddons")
+	#	xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.xvbmc.oc/xvbmc-oc.py)')
+		xbmc.executebuiltin("RunAddon(script.xvbmc.oc)")
+
+
+def subDEVmenu(url):
+#	DEVmenu XvBMC Nederland
+    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.dev')))
+    if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.dev)")
+    else:
+		url=base+'script.xvbmc.dev/script.xvbmc.dev-3.01.zip'
+		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+		dp = xbmcgui.DialogProgress()
+		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
+		lib=os.path.join(path, 'script.xvbmc.dev-3.01.zip')
+		try:
+			os.remove(lib)
+		except:
+			pass
+		downloader.download(url, lib, dp)
+		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
+		time.sleep(3)
+		dp.update(0,"", "Extracting ZiP Please Wait...")
+		print '=== EXCTRACTING Kodi.Schoonmaak ==='
+		extract.all(lib,addonfolder,dp)
+	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
+		xbmc.executebuiltin("UpdateLocalAddons")
+	#	xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.xvbmc.dev/xvbmc-dev.py)')
+		xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
+
+
+def xvbmcTweak():
+#	EPiC XvBMC user preferences and tweaking
+	dialog.ok("XvBMC NL Tweaks", "EPiC XvBMC Tweaking bitches...", "Coming soon to a theater near you ;-P")
+
+
+def xvbmcMaintenance(url):
+    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
+    if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
+    else:
+		url=base+'script.schoonmaak/script.schoonmaak-1.10.03.zip'
+		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+		dp = xbmcgui.DialogProgress()
+		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
+		lib=os.path.join(path, 'script.schoonmaak-1.10.03.zip')
+		try:
+			os.remove(lib)
+		except:
+			pass
+		downloader.download(url, lib, dp)
+		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
+		time.sleep(3)
+		dp.update(0,"", "Extracting ZiP Please Wait...")
+		print '=== EXCTRACTING Kodi.Schoonmaak ==='
+		extract.all(lib,addonfolder,dp)
+	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
+		xbmc.executebuiltin("UpdateLocalAddons")
+	#   xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/default.py)')
+		xbmc.executebuiltin("RunAddon(script.schoonmaak)")
+
+
+def closeandexit():
+#	http://kodi.wiki/view/Keyboard.xml
+	xbmc.executebuiltin('Action(back)')
+
+
+#######################################################################
+#						START MAIN
+#######################################################################              
+
+params=get_params()
+url=None
+name=None
+mode=None
+fanart=None
+
+try:
+        url=urllib.unquote_plus(params["url"])
+except:
+        pass
+try:
+        name=urllib.unquote_plus(params["name"])
+except:
+        pass
+try:
+        mode=int(params["mode"])
+except:
+        pass
+try:    
+		fanart=urllib.unquote_plus(params["fanart"])
+except: 
+		pass
+
+if mode==None or url==None or len(url)<1:
+	mainMenu()
+
+elif mode==1:
+	ServicePack(url)
+
+elif mode==2:
+	UpdateRollup(url)
+
+elif mode==3:
+	forceRefresh()
+
+elif mode==4:
+	xvbmcOverclock(url)
+
+elif mode==5:
+    subDEVmenu(url)
+
+elif mode==6:
+    xvbmcTweak()
+
+elif mode==7:
+	xvbmcMaintenance(url)
+
+elif mode==8:
+	closeandexit()
+
+
+xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
