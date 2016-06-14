@@ -6,10 +6,10 @@
   
 <title>   
 #XvBMC_Nederland:
-https://www.facebook.com/groups/XvBMCnederland/ 
+<a href="{{ https://www.facebook.com/groups/XvBMCnederland/ }}" type="application/rss+xml" target="_blank">{{ https://www.facebook.com/groups/XvBMCnederland/ }}</a>
 
 #XvBMC_Pi:
-https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/ 
+<a href="https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/">https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</A>
 
 #XvBMC_Android:
 https://www.fb.com/groups/xbmcvoorbeginners.android/ 
