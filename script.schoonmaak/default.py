@@ -64,23 +64,18 @@ class cacheEntry:
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('[B]C[/B]lear [COLOR white]Cache[/COLOR]','url', 1,os.path.join(mediaPath, "cache.png"))
-	addItem('[B]D[/B]elete [COLOR white]Thumbnails[/COLOR]', 'url', 2,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B]K[/B]ill kodi (force close)', 'url', 3,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]K[/B]odi versie (WhoAmI)', 'url', 4,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('Over [B][COLOR lime]XvBMC-NL[/COLOR][/B] (about)', 'url', 5,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]P[/B]urge [COLOR white]Packages[/COLOR]', 'url', 6,os.path.join(mediaPath, "packages.png"))
-	addItem('[COLOR red]Refresh[/COLOR] [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 7,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]R[/B]emove addons.db', 'url', 8,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Build [COLOR red]Purge[/COLOR] (cleanup image)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B][COLOR lime]XvBMC-NL[/COLOR][/B] Update [B]&[/B] Development Tool', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]S[/B]alts [B]HD Lite [/B]- flush cache', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]S[/B]alts [B]HD Lite [/B]- reset db', 'url', 12,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]S[/B]alts [B]RD Lite [/B]- flush cache', 'url', 13,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]S[/B]alts [B]RD Lite [/B]- reset db', 'url', 14,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]E[/B]xodus - flush cache', 'url', 15,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]E[/B]xodus - flush sources', 'url', 16,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]Back[/B]', 'url', 17,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]C[/B]lear Cache','url', 1,os.path.join(mediaPath, "cache.png"))
+	addItem('[B]D[/B]elete Thumbnails', 'url', 2,os.path.join(mediaPath, "thumbs.png"))
+	addItem('[B]P[/B]urge Packages', 'url', 3,os.path.join(mediaPath, "packages.png"))
+	addItem('[B]F[/B]lush Add-ons (Salts HD/RD lite, Exodus, etc.)', 'url', 4,os.path.join(mediaPath, "packages.png"))
+	addItem('[B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 5,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]R[/B]emove addons.db', 'url', 6,os.path.join(mediaPath, "thumbs.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC About (over & info)', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Build [COLOR red]Purge[/COLOR] (image crap cleaner)', 'url', 8,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Update(r) [B]&[/B] Development (v[COLOR white]3[/COLOR])', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]K[/B]ill kodi  (force close)', 'url', 10,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]K[/B]odi versie (WhoAmI)', 'url', 11,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B][COLOR white]Back[/COLOR][/B]', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
 
 
 #######################################################################
@@ -345,7 +340,9 @@ def forceRefresh():
 	xbmc.executebuiltin("UpdateAddonRepos")
 #   xbmc.executebuiltin("ReloadSkin()")
 
-
+#######################################################################
+#						PACKAGES
+#######################################################################
 def purgePackages():
     purgePath = xbmc.translatePath('special://home/addons/packages')
     #  dialog = xbmcgui.Dialog()
@@ -464,11 +461,11 @@ def xvbmcupdater(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.update')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
     else:
-		url=base+'script.xvbmc.update/script.xvbmc.update-3.08.zip'
+		url=base+'script.xvbmc.update/script.xvbmc.update-3.09.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.xvbmc.update-3.08.zip')
+		lib=os.path.join(path, 'script.xvbmc.update-3.09.zip')
 		try:
 			os.remove(lib)
 		except:
@@ -608,48 +605,6 @@ def infoTXT(heading, text):
 	    pass
 
 #######################################################################
-#						SALTSHD/RDLITE
-#######################################################################
-def HDflush():
-    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.saltshd.lite')))
-    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.saltshd.lite/?mode=flush_cache)")
-    else:
-		dialog.ok("XvBMC Nederland", 'Salts HD Lite bevindt zich niet op uw systeem','', '(...Salts HD Lite not found...)')
-
-def HDreset():
-    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.saltshd.lite')))
-    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.saltshd.lite/?mode=reset_db)")
-    else:
-		dialog.ok("XvBMC Nederland", 'Salts HD Lite bevindt zich niet op uw systeem','', '(...Salts HD Lite not found...)')
-
-def RDflush():
-    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.saltsrd.lite')))
-    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=flush_cache)")
-    else:
-		dialog.ok("XvBMC Nederland", 'Salts RD Lite bevindt zich niet op uw systeem','', '(...Salts RD Lite not found...)')
-
-def RDreset():
-    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.saltsrd.lite')))
-    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=reset_db)")
-    else:
-		dialog.ok("XvBMC Nederland", 'Salts RD Lite bevindt zich niet op uw systeem','', '(...Salts RD Lite not found...)')
-
-#######################################################################
-#						EXODUS
-#######################################################################
-def ExodusCache():
-    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.exodus')))
-    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.exodus/?action=clearCache)")
-    else:
-		dialog.ok("XvBMC Nederland", 'Exodus bevindt zich niet op uw systeem','', '(...Exodus not found...)')
-
-def ExodusSources():
-    pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','plugin.video.exodus')))
-    if pluginpath: xbmc.executebuiltin("RunPlugin(plugin://plugin.video.exodus/?action=clearSources)")
-    else:
-		dialog.ok("XvBMC Nederland", 'Exodus bevindt zich niet op uw systeem','', '(...Exodus not found...)')
-
-#######################################################################
 #						GOBACK
 #######################################################################
 
@@ -696,48 +651,33 @@ elif mode==2:
 	deleteThumbnails()
 
 elif mode==3:
-	killKodi()
-
-elif mode==4:
-	KODIVERSION(url)
-
-elif mode==5:	
-	AboutXvBMC()
-
-elif mode==6:
 	purgePackages()
 
-elif mode==7:
+elif mode==4:
+    xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/xvbmc-flush.py)')
+
+elif mode==5:
     forceRefresh()
 
-elif mode==8:
+elif mode==6:
     AddonsDatabaseRemoval()
 
-elif mode==9:
+elif mode==7:	
+	AboutXvBMC()
+
+elif mode==8:
 	purgeOld()
 
-elif mode==10:
+elif mode==9:
     xvbmcupdater(url)
 
+elif mode==10:
+	killKodi()
+
 elif mode==11:
-    HDflush()
+	KODIVERSION(url)
 
 elif mode==12:
-    HDreset()
-
-elif mode==13:
-    RDflush()
-
-elif mode==14:
-    RDreset()
-
-elif mode==15:
-    ExodusCache()
-
-elif mode==16:
-    ExodusSources()
-
-elif mode==17:
 	closeandexit()
 
 

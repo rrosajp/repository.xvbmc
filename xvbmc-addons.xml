@@ -1120,9 +1120,9 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 </addon>
 
 <addon id="script.schoonmaak"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR white]Raw[/COLOR] Maintenance [I] [COLOR green](kodi schoonmaak)[/COLOR][/I]"
-       version="1.10.06"
-       provider-name="Raw Maintenance (XvBMC-MOD)">
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]S[/COLOR]choonmaak/[COLOR red]M[/COLOR]aintenance [I][COLOR green] (kodi schoonmaak)[/COLOR][/I]"
+       version="1.10.07"
+       provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
 	<import addon="repository.xvbmc" version="3.0.1"/>
@@ -1132,13 +1132,14 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary>Kodi Schoonmaak 1.10.03 / Raw Maintenance 0.1.10</summary>
-    <description>For OFFICIAL RAW Maintenance support only:  please visit www.no-issue.ca </description>
-    <language></language>
-    <license></license>
-    <source></source>
-    <forum></forum>
-    <website>www.no-issue.ca</website>
+    <summary lang="en">XvBMC Nederland - Kodi Schoonmaak v3</summary>
+    <description lang="en">XvBMC Maintenance/Schoonmaak ; CrapCleaner + Purge.</description>
+	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
+	<platform>all</platform>
+	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+	<forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
+	<website>https://www.facebook.com/groups/XvBMCnederland/</website>
+	<source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
   </extension>
 </addon>
 
@@ -1209,7 +1210,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.video.F4mProxy"
 	     name="F4mProxy"
-	     version="2.5.0"
+	     version="2.5.1"
 	     provider-name="Shani">
   <requires>
     <import addon="xbmc.python" version="2.1.0" />
@@ -1229,7 +1230,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.xvbmc.dev"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [I][COLOR green] v3[/COLOR][/I]"
-       version="3.02"
+       version="3.03"
        provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -1253,7 +1254,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.xvbmc.oc"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]OverClock[/COLOR] [I][COLOR green] v3[/COLOR][/I]"
-       version="3.02"
+       version="3.03"
        provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -1276,8 +1277,8 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 </addon>
 
 <addon id="script.xvbmc.update"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]Update[/COLOR] &amp; Development [I][COLOR green] v3[/COLOR][/I]"
-	   version="3.08"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]Update(r)[/COLOR] &amp; Development [I][COLOR green] v3[/COLOR][/I]"
+	   version="3.09"
        provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -1290,8 +1291,8 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC Nederland - Maintenance/update(r) v3</summary>
-    <description lang="en">XvBMC Maintenance ; Updates, tweaks, config's (v3 *Final* LibreELEC Jarvis).</description>
+    <summary lang="en">XvBMC Nederland - Update(r)+DEVelopment v3</summary>
+    <description lang="en">XvBMC Update(r) + DEVelopment ; updates, tweaks, config's (v3 *Final* LibreELEC Jarvis).</description>
 	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
 	<platform>all</platform>
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
