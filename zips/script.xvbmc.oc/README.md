@@ -18,7 +18,7 @@ https://www.fb.com/groups/XbmcvoorbeginnersfilmsForum/
 #XvBMC_Sports:
 https://www.fb.com/groups/XbmcVoorBeginnersSportChat/ 
 
-XvBMC_retro-Games:
+#XvBMC_retro-Games:
 https://www.facebook.com/groups/XvBMCretroGames/ 
 
 #XvBMC_Marktplaats:
