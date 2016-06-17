@@ -34,47 +34,12 @@ import extract
 
 
 #                  ProgTitle="XvBMC Update+Development"               #
-thumbnailPath = xbmc.translatePath('special://thumbnails');
-cachePath = os.path.join(xbmc.translatePath('special://home'), 'cache')
-tempPath = xbmc.translatePath('special://temp')
 addonPath = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'addons'),'script.xvbmc.update')
 mediaPath = os.path.join(addonPath, 'media')
-databasePath = xbmc.translatePath('special://database')
 dialog = xbmcgui.Dialog()
 base='https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/'
 #                  ProgTitle="XvBMC Update+Development"               #
 
-
-#######################################################################
-#                       CLASSES
-#######################################################################
-
-class cacheEntry:
-    def __init__(self, namei, pathi):
-        self.name = namei
-        self.path = pathi
-
-
-#######################################################################
-#						Define DL
-#######################################################################
-
-#	def DownloaderClass(url,dest):
-#	    dp = xbmcgui.DialogProgress()
-#	    dp.create('XvBMC Nederland - Updater','XvBMC-NL: doing some VOODOO...','')
-#	    urllib.urlretrieve(url,dest,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))
-  
-#	def _pbhook(numblocks, blocksize, filesize, url=None,dp=None):
-#	    try:
-#	        percent = min((numblocks*blocksize*100)/filesize, 100)
-#	        print 'Gedownload:'+str(percent)+'%'
-#	        dp.update(percent)
-#	    except:
-#	        percent = 100
-#	        dp.update(percent)
-#	    if dp.iscanceled(): 
-#	        print 'Download Geannuleerd' #	raise Exception("Canceled")
-#	        dp.close()
 
 #######################################################################
 #						Define Menus
@@ -84,12 +49,12 @@ def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
 	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack 02 (15-05-2016)', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack (00 t/m 02) bulk pack','url', 2,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]Refresh[/B] Addons[B]+[/B]Repos', 'url', 3,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 3,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [B]Pi[/B] **only**)', 'url', 4,os.path.join(mediaPath, "dev.png"))	
 	addItem('XvBMC [B]#DEV#[/B] Corner (Firmware-OS-etc)', 'url', 5,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [B]T[/B]weaking', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC Raw [B]M[/B]aintenance Tool ([B]k[/B]odi [B]s[/B]choonmaak)', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]Back[/B]', 'url', 8,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance (v[COLOR white]3[/COLOR])', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR white]Back[/COLOR][/B]', 'url', 8,os.path.join(mediaPath, "dev.png"))
 
 
 #######################################################################
@@ -164,7 +129,6 @@ def ServicePack(url):
 		dp.update(0,"", "Extracting ZiP Please Wait...")
 		print '=== EXCTRACTING ServicePack ==='
 		extract.all(lib,addonfolder,dp)
-		#	dialog = xbmcgui.Dialog()
 		dialog.ok("XvBMC-NL ServicePack-update finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
 		xbmc.executebuiltin("UpdateLocalAddons")
 		xbmc.executebuiltin("UpdateAddonRepos")
@@ -188,7 +152,6 @@ def UpdateRollup(url):
 		dp.update(0,"", "Extracting ZiP Please Wait...")
 		print '=== EXCTRACTING Roll-Up ==='
 		extract.all(lib,addonfolder,dp)
-		#	dialog = xbmcgui.Dialog()
 		dialog.ok("XvBMC-NL ServicePack-rollup finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
 		xbmc.executebuiltin("UpdateLocalAddons")
 		xbmc.executebuiltin("UpdateAddonRepos")
@@ -207,11 +170,11 @@ def xvbmcOverclock(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.oc')))
     if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.oc)")
     else:
-		url=base+'script.xvbmc.oc/script.xvbmc.oc-3.01.zip'
+		url=base+'script.xvbmc.oc/script.xvbmc.oc-3.03.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.xvbmc.oc-3.01.zip')
+		lib=os.path.join(path, 'script.xvbmc.oc-3.03.zip')
 		try:
 			os.remove(lib)
 		except:
@@ -220,7 +183,7 @@ def xvbmcOverclock(url):
 		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
 		time.sleep(3)
 		dp.update(0,"", "Extracting ZiP Please Wait...")
-		print '=== EXCTRACTING Kodi.Schoonmaak ==='
+		print '=== EXCTRACTING Kodi.OC ==='
 		extract.all(lib,addonfolder,dp)
 	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
 		xbmc.executebuiltin("UpdateLocalAddons")
@@ -233,11 +196,11 @@ def subDEVmenu(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.dev')))
     if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.dev)")
     else:
-		url=base+'script.xvbmc.dev/script.xvbmc.dev-3.01.zip'
+		url=base+'script.xvbmc.dev/script.xvbmc.dev-3.03.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.xvbmc.dev-3.01.zip')
+		lib=os.path.join(path, 'script.xvbmc.dev-3.03.zip')
 		try:
 			os.remove(lib)
 		except:
@@ -246,7 +209,7 @@ def subDEVmenu(url):
 		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
 		time.sleep(3)
 		dp.update(0,"", "Extracting ZiP Please Wait...")
-		print '=== EXCTRACTING Kodi.Schoonmaak ==='
+		print '=== EXCTRACTING Kodi.DEV ==='
 		extract.all(lib,addonfolder,dp)
 	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
 		xbmc.executebuiltin("UpdateLocalAddons")
@@ -263,11 +226,11 @@ def xvbmcMaintenance(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
     else:
-		url=base+'script.schoonmaak/script.schoonmaak-1.10.03.zip'
+		url=base+'script.schoonmaak/script.schoonmaak-1.10.07.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.schoonmaak-1.10.03.zip')
+		lib=os.path.join(path, 'script.schoonmaak-1.10.07.zip')
 		try:
 			os.remove(lib)
 		except:
