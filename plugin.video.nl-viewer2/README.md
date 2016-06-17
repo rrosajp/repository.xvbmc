@@ -1,1 +1,0 @@
-Dit is de NL Film viewer van XBMC voor beginners
