@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.nlv3" name="NL viewer V3" version="1.2.5"
+<addon id="plugin.video.nlv4" name="NL viewer V4" version="1.2.6"
        provider-name="Scott Marten">
     <requires>
         <import addon="xbmc.python" version="2.12.0"/>
         <import addon="repository.xvbmc" version="3.0.1"/>
-        <import addon="script.module.mctools" version="1.3.6"/>
+        <import addon="script.module.mctools" version="1.3.7"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>video</provides>

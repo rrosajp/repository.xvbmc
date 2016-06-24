@@ -22,21 +22,25 @@ def index():
          'thumbnail': dirImages("search.png"),
          'properties': {'fanart_image': settings.fanart}
          }]
-    listTypes = ['Music Video',
-                 'Nederlandse Films',
-                 'Nederlandse Films 2',
+    listTypes = ['NL1',
+                 'NL2',
+				 'DTS',
+				 'Sparks'
                  ]
-    listUrl = ['/cat/Music',
-               '/search/nl+audio/1',
-               '/search/gesproken/1',
+    listUrl = ['/n/nl-audio/se/desc',
+               '/g/gesproken/se/desc',
+			   '/d/dts-jyk/se/desc',
+			   '/s/sparks/se/desc'
                ]
-    listIcons = [dirImages("music.png"),
-                 dirImages("movies.png"),
-                 dirImages("movies.png"),
+    listIcons = [dirImages("movies.png"),
+                 dirImages("tvShows.png"),
+				 dirImages("tvShows.png"),
+				 dirImages("tvShows.png"),
                  ]
-    listAction = ['web',
+    listAction = ['readHTML',
                   'readHTML',
-                  'readHTML',
+				  'readHTML',
+				  'readHTML',
                   ]
     for type, url, icon, action in zip(listTypes, listUrl, listIcons, listAction):
         items.append({'label': type,
@@ -49,39 +53,6 @@ def index():
                   'thumbnail': dirImages("help.png"),
                   'properties': {'fanart_image': settings.fanart}
                   })
-    return items
-
-
-# Using the same website format
-@plugin.route('/web/<url>/showSeasons')
-def web(url="", showSeasons=""):
-    items = []
-    listTypes = ['Music Video',
-                 ]
-    listUrl = ['/sub/25',
-               ]
-    listIcons = [dirImages("music.png"),
-                 ]
-    for type, url, icon in zip(listTypes, listUrl, listIcons):
-        if type in storage.database.keys():
-            importInfo = (settings.string(32001),
-                          'XBMC.Container.Update(%s)' % plugin.url_for('unsubscribe', key=type))
-        else:
-            importInfo = (settings.string(32002),
-                          'XBMC.Container.Update(%s)' % plugin.url_for('subscribe', key=type, url=url))
-        items.append({'label': type,
-                      'path': plugin.url_for('readHTML', url=url, showSeasons='True'),
-                      'thumbnail': icon,
-                      'properties': {'fanart_image': settings.fanart},
-                      'context_menu': [importInfo,
-                                       (plugin.get_string(32009),
-                                        'XBMC.RunPlugin(%s)' % plugin.url_for('importAll', url=url)),
-                                       (plugin.get_string(32188),
-                                        'XBMC.Container.Update(%s)' % plugin.url_for('modify', key=type)),
-                                       (plugin.get_string(32045),
-                                        'XBMC.RunPlugin(%s)' % plugin.url_for('rebuilt', url=url))
-                                       ]
-                      })
     return items
 
 
@@ -102,12 +73,12 @@ def searchMenu():
 @plugin.route('/search/')
 def search():
     query = settings.dialog.input(settings.string(32190))
-    url = "/search/%s" % query.replace(" ", "+")
-    response = settings.dialog.yesno(settings.name, "Do you want to keep this query?")
+    url = "/search?q=%s&m=1" % query.replace(' ', '-')
+    response = settings.dialog.yesno(settings.name, settings.string(32193))
     if response:
         name = ''
         while name is '':
-            name = settings.dialog.input(plugin.get_string(32008)).title()
+            name = settings.dialog.input(plugin.get_string(32192)).title()
         storage.database[name] = (url, False)  # url, isSubscribed
         storage.save()
     return readHTML(url, showSeasons='False')
@@ -116,7 +87,7 @@ def search():
 ####################################################
 @plugin.route('/readHTML/<url>/<showSeasons>', name="readHTML")
 def readHTML(url="", showSeasons='True'):
-    # Firt Page
+    # First Page
     information = plugin.get_storage('information')
     information.clear()
     return nextPage(url=url, showSeasons=showSeasons)
@@ -131,7 +102,7 @@ def nextPage(url="", page="1", showSeasons='True'):
     # Read
     settings.log(urlSearch)
     response = browser.get(urlSearch)
-    soup = bs4.BeautifulSoup(response.text, 'html.parser')
+    soup = bs4.BeautifulSoup(response.text)
 
     # Storage information
     source = plugin.get_storage('source')
@@ -141,23 +112,11 @@ def nextPage(url="", page="1", showSeasons='True'):
     # Titles and Urls
     titles = []
     urlSources = []
-    if 'Movie Library' in soup.title.text:
-        links = soup.select("div.info")
-        for link in links:
-            title = link.h5.text
-            for a in link.select("div.download-row a"):
-                titles.append(title)
-                urlSources.append(settings.value["urlAddress"] + a["href"])
-    elif 'series' in url:
-        links = soup.select("div.torrent-name a")
-        for a in links:
-            titles.append(soup.title.text)
-            urlSources.append(settings.value["urlAddress"] + a["href"])
-    else:
-        links = soup.select("strong a")
-        for a in links:
-            titles.append(a.get("title", a.text))
-            urlSources.append(settings.value["urlAddress"] + a["href"])
+    linksTitle = soup.select("table.download td.n a")
+    linksMagnet = soup.select("table.download td.m a")
+    for aTitle, aMagnet in zip(linksTitle, linksMagnet):
+        titles.append(aTitle["title"])
+        urlSources.append(aMagnet["href"])
 
     # Create Menu
     createMenu(titles, urlSources)
@@ -183,6 +142,7 @@ def nextPage(url="", page="1", showSeasons='True'):
 ###################################################
 @plugin.route('/play/<url>')
 def play(url):
+    # magnet = getPlayableLink(url)
     magnet = url
     # Set-up the plugin
     uri_string = quote_plus(getPlayableLink(uncodeName(magnet)))
@@ -266,6 +226,7 @@ def remove(key=""):
     if settings.dialog.yesno(settings.cleanName, plugin.get_string(32006) % key):
         storage.remove(key, safe=False)
         storage.save()
+        'XBMC.Container.Update(%s)' % plugin.url_for('/search/')
 
 
 @plugin.route('/modify/<key>')
@@ -277,6 +238,7 @@ def modify(key):
     storage.database[newKey] = (selection, storage.database[key][1])
     if newKey != key: storage.remove(key, safe=False)
     storage.save()
+    'XBMC.Container.Update(%s)' % plugin.url_for('/search/')
 
 
 def read():
@@ -326,7 +288,7 @@ def createMenu(titles=[], urlSources=[], typeVideo=""):
         page[info.infoTitle["folder"]] = (info, level1)
 
 
-def menu0(showSeasons='True'):  # create the menu for first level
+def menu0():  # create the menu for first level
     information = plugin.get_storage('page')
     source = plugin.get_storage('source')
 
@@ -338,7 +300,7 @@ def menu0(showSeasons='True'):  # create the menu for first level
         try:
             settings.log(info.fileName)
             items.append({'label': info.infoTitle["folder"],
-                          'path': plugin.url_for('readHTML', url=info.fileName, showSeasons=showSeasons),
+                          'path': plugin.url_for('readHTML', url=info.fileName, showSeasons='False'),
                           'thumbnail': info.infoLabels.get('cover_url', settings.icon),
                           'properties': {'fanart_image': info.fanart},
                           'info': info.infoLabels,

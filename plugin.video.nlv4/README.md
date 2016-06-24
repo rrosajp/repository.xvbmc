@@ -1,6 +1,6 @@
 Introduction
 ===================
-This is addon is a viewer for ALT-LATINO site and it allows to play its torrents directly with the help of Pulsar, KmediaTorrent, XBMCTorrent, Torrenter V2 and YATP.
+This is addon is a viewer for MagnetDL site and it allows to play its torrents directly with the help of Pulsar, KmediaTorrent, XBMCTorrent, Torrenter V2 and YATP.
 
 It also integrates the feed in the local library allowing to use all the tools from local library as trailer, cinema experience, etc.
 
