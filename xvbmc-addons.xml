@@ -213,12 +213,12 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<addon id="plugin.video.nlv3" name="NL viewer V3" version="1.2.5"
+<addon id="plugin.video.nlv4" name="NL viewer V4" version="1.2.6"
        provider-name="Scott Marten">
     <requires>
         <import addon="xbmc.python" version="2.12.0"/>
         <import addon="repository.xvbmc" version="3.0.1"/>
-        <import addon="script.module.mctools" version="1.3.6"/>
+        <import addon="script.module.mctools" version="1.3.7"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>video</provides>
@@ -239,7 +239,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.party-time!"
 	name="Party Time!"
-	version="1.0.2"
+	version="1.0.4"
 	provider-name="Scott Marten">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
