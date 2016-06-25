@@ -154,22 +154,6 @@ def setupCacheEntries():
     
     return cacheEntries
 
-def setupXvbmcEntries():
-    entries = 5 #make sure this reflects the amount of entries you have
-    dialogName = ["NLVIEW", "SportCenterHD", "SportsDevil", "NLviewRepo", "TVaddons.nl"]
-    pathName = ["special://home/addons/plugin.video.NLVIEW",
-				"special://home/addons/plugin.video.sportcenterhd",
-				"special://home/addons/plugin.video.SportsDevil",
-				"special://home/addons/repository.NLVIEW",
-				"special://home/addons/repository.tvaddons.nl"]
-                    
-    XvbmcEntries = []
-    
-    for x in range(entries):
-        XvbmcEntries.append(cacheEntry(dialogName[x],pathName[x]))
-    
-    return XvbmcEntries
-
 
 #######################################################################
 #						CACHE
@@ -363,65 +347,6 @@ def purgePackages():
             else:
                 dialog.ok("XvBMC Raw Maintenance", "No Packages to Purge")
 
-#######################################################################
-#						CRAPCLEANER
-#######################################################################
-def purgeOld():
-#   import os,xbmc,shutil
-#   bruteforce removal  #
-#   xvbmc = os.listdir(xbmc.translatePath(os.path.join('special://home/addons/')))
-#   addonfolder = xbmc.translatePath(os.path.join('special://home/addons/'))
-#   for item in xvbmc:
-#       if ('repository.tvaddons.nl') in item:
-#           print str(xvbmc)+str(item)
-#           try:
-#               shutil.rmtree(addonfolder+item, ignore_errors=True)
-#           except:
-#               pass
-#       else:
-#           pass
-
-    XvbmcEntries = setupXvbmcEntries()
-
-    for entry in XvbmcEntries:
-        xvbmcaddons = xbmc.translatePath(entry.path)
-        if os.path.exists(xvbmcaddons)==True:    
-            for root, dirs, files in os.walk(xvbmcaddons):
-                file_count = 0
-                file_count += len(files)
-                if file_count > 0:
-			
-                    for f in files:
-                        try:
-                            os.unlink(os.path.join(root, f))
-                        except:
-                            pass
-                    for d in dirs:
-                        try:
-                            shutil.rmtree(os.path.join(root, d), ignore_errors=True)
-                        except:
-                            pass
-
-                    try:
-                        shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.NLVIEW')), ignore_errors=True)
-                        shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.sportcenterhd')), ignore_errors=True)
-                        shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.SportsDevil')), ignore_errors=True)
-                        shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','repository.NLVIEW')), ignore_errors=True)
-                        shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','repository.tvaddons.nl')), ignore_errors=True)
-                        dialog.ok("XvBMC-NL Purge", 'Crap Purge all done...','', 'Reboot is advisable')
-                        xbmc.executebuiltin("UpdateLocalAddons")
-                    except:				
-                        pass
-
-            else:
-                #dialog.ok("XvBMC-NL Purge", "Crap cleaner all done...")
-                pass
-        else:
-            #dialog.ok("XvBMC-NL Purge", "Crap cleaner all done...")
-            pass
-
-    dialog.ok("XvBMC-NL Purge", "everything is as clean as a whistle...")
-#	return
 
 #######################################################################
 #						WHOAMI/WHOIS
@@ -666,7 +591,7 @@ elif mode==7:
 	AboutXvBMC()
 
 elif mode==8:
-	purgeOld()
+	xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/purge.py)')
 
 elif mode==9:
     xvbmcupdater(url)

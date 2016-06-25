@@ -47,8 +47,8 @@ base='https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/'
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack 02 (15-05-2016)', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack (00 t/m 02) bulk pack','url', 2,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack 03 (25-06-2016)', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack (00 t/m 03) bulk pack','url', 2,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 3,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [B]Pi[/B] **only**)', 'url', 4,os.path.join(mediaPath, "dev.png"))	
 	addItem('XvBMC [B]#DEV#[/B] Corner (Firmware-OS-etc)', 'url', 5,os.path.join(mediaPath, "dev.png"))
@@ -111,10 +111,10 @@ def get_params():
 #######################################################################
 
 def ServicePack(url):
-#	\update\sp\02-servicepack.zip
+#	\update\sp\03-servicepack.zip
     #  dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?'):
-		url=base+'update/sp/02-servicepack.zip'
+		url=base+'update/sp/03-servicepack.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
@@ -126,18 +126,19 @@ def ServicePack(url):
 		downloader.download(url, lib, dp)
 		addonfolder = xbmc.translatePath(os.path.join('special://','home'))
 		time.sleep(3)
-		dp.update(0,"", "Extracting ZiP Please Wait...")
+		dp.update(0,"", "*Extracting ZiP Please Wait*")
 		print '=== EXCTRACTING ServicePack ==='
 		extract.all(lib,addonfolder,dp)
 		dialog.ok("XvBMC-NL ServicePack-update finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
+		xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/purge.py)')
 		xbmc.executebuiltin("UpdateLocalAddons")
 		xbmc.executebuiltin("UpdateAddonRepos")
 
 def UpdateRollup(url):
-#	\update\sp\02-sp-rollup.zip
+#	\update\sp\03-sp-rollup.zip
     #  dialog = xbmcgui.Dialog()
     if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?'):
-		url=base+'update/sp/02-sp-rollup.zip'
+		url=base+'update/sp/03-sp-rollup.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
@@ -149,10 +150,11 @@ def UpdateRollup(url):
 		downloader.download(url, lib, dp)
 		addonfolder = xbmc.translatePath(os.path.join('special://','home'))
 		time.sleep(3)
-		dp.update(0,"", "Extracting ZiP Please Wait...")
+		dp.update(0,"", "*Extracting ZiP Please Wait*")
 		print '=== EXCTRACTING Roll-Up ==='
 		extract.all(lib,addonfolder,dp)
 		dialog.ok("XvBMC-NL ServicePack-rollup finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
+		xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/purge.py)')
 		xbmc.executebuiltin("UpdateLocalAddons")
 		xbmc.executebuiltin("UpdateAddonRepos")
 
