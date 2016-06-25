@@ -1092,7 +1092,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.schoonmaak"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]S[/COLOR]choonmaak/[COLOR red]M[/COLOR]aintenance [I][COLOR green] (kodi schoonmaak)[/COLOR][/I]"
-       version="1.10.07"
+       version="1.10.08"
        provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -1249,13 +1249,13 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.xvbmc.update"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]Update(r)[/COLOR] &amp; Development [I][COLOR green] v3[/COLOR][/I]"
-	   version="3.09"
+	   version="3.10"
        provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-	<import addon="script.schoonmaak" version="1.10.03" optional="true"/>
-	<import addon="script.xvbmc.dev" version="3.01" optional="true"/>
-	<import addon="script.xvbmc.oc" version="3.01" optional="true" />
+	<import addon="script.schoonmaak" version="1.10.08" optional="true"/>
+	<import addon="script.xvbmc.dev" version="3.03" optional="true"/>
+	<import addon="script.xvbmc.oc" version="3.03" optional="true" />
 	<import addon="repository.xvbmc" version="3.0.1"/>
   </requires>
    <extension point="xbmc.python.pluginsource" library="xvbmc.py">
