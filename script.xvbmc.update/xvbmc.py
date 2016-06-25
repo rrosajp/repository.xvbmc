@@ -228,11 +228,11 @@ def xvbmcMaintenance(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
     else:
-		url=base+'script.schoonmaak/script.schoonmaak-1.10.07.zip'
+		url=base+'script.schoonmaak/script.schoonmaak-1.10.08.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.schoonmaak-1.10.07.zip')
+		lib=os.path.join(path, 'script.schoonmaak-1.10.08.zip')
 		try:
 			os.remove(lib)
 		except:
