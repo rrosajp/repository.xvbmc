@@ -386,11 +386,11 @@ def xvbmcupdater(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.update')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
     else:
-		url=base+'script.xvbmc.update/script.xvbmc.update-3.09.zip'
+		url=base+'script.xvbmc.update/script.xvbmc.update-3.10.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.xvbmc.update-3.09.zip')
+		lib=os.path.join(path, 'script.xvbmc.update-3.10.zip')
 		try:
 			os.remove(lib)
 		except:
