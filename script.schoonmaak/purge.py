@@ -47,10 +47,9 @@ class cacheEntry:
 
 
 def setupXvbmcEntries():
-    entries = 9 #make sure this reflects the amount of entries you have
-    dialogName = ["DutchNubes", "NLVIEW", "nl-viewer", "nl-viewer2", "nlv3", "SportCenterHD", "SportsDevil", "NLviewRepo", "TVaddons.nl"]
-    pathName = ["special://home/addons/plugin.video.cloudtv",
-				"special://home/addons/plugin.video.NLVIEW",
+    entries = 8 #make sure this reflects the amount of entries you have
+    dialogName = ["NLVIEW", "nl-viewer", "nl-viewer2", "nlv3", "SportCenterHD", "SportsDevil", "NLviewRepo", "TVaddons.nl"]
+    pathName = ["special://home/addons/plugin.video.NLVIEW",
 				"special://home/addons/plugin.video.nl-viewer",
 				"special://home/addons/plugin.video.nl-viewer2",
 				"special://home/addons/plugin.video.nlv3",
@@ -98,8 +97,8 @@ def purgeOLD():
                     for f in files:
                         try:
                             os.unlink(os.path.join(root, f))
-                        except:
-                            pass
+                        except OSError:
+                            os.remove(os.path.join(root, f))
                     for d in dirs:
                         try:
                             shutil.rmtree(os.path.join(root, d), ignore_errors=True)
@@ -107,7 +106,6 @@ def purgeOLD():
                             pass
 
                 else:
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.cloudtv')), ignore_errors=True)
                     shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.NLVIEW')), ignore_errors=True)
                     shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.nl-viewer')), ignore_errors=True)
                     shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.nl-viewer2')), ignore_errors=True)

@@ -1,6 +1,6 @@
-# -*- coding: UTF-8 -*-
-"""
-    Copyright (C) 2015  tknorris
+'''
+    urlresolver XBMC Addon
+    Copyright (C) 2016 Gujal
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,44 +14,35 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+'''
 
 import re
-import xml.etree.ElementTree as ET
 from urlresolver import common
 from urlresolver.resolver import UrlResolver, ResolverError
 
-class MediaPlayBoxResolver(UrlResolver):
-    name = "MediaPlayBox"
-    domains = ["mediaplaybox.com"]
-    pattern = '(?://|\.)(mediaplaybox\.com)/video/(.*)'
+class MegaMP4Resolver(UrlResolver):
+    name = "megamp4.net"
+    domains = ["megamp4.net"]
+    pattern = '(?://|\.)(megamp4\.net)/(?:embed-|emb\.html\?)([0-9a-zA-Z]+)'
 
     def __init__(self):
         self.net = common.Net()
-        self.net.set_user_agent(common.IE_USER_AGENT)
-        self.headers = {'User-Agent': common.IE_USER_AGENT}
 
     def get_media_url(self, host, media_id):
         web_url = self.get_url(host, media_id)
         html = self.net.http_GET(web_url).content
-        patterns = [
-            'property="og:video"\s+content="[^"]+\?f=([^"]+)',
-            'itemprop="embedURL"\s+content="[^"]+\?f=([^"]+)',
-            '<embed[^>]+src="[^"]+\?f=([^"]+)'
-        ]
-        for pattern in patterns:
-            match = re.search(pattern, html)
-            if match:
-                xml = self.net.http_GET(match.group(1)).content
-                root = ET.fromstring(xml)
-                result = root.find('./video/src')
-                if result is not None:
-                    return result.text
 
-        raise ResolverError('Unable to find mediaplaybox video')
+        if 'Not Found' in html:
+            raise ResolverError('File Removed')
+
+        link = re.search('file:"(.*?)",', html)
+        if link:
+            return link.group(1)
+            
+        raise ResolverError('Unable to find megamp4 video')
 
     def get_url(self, host, media_id):
-        return 'http://mediaplaybox.com/video/%s' % media_id
+        return 'http://megamp4.net/embed-%s.html' % (media_id)
 
     def get_host_and_id(self, url):
         r = re.search(self.pattern, url)
@@ -59,6 +50,3 @@ class MediaPlayBoxResolver(UrlResolver):
             return r.groups()
         else:
             return False
-
-    def valid_url(self, url, host):
-        return re.search(self.pattern, url) or self.name in host
