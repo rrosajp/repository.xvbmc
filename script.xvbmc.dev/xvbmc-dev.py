@@ -34,7 +34,7 @@ def showMenu():
     userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Cutting Edge)")
     userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -20 may 2016)")
     userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Current v3 image)")
-    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.1)")
+    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.2)")
     userchoice.append("XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-6.95.3)")
     userchoice.append("[B][COLOR white]Exit[/COLOR][/B]")
     
@@ -55,8 +55,8 @@ def showMenu():
     elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Current v3 image)":
         FirmwareImage()
     
-	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.1.tar
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.1)":
+	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.2.tar
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.2)":
         SystemOS()
     
     #    http://openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-6.95.3.tar
@@ -94,12 +94,12 @@ class FirmwareImageClass(xbmcgui.Window):
 class SystemOSClass(xbmcgui.Window):
   def __init__(self):
     #  dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC-NL LibreELEC OS update','Preparing v7.0.1 and Reboot when done...'):
-		url='http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.1.tar'
+    if dialog.yesno('XvBMC-NL LibreELEC OS update','Preparing v7.0.2 and Reboot when done...'):
+		url='http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.2.tar'
 		path = xbmc.translatePath(os.path.join('/storage/.update/',''))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","XvBMC-DEV: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'libreelec701.tar')
+		lib=os.path.join(path, 'libreelec702.tar')
 		try:
 			os.remove(lib)
 		except:
