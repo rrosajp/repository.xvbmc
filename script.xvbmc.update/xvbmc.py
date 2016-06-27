@@ -198,11 +198,11 @@ def subDEVmenu(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.dev')))
     if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.dev)")
     else:
-		url=base+'script.xvbmc.dev/script.xvbmc.dev-3.03.zip'
+		url=base+'script.xvbmc.dev/script.xvbmc.dev-3.04.zip'
 		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.xvbmc.dev-3.03.zip')
+		lib=os.path.join(path, 'script.xvbmc.dev-3.04.zip')
 		try:
 			os.remove(lib)
 		except:
