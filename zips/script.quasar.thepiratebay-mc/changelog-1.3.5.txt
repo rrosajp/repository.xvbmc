@@ -1,0 +1,7 @@
+v1.3.5 fix common, new language and package season selector
+v1.3.0 search season support
+v1.2.2 fix None Table error
+v1.2.1 new Icon
+v1.2.0 icon support
+v1.1.0 normalize version
+Version 1.0.0 Quasar ready
