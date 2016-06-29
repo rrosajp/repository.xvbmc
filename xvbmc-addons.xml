@@ -158,7 +158,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.jericho"
        name="Jericho"
-       version="1.0.1"
+       version="1.0.3"
        provider-name="Team Jericho">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>

@@ -313,7 +313,6 @@ def indexsport():
     addDir('Live Sport','',72,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/livesport.png',fanart,"","","","","",)
     getData(base64.b64decode(SportBase),'')
     addDir('FOX Sports Videos *Dutch*','http://www.foxsports.nl/video/',227,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fs.png' ,  fanart,'','','','')
-    addDir('FOX Sports Videos *Dutch*','http://www.foxsports.nl/video/',227,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fs.png' ,  fanart,'','','','')
     addDir('Ziggo Sport Totaal Replays and Clips','http://www.ziggosporttotaal.nl/video/',232,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/zst.png' ,  fanart,'','','','')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
@@ -363,16 +362,19 @@ def getbvlsSchedule():
     
     match = re.compile(r'(<p>(?:<b>)?<span class="time".*?</p>)\s+(?:<HR|<div)', re.DOTALL | re.IGNORECASE).findall(bvlspage)
     for wedstrijd in match:
-        eggs = re.compile("(<p>.*?)<a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)[0]
-        eggs = striphtml(eggs).replace('\n','')
-        addDir(eggs,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
         try:
-            streams = re.compile("<a[^>]+>(.*?)</a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)
-            for stream in streams:
-                stream = striphtml(stream)
-                tekstregel = '             [COLOR yellow]' + stream + ' [/COLOR] '
-                addDir(tekstregel,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-        except: pass
+            eggs = re.compile("(<p>.*?)<a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)[0]
+            eggs = striphtml(eggs).replace('\n','')
+            addDir(eggs,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
+            try:
+                streams = re.compile("<a[^>]+>(.*?)</a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)
+                for stream in streams:
+                    stream = striphtml(stream)
+                    tekstregel = '             [COLOR yellow]' + stream + ' [/COLOR] '
+                    addDir(tekstregel,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
+            except: pass
+        except:
+            addDir('Error with the agenda, go to the streams','',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def getHtml(url, referer=None, hdr=None, data=None):
