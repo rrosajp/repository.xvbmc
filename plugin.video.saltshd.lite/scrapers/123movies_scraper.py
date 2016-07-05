@@ -68,7 +68,7 @@ class One23Movies_Scraper(scraper.Scraper):
             page_url = urlparse.urljoin(self.base_url, source_url)
             for match in re.finditer('''loadEpisode\(\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'\s*\).*?class="btn-eps[^>]*>([^<]+)''', html, re.DOTALL):
                 link_type, link_id, hash_id, q_str = match.groups()
-                pattern = 'Episode\s+%s(:|$| )' % (video.episode)
+                pattern = 'Episode\s+0*%s(:|$| )' % (video.episode)
                 if video.video_type == VIDEO_TYPES.EPISODE and not re.search(pattern, q_str):
                     continue
                 
@@ -107,6 +107,7 @@ class One23Movies_Scraper(scraper.Scraper):
         sources = {}
         try:
             headers = {'Referer': page_url}
+            headers.update(XHR)
             xml = self._http_get(url, headers=headers, cache_limit=.5)
             root = ET.fromstring(xml)
             for item in root.findall('.//item'):
@@ -133,17 +134,24 @@ class One23Movies_Scraper(scraper.Scraper):
         page_html = self._http_get(url, cache_limit=8)
         movie_id = dom_parser.parse_dom(page_html, 'div', {'id': 'media-player'}, 'movie-id')
         token = dom_parser.parse_dom(page_html, 'div', {'id': 'media-player'}, 'player-token')
+        match1 = re.search('ads_hash\s*:\s*"([^"]+)', page_html)
+        match2 = re.search('ads_token\s*:\s*"([^"]+)', page_html)
+        if match1 and match2:
+            cookies = {match1.group(1): match2.group(1)}
+        else:
+            cookies = {}
+            
         if movie_id and token:
             server_url = SL_URL % (movie_id[0], token[0])
             headers = XHR
             headers['Referer'] = url
             url = urlparse.urljoin(self.base_url, server_url)
-            html = self._http_get(url, headers=headers, cache_limit=8)
+            html = self._http_get(url, cookies=cookies, headers=headers, cache_limit=8)
         return html
 
     def _get_episode_url(self, season_url, video):
         html = self.__get_source_page(season_url)
-        if re.search('title\s*=\s*"Episode\s+%s(:|"| )' % (video.episode), html, re.I):
+        if re.search('title\s*=\s*"Episode\s+0*%s(:|"| )' % (video.episode), html, re.I):
             return season_url
     
     def search(self, video_type, title, year, season=''):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    urlresolver XBMC Addon
+    SALTS XBMC Addon
     Copyright (C) 2016 tknorris
     Derived from Shani's LPro Code (https://github.com/Shani-08/ShaniXBMCWork2/blob/master/plugin.video.live.streamspro/unCaptcha.py)
 
@@ -65,6 +65,8 @@ class cInputWindow(xbmcgui.WindowDialog):
         self.addControl(self.okbutton)
         self.addControl(self.cancelbutton)
 
+        button_fo = os.path.join(kodi.get_path(), 'resources', 'skins', 'Default', 'media', 'button-fo.png')
+        button_nofo = os.path.join(kodi.get_path(), 'resources', 'skins', 'Default', 'media', 'button-nofo.png')
         for i in xrange(9):
             row = i / 3
             col = i % 3
@@ -73,7 +75,7 @@ class cInputWindow(xbmcgui.WindowDialog):
             self.chk[i] = xbmcgui.ControlImage(x_pos, y_pos, pw, ph, check_image)
             self.addControl(self.chk[i])
             self.chk[i].setVisible(False)
-            self.chkbutton[i] = xbmcgui.ControlButton(x_pos, y_pos, pw, ph, str(i + 1), font='font1')
+            self.chkbutton[i] = xbmcgui.ControlButton(x_pos, y_pos, pw, ph, str(i + 1), font='font1', focusTexture=button_fo, noFocusTexture=button_nofo)
             self.addControl(self.chkbutton[i])
 
         for i in xrange(9):

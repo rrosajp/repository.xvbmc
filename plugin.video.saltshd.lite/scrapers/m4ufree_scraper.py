@@ -99,6 +99,9 @@ class M4UFree_Scraper(scraper.Scraper):
     def __get_sources(self, html):
         sources = {}
         for source in dom_parser.parse_dom(html, 'source', {'type': 'video/mp4'}, ret='src') + dom_parser.parse_dom(html, 'iframe', ret='src'):
+            if not source.startswith('http'):
+                source = urlparse.urljoin(self.base_url, source)
+                
             if self.base_url in source:
                 redir_url = self._http_get(source, allow_redirect=False, method='HEAD', cache_limit=0)
                 if redir_url.startswith('http'):

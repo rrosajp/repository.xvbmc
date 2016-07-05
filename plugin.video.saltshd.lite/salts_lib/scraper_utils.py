@@ -23,13 +23,14 @@ import time
 import urllib
 import urlparse
 import json
-import htmlentitydefs
 import os.path
 from salts_lib import kodi
 from salts_lib import pyaes
 from salts_lib import log_utils
 from salts_lib import utils2
 from salts_lib.constants import *
+
+cleanse_title = utils2.cleanse_title
 
 def disable_sub_check(settings):
     for i in reversed(xrange(len(settings))):
@@ -306,31 +307,6 @@ def format_size(num, suffix='B'):
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Y', suffix)
 
-def cleanse_title(text):
-    def fixup(m):
-        text = m.group(0)
-        if text[:2] == "&#":
-            # character reference
-            try:
-                if text[:3] == "&#x":
-                    return unichr(int(text[3:-1], 16))
-                else:
-                    return unichr(int(text[2:-1]))
-            except ValueError:
-                pass
-        else:
-            # named entity
-            try:
-                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
-            except KeyError:
-                pass
-        return text
-    
-    if isinstance(text, str):
-        try: text = text.decode('utf-8')
-        except: pass
-    return re.sub("&#?\w+;", fixup, text.strip())
-
 def update_scraper(file_name, scraper_url, scraper_key):
     py_path = os.path.join(kodi.get_path(), 'scrapers', file_name)
     exists = os.path.exists(py_path)
@@ -354,3 +330,13 @@ def urljoin(base_url, url):
     if url.startswith('/'):
         url = url[1:]
     return urlparse.urljoin(base_url, url)
+
+def parse_params(params):
+    result = {}
+    params = params[1:-1]
+    for element in params.split(','):
+        key, value = element.split(':')
+        key = re.sub('''['"]''', '', key.strip())
+        value = re.sub('''['"]''', '', value.strip())
+        result[key] = value
+    return result

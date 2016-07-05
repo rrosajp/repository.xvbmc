@@ -19,7 +19,9 @@ import re
 import urllib
 import urlparse
 
+from salts_lib import dom_parser
 from salts_lib import kodi
+from salts_lib import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -27,9 +29,9 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 
-BASE_URL = 'http://filmikz.ch'
+BASE_URL = 'http://movie-box.co'
 
-class Filmikz_Scraper(scraper.Scraper):
+class MovieBox_Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -42,52 +44,54 @@ class Filmikz_Scraper(scraper.Scraper):
 
     @classmethod
     def get_name(cls):
-        return 'filmikz.ch'
+        return 'MovieBox'
 
     def resolve_link(self, link):
         return link
 
     def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
+        label = '[%s] %s' % (item['quality'], item['host'])
+        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
+        sources = {}
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-
-            pattern = "/w\.php\?q=([^']+)"
-            seen_hosts = {}
-            for match in re.finditer(pattern, html, re.DOTALL):
-                url = match.group(1)
-                hoster = {'multi-part': False, 'url': url.decode('base-64'), 'class': self, 'quality': None, 'views': None, 'rating': None, 'direct': False}
-                hoster['host'] = urlparse.urlsplit(hoster['url']).hostname
-                # top list is HD, bottom list is SD
-                if hoster['host'] in seen_hosts:
-                    quality = QUALITIES.HIGH
+            sources = dom_parser.parse_dom(html, 'source', ret='src')
+            sources += dom_parser.parse_dom(html, 'iframe', ret='data-lazy-src')
+            if not sources:
+                sources += dom_parser.parse_dom(html, 'iframe', ret='src')
+            
+            for source in sources:
+                host = self._get_direct_hostname(source)
+                if self.base_url in source or host == 'gvideo':
+                    direct = True
+                    stream_url = source + '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), url)
                 else:
-                    quality = QUALITIES.HD720
-                    seen_hosts[hoster['host']] = True
-                hoster['quality'] = scraper_utils.get_quality(video, hoster['host'], quality)
+                    direct = False
+                    host = urlparse.urlparse(source).hostname
+                    stream_url = source
+                    
+                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': QUALITIES.HD720, 'views': None, 'rating': None, 'url': stream_url, 'direct': direct}
                 hosters.append(hoster)
+
         return hosters
 
-    def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/index.php?search=%s&image.x=0&image.y=0')
-        search_url = search_url % (urllib.quote_plus(title))
-        html = self._http_get(search_url, cache_limit=.25)
+    def get_url(self, video):
+        return self._default_get_url(video)
 
+    def search(self, video_type, title, year, season=''):
         results = []
-        # Are we on a results page?
-        if not re.search('window\.location', html):
-            pattern = '<td[^>]+class="movieText"[^>]*>(.*?)</p>.*?href="(/watch/[^"]+)'
-            for match in re.finditer(pattern, html, re.DOTALL):
-                match_title_year, match_url = match.groups('')
-                # skip porn
-                if '-XXX-' in match_url.upper() or ' XXX:' in match_title_year: continue
-                
-                match_title_year = re.sub('</?.*?>', '', match_title_year)
+        search_url = urlparse.urljoin(self.base_url, '/wp-json/wp/v2/posts?search=%s' % (title))
+        html = self._http_get(search_url, cache_limit=1)
+        js_data = scraper_utils.parse_json(html, search_url)
+        for item in js_data:
+            if 'link' in item and 'title' in item and 'rendered' in item['title']:
+                match_url = item['link']
+                match_title_year = item['title']['rendered']
                 match = re.search('(.*?)\s+\(?(\d{4})\)?', match_title_year)
                 if match:
                     match_title, match_year = match.groups()
@@ -96,13 +100,7 @@ class Filmikz_Scraper(scraper.Scraper):
                     match_year = ''
                 
                 if not year or not match_year or year == match_year:
-                    result = {'url': match_url, 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                    result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                     results.append(result)
-        else:
-            match = re.search('window\.location\s+=\s+"([^"]+)', html)
-            if match:
-                url = match.group(1)
-                if url != 'movies.php':
-                    result = {'url': scraper_utils.pathify_url(url), 'title': scraper_utils.cleanse_title(title), 'year': year}
-                    results.append(result)
+
         return results

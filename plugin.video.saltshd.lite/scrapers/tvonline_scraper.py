@@ -17,6 +17,7 @@
 """
 import re
 import urlparse
+import base64
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import log_utils
@@ -27,7 +28,7 @@ from salts_lib.constants import QUALITIES
 import scraper
 
 
-BASE_URL = 'http://tvonline.tw'
+BASE_URL = 'http://opentuner.is'
 
 class TVOnlineTW_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -57,8 +58,8 @@ class TVOnlineTW_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=.25)
-            for match in re.finditer('''onclick\s*=\s*"go_to\(\s*\d+\s*,\s*'([^']+)''', html):
-                stream_url = match.group(1)
+            for match in re.finditer('''/go.php\?url=([^"&]+)''', html):
+                stream_url = base64.b64decode(match.group(1))
                 host = urlparse.urlparse(stream_url).hostname
                 quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
                 hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
@@ -74,7 +75,7 @@ class TVOnlineTW_Scraper(scraper.Scraper):
     def search(self, video_type, title, year, season=''):
         results = []
         if title:
-            search_url = '/tv-listings/%s/' % (title[:1].lower())
+            search_url = '/alphabet/%s/' % (title[:1].lower())
             search_url = urlparse.urljoin(self.base_url, search_url)
             html = self._http_get(search_url, cache_limit=8)
             fragment = dom_parser.parse_dom(html, 'div', {'class': 'home'})

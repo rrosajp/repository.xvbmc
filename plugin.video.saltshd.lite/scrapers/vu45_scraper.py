@@ -73,7 +73,7 @@ class VU45_Scraper(scraper.Scraper):
                     else:
                         multipart = False
                     
-                    direct, streams = self.__get_links(iframe_url)
+                    direct, streams = self.__get_links(iframe_url, url)
                     for stream_url in streams:
                         if stream_url:
                             if direct:
@@ -92,13 +92,15 @@ class VU45_Scraper(scraper.Scraper):
 
         return sources
 
-    def __get_links(self, iframe_url):
+    def __get_links(self, iframe_url, page_url):
         sources = []
         direct = True
-        html = self._http_get(iframe_url, cache_limit=2)
+        headers = {'Referer': page_url}
+        html = self._http_get(iframe_url, headers=headers, cache_limit=0)
         iframe_url2 = dom_parser.parse_dom(html, 'iframe', ret='src')
         if iframe_url2 and 'token=&' not in iframe_url2[0]:
-            html = self._http_get(iframe_url2[0], cache_limit=2)
+            headers = {'Referer': iframe_url}
+            html = self._http_get(iframe_url2[0], headers=headers, cache_limit=2)
             if 'fmt_stream_map' in html:
                 sources = self._parse_gdocs(iframe_url2[0])
                 direct = True

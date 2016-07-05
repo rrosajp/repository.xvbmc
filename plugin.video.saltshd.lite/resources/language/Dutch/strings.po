@@ -1024,7 +1024,7 @@ msgstr "Verwante Urls schoongemaakt: %s"
 
 msgctxt "#30262"
 msgid "Anticipated %s"
-msgstr "Verwacht %s"
+msgstr "Verwachte %s"
 
 msgctxt "#30263"
 msgid "Set as Sources View"

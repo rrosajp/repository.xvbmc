@@ -64,6 +64,7 @@ class Premiumize_Scraper(scraper.Scraper):
         self.tv_base_url = kodi.get_setting('%s-base_url3' % (self.get_name()))
         self.username = kodi.get_setting('%s-username' % (self.get_name()))
         self.password = kodi.get_setting('%s-password' % (self.get_name()))
+        self.include_trans = kodi.get_setting('%s-include_trans' % (self.get_name())) == 'true'
 
     @classmethod
     def provides(cls):
@@ -118,7 +119,7 @@ class Premiumize_Scraper(scraper.Scraper):
                     label = '(%s) %s' % (scraper_utils.format_size(item['size'], 'B'), item['name'])
                     video = {'label': label, 'url': item['url']}
                     videos.append(video)
-                    if 'transcoded' in item and item['transcoded']:
+                    if self.include_trans and 'transcoded' in item and item['transcoded']:
                         transcode = item['transcoded']
                         if 'size' in transcode:
                             label = '(%s) (Transcode) %s' % (scraper_utils.format_size(transcode['size'], 'B'), item['name'])
@@ -291,6 +292,7 @@ class Premiumize_Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-6,true)"/>' % (name, i18n('password')))
         settings.append('         <setting id="%s-base_url2" type="text" label="     %s %s" default="%s" visible="eq(-7,true)"/>' % (name, i18n('movies'), i18n('base_url'), cls.movie_base_url))
         settings.append('         <setting id="%s-base_url3" type="text" label="     %s %s" default="%s" visible="eq(-8,true)"/>' % (name, i18n('tv_shows'), i18n('base_url'), cls.tv_base_url))
+        settings.append('         <setting id="%s-include_trans" type="bool" label="     %s" default="true" visible="eq(-9,true)"/>' % (name, i18n('include_transcodes')))
         return settings
 
     def _json_get(self, url, data=None, allow_redirect=True, cache_limit=8):

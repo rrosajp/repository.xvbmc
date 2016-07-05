@@ -30,6 +30,7 @@ import urlparse
 import xbmcgui
 import urlresolver
 from salts_lib import cloudflare
+from salts_lib import cf_captcha
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib import scraper_utils
@@ -47,6 +48,7 @@ COOKIEPATH = kodi.translate_path(kodi.get_profile())
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 # Q_LIST = [item[0] for item in sorted(Q_ORDER.items(), key=lambda x:x[1])]
 MAX_RESPONSE = 1024 * 1024 * 2
+CF_CAPCHA_ENABLED = kodi.get_setting('cf_captcha') == 'true'
 
 class NoRedirection(urllib2.HTTPErrorProcessor):
     def http_response(self, request, response):
@@ -326,7 +328,12 @@ class Scraper(object):
                 else:
                     html = response.read(MAX_RESPONSE)
         except urllib2.HTTPError as e:
-            if e.code == 503 and 'cf-browser-verification' in e.read():
+            html = e.read()
+            if CF_CAPCHA_ENABLED and e.code == 403 and 'cf-captcha-bookmark' in html:
+                html = cf_captcha.solve(url, self.cj, scraper_utils.get_ua())
+                if not html:
+                    return ''
+            elif e.code == 503 and 'cf-browser-verification' in html:
                 html = cloudflare.solve(url, self.cj, scraper_utils.get_ua())
                 if not html:
                     return ''

