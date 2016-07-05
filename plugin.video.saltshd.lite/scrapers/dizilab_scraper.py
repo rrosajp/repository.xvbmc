@@ -26,19 +26,13 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
 import scraper
-import xml.etree.ElementTree as ET
-
-try:
-    from xml.parsers.expat import ExpatError
-except ImportError:
-    class ExpatError(Exception): pass
-try:
-    from xml.etree.ElementTree import ParseError
-except ImportError:
-    class ParseError(Exception): pass
 
 BASE_URL = 'http://dizilab.com'
+AJAX_URL = '/request/php/'
 STREAM_URL = '%s%s|User-Agent=%s&Referer=%s'
+ICONS = {'icon-tr': 'Turkish Subtitles', 'icon-en': 'English Subtitles', 'icon-orj': ''}
+DEFAULT_SUB = 'Turkish Subtitles'
+XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Dizilab_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -70,63 +64,78 @@ class Dizilab_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=.5)
-            page_urls = [page_url]
-            if kodi.get_setting('scraper_url'):
-                page_urls += self.__get_page_urls(html)
-            
-            for page_url in page_urls:
-                html = self._http_get(page_url, cache_limit=.5)
-                subs = 'Turkish Subtitles'
-                fragment = dom_parser.parse_dom(html, 'li', {'class': 'active'})
-                if fragment:
-                    frag_class = dom_parser.parse_dom(fragment[0], 'span', ret='class')
-                    if frag_class:
-                        if frag_class[0] == 'icon-en':
-                            subs = 'English Subtitles'
-                        elif frag_class[0] == 'icon-orj':
-                            subs = ''
-                            
-                hosters += self.__get_cloud_links(html, page_url, subs)
-                hosters += self.__get_embedded_links(html, subs)
-                hosters += self.__get_iframe_links(html, subs)
+            videos = re.findall('''onclick\s*=\s*"loadVideo\('([^']+)''', html)
+            subs = self.__get_subs(html)
+            for v_id, icon in zip(videos, subs):
+                ajax_url = urlparse.urljoin(self.base_url, AJAX_URL)
+                data = {'vid': v_id, 'tip': 1, 'type': 'loadVideo'}
+                headers = XHR
+                headers['Referer'] = page_url
+                html = self._http_get(ajax_url, data=data, headers=headers, cache_limit=.5)
+                sub = ICONS.get(icon, DEFAULT_SUB)
+                hosters += self.__get_cloud_links(html, page_url, sub)
+                hosters += self.__get_embedded_links(html, sub)
+                hosters += self.__get_iframe_links(html, sub)
+                hosters += self.__get_json_links(html, sub)
+                if not kodi.get_setting('scraper_url'): break
 
         return hosters
 
-    def __get_page_urls(self, html):
-        page_urls = []
-        for item in dom_parser.parse_dom(html, 'li', {'class': ''}):
-            page_url = dom_parser.parse_dom(item, 'a', ret='href')
-            if page_url:
-                page_urls.append(page_url[0])
-        return page_urls
+    def __get_subs(self, html):
+        subs = []
+        fragment = dom_parser.parse_dom(html, 'ul', {'class': '[^"]*language[^"]*'})
+        if fragment:
+            subs = dom_parser.parse_dom(fragment[0], 'span', {'class': 'icon-[^"]*'}, ret='class')
+        return subs
     
-    def __get_iframe_links(self, html, subs):
+    def __get_json_links(self, html, sub):
         hosters = []
+        js_data = scraper_utils.parse_json(html)
+        if 'sources' in js_data:
+            for source in js_data['sources']:
+                if 'file' in source:
+                    stream_url = source['file']
+                    host = self._get_direct_hostname(stream_url)
+                    if host == 'gvideo':
+                        quality = scraper_utils.gv_get_quality(stream_url)
+                    elif 'label' in source:
+                        quality = scraper_utils.height_get_quality(source['label'])
+                    else:
+                        quality = QUALITIES.HIGH
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                    hoster['subs'] = sub
+                    hosters.append(hoster)
+        return hosters
+    
+    def __get_iframe_links(self, html, sub):
+        hosters = []
+        html = html.replace('\\"', '"').replace('\\/', '/')
         iframe_urls = dom_parser.parse_dom(html, 'iframe', {'id': 'episode_player'}, ret='src')
         if iframe_urls:
             stream_url = iframe_urls[0]
             host = urlparse.urlparse(stream_url).hostname
             quality = QUALITIES.HD720
-            if host:
-                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
-                hoster['subs'] = subs
-                hosters.append(hoster)
+            hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
+            hoster['subs'] = sub
+            hosters.append(hoster)
         return hosters
     
-    def __get_embedded_links(self, html, subs):
+    def __get_embedded_links(self, html, sub):
         hosters = []
+        html = html.replace('\\"', '"').replace('\\/', '/')
         sources = self._parse_sources_list(html)
         for source in sources:
             host = self._get_direct_hostname(source)
             quality = sources[source]['quality']
             direct = sources[source]['direct']
             hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': source, 'direct': direct}
-            hoster['subs'] = subs
+            hoster['subs'] = sub
             hosters.append(hoster)
         return hosters
     
-    def __get_cloud_links(self, html, page_url, subs):
+    def __get_cloud_links(self, html, page_url, sub):
         hosters = []
+        html = html.replace('\\"', '"').replace('\\/', '/')
         match = re.search("dizi_kapak_getir\('([^']+)", html)
         if match:
             ep_id = match.group(1)
@@ -154,7 +163,7 @@ class Dizilab_Scraper(scraper.Scraper):
                                 else:
                                     quality = QUALITIES.HIGH
                                 hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                                hoster['subs'] = subs
+                                hoster['subs'] = sub
                                 hosters.append(hoster)
         return hosters
     
@@ -165,20 +174,16 @@ class Dizilab_Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        xml_url = urlparse.urljoin(self.base_url, '/diziler.xml')
-        xml = self._http_get(xml_url, cache_limit=24)
-        if xml:
-            norm_title = scraper_utils.normalize_title(title)
-            match_year = ''
-            try:
-                for element in ET.fromstring(xml).findall('.//dizi'):
-                    name = element.find('adi')
-                    if name is not None and norm_title in scraper_utils.normalize_title(name.text):
-                        url = element.find('url')
-                        if url is not None and (not year or not match_year or year == match_year):
-                            result = {'url': scraper_utils.pathify_url(url.text), 'title': scraper_utils.cleanse_title(name.text), 'year': ''}
-                            results.append(result)
-            except (ParseError, ExpatError) as e:
-                log_utils.log('Dizilab Search Parse Error: %s' % (e), log_utils.LOGWARNING)
+        html = self._http_get(self.base_url, cache_limit=24)
+        norm_title = scraper_utils.normalize_title(title)
+        match_year = ''
+        fragment = dom_parser.parse_dom(html, 'div', {'class': 'search-result'})
+        if fragment:
+            urls = dom_parser.parse_dom(fragment[0], 'a', ret='href')
+            titles = dom_parser.parse_dom(fragment[0], 'span', {'class': 'title'})
+            for match_url, match_title in zip(urls, titles):
+                if norm_title in scraper_utils.normalize_title(match_title):
+                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                    results.append(result)
 
         return results

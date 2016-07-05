@@ -26,6 +26,7 @@ from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
+from salts_lib.constants import Q_ORDER
 import scraper
 
 
@@ -42,7 +43,7 @@ class XMovies8V2_Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.MOVIE, VIDEO_TYPES.SEASON, VIDEO_TYPES.EPISODE])
+        return frozenset([VIDEO_TYPES.MOVIE])
 
     @classmethod
     def get_name(cls):
@@ -83,6 +84,7 @@ class XMovies8V2_Scraper(scraper.Scraper):
                                 else:
                                     quality = scraper_utils.height_get_quality(height)
                                 sources[html] = {'quality': quality, 'direct': True}
+                                if not kodi.get_setting('scraper_url') and Q_ORDER[quality] >= Q_ORDER[QUALITIES.HD720]: break
                                 
                     else:
                         sources[iframe_url] = {'quality': QUALITIES.HIGH, 'direct': False}

@@ -75,59 +75,60 @@ def auth_trakt():
         log_utils.log('Trakt Authorization Failed: %s' % (e), log_utils.LOGDEBUG)
 
 def perform_auto_conf(responses):
-    length = len(responses)
-    TOTAL = 13
-    if length < TOTAL:
-        responses += [True] * (TOTAL - length)
+    with kodi.WorkingDialog():
+        length = len(responses)
+        TOTAL = 13
+        if length < TOTAL:
+            responses += [True] * (TOTAL - length)
+            
+        if responses[0]: kodi.set_setting('trakt_timeout', '60')
+        if responses[1]: kodi.set_setting('calendar-day', '-1')
+        if responses[2]: kodi.set_setting('calendar_time', '2')
+        if responses[3]: kodi.set_setting('source_timeout', '20')
+        if responses[4]: kodi.set_setting('include_watchlist_next', 'true')
+        if responses[5]: kodi.set_setting('filter_direct', 'true')
+        if responses[6]: kodi.set_setting('filter_unusable', 'true')
+        if responses[7]: kodi.set_setting('show_debrid', 'true')
+        if responses[8]: kodi.set_setting('source_results', '0')
+        if responses[9]:
+            kodi.set_setting('enable_sort', 'true')
+            kodi.set_setting('sort1_field', '2')
+            kodi.set_setting('sort2_field', '5')
+            kodi.set_setting('sort3_field', '6')
+            kodi.set_setting('sort4_field', '1')
+            kodi.set_setting('sort5_field', '3')
+            kodi.set_setting('sort6_field', '4')
+    
+        if responses[10]:
+            tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
+                     ['IFlix', 'torba.se', 'MoviesPlanet', 'TVWTVS', 'MWM', '123Movies', 'niter.tv', 'YesMovies', 'HDFlix', 'HDMovie14', 'ororo.tv'],
+                     ['DayT.se', 'StreamLord', 'CyberReel', 'm4ufree', 'tunemovie', 'MovieBox', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD'],
+                     ['MovieGo', 'MovieXK', 'Stage66', 'PelisPedia', 'FardaDownload', 'vu45', 'PutMV', 'PirateJunkies', 'FireMoviesHD', 'SeriesWatch', 'VidNow4K'],
+                     ['HEVCBluRay', 'MovieZone', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
+                     ['vivo.to', 'CloudMovie', 'DDLValley', '2DDL', 'DDLSeries', 'CinemaMKV', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net'],
+                     ['IceFilms', 'Flixanity', 'Watch5s', 'Rainierland', 'WatchEpisodes', 'WatchItVideos', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries'],
+                     ['WatchSeries', 'RLSeries', 'Putlocker', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K'],
+                     ['afdah', 'SolarMovie', 'MiraDeTodo', 'Filmovizija', 'UFlix.org', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now'],
+                     ['yshows', 'iWatchOnline', 'vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD'],
+                     ['LosMovies', 'wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu', 'clickplay.to'],
+                     ['MovieTube', 'FilmStreaming.in']]
         
-    if responses[0]: kodi.set_setting('trakt_timeout', '60')
-    if responses[1]: kodi.set_setting('calendar-day', '-1')
-    if responses[2]: kodi.set_setting('calendar_time', '2')
-    if responses[3]: kodi.set_setting('source_timeout', '20')
-    if responses[4]: kodi.set_setting('include_watchlist_next', 'true')
-    if responses[5]: kodi.set_setting('filter_direct', 'true')
-    if responses[6]: kodi.set_setting('filter_unusable', 'true')
-    if responses[7]: kodi.set_setting('show_debrid', 'true')
-    if responses[8]: kodi.set_setting('source_results', '0')
-    if responses[9]:
-        kodi.set_setting('enable_sort', 'true')
-        kodi.set_setting('sort1_field', '2')
-        kodi.set_setting('sort2_field', '5')
-        kodi.set_setting('sort3_field', '6')
-        kodi.set_setting('sort4_field', '1')
-        kodi.set_setting('sort5_field', '3')
-        kodi.set_setting('sort6_field', '4')
-
-    if responses[10]:
-        tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
-                 ['IFlix', 'torba.se', 'MoviesPlanet', 'TVWTVS', 'MWM', '9Movies', '123Movies', 'niter.tv', 'HDMovie14', 'ororo.tv', 'm4ufree'],
-                 ['StreamLord', 'CyberReel', 'tunemovie', 'MovieLocker', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD'],
-                 ['MovieXK', 'Stage66', 'PelisPedia', 'DayT.se', 'FardaDownload', 'vu45', 'PutMV', 'PirateJunkies', 'FireMoviesHD', 'SeriesWatch'],
-                 ['HEVCBluRay', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
-                 ['vivo.to', 'CloudMovie', 'DDLValley', '2DDL', 'DDLSeries', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net'],
-                 ['IceFilms', 'Flixanity', 'Watch5s', 'Rainierland', 'WatchEpisodes', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries', 'WatchSeries'],
-                 ['RLSeries', 'Putlocker', 'Ganool', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K', 'afdah', 'SolarMovie'],
-                 ['MiraDeTodo', 'Filmovizija', 'UFlix.org', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now', 'yshows', 'iWatchOnline'],
-                 ['vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD', 'LosMovies'],
-                 ['wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu', 'clickplay.to'],
-                 ['MovieTube', 'FilmStreaming.in']]
-    
-        sso = []
-        random_sso = kodi.get_setting('random_sso') == 'true'
-        for tier in tiers:
-            if isinstance(tier, basestring):
-                sso.append(tier)
-            else:
-                if random_sso:
-                    random.shuffle(tier)
-                sso += tier
-        kodi.set_setting('source_sort_order', '|'.join(sso))
-    
-    if responses[11]: reset_base_url()
-    if responses[12]: kodi.set_setting('mne_time', '2')
-    trigger = [False, True, False, True, False, True, True, False, True, False, False, False]
-    if all([t == r for t, r in zip(trigger, responses)]):
-        kodi.set_setting('scraper_download', 'true')
+            sso = []
+            random_sso = kodi.get_setting('random_sso') == 'true'
+            for tier in tiers:
+                if isinstance(tier, basestring):
+                    sso.append(tier)
+                else:
+                    if random_sso:
+                        random.shuffle(tier)
+                    sso += tier
+            kodi.set_setting('source_sort_order', '|'.join(sso))
+        
+        if responses[11]: reset_base_url()
+        if responses[12]: kodi.set_setting('mne_time', '2')
+        trigger = [False, True, False, True, False, True, True, False, True, False, False, False]
+        if all([t == r for t, r in zip(trigger, responses)]):
+            kodi.set_setting('scraper_download', 'true')
         
     kodi.notify(msg=i18n('auto_conf_complete'))
 

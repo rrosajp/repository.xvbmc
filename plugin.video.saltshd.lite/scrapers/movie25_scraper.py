@@ -22,6 +22,7 @@ import urlparse
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import scraper_utils
+from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
@@ -29,7 +30,7 @@ import scraper
 
 
 QUALITY_MAP = {'DVD': QUALITIES.HIGH, 'TS': QUALITIES.MEDIUM, 'CAM': QUALITIES.LOW}
-BASE_URL = 'http://movie25.ph'
+BASE_URL = 'http://tinklepad.is'
 
 class Movie25_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -77,17 +78,27 @@ class Movie25_Scraper(scraper.Scraper):
             if match:
                 quality = QUALITY_MAP.get(match.group(1).strip().upper())
 
+            seen_links = {}
             for item in dom_parser.parse_dom(html, 'li', {'id': 'playing_button'}):
                 stream_url = dom_parser.parse_dom(item, 'a', ret='href')
                 if stream_url:
-                    match = re.search('url=([^&"]+)', stream_url[0])
+                    stream_url = stream_url[0]
+                    match = re.search('url=([^&"]+)', stream_url)
                     if match:
                         stream_url = base64.b64decode(match.group(1))
+                    else:
+                        match = re.search('stream\.php\?([^"]+)', stream_url)
+                        if match:
+                            stream_url = base64.b64decode(match.group(1))
+                            i = stream_url.rfind('&&')
+                            if i > -1:
+                                stream_url = stream_url[i + 2:]
+                        
+                    if stream_url in seen_links: continue
+                    seen_links[stream_url] = True
                     host = urlparse.urlparse(stream_url).hostname
-                    
-                    if host:
-                        hoster = {'multi-part': False, 'host': host, 'class': self, 'url': stream_url, 'quality': scraper_utils.get_quality(video, host, quality), 'rating': None, 'views': None, 'direct': False}
-                        hosters.append(hoster)
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'url': stream_url, 'quality': scraper_utils.get_quality(video, host, quality), 'rating': None, 'views': None, 'direct': False}
+                    hosters.append(hoster)
         return hosters
 
     def search(self, video_type, title, year, season=''):

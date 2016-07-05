@@ -69,10 +69,17 @@ class MiraDetodo_Scraper(scraper.Scraper):
                     if not iframe_url.startswith('http'):
                         iframe_url = dom_parser.parse_dom(fragment, 'iframe', ret='data-lazy-src')
                         iframe_url = iframe_url[0]
+                        
                     sources = {}
                     if 'miradetodo' in iframe_url:
                         direct = True
                         html = self._http_get(iframe_url, cache_limit=.5)
+                        fragment = dom_parser.parse_dom(html, 'nav', {'class': 'nav'})
+                        if fragment:
+                            stream_url = dom_parser.parse_dom(fragment, 'a', ret='href')
+                            if stream_url:
+                                html = self._http_get(stream_url[0], cache_limit=.5)
+                                
                         sources.update(self.__get_gk_links(html))
                         sources.update(self.__get_gk_links2(html))
                         sources.update(self.__get_amazon_links(html))

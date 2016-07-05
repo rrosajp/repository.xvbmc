@@ -28,7 +28,7 @@ import scraper
 
 
 BASE_URL = 'http://www.couchtuner.ch'
-BASE_URL2 = 'http://www.couchtuner.city'
+BASE_URL2 = 'http://couchtuner.city'
 
 class CouchTunerV1_Scraper(scraper.Scraper):
     base_url = BASE_URL

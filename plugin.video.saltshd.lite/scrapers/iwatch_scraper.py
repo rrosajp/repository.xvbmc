@@ -18,6 +18,7 @@
 import re
 import time
 import urlparse
+import urllib
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import scraper_utils
@@ -29,7 +30,7 @@ import scraper
 
 
 QUALITY_MAP = {'HD': QUALITIES.HIGH, 'HDTV': QUALITIES.HIGH, 'DVD': QUALITIES.HIGH, '3D': QUALITIES.HIGH, 'CAM': QUALITIES.LOW}
-BASE_URL = 'https://www.iwatchonline.ph'
+BASE_URL = 'http://www.iwatchonline.ph'
 
 class IWatchOnline_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -127,15 +128,15 @@ class IWatchOnline_Scraper(scraper.Scraper):
         return age
 
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/advance-search')
-        if video_type == VIDEO_TYPES.MOVIE:
-            data = {'searchin': '1'}
-        else:
-            data = {'searchin': '2'}
-        data.update({'searchquery': title})
-        html = self._http_get(search_url, data=data, cache_limit=.25)
-
         results = []
+        search_url = urlparse.urljoin(self.base_url, '/search')
+        if video_type == VIDEO_TYPES.MOVIE:
+            data = {'searchin': 'm'}
+        else:
+            data = {'searchin': 't'}
+        data.update({'searchquery': title})
+        html = self._http_get(search_url, data=data, cache_limit=8)
+
         pattern = r'href="([^"]+)">(.*?)\s+\((\d{4})\)'
         for match in re.finditer(pattern, html):
             url, title, match_year = match.groups('')

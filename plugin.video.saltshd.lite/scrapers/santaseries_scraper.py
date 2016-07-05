@@ -63,16 +63,22 @@ class SantaSeries_Scraper(scraper.Scraper):
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=.25)
             for link in dom_parser.parse_dom(html, 'li', {'class': 'elemento'}):
+                stream_url = ''
                 match = re.search('href="[^"]*/load-episode/#([^"]+)', link)
                 if match:
                     stream_url = base64.decodestring(match.group(1))
-                    if stream_url.startswith('http'):
-                        label = dom_parser.parse_dom(link, 'span', {'class': 'd'})
-                        host = urlparse.urlparse(stream_url).hostname
-                        quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
-                        hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
-                        if label: hoster['label'] = label[0]
-                        hosters.append(hoster)
+                else:
+                    match = re.search('href="([^"]+)', link)
+                    if match:
+                        stream_url = match.group(1)
+                        
+                if stream_url.startswith('http'):
+                    label = dom_parser.parse_dom(link, 'span', {'class': 'd'})
+                    host = urlparse.urlparse(stream_url).hostname
+                    quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
+                    if label: hoster['label'] = label[0]
+                    hosters.append(hoster)
         return hosters
 
     def _get_episode_url(self, show_url, video):

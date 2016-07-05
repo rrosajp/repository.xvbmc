@@ -61,7 +61,7 @@ class MovieWatcher_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(page_url, cache_limit=.25)
+            html = self._http_get(page_url, cache_limit=1)
             for item in dom_parser.parse_dom(html, 'div', {'class': 'stream-table__row'}):
                 stream_url = dom_parser.parse_dom(item, 'a', ret='href')
                     
@@ -128,7 +128,7 @@ class MovieWatcher_Scraper(scraper.Scraper):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search?q=')
         search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=1)
+        html = self._http_get(search_url, cache_limit=8)
         norm_title = scraper_utils.normalize_title(title)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'video_item'}):
             match_url = dom_parser.parse_dom(item, 'a', ret='href')
@@ -148,4 +148,3 @@ class MovieWatcher_Scraper(scraper.Scraper):
                     results.append(result)
 
         return results
-        

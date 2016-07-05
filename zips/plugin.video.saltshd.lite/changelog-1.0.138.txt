@@ -1,3 +1,12 @@
+[B]Version 1.0.138[/B]
++ see below ;-P (scrapers+fixes)
+
+[B]Version 1.0.137[/B]
++ see below ;-P (fix metaliQ)
+
+[B]Version 1.0.136[/B]
++ see below ;-P (scrapers+fixes)
+
 [B]Version 2.0.66[/B]
 - Add MovieGo Scraper
 - Fix HDFlix Scraper
