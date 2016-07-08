@@ -71,7 +71,7 @@ def make_info(item, show=None, people=None):
     if 'season' in item: info['season'] = item['season']
     if 'episode' in item: info['episode'] = item['episode']
     if 'number' in item: info['episode'] = item['number']
-    if 'genres' in item:
+    if 'genres' in item and item['genres']:
         genres = dict((genre['slug'], genre['name']) for genre in trakt_api.get_genres(SECTIONS.TV))
         genres.update(dict((genre['slug'], genre['name']) for genre in trakt_api.get_genres(SECTIONS.MOVIES)))
         item_genres = [genres[genre] for genre in item['genres'] if genre in genres]
@@ -101,7 +101,7 @@ def make_info(item, show=None, people=None):
     if 'network' in show: info['studio'] = show['network']
     if 'status' in show: info['status'] = show['status']
     if 'trailer' in show and show['trailer']: info['trailer'] = utils2.make_trailer(show['trailer'])
-    if show is not None: info['mediatype'] = 'episode'
+    if show: info['mediatype'] = 'episode'
     info.update(utils2.make_ids(show))
     info.update(utils2.make_people(people))
     return info
@@ -234,7 +234,11 @@ def get_resume_choice(trakt_id, season, episode):
         resume_point = utils2.format_time(_get_db_connection().get_bookmark(trakt_id, season, episode))
         header = utils2.i18n('local_bookmark_exists')
     question = utils2.i18n('resume_from') % (resume_point)
-    return xbmcgui.Dialog().yesno(header, question, '', '', utils2.i18n('start_from_beginning'), utils2.i18n('resume')) == 1
+    dialog = xbmcgui.Dialog()
+    try:
+        return dialog.contextmenu([question, utils2.i18n('start_from_beginning'), ]) == 0
+    except:
+        return dialog.yesno(header, question, '', '', utils2.i18n('start_from_beginning'), utils2.i18n('resume')) == 1
 
 def get_bookmark(trakt_id, season, episode):
     if kodi.get_setting('trakt_bookmark') == 'true':
@@ -246,16 +250,19 @@ def get_bookmark(trakt_id, season, episode):
         bookmark = _get_db_connection().get_bookmark(trakt_id, season, episode)
     return bookmark
 
-def relevant_scrapers(video_type=None, include_disabled=False, order_matters=False):
+def relevant_scrapers(video_type=None, include_disabled=False, order_matters=False, as_dict=False):
     classes = scraper.Scraper.__class__.__subclasses__(scraper.Scraper)
     classes += proxy.Proxy.__class__.__subclasses__(proxy.Proxy)
-    relevant = []
+    relevant = {} if as_dict else []
     for cls in classes:
         if cls.get_name() and not cls.has_proxy() and (video_type is None or video_type in cls.provides()):
             if include_disabled or utils2.scraper_enabled(cls.get_name()):
-                    relevant.append(cls)
+                    if as_dict:
+                        relevant[cls.get_name()] = cls
+                    else:
+                        relevant.append(cls)
 
-    if order_matters:
+    if order_matters and not as_dict:
         relevant.sort(key=get_source_sort_key)
     return relevant
 

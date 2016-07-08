@@ -1,5 +1,5 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.saltsRD.Lite
+# Addon id: plugin.video.salts
 # Addon Provider: TV Addons
 msgid ""
 msgstr ""
@@ -515,11 +515,11 @@ msgid "Next Week"
 msgstr ""
 
 msgctxt "#30125"
-msgid "Mark as Unwatched"
+msgid "Mark as Unwatched (SALTS)"
 msgstr ""
 
 msgctxt "#30126"
-msgid "Mark as Watched"
+msgid "Mark as Watched (SALTS)"
 msgstr ""
 
 msgctxt "#30127"
@@ -851,7 +851,7 @@ msgid "Requested Sources from: %s"
 msgstr ""
 
 msgctxt "#30220"
-msgid "Received %s Sources from: %s"
+msgid "Received Sources: (%s / %s) from %s"
 msgstr ""
 
 msgctxt "#30221"
@@ -1096,6 +1096,22 @@ msgstr ""
 
 msgctxt "#30281"
 msgid "Include Transodes"
+msgstr ""
+
+msgctxt "#30282"
+msgid "Next Episode"
+msgstr ""
+
+msgctxt "#30283"
+msgid "Remaining: %s of %s"
+msgstr ""
+
+msgctxt "#30284"
+msgid "Remaining: %s"
+msgstr ""
+
+msgctxt "#30285"
+msgid "Genres"
 msgstr ""
 
 msgctxt "#30500"
@@ -1847,5 +1863,91 @@ msgstr ""
 
 msgctxt "#30684"
 msgid "Show air time in MNE"
+msgstr ""
+
+# 30685 removed
+
+msgctxt "#30686"
+msgid "Show Next Episode Notification"
+msgstr ""
+
+msgctxt "#30687"
+msgid "    Next Episode Delay (secs)"
+msgstr ""
+
+msgctxt "#30688"
+msgid "    Show Next Episode on Unwatched"
+msgstr ""
+
+msgctxt "#30689"
+msgid "    Show air time in Next Episode"
+msgstr ""
+
+msgctxt "#30690"
+msgid "Show CF Site Protection Captchas"
+msgstr ""
+
+msgctxt "#30691"
+msgid "    Next Episode Duration (secs)"
+msgstr ""
+
+msgctxt "#30692"
+msgid "Show Genres"
+msgstr ""
+
+msgctxt "#30693"
+msgid "Movie Genre List"
+msgstr ""
+
+msgctxt "#30694"
+msgid "TV Genre List"
+msgstr ""
+
+msgctxt "#30695"
+msgid "Trending"
+msgstr ""
+
+msgctxt "#30696"
+msgid "Popular"
+msgstr ""
+
+msgctxt "#30697"
+msgid "Anticipated"
+msgstr ""
+
+msgctxt "#30698"
+msgid "Most Watched (Week)"
+msgstr ""
+
+msgctxt "#30699"
+msgid "Most Watched (Month)"
+msgstr ""
+
+msgctxt "#30700"
+msgid "Most Watched (All)"
+msgstr ""
+
+msgctxt "#30701"
+msgid "Most Played (Week)"
+msgstr ""
+
+msgctxt "#30702"
+msgid "Most Played (Month)"
+msgstr ""
+
+msgctxt "#30703"
+msgid "Most Played (All)"
+msgstr ""
+
+msgctxt "#30704"
+msgid "Most Collected (Week)"
+msgstr ""
+
+msgctxt "#30705"
+msgid "Most Collected (Month)"
+msgstr ""
+
+msgctxt "#30706"
+msgid "Most Collected (All)"
 msgstr ""
 

@@ -34,7 +34,7 @@ __all__ = ['scraper',
 		   'serieswatch_scraper',
            'dizigold_scraper', 
 		   'emoviespro_scraper', 
-		   '123movies_scraper', 
+		    
 		   'sezonlukdizi_scraper',
            'yesmovies_scraper',
 		   'moviego_scraper',

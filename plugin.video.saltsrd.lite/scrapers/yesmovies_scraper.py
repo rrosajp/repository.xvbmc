@@ -34,6 +34,7 @@ SL_URL = '/ajax/movie_servers_list/%s/%s/%s.html'
 PLAYLIST_URL1 = '/ajax/movie_load_embed/%s.html'
 PLAYLIST_URL2 = '/ajax/movie_load_episode_rss/%s.html'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
+MAX_HOSTERS = 3
 
 class YesMovies_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -74,7 +75,14 @@ class YesMovies_Scraper(scraper.Scraper):
                 if match1 and match2:
                     links.append((match1.group(1), match2.group(1)))
             
-            for link_type, link_id in links:
+            for param1, param2 in links:
+                if int(param1) < 100:
+                    link_type = param1
+                    link_id = param2
+                else:
+                    link_type = param2
+                    link_id = param1
+                    
                 if link_type in ['12', '13', '14', '15']:
                     url = urlparse.urljoin(self.base_url, PLAYLIST_URL1 % (link_id))
                     sources = self.__get_link_from_json(url)
@@ -95,6 +103,10 @@ class YesMovies_Scraper(scraper.Scraper):
                         stream_url = source
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': sources[source]['quality'], 'views': None, 'rating': None, 'url': stream_url, 'direct': sources[source]['direct']}
                     hosters.append(hoster)
+                
+                if not kodi.get_setting('scraper_url') and len(hosters) >= MAX_HOSTERS:
+                    break
+                
         return hosters
 
     def __get_source_page(self, page_url):
@@ -133,6 +145,7 @@ class YesMovies_Scraper(scraper.Scraper):
             root = ET.fromstring(xml)
             for item in root.findall('.//item'):
                 title = item.find('title').text
+                if title and title.upper() == 'OOPS!': continue
                 for source in item.findall('{http://rss.jwpcdn.com/}source'):
                     stream_url = source.get('file')
                     label = source.get('label')
@@ -171,7 +184,6 @@ class YesMovies_Scraper(scraper.Scraper):
         js_data = scraper_utils.parse_json(html, search_url)
         html = js_data.get('content', '')
         html = html.replace('\"', '"')
-        log_utils.log(html)
         titles = dom_parser.parse_dom(html, 'a', {'class': 'ss-title'})
         urls = dom_parser.parse_dom(html, 'a', {'class': 'ss-title'}, ret='href')
         match_year = ''
@@ -185,4 +197,4 @@ class YesMovies_Scraper(scraper.Scraper):
                     result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                     results.append(result)
     
-            return results
+        return results

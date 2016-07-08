@@ -141,7 +141,7 @@ class VivoTo_Scraper(scraper.Scraper):
             url = urlparse.urljoin(self.base_url, url)
             html = self._http_get(url, headers=XHR, cache_limit=.25)
             js_data = scraper_utils.parse_json(html, url)
-            if 'data' in js_data:
+            if 'data' in js_data and js_data['data']:
                 if 'files' in js_data['data'] and js_data['data']['files']:
                     return js_data['data']['files']
                 elif js_data['data']:

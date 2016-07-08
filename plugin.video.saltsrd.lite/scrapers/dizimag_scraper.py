@@ -19,10 +19,10 @@
 import re
 import urllib
 import urlparse
-
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import scraper_utils
+from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 import scraper
@@ -67,6 +67,7 @@ class Dizimag_Scraper(scraper.Scraper):
                 url, data = match.groups()
                 url = urlparse.urljoin(self.base_url, url)
                 result = self._http_get(url, data=data, headers=XHR, cache_limit=.5)
+                log_utils.log(result)
                 for match in re.finditer('"videolink\d*"\s*:\s*"([^"]+)","videokalite\d*"\s*:\s*"?(\d+)p?', result):
                     stream_url, height = match.groups()
                     stream_url = stream_url.replace('\\/', '/')
@@ -75,7 +76,7 @@ class Dizimag_Scraper(scraper.Scraper):
                         quality = scraper_utils.gv_get_quality(stream_url)
                     else:
                         quality = scraper_utils.height_get_quality(height)
-                        stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), urllib.quote(page_url))
+                        stream_url += '|User-Agent=%s&Referer=%s&Cookie=%s' % (scraper_utils.get_ua(), urllib.quote(page_url), self._get_stream_cookies())
 
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                     hosters.append(hoster)
@@ -89,6 +90,7 @@ class Dizimag_Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         html = self._http_get(self.base_url, cache_limit=8)
+        log_utils.log(html)
         results = []
         fragment = dom_parser.parse_dom(html, 'div', {'id': 'fil'})
         norm_title = scraper_utils.normalize_title(title)

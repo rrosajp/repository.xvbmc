@@ -287,5 +287,10 @@ STRINGS = {
     'set_rewatch_list': 30277,
     'playback_limited': 30278,
     'size_limit': 30279,
-    'include_transcodes': 30281
+    'include_transcodes': 30281,
+    'next_episode': 30282,
+    'remaining_over': 30283,
+    'remaining_under': 30284,
+    'genres': 30285
+    
 }

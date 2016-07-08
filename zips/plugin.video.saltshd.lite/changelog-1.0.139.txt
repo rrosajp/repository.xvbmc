@@ -1,61 +1,14 @@
-Version 1.0.[B]139[/B] EPiC Real-Debrid
-+ All Kudos -2- TKnorris (Y)
+[B]Version 1.0.139[/B]
 + see below ;-P (scrapers+fixes)
 
-Version 1.0.137[B]a[/B] EPiC Real-Debrid
-+ All Kudos -2- TKnorris (Y)
-- some scraper fixes...
+[B]Version 1.0.138[/B]
++ see below ;-P (scrapers+fixes)
 
-Version 1.0.[B]137[/B] EPiC Real-Debrid
-+ All Kudos -2- TKnorris (Y)
+[B]Version 1.0.137[/B]
 + see below ;-P (fix metaliQ)
-- Salts HD Lite .137 "engine"
-- *code*cosmetics* & SALTs fixes up to v2.0.45
 
-Version 1.0.135[B]b[/B] EPiC Real-Debrid
-+ All Kudos -2- TKnorris (Y)
-- Remove WatchHD scraper
-
-Version 1.0.135[B]a[/B] EPiC Real-Debrid
-+ All Kudos -2- TKnorris (Y)
-- Fix Icefilms resolve
-- More fixes, see: v2.0.43
-
-Version 1.0.[B]135[/B] EPiC Real-Debrid
-+ All Kudos -2- TKnorris (Y)
-- Salts HD Lite .135 "engine"
-- some scrapers fixes (and *code*cosmetics*)
-
-Version 1.0.132[B]f[/B] EPiC Real-Debrid
-+ Fixed some scrapers (for now)...
-
-Version 1.0.132[B]d[/B] EPiC Real-Debrid
-+ Salts HD Lite .132 "engine" (kudos-2-TKnorris though)
-- add: TVrelease + enable 'Pre-test All Direct sources'
-
-Version 1.0.132[B]c[/B] EPiC Real-Debrid
-+ Salts HD Lite .132 "engine" (kudos-2-TKnorris though)
-- 2nd  'code cosmetics'  :-p  (scrapers/sources remove)
-
-Version 1.0.132[B]b[/B] EPiC Real-Debrid
-+ Salts HD Lite .132 "engine" (kudos-2-TKnorris though)
-- 1st  'code cosmetics'  :-p  (scrapers/sources clean!)
-
-Version 1.0.132[B]a[/B] EPiC Real-Debrid
-+ Salts HD Lite .132 "engine" (kudos-2-TKnorris though)
-
-[B]Version 1.0.130[/B] EPiC Real-Debrid          #BETA#
-+ Salts HD Lite .130 "engine" (kudos-2-TKnorris though)
-
----------------------
-
-[B]Version 2.0.68[/B]
-- Fix pftv scraper
-- Fix yshow scraper
-- Fix MovieZone
-- Fix Sezon
-- Fix YesMovies
-- Fix MovieWatcher
+[B]Version 1.0.136[/B]
++ see below ;-P (scrapers+fixes)
 
 [B]Version 2.0.67[/B]
 - Improve xmovies8

@@ -26,7 +26,7 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 
-BASE_URL = 'http://projectfreetv.so'
+BASE_URL = 'http://projectfreetv.im'
 
 class PFTV_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -82,7 +82,7 @@ class PFTV_Scraper(scraper.Scraper):
             return self._default_get_episode_url(season_url, video, episode_pattern, airdate_pattern=airdate_pattern)
 
     def search(self, video_type, title, year, season=''):
-        url = urlparse.urljoin(self.base_url, '/watch-tv-series')
+        url = urlparse.urljoin(self.base_url, '/watch-tv-series/')
         html = self._http_get(url, cache_limit=8)
         results = []
         norm_title = scraper_utils.normalize_title(title)

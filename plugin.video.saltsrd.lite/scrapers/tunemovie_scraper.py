@@ -29,8 +29,9 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 
-BASE_URL = 'http://tunemovie.is'
+BASE_URL = 'http://tunemovies.to'
 LINK_URL = '/ip.temp/swf/plugins/ipplugins.php'
+LINK_URL2 = '/ip.temp/swf/ipplayer/ipplayer.php?u=%s&w=100%%&h=420'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 GK_KEY = base64.b64decode('Q05WTmhPSjlXM1BmeFd0UEtiOGg=')
 
@@ -50,14 +51,6 @@ class TuneMovie_Scraper(scraper.Scraper):
         return 'tunemovie'
 
     def resolve_link(self, link):
-        if self.base_url in link:
-            html = self._http_get(link, cache_limit=0)
-            fragment = dom_parser.parse_dom(html, 'div', {'id': 'player'})
-            if fragment:
-                match = re.search('<iframe[^>]*src="([^"]+)', fragment[0])
-                if match:
-                    link = match.group(1)
-
         return link
 
     def format_source_label(self, item):
@@ -76,8 +69,6 @@ class TuneMovie_Scraper(scraper.Scraper):
             sources = self.__get_gk_links(html, url)
             if not sources:
                 sources = self.__get_gk_links2(html)
-            
-            sources.update(self.__get_iframe_links(html))
             
             for source in sources:
                 host = self._get_direct_hostname(source)
@@ -99,19 +90,6 @@ class TuneMovie_Scraper(scraper.Scraper):
 
         return hosters
 
-    def __get_iframe_links(self, html):
-        sources = {}
-        fragment = dom_parser.parse_dom(html, 'div', {'id': 'total_version'})
-        if fragment:
-            names = dom_parser.parse_dom(fragment[0], 'p', {'class': 'server_servername'})
-            links = dom_parser.parse_dom(fragment[0], 'p', {'class': 'server_play'})
-            for name, link in zip(names, links):
-                name = name.replace('Server ', '')
-                match = re.search('href="([^"]+)', link)
-                if match:
-                    sources[match.group(1)] = name.lower()
-        return sources
-    
     def __get_gk_links(self, html, page_url):
         sources = {}
         for link in dom_parser.parse_dom(html, 'div', {'class': '[^"]*server_line[^"]*'}):
@@ -126,18 +104,22 @@ class TuneMovie_Scraper(scraper.Scraper):
                 html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
                 js_data = scraper_utils.parse_json(html, url)
                 if 's' in js_data:
-                    if isinstance(js_data['s'], basestring):
-                        sources[js_data['s']] = QUALITIES.HIGH
-                    else:
-                        for link in js_data['s']:
-                            stream_url = link['file']
-                            if self._get_direct_hostname(stream_url) == 'gvideo':
-                                quality = scraper_utils.gv_get_quality(stream_url)
-                            elif 'label' in link:
-                                quality = scraper_utils.height_get_quality(link['label'])
-                            else:
-                                quality = QUALITIES.HIGH
-                            sources[stream_url] = quality
+                    url = urlparse.urljoin(self.base_url, LINK_URL2 % (js_data['s']))
+                    html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
+                    js_data = scraper_utils.parse_json(html, url)
+                    if 'data' in js_data and js_data['data']:
+                        if isinstance(js_data['data'], basestring):
+                            sources[js_data['data']] = QUALITIES.HIGH
+                        else:
+                            for link in js_data['data']:
+                                stream_url = link['files']
+                                if self._get_direct_hostname(stream_url) == 'gvideo':
+                                    quality = scraper_utils.gv_get_quality(stream_url)
+                                elif 'quality' in link:
+                                    quality = scraper_utils.height_get_quality(link['quality'])
+                                else:
+                                    quality = QUALITIES.HIGH
+                                sources[stream_url] = quality
         return sources
 
     def __get_gk_links2(self, html):
@@ -158,7 +140,7 @@ class TuneMovie_Scraper(scraper.Scraper):
         return self._default_get_episode_url(season_url, video, episode_pattern)
     
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/search-movies/%s.html')
+        search_url = urlparse.urljoin(self.base_url, '/search/%s.html')
         search_url = search_url % (urllib.quote_plus(title))
         html = self._http_get(search_url, cache_limit=8)
         results = []

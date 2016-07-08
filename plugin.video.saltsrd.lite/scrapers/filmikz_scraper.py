@@ -57,7 +57,7 @@ class Filmikz_Scraper(scraper.Scraper):
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
 
-            pattern = "/watch\.php\?q=([^']+)"
+            pattern = "/w\.php\?q=([^']+)"
             seen_hosts = {}
             for match in re.finditer(pattern, html, re.DOTALL):
                 url = match.group(1)

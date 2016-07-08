@@ -29,7 +29,7 @@ from salts_lib.kodi import i18n
 import scraper
 
 
-BASE_URL = 'http://download.myvideolinks.xyz'
+BASE_URL = 'http://newmyvideolink.xyz'
 
 class MyVidLinks_Scraper(scraper.Scraper):
     base_url = BASE_URL

@@ -54,6 +54,8 @@ else:
     try: MAX_WRITERS = int(kodi.get_setting('sema_value')) or 1
     except: MAX_WRITERS = 1
 SQL_SEMA = Semaphore(MAX_WRITERS)
+SOURCE_CHUNK = 200
+
 
 class DB_Connection():
     locks = 0
@@ -202,6 +204,28 @@ class DB_Connection():
         else:
             return False, None
         
+    def cache_sources(self, sources):
+        sql = 'DELETE FROM source_cache'
+        self.__execute(sql)
+        for i in xrange(0, len(sources), SOURCE_CHUNK):
+            uow = sources[i: i + SOURCE_CHUNK]
+            for source in uow:
+                if 'class' in source:
+                    source['name'] = source['class'].get_name()
+                    del source['class']
+            pickled_row = cPickle.dumps(uow)
+            sql = 'INSERT INTO source_cache (source) VALUES (?)'
+            self.__execute(sql, (pickled_row,))
+    
+    def get_cached_sources(self):
+        sql = 'SELECT source from source_cache'
+        rows = self.__execute(sql)
+        sources = []
+        for row in rows:
+            col = row[0].encode('utf-8') if isinstance(row[0], unicode) else row[0]
+            sources += cPickle.loads(col)
+        return sources
+    
     def add_other_list(self, section, username, slug, name=None):
         sql = 'REPLACE INTO other_lists (section, username, slug, name) VALUES (?, ?, ?, ?)'
         self.__execute(sql, (section, username, slug, name))
@@ -420,6 +444,7 @@ class DB_Connection():
                 PRIMARY KEY(id))')
                 self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug VARCHAR(255) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, resumepoint DOUBLE NOT NULL, \
                 PRIMARY KEY(slug, season, episode))')
+                self.__execute('CREATE TABLE IF NOT EXISTS source_cache (source TEXT NOT NULL)')
             else:
                 self.__create_sqlite_db()
                 self.__execute('PRAGMA journal_mode=WAL')
@@ -433,6 +458,7 @@ class DB_Connection():
                 self.__execute('CREATE TABLE IF NOT EXISTS saved_searches (id INTEGER PRIMARY KEY, section TEXT NOT NULL, added DOUBLE NOT NULL,query TEXT NOT NULL)')
                 self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug TEXT NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL, resumepoint DOUBLE NOT NULL, \
                 PRIMARY KEY(slug, season, episode))')
+                self.__execute('CREATE TABLE IF NOT EXISTS source_cache (source TEXT NOT NULL)')
     
             # reload the previously saved backup export
             if db_version is not None and cur_version != db_version:
