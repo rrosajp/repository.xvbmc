@@ -30,6 +30,7 @@ import urlparse
 import xbmcgui
 import urlresolver
 from salts_lib import cloudflare
+from salts_lib import cf_captcha
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib import scraper_utils
@@ -47,6 +48,7 @@ COOKIEPATH = kodi.translate_path(kodi.get_profile())
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 # Q_LIST = [item[0] for item in sorted(Q_ORDER.items(), key=lambda x:x[1])]
 MAX_RESPONSE = 1024 * 1024 * 2
+CF_CAPCHA_ENABLED = kodi.get_setting('cf_captcha') == 'true'
 
 class NoRedirection(urllib2.HTTPErrorProcessor):
     def http_response(self, request, response):
@@ -233,10 +235,10 @@ class Scraper(object):
 
         return url
 
-    def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, method=None, require_debrid=False, cache_limit=8):
+    def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, method=None, require_debrid=False, read_error=False, cache_limit=8):
         html = self._cached_http_get(url, self.base_url, self.timeout, cookies=cookies, data=data, multipart_data=multipart_data,
                                      headers=headers, allow_redirect=allow_redirect, method=method, require_debrid=require_debrid,
-                                     cache_limit=cache_limit)
+                                     read_error=read_error, cache_limit=cache_limit)
         sucuri_cookie = scraper_utils.get_sucuri_cookie(html)
         if sucuri_cookie:
             log_utils.log('Setting sucuri cookie: %s' % (sucuri_cookie), log_utils.LOGDEBUG)
@@ -246,11 +248,11 @@ class Scraper(object):
                 cookies = sucuri_cookie
             html = self._cached_http_get(url, self.base_url, self.timeout, cookies=cookies, data=data, multipart_data=multipart_data,
                                          headers=headers, allow_redirect=allow_redirect, method=method, require_debrid=require_debrid,
-                                         cache_limit=0)
+                                         read_error=read_error, cache_limit=0)
         return html
     
     def _cached_http_get(self, url, base_url, timeout, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, method=None,
-                         require_debrid=False, cache_limit=8):
+                         require_debrid=False, read_error=False, cache_limit=8):
         if require_debrid:
             if Scraper.debrid_resolvers is None:
                 Scraper.debrid_resolvers = [resolver for resolver in urlresolver.relevant_resolvers() if resolver.isUniversal()]
@@ -326,13 +328,19 @@ class Scraper(object):
                 else:
                     html = response.read(MAX_RESPONSE)
         except urllib2.HTTPError as e:
-            if e.code == 503 and 'cf-browser-verification' in e.read():
+            html = e.read()
+            if CF_CAPCHA_ENABLED and e.code == 403 and 'cf-captcha-bookmark' in html:
+                html = cf_captcha.solve(url, self.cj, scraper_utils.get_ua())
+                if not html:
+                    return ''
+            elif e.code == 503 and 'cf-browser-verification' in html:
                 html = cloudflare.solve(url, self.cj, scraper_utils.get_ua())
                 if not html:
                     return ''
             else:
                 log_utils.log('Error (%s) during scraper http get: %s' % (str(e), url), log_utils.LOGWARNING)
-                return ''
+                if not read_error:
+                    return ''
         except Exception as e:
             log_utils.log('Error (%s) during scraper http get: %s' % (str(e), url), log_utils.LOGWARNING)
             return ''

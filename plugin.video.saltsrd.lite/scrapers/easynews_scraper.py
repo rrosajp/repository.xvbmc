@@ -32,7 +32,7 @@ BASE_URL = 'http://members.easynews.com'
 SORT = 's1=relevance&s1d=-&s2=dsize&s2d=-&s3=dtime&s3d=-'
 VID_FILTER = 'fex=mkv%%2C+mp4%%2C+avi'
 # RANGE_FILTERS = 'd1=&d1t=&d2=&d2t=&b1=&b1t=&b2=&b2t=&px1=&px1t=&px2=&px2t=&fps1=&fps1t=&fps2=&fps2t=&bps1=&bps1t=&bps2=&bps2t=&hz1=&hz1t=&hz2=&hz2t=&rn1=&rn1t=1&rn2=&rn2t='
-SEARCH_URL = '/2.0/search/solr-search/advanced?st=adv&safeO=0&sb=1&%s&%s&fty[]=VIDEO&spamf=1&u=1&gx=1&pby=100&pno=1&sS=3' % (VID_FILTER, SORT)
+SEARCH_URL = '/2.0/search/solr-search/advanced?st=adv&safeO=0&sb=1&%s&%s&fty[]=VIDEO&spamf=1&u=1&gx=1&pby=%s&pno=1&sS=3'
 SEARCH_URL += '&gps=%s&sbj=%s'
 
 class EasyNews_Scraper(scraper.Scraper):
@@ -43,6 +43,7 @@ class EasyNews_Scraper(scraper.Scraper):
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
         self.username = kodi.get_setting('%s-username' % (self.get_name()))
         self.password = kodi.get_setting('%s-password' % (self.get_name()))
+        self.max_results = int(kodi.get_setting('%s-result_limit' % (self.get_name())))
         self.cookie = {'chickenlicker': '%s%%3A%s' % (self.username, self.password)}
 
     @classmethod
@@ -163,6 +164,7 @@ class EasyNews_Scraper(scraper.Scraper):
         name = cls.get_name()
         settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-4,true)"/>' % (name, i18n('username')))
         settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-5,true)"/>' % (name, i18n('password')))
+        settings.append('         <setting id="%s-result_limit" label="     %s" type="slider" default="10" range="10,100" option="int" visible="eq(-6,true)"/>' % (name, i18n('result_limit')))
         return settings
 
     def _http_get(self, url, cache_limit=8):
@@ -173,5 +175,5 @@ class EasyNews_Scraper(scraper.Scraper):
 
     def __translate_search(self, url):
         query = urllib.quote_plus(urlparse.parse_qs(urlparse.urlparse(url).query)['query'][0])
-        url = urlparse.urljoin(self.base_url, SEARCH_URL % (query, query))
+        url = urlparse.urljoin(self.base_url, SEARCH_URL % (VID_FILTER, SORT, self.max_results, query, query))
         return url

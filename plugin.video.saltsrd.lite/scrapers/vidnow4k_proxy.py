@@ -18,9 +18,9 @@
 from salts_lib import log_utils
 import proxy
 
-class MovieLocker_Proxy(proxy.Proxy):
+class VidNow4K_Proxy(proxy.Proxy):
     try:
-        from movielocker_scraper import MovieLocker_Scraper as real_scraper
+        from vidnow4k_scraper import VidNow4K_Scraper as real_scraper
     except Exception as e:
         real_scraper = None
         log_utils.log('import failed: %s' % (e), log_utils.LOGDEBUG)

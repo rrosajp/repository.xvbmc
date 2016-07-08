@@ -65,7 +65,7 @@ class KiwiHD_Scraper(scraper.Scraper):
 
             source = dom_parser.parse_dom(html, 'source', {'type': 'video/mp4'}, ret='src')
             if source:
-                source = source[0]
+                source = source[0].replace(' ', '')
                 host = self._get_direct_hostname(source)
                 stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
                 hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': QUALITIES.HD720, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}

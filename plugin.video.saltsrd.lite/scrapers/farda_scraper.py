@@ -26,8 +26,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://fardadownload.ir'
-BASE_URL2 = 'http://dl.fardadownload.ir'
+BASE_URL = 'http://dl.fardadownload.ir/Serial'
 
 class Farda_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -35,7 +34,6 @@ class Farda_Scraper(scraper.Scraper):
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
-        self.base_url2 = BASE_URL2
 
     @classmethod
     def provides(cls):
@@ -62,7 +60,7 @@ class Farda_Scraper(scraper.Scraper):
         hosters = []
         norm_title = scraper_utils.normalize_title(video.title)
         if source_url and source_url != FORCE_NO_MATCH:
-            source_url = urlparse.urljoin(self.base_url2, source_url)
+            source_url = urlparse.urljoin(self.base_url, source_url)
             for line in self._get_files(source_url, cache_limit=24):
                 if not line['directory']:
                     match = {}
@@ -88,15 +86,15 @@ class Farda_Scraper(scraper.Scraper):
     def _get_episode_url(self, show_url, video):
         force_title = scraper_utils.force_title(video)
         if not force_title:
-            show_url = urlparse.urljoin(self.base_url2, show_url)
-            html = self._http_get(show_url, cache_limit=24)
+            show_url = self.base_url + show_url
+            html = self._http_get(show_url, cache_limit=48)
             match = re.search('href="(S%02d/)"' % (int(video.season)), html)
             if match:
                 season_url = urlparse.urljoin(show_url, match.group(1))
             else:
                 season_url = show_url
 
-            for item in self._get_files(season_url, cache_limit=1):
+            for item in self._get_files(season_url, cache_limit=8):
                 match = re.search('[._ -]S%02d[._ -]?E%02d[._ -]' % (int(video.season), int(video.episode)), item['title'], re.I)
                 if match:
                     return scraper_utils.pathify_url(season_url)
@@ -104,27 +102,9 @@ class Farda_Scraper(scraper.Scraper):
     def search(self, video_type, title, year, season=''):
         results = []
         norm_title = scraper_utils.normalize_title(title)
-        html = self._http_get(self.base_url, cache_limit=48)
-        links = dom_parser.parse_dom(html, 'a', {'rollapp-href': '[^"]*'}, ret='href')
-        titles = dom_parser.parse_dom(html, 'a', {'rollapp-href': '[^"]*'})
-        for match_url, match_title in zip(links, titles):
-            if norm_title in scraper_utils.normalize_title(match_title):
-                show_dir = self.__get_show_dir(match_url)
-                if show_dir:
-                    result = {'url': scraper_utils.pathify_url(show_dir), 'title': scraper_utils.cleanse_title(match_title), 'year': ''}
-                    results.append(result)
+        html = self._http_get(self.base_url, cache_limit=24 * 7)
+        for item in self._parse_directory(html):
+            if norm_title in scraper_utils.normalize_title(item['title']) and item['directory']:
+                result = {'url': scraper_utils.pathify_url(item['link']), 'title': scraper_utils.cleanse_title(item['title']), 'year': ''}
+                results.append(result)
         return results
-
-    def __get_show_dir(self, show_url):
-        show_url = urlparse.urljoin(self.base_url, show_url)
-        html = self._http_get(show_url, cache_limit=48)
-        article = dom_parser.parse_dom(html, 'article')
-        if article:
-            serial_url = self.base_url2 + '/Serial/[^"]*'
-            links = dom_parser.parse_dom(article[0], 'a', {'href': serial_url}, ret='href')
-            if links:
-                links = list(set(links))
-                pattern = self.base_url2 + '(/Serial/[^/]+/)'
-                match = re.search(pattern, links[0])
-                if match:
-                    return match.group(1)

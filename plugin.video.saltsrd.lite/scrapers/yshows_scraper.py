@@ -17,7 +17,7 @@
 """
 import re
 import urlparse
-
+import urllib
 from salts_lib import dom_parser
 from salts_lib import kodi
 from salts_lib import log_utils
@@ -62,13 +62,14 @@ class YShows_Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=.25)
-            fragment = dom_parser.parse_dom(html, 'tbody')
-            if fragment:
-                links = dom_parser.parse_dom(fragment[0], 'a', ret='href')
-                domains = dom_parser.parse_dom(fragment[0], 'a')
-                for link, host in zip(links, domains):
-                    host = re.sub('</?span[^>]*>', '', host)
-                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': scraper_utils.get_quality(video, host, QUALITIES.HIGH), 'views': None, 'rating': None, 'url': link, 'direct': False}
+            for td in dom_parser.parse_dom(html, 'td', {'class': '[^"]*text-xs-left[^"]*'}):
+                link = dom_parser.parse_dom(td, 'a', ret='href')
+                host = dom_parser.parse_dom(td, 'img', ret='alt')
+                if link and host:
+                    host = host[0]
+                    link = link[0]
+                    quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': link, 'direct': False}
                     hosters.append(hoster)
         return hosters
 
@@ -78,12 +79,14 @@ class YShows_Scraper(scraper.Scraper):
         return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/search_ajax')
-        data = {'query': title}
-        html = self._http_get(search_url, data=data, headers=XHR, cache_limit=1)
         results = []
-        for match in re.finditer('class="list-group-item"\s+href="([^"]+)">([^<]+)', html):
-            url, match_title = match.groups()
-            result = {'url': scraper_utils.pathify_url(url), 'title': scraper_utils.cleanse_title(match_title), 'year': ''}
-            results.append(result)
+        search_url = urlparse.urljoin(self.base_url, '/search?q=%s')
+        search_url = search_url % (urllib.quote_plus(title))
+        html = self._http_get(search_url, cache_limit=8)
+        fragment = dom_parser.parse_dom(html, 'div', {'class': 'col-md-9'})
+        if fragment:
+            for match in re.finditer('href="([^"]+)[^>]+>([^<]+)', fragment[0]):
+                url, match_title = match.groups()
+                result = {'url': scraper_utils.pathify_url(url), 'title': scraper_utils.cleanse_title(match_title), 'year': ''}
+                results.append(result)
         return results

@@ -84,6 +84,7 @@ def create_item(queries, label, thumb='', fanart='', is_folder=None, is_playable
     add_item(queries, list_item, fanart, is_folder, is_playable, total_items, menu_items, replace_menu)
 
 def add_item(queries, list_item, fanart='', is_folder=None, is_playable=None, total_items=0, menu_items=None, replace_menu=False):
+    if not fanart: fanart = os.path.join(get_path(), 'fanart.jpg')
     if menu_items is None: menu_items = []
     if is_folder is None:
         is_folder = False if is_playable else True
@@ -94,7 +95,7 @@ def add_item(queries, list_item, fanart='', is_folder=None, is_playable=None, to
         playable = 'true' if is_playable else 'false'
 
     liz_url = get_plugin_url(queries)
-    if fanart: list_item.setProperty('fanart_image', fanart)
+    if not list_item.getProperty('fanart_image'): list_item.setProperty('fanart_image', fanart)
     list_item.setInfo('video', {'title': list_item.getLabel()})
     list_item.setProperty('isPlayable', playable)
     list_item.addContextMenuItems(menu_items, replaceItems=replace_menu)
@@ -111,10 +112,10 @@ def parse_query(query):
             q[key] = queries[key]
     return q
 
-def notify(header=None, msg='', duration=2000, sound=None):
+def notify(header=None, msg='', duration=2000, sound=None, icon_path=None):
     if header is None: header = get_name()
     if sound is None: sound = get_setting('mute_notifications') == 'false'
-    icon_path = os.path.join(get_path(), 'icon.png')
+    if icon_path is None: icon_path = os.path.join(get_path(), 'icon.png')
     try:
         xbmcgui.Dialog().notification(header, msg, icon_path, duration, sound)
     except:

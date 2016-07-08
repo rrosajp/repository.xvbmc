@@ -18,16 +18,18 @@
 import xbmc
 import xbmcgui
 import xbmcaddon
+import time
 from salts_lib import kodi
 from salts_lib import log_utils
 from salts_lib import utils
 from salts_lib import utils2
+from salts_lib.kodi import i18n
 from salts_lib.constants import MODES
 from salts_lib.constants import TRIG_DB_UPG
 from salts_lib.db_utils import DB_Connection
+from salts_lib.trakt_api import Trakt_API
 
 MAX_ERRORS = 10
-
 log_utils.log('Service: Installed Version: %s' % (kodi.get_version()), log_utils.LOGNOTICE)
 db_connection = DB_Connection()
 if kodi.get_setting('use_remote_db') == 'false' or kodi.get_setting('enable_upgrade') == 'true':
@@ -132,7 +134,7 @@ class Service(xbmc.Player):
         log_utils.log('Service: Playback completed', log_utils.LOGNOTICE)
         self.onPlayBackStopped()
 
-monitor = Service()
+service = Service()
 utils.do_startup_task(MODES.UPDATE_SUBS)
 
 was_on = False
@@ -151,13 +153,50 @@ def disable_global_cx():
             sf.setSetting('CONTEXT', 'true')
             was_on = False
     
+last_label = ''
+begin = 0
+def show_next_up():
+    global last_label
+    global begin
+    token = kodi.get_setting('trakt_oauth_token')
+    if token and xbmc.getInfoLabel('Container.PluginName') == kodi.get_id() and xbmc.getInfoLabel('Container.Content') == 'tvshows':
+        if xbmc.getInfoLabel('ListItem.label') != last_label:
+            begin = time.time()
+
+        last_label = xbmc.getInfoLabel('ListItem.label')
+        if begin and (time.time() - begin) >= int(kodi.get_setting('next_up_delay')):
+            liz_url = xbmc.getInfoLabel('ListItem.FileNameAndPath')
+            queries = kodi.parse_query(liz_url[liz_url.find('?'):])
+            if 'trakt_id' in queries:
+                try: list_size = int(kodi.get_setting('list_size'))
+                except: list_size = 30
+                try: trakt_timeout = int(kodi.get_setting('trakt_timeout'))
+                except: trakt_timeout = 20
+                trakt_api = Trakt_API(token, kodi.get_setting('use_https') == 'true', list_size, trakt_timeout, kodi.get_setting('trakt_offline') == 'true')
+                progress = trakt_api.get_show_progress(queries['trakt_id'], full=True)
+                if 'next_episode' in progress and progress['next_episode']:
+                    if progress['completed'] or kodi.get_setting('next_unwatched') == 'true':
+                        next_episode = progress['next_episode']
+                        date = utils2.make_day(utils2.make_air_date(next_episode['first_aired']))
+                        if kodi.get_setting('next_time') != '0':
+                            date_time = '%s@%s' % (date, utils2.make_time(utils2.iso_2_utc(next_episode['first_aired']), 'next_time'))
+                        else:
+                            date_time = date
+                        msg = '[[COLOR deeppink]%s[/COLOR]] - %sx%s' % (date_time, next_episode['season'], next_episode['number'])
+                        if next_episode['title']: msg += ' - %s' % (next_episode['title'])
+                        duration = int(kodi.get_setting('next_up_duration')) * 1000
+                        kodi.notify(header=i18n('next_episode'), msg=msg, duration=duration)
+            begin = 0
+    else:
+        last_label = ''
+
 errors = 0
 while not xbmc.abortRequested:
     try:
-        isPlaying = monitor.isPlaying()
+        isPlaying = service.isPlaying()
         utils.do_scheduled_task(MODES.UPDATE_SUBS, isPlaying)
-        if monitor.tracked and monitor.isPlayingVideo():
-            monitor._lastPos = monitor.getTime()
+        if service.tracked and service.isPlayingVideo():
+            service._lastPos = service.getTime()
     except Exception as e:
         errors += 1
         if errors >= MAX_ERRORS:
@@ -168,7 +207,9 @@ while not xbmc.abortRequested:
     else:
         errors = 0
 
-    xbmc.sleep(1000)
+    xbmc.sleep(500)
     disable_global_cx()
+    if kodi.get_setting('show_next_up') == 'true':
+        show_next_up()
     
 log_utils.log('Service: shutting down...', log_utils.LOGNOTICE)
