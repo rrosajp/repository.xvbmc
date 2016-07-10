@@ -141,7 +141,10 @@ def solve(url, cj, user_agent=None, wait=True):
             else:
                 break
         except urllib2.HTTPError as e:
-            log_utils.log('CloudFlare Error: %s on url: %s' % (e.code, url), log_utils.LOGWARNING)
+            log_utils.log('CloudFlare HTTP Error: %s on url: %s' % (e.code, url), log_utils.LOGWARNING)
+            return False
+        except urllib2.URLError as e:
+            log_utils.log('CloudFlare URLError Error: %s on url: %s' % (e, url), log_utils.LOGWARNING)
             return False
 
     if cj is not None:

@@ -66,7 +66,7 @@ class Dizilab_Scraper(scraper.Scraper):
             html = self._http_get(page_url, cache_limit=.5)
             videos = re.findall('''onclick\s*=\s*"loadVideo\('([^']+)''', html)
             subs = self.__get_subs(html)
-            for v_id, icon in zip(videos, subs):
+            for v_id, icon in map(None, videos, subs):
                 ajax_url = urlparse.urljoin(self.base_url, AJAX_URL)
                 data = {'vid': v_id, 'tip': 1, 'type': 'loadVideo'}
                 headers = XHR
@@ -83,7 +83,7 @@ class Dizilab_Scraper(scraper.Scraper):
 
     def __get_subs(self, html):
         subs = []
-        fragment = dom_parser.parse_dom(html, 'ul', {'class': '[^"]*language[^"]*'})
+        fragment = dom_parser.parse_dom(html, 'ul', {'class': 'language alternative'})
         if fragment:
             subs = dom_parser.parse_dom(fragment[0], 'span', {'class': 'icon-[^"]*'}, ret='class')
         return subs
@@ -174,16 +174,16 @@ class Dizilab_Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        html = self._http_get(self.base_url, cache_limit=24)
+        url = urlparse.urljoin(self.base_url, AJAX_URL)
+        data = {'type': 'getDizi'}
+        html = self._http_get(url, data=data, headers=XHR, cache_limit=48)
         norm_title = scraper_utils.normalize_title(title)
         match_year = ''
-        fragment = dom_parser.parse_dom(html, 'div', {'class': 'search-result'})
-        if fragment:
-            urls = dom_parser.parse_dom(fragment[0], 'a', ret='href')
-            titles = dom_parser.parse_dom(fragment[0], 'span', {'class': 'title'})
-            for match_url, match_title in zip(urls, titles):
-                if norm_title in scraper_utils.normalize_title(match_title):
-                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+        js_data = scraper_utils.parse_json(html, url)
+        if 'data' in js_data:
+            for item in js_data['data']:
+                if 'adi' in item and 'url' in item and norm_title in scraper_utils.normalize_title(item['adi']):
+                    result = {'url': scraper_utils.pathify_url(item['url']), 'title': scraper_utils.cleanse_title(item['adi']), 'year': match_year}
                     results.append(result)
 
         return results

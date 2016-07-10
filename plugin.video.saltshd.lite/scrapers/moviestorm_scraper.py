@@ -66,7 +66,7 @@ class MovieStorm_Scraper(scraper.Scraper):
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
+            html = self._http_get(url, cache_limit=2)
             pattern = 'class="source_td">\s*<img[^>]+>\s*(.*?)\s*-\s*\((\d+) views\).*?class="quality_td">\s*(.*?)\s*<.*?href="([^"]+)'
             for match in re.finditer(pattern, html, re.DOTALL):
                 host, views, quality_str, stream_url = match.groups()
@@ -85,7 +85,7 @@ class MovieStorm_Scraper(scraper.Scraper):
         results = []
         if video_type == VIDEO_TYPES.TVSHOW:
             url = urlparse.urljoin(self.base_url, '/series/all/')
-            html = self._http_get(url, cache_limit=8)
+            html = self._http_get(url, cache_limit=48)
     
             links = dom_parser.parse_dom(html, 'a', {'class': 'underilne'}, 'href')
             titles = dom_parser.parse_dom(html, 'a', {'class': 'underilne'})

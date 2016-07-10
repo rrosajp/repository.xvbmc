@@ -57,26 +57,36 @@ class MovieZone_Scraper(scraper.Scraper):
         return label
 
     def get_sources(self, video):
+        hosters = []
         source_url = self.get_url(video)
-        sources = []
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=8)
-            for source in dom_parser.parse_dom(html, 'source', ret='src'):
+            sources = dom_parser.parse_dom(html, 'source', ret='src')
+            for fragment in dom_parser.parse_dom(html, 'div', {'id': 'div\d+'}):
+                log_utils.log(fragment)
+                iframes = dom_parser.parse_dom(fragment, 'iframe', ret='src')
+                for iframe_url in iframes:
+                    iframe_url = urlparse.urljoin(self.base_url, iframe_url)
+                    html = self._http_get(iframe_url, cache_limit=1)
+                    sources += dom_parser.parse_dom(html, 'source', ret='src')
+                    iframes += dom_parser.parse_dom(html, 'iframe', ret='src')
+            
+            for source in sources:
                 host = self._get_direct_hostname(source)
                 if host == 'gvideo':
                     quality = scraper_utils.gv_get_quality(source)
                 else:
                     quality = QUALITIES.HIGH
                 source = {'multi-part': False, 'url': source, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
-                sources.append(source)
+                hosters.append(source)
 
-        return sources
+        return hosters
 
     def search(self, video_type, title, year, season=''):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/?s=%s' % (urllib.quote_plus(title)))
-        html = self._http_get(search_url, cache_limit=8)
+        html = self._http_get(search_url, read_error=True, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item'}):
             post_type = dom_parser.parse_dom(item, 'div', {'class': 'typepost'})
             if post_type and post_type[0] == 'tv': continue

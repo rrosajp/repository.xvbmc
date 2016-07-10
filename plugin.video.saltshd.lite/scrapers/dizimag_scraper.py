@@ -62,24 +62,27 @@ class Dizimag_Scraper(scraper.Scraper):
             if re.search('Şu an fragman*', html, re.I):
                 return hosters
             
-            match = re.search('''url\s*:\s*"([^"]+)"\s*,\s*data:\s*["'](id=\d+)''', html)
+            match = re.search('''url\s*:\s*"([^"]+)"\s*,\s*data:'id=''', html)
             if match:
-                url, data = match.groups()
-                url = urlparse.urljoin(self.base_url, url)
-                result = self._http_get(url, data=data, headers=XHR, cache_limit=.5)
-                log_utils.log(result)
-                for match in re.finditer('"videolink\d*"\s*:\s*"([^"]+)","videokalite\d*"\s*:\s*"?(\d+)p?', result):
-                    stream_url, height = match.groups()
-                    stream_url = stream_url.replace('\\/', '/')
-                    host = self._get_direct_hostname(stream_url)
-                    if host == 'gvideo':
-                        quality = scraper_utils.gv_get_quality(stream_url)
-                    else:
-                        quality = scraper_utils.height_get_quality(height)
-                        stream_url += '|User-Agent=%s&Referer=%s&Cookie=%s' % (scraper_utils.get_ua(), urllib.quote(page_url), self._get_stream_cookies())
-
-                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                    hosters.append(hoster)
+                ajax_url = match.group(1)
+                for data_id in re.findall("kaynakdegis\('([^']+)", html):
+                    url = urlparse.urljoin(self.base_url, ajax_url)
+                    headers = {'Referer': page_url}
+                    headers.update(XHR)
+                    data = {'id': data_id}
+                    result = self._http_get(url, data=data, headers=headers, cache_limit=.5)
+                    for match in re.finditer('"videolink\d*"\s*:\s*"([^"]+)","videokalite\d*"\s*:\s*"?(\d+)p?', result):
+                        stream_url, height = match.groups()
+                        stream_url = stream_url.replace('\\/', '/')
+                        host = self._get_direct_hostname(stream_url)
+                        if host == 'gvideo':
+                            quality = scraper_utils.gv_get_quality(stream_url)
+                        else:
+                            quality = scraper_utils.height_get_quality(height)
+                            stream_url += '|User-Agent=%s&Referer=%s&Cookie=%s' % (scraper_utils.get_ua(), urllib.quote(page_url), self._get_stream_cookies())
+    
+                        hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                        hosters.append(hoster)
     
         return hosters
 
@@ -89,8 +92,7 @@ class Dizimag_Scraper(scraper.Scraper):
         return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year, season=''):
-        html = self._http_get(self.base_url, cache_limit=8)
-        log_utils.log(html)
+        html = self._http_get(self.base_url, cache_limit=48)
         results = []
         fragment = dom_parser.parse_dom(html, 'div', {'id': 'fil'})
         norm_title = scraper_utils.normalize_title(title)
