@@ -235,10 +235,10 @@ class Scraper(object):
 
         return url
 
-    def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, method=None, require_debrid=False, cache_limit=8):
+    def _http_get(self, url, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, method=None, require_debrid=False, read_error=False, cache_limit=8):
         html = self._cached_http_get(url, self.base_url, self.timeout, cookies=cookies, data=data, multipart_data=multipart_data,
                                      headers=headers, allow_redirect=allow_redirect, method=method, require_debrid=require_debrid,
-                                     cache_limit=cache_limit)
+                                     read_error=read_error, cache_limit=cache_limit)
         sucuri_cookie = scraper_utils.get_sucuri_cookie(html)
         if sucuri_cookie:
             log_utils.log('Setting sucuri cookie: %s' % (sucuri_cookie), log_utils.LOGDEBUG)
@@ -248,11 +248,11 @@ class Scraper(object):
                 cookies = sucuri_cookie
             html = self._cached_http_get(url, self.base_url, self.timeout, cookies=cookies, data=data, multipart_data=multipart_data,
                                          headers=headers, allow_redirect=allow_redirect, method=method, require_debrid=require_debrid,
-                                         cache_limit=0)
+                                         read_error=read_error, cache_limit=0)
         return html
     
     def _cached_http_get(self, url, base_url, timeout, cookies=None, data=None, multipart_data=None, headers=None, allow_redirect=True, method=None,
-                         require_debrid=False, cache_limit=8):
+                         require_debrid=False, read_error=False, cache_limit=8):
         if require_debrid:
             if Scraper.debrid_resolvers is None:
                 Scraper.debrid_resolvers = [resolver for resolver in urlresolver.relevant_resolvers() if resolver.isUniversal()]
@@ -339,7 +339,8 @@ class Scraper(object):
                     return ''
             else:
                 log_utils.log('Error (%s) during scraper http get: %s' % (str(e), url), log_utils.LOGWARNING)
-                return ''
+                if not read_error:
+                    return ''
         except Exception as e:
             log_utils.log('Error (%s) during scraper http get: %s' % (str(e), url), log_utils.LOGWARNING)
             return ''

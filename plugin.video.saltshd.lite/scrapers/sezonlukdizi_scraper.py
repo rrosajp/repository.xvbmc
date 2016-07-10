@@ -33,7 +33,7 @@ import scraper
 BASE_URL = 'http://sezonlukdizi.com'
 SEARCH_URL = '/js/dizi.js'
 SEASON_URL = '/ajax/dataDizi.asp'
-GET_VIDEO_URL = '/service/get_video_part'
+EMBED_URL = '/ajax/dataEmbed.asp'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class SezonLukDizi_Scraper(scraper.Scraper):
@@ -73,40 +73,60 @@ class SezonLukDizi_Scraper(scraper.Scraper):
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
+        sources = []
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=2)
-            fragment = dom_parser.parse_dom(html, 'div', {'id': 'embed'})
+            fragment = dom_parser.parse_dom(html, 'div', {'id': 'playerMenu'})
             if fragment:
-                    iframe_url = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
+                for data_id in dom_parser.parse_dom(fragment[0], 'div', {'class': '[^"]*item[^"]*'}, ret='data-id'):
+                    embed_url = urlparse.urljoin(self.base_url, EMBED_URL)
+                    data = {'id': data_id}
+                    headers = {'Referer': page_url}
+                    headers.update(XHR)
+                    html = self._http_get(embed_url, data=data, headers=headers, cache_limit=.5)
+                    iframe_url = dom_parser.parse_dom(html, 'iframe', ret='src')
                     if iframe_url:
-                        html = self._http_get(iframe_url[0], cache_limit=.25)
-                        seen_urls = {}
-                        # if captions exist, then they aren't hardcoded
-                        if re.search('kind\s*:\s*"captions"', html):
-                            subs = False
+                        iframe_url = iframe_url[0]
+                        if self.base_url in iframe_url:
+                            sources += self.__get_direct_links(iframe_url, page_url)
                         else:
-                            subs = True
+                            sources += [{'stream_url': iframe_url, 'subs': True, 'height': 480, 'direct': False}]
                             
-                        for match in re.finditer('"?file"?\s*:\s*"([^"]+)"\s*,\s*"?label"?\s*:\s*"(\d+)p?[^"]*"', html):
-                            stream_url, height = match.groups()
-                            if stream_url not in seen_urls:
-                                seen_urls[stream_url] = True
-                                if 'v.asp' in stream_url:
-                                    stream_redirect = self._http_get(stream_url, allow_redirect=False, method='HEAD', cache_limit=0)
-                                    if stream_redirect: stream_url = stream_redirect
-                                    
-                                stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
-                                host = self._get_direct_hostname(stream_url)
-                                if host == 'gvideo':
-                                    quality = scraper_utils.gv_get_quality(stream_url)
-                                else:
-                                    quality = scraper_utils.height_get_quality(height)
-                                hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True, 'subs': subs}
-                                
-                                hosters.append(hoster)
+            for source in sources:
+                stream_url = source['stream_url'] + '|User-Agent=%s' % (scraper_utils.get_ua())
+                if source['direct']:
+                    host = self._get_direct_hostname(stream_url)
+                    if host == 'gvideo':
+                        quality = scraper_utils.gv_get_quality(stream_url)
+                    else:
+                        quality = scraper_utils.height_get_quality(source['height'])
+                else:
+                    host = urlparse.urlparse(source['stream_url']).hostname
+                    quality = scraper_utils.height_get_quality(source['height'])
+                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': source['direct'], 'subs': source['subs']}
+                hosters.append(hoster)
         return hosters
     
+    def __get_direct_links(self, iframe_url, page_url):
+        sources = []
+        headers = {'Referer': page_url}
+        html = self._http_get(iframe_url, headers=headers, cache_limit=.5)
+        
+        # if captions exist, then they aren't hardcoded
+        if re.search('kind\s*:\s*"captions"', html):
+            subs = False
+        else:
+            subs = True
+         
+        for match in re.finditer('"?file"?\s*:\s*"([^"]+)"\s*,\s*"?label"?\s*:\s*"(\d+)p?[^"]*"', html):
+            stream_url, height = match.groups()
+            if 'v.asp' in stream_url:
+                stream_redirect = self._http_get(stream_url, allow_redirect=False, method='HEAD', cache_limit=0)
+                if stream_redirect: stream_url = stream_redirect
+            sources.append({'stream_url': stream_url, 'subs': subs, 'height': height, 'direct': True})
+        return sources
+                    
     def _get_episode_url(self, show_url, video):
         url = urlparse.urljoin(self.base_url, show_url)
         html = self._http_get(url, cache_limit=.25)

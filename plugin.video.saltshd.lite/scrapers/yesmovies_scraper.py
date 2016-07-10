@@ -34,6 +34,7 @@ SL_URL = '/ajax/movie_servers_list/%s/%s/%s.html'
 PLAYLIST_URL1 = '/ajax/movie_load_embed/%s.html'
 PLAYLIST_URL2 = '/ajax/movie_load_episode_rss/%s.html'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
+MAX_HOSTERS = 3
 
 class YesMovies_Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -102,6 +103,10 @@ class YesMovies_Scraper(scraper.Scraper):
                         stream_url = source
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': sources[source]['quality'], 'views': None, 'rating': None, 'url': stream_url, 'direct': sources[source]['direct']}
                     hosters.append(hoster)
+                
+                if not kodi.get_setting('scraper_url') and len(hosters) >= MAX_HOSTERS:
+                    break
+                
         return hosters
 
     def __get_source_page(self, page_url):
