@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.saltsrd.lite" version="1.0.139" name="Salts RD Lite" provider-name="TKnorris (XvBMC-NL MOD)">
+<addon id="plugin.video.saltsrd.lite" version="1.0.140" name="Salts RD Lite" provider-name="TKnorris (XvBMC-NL MOD)">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
 		<import addon="repository.xvbmc" version="3.0.1"/>
