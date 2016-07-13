@@ -36,6 +36,8 @@
 # 1.0.8
 # - Added selector
 #---------------------------------------------------------------------------
+# ! used with/in TROMA movie-addon by EPiC 'XvBMC Nederland' (with special thanks to Patrick Dijkkamp) ... Please keep credits if you copy/paste links, THX !
+#---------------------------------------------------------------------------
 
 import xbmc
 import xbmcplugin
