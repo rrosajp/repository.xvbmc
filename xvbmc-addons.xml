@@ -493,8 +493,8 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.xvbmc.troma"
 	name=" [COLOR lime][B]X[/B][/COLOR]vBMC's [COLOR red][B]Troma[/B][/COLOR] Channel ([COLOR white]40 Years of Disrupting Media[/COLOR])"
-	version="1.0.0"
-	provider-name="EPiC XvBMC-Nederland">
+	version="1.0.1"
+	provider-name="EPiC, XvBMC-Nederland">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.addon.common" version="2.0.0"/>
@@ -506,14 +506,16 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC Nederland: EPiC Troma Channel</summary>
-    <description lang="en">XvBMC Nederland: Troma Channel, 40 Years of EPiC Disrupting Media...  |  be sure to check out our support pages @ https://www.fb.com/groups/XvBMCnederland/  |  all credit goes to http://www.Troma.com/ (Y)</description>
-	<disclaimer lang="en">!!! NOT for the faint-hearted mwoehahahahaah !!!  |  be sure to check out our FB-page: https://www.fb.com/groups/XvBMCnederland/  |  CREDITS: http://www.Troma.com/films/  |  (special thanks -2- Patrick Dijkkamp)</disclaimer>
+    <summary lang="en_GB">XvBMC Nederland: EPiC Troma Channel</summary>
+    <description lang="en_GB">XvBMC Nederland: Troma Channel, 40 Years of EPiC Disrupting Media...  |  be sure to check out our support pages @ https://www.fb.com/groups/XvBMCnederland/  |  all credit goes to http://www.Troma.com/ (Y)</description>
+	<disclaimer lang="en_GB">!!! NOT for the faint-hearted mwoehahahahaah !!!  |  be sure to check out our FB-page: https://www.fb.com/groups/XvBMCnederland/  |  CREDITS: http://www.Troma.com/films/  |  (special thanks -2- Patrick Dijkkamp)</disclaimer>
     <platform>all</platform>
-	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007 *and* copyright / intellectual property: Troma Entertaiment, INC.</license>
+	<language></language>
+	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007 *and* copyright / intellectual property: Troma Entertaiment, INC. / XvBMC-Nederland.</license>
 	<forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
 	<website>https://www.facebook.com/groups/XvBMCnederland/</website>
 	<source>https://archive.org/download/repository.xvbmc/</source>
+	<email>XvBMCnederland@groups.facebook.com</email>
   </extension>
 </addon>
 

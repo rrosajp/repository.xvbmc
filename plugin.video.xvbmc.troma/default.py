@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# Documentaries on YouTube by coldkeys
+# Documentaries on YouTube by coldkeys used as source project
 #------------------------------------------------------------
 # License: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
 # Based on code from youtube addon
 #
-# Author: coldkeys
+# Original author: coldkeys [This script is a MOD]
 #------------------------------------------------------------
 
-# TROMA Build by EPiC XvBMC Nederland with special thanks to Patrick Dijkkamp (Y) 'please keep credits if you copy/paste links, THX!'...
+# ! TROMA movie-addon by EPiC 'XvBMC Nederland' (with special thanks to Patrick Dijkkamp) ... Please keep credits if you copy/paste links, THX !
 
-import os
-import sys, urllib
-import plugintools
-import xbmc,xbmcaddon, xbmcgui, xbmcplugin
+import os,sys,urllib
+import xbmc,xbmcaddon,xbmcgui,xbmcplugin
+import re,base64,plugintools
 from addon.common.addon import Addon
 
 import YDStreamExtractor
@@ -29,16 +28,13 @@ tromavids = [
             ("A Tale Of Two Sisters","https://www.youtube.com/watch?v=krTA9NPde04","http://www.troma.com/wp-content/uploads/2011/03/SHEEN_COVER.jpg"),
             ("Actium Maximus : War Of The Alien Dinosaurs","https://www.youtube.com/watch?v=6Zor9h7bfy8","https://www.tromashop.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/t/r/tr9258.jpg"),
             ("Alien Blood","https://www.youtube.com/watch?v=PPvmgIo6Dc4","http://www.troma.com/wp-content/uploads/2011/02/COVER.jpg"),
-            ("All The Love You Cannes","https://www.youtube.com/watch?v=ZuROkQC3fy4","http://www.troma.com/wp-content/uploads/2011/02/ALL_THE_LOVE_YOU_CANNES_COVER.jpg"),
             ("Angel Negro","https://www.youtube.com/watch?v=sLdtnI-QBgg","http://www.troma.com/wp-content/uploads/2011/02/ANGEL_NEGRO_COVER.jpg"),
             ("Another Space Daze","https://www.youtube.com/watch?v=2PdM8fci4iM","http://i.ebayimg.com/images/g/cfAAAMXQQQhRb6Vb/s-l1600.jpg"),
-            ("APOCALYPSE SOON","https://www.youtube.com/watch?v=1_X9FnnhC8I","http://www.troma.com/wp-content/uploads/2011/03/apocalypsesoon.jpg"),
             ("Attack Of The Tromaggot!","https://www.youtube.com/watch?v=H0zBCjnEWuc","http://www.troma.com/wp-content/uploads/2012/10/TROMAGGOT.jpg"),
             ("Back Road Diner","https://www.youtube.com/watch?v=ys8uQvoKqB0","http://www.troma.com/wp-content/uploads/2011/01/BACK_ROAD_DINER_COVER.jpg"),
             ("Baconhead","https://www.youtube.com/watch?v=v3uQN53oHh0","http://www.troma.com/wp-content/uploads/2011/02/COVER1.jpg"),
             ("Banana Motherf*ck*r","https://www.youtube.com/watch?v=QOt0XjU1TqQ","http://www.troma.com/wp-content/uploads/2014/07/BMF_MOVIE-CATALOG.jpg"),
             ("Battle Of Love's Return","https://www.youtube.com/watch?v=RVKgsM6Eiug","http://www.troma.com/wp-content/uploads/2011/02/BATTLE_OF_LOVES_RETURN_COVER.jpg"),
-            ("Bazaar Bizarre","https://www.youtube.com/watch?v=WpgV7pssPDA","http://www.troma.com/wp-content/uploads/2011/02/BAZAAR_BIZARRE_COVER.jpg"),
             ("Beg!","https://www.youtube.com/watch?v=E1-FdZJokoo","http://www.troma.com/wp-content/uploads/2011/02/COVER3.jpg"),
             ("Belcebu","https://www.youtube.com/watch?v=ceXc_jk5vf4","http://www.troma.com/wp-content/uploads/2011/02/COVER4.jpg"),
             ("Beware Children At Play!","https://www.youtube.com/watch?v=3qkaI96Affc","http://www.troma.com/wp-content/uploads/2011/01/BEWARE_CHILDREN_AT_PLAY_COVER.jpg"),
@@ -46,7 +42,6 @@ tromavids = [
             ("Big Gus What's The Fuss?","https://www.youtube.com/watch?v=zS2EgumLXXE","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/t/r/tr8888.gif"),
             ("Bigfoot","https://www.youtube.com/watch?v=b0wbdyGGsIc","http://www.troma.com/wp-content/uploads/2011/02/BIGFOOT_COVER.jpg"),
             ("Blondes Have More Guns","https://www.youtube.com/watch?v=QKs2NWVzEKE","http://www.troma.com/wp-content/uploads/2011/01/BLONDES_HAVE_MORE_GUNS_COVER.jpg"),
-            ("Blood Boobs & Beast!","https://www.youtube.com/watch?v=Z-CSIFoqJD4","http://www.troma.com/wp-content/uploads/2011/01/BLOOD_BOOBS_AND_BEAST_COVER.jpg"),
             ("Blood Hook","https://www.youtube.com/watch?v=4VI7ntoJNEk","http://www.troma.com/wp-content/uploads/2011/02/BLOOD_HOOD_.jpg"),
             ("Blood Junkie","https://www.youtube.com/watch?v=ttI4dpHfS_o","http://www.troma.com/wp-content/uploads/2011/01/BJ_COVER.jpg"),
             ("Blood Sisters of Lesbian Sin","https://www.youtube.com/watch?v=CNZYxwyzw9w","http://www.troma.com/wp-content/uploads/2011/02/COVER5.jpg"),
@@ -70,6 +65,15 @@ tromavids = [
             ("Decampitated","https://www.youtube.com/watch?v=FKQJkJpdCnI","http://www.troma.com/wp-content/uploads/2011/02/COVER16.jpg"),
             ("Def by Temptation","https://www.youtube.com/watch?v=uM4tOnWae0s","http://www.troma.com/wp-content/uploads/2011/02/DEF_BY_TEMPTATION_COVER.jpg"),
             ("Demented Death Farm Massacre","https://www.youtube.com/watch?v=zB5DaF46wZc","http://www.troma.com/wp-content/uploads/2011/02/DEMENTED_DEATH_FARM_MASSACRE_COVER.jpg"),
+            ("DOCU: All The Love You Cannes","https://www.youtube.com/watch?v=ZuROkQC3fy4","http://www.troma.com/wp-content/uploads/2011/02/ALL_THE_LOVE_YOU_CANNES_COVER.jpg"),
+            ("DOCU: APOCALYPSE SOON","https://www.youtube.com/watch?v=1_X9FnnhC8I","http://www.troma.com/wp-content/uploads/2011/03/apocalypsesoon.jpg"),
+            ("DOCU: Bazaar Bizarre","https://www.youtube.com/watch?v=WpgV7pssPDA","http://www.troma.com/wp-content/uploads/2011/02/BAZAAR_BIZARRE_COVER.jpg"),
+            ("DOCU: Blood Boobs & Beast!","https://www.youtube.com/watch?v=Z-CSIFoqJD4","http://www.troma.com/wp-content/uploads/2011/01/BLOOD_BOOBS_AND_BEAST_COVER.jpg"),
+            ("DOCU: Farts of Darkness","https://www.youtube.com/watch?v=O4DiEz_1AIk","http://www.troma.com/wp-content/uploads/2011/03/fartsofdarkness.jpg"),
+            ("DOCU: Jefftowne","https://www.youtube.com/watch?v=T1DbQbmc3Vg","http://www.troma.com/wp-content/uploads/2011/02/JEFFTOWNE_web.jpg"),
+            ("DOCU: Poultry In Motion","https://www.youtube.com/watch?v=GJFICyxV7xA","http://ia.media-imdb.com/images/M/MV5BMjA2Njk3MDc5OV5BMl5BanBnXkFtZTgwNjk2NDg2NjE@._V1_.jpg"),
+            ("DOCU: Splendor and Wisdom","https://www.youtube.com/watch?v=OlPP0-6qqVU","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/s/p/splendor[1].jpg"),
+            ("DOCU: Story Of A Junkie","https://www.youtube.com/watch?v=21uJglN6siA","http://www.troma.com/wp-content/uploads/2011/02/STORY_OF_A_JUNKIE_web.jpg"),
             ("Doggie Tails","https://www.youtube.com/watch?v=VirQxX9QGHw","http://www.troma.com/wp-content/uploads/2011/02/DOGGIE_TAILS_COVER.jpg"),
             ("Dr. Hackenstein","https://www.youtube.com/watch?v=GyUMa9r8Yyk","http://www.troma.com/wp-content/uploads/2011/02/DR_HACKENSTEIN.jpg"),
             ("Dragon Fury","https://www.youtube.com/watch?v=pZZUa6lJQqM","http://www.troma.com/wp-content/uploads/2011/03/DRAGON_FURY.jpg"),
@@ -80,7 +84,6 @@ tromavids = [
             ("Evolved Part 1, The","https://www.youtube.com/watch?v=nThZe6hFkZo","http://www.troma.com/wp-content/uploads/2011/02/THE_EVOLVED.jpg"),
             ("Eye of the Stranger","https://www.youtube.com/watch?v=0f39OWEqJ24","http://www.troma.com/wp-content/uploads/2011/02/EYE_OF_THE_STRANGER_COVER.jpg"),
             ("Fag Hag","https://www.youtube.com/watch?v=h-Htv8y7xSA","http://www.troma.com/wp-content/uploads/2015/02/FH-poster.jpg"),
-            ("Farts of Darkness","https://www.youtube.com/watch?v=O4DiEz_1AIk","http://www.troma.com/wp-content/uploads/2011/03/fartsofdarkness.jpg"),
             ("Fatty Drives The Bus","https://www.youtube.com/watch?v=N0Dt9i9IUNg","http://www.troma.com/wp-content/uploads/2011/01/FATTY_DRIVES_THE_BUS_COVER.jpg"),
             ("Ferocious Female Freedom Fighters","https://www.youtube.com/watch?v=HCljpl9EOpw","http://www.troma.com/wp-content/uploads/2011/01/FEROCIOUS_FEMALE_FREEDOM_FIGHTERS_COVER.jpg"),
             ("Fertilize The Blaspheming Bombshell!","https://www.youtube.com/watch?v=gAA8c2kVXV4","http://www.troma.com/wp-content/uploads/2011/02/FERTILIZE_THE_BLASPHEMING_BOMBSHELL.jpg"),
@@ -105,7 +108,6 @@ tromavids = [
             ("Hot Summer in Barefoot County","https://www.youtube.com/watch?v=0SNPzXLxIvo","http://www.troma.com/wp-content/uploads/2011/02/HOT_SUMMER_IN_BAREFOOT_COUNTY_web.jpg"),
             ("I Was A Teenage TV Terrorist!","https://www.youtube.com/watch?v=Eay9cz3kXCI","http://www.troma.com/wp-content/uploads/2011/02/I_WAS_A_TEENAGE_TV_TERRORIST_web.jpg"),
             ("Igor and the Lunatics","https://www.youtube.com/watch?v=8fYtO8ohgb0","http://www.troma.com/wp-content/uploads/2011/02/IGOR_AND_THE_LUNATICS_web.jpg"),
-            ("Jefftowne","https://www.youtube.com/watch?v=T1DbQbmc3Vg","http://www.troma.com/wp-content/uploads/2011/02/JEFFTOWNE_web.jpg"),
             ("Jessicka Rabid","https://www.youtube.com/watch?v=2dE0MZrRbFk","http://www.troma.com/wp-content/uploads/2011/02/JRABID_COVER.jpg"),
             ("Jurassic Women","https://www.youtube.com/watch?v=scWyknOtfbs","https://image.tmdb.org/t/p/w300_and_h450_bestv2/ltte1HZ9byjx6PlHUrp739hc8x3.jpg"),
             ("Killer Nerd","https://www.youtube.com/watch?v=ShhENu0ZWQo","http://www.troma.com/wp-content/uploads/2011/01/KILLER_NERD_COVER.jpg"),
@@ -133,7 +135,6 @@ tromavids = [
             ("Open 24/7","https://www.youtube.com/watch?v=xaJB2wMfiPQ","http://www.troma.com/wp-content/uploads/2011/10/OPEN-24-7-MOVIE-CATALOG.jpg"),
             ("Parts of the Family","https://www.youtube.com/watch?v=wUq8ZwIXdHk","http://www.troma.com/wp-content/uploads/2011/02/PARTS_OF_THE_FAMILY_web.jpg"),
             ("Pep Squad","https://www.youtube.com/watch?v=CWssk2UTPJo","http://www.troma.com/wp-content/uploads/2011/02/pep-squad.jpg"),
-            ("Poultry In Motion","https://www.youtube.com/watch?v=GJFICyxV7xA","http://ia.media-imdb.com/images/M/MV5BMjA2Njk3MDc5OV5BMl5BanBnXkFtZTgwNjk2NDg2NjE@._V1_.jpg"),
             ("Poultrygeist: Night Of The Chicken Dead!","https://www.youtube.com/watch?v=UZxo9AwQxk8","http://www.troma.com/wp-content/uploads/2011/02/POULTRYGEIST_web.jpg"),
             ("Psycho Sleepover","https://www.youtube.com/watch?v=KqsAZvaGrbY","http://www.troma.com/wp-content/uploads/2011/03/PSYCHOS_COVER.jpg"),
             ("Purge","https://www.youtube.com/watch?v=_xI1ARTF0i8","http://www.troma.com/wp-content/uploads/2011/02/PURGE-CATALOG.jpg"),
@@ -146,14 +147,15 @@ tromavids = [
             ("Sgt Kabukiman NYPD","https://www.youtube.com/watch?v=8ua2Rr85Gi4","http://www.troma.com/wp-content/uploads/2011/02/SGT_KABUKIMAN_V2_web.jpg"),
             ("Shakespeare In and Out","https://www.youtube.com/watch?v=WGgOjBdkTDY","http://www.troma.com/wp-content/uploads/2011/02/shakespear-in-out.jpg"),
             ("Space Zombie Bingo!","https://www.youtube.com/watch?v=W9bPOXpqq30","http://www.troma.com/wp-content/uploads/2011/02/SPACE-ZOMBIE-BINGO_FRONT.jpg"),
-            ("Splendor and Wisdom","https://www.youtube.com/watch?v=OlPP0-6qqVU","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/s/p/splendor[1].jpg"),
+            ("Squeeze Play!","https://www.youtube.com/watch?v=aokaxlmnUN0","http://www.troma.com/wp-content/uploads/2011/02/SQUEEZE_PLAY_web.jpg"),
             ("Star Worms II: Attack of the Pleasure Pods","https://www.youtube.com/watch?v=n2FeUml30gU","http://www.troma.com/wp-content/uploads/2011/02/STAR_WORMS_2_web.jpg"),
-            ("Story Of A Junkie","https://www.youtube.com/watch?v=21uJglN6siA","http://www.troma.com/wp-content/uploads/2011/02/STORY_OF_A_JUNKIE_web.jpg"),
             ("Strangest Dreams: Invasion of the Space Preachers","https://www.youtube.com/watch?v=-qqTkle1oG4","http://www.troma.com/wp-content/uploads/2011/02/STRANGEST_DREAMS_SPACE_PREACHERS_web.jpg"),
+            ("Stuck On You!","https://www.youtube.com/watch?v=Oq6ntwLmWQ0","http://www.troma.com/wp-content/uploads/2011/02/STUCK_ON_YOU_web.jpg"),
             ("Sucker The Vampire","https://www.youtube.com/watch?v=2sCOHEcJ_YU","http://www.troma.com/wp-content/uploads/2011/02/SUCKER_THE_VAMPIRE_web.jpg"),
             ("SUPERSTARLET A D","https://www.youtube.com/watch?v=G_92vkP5YT4","http://www.troma.com/wp-content/uploads/2011/02/superstarlet-a.jpg"),
             ("Surf Nazis Must Die!","https://www.youtube.com/watch?v=qRk9yRdzgyc","http://www.troma.com/wp-content/uploads/2011/02/SURF_NAZIS_MUST_DIE_web.jpg"),
             ("Teenape Vs. The Monster Nazi Apocalypse","https://www.youtube.com/watch?v=KTGEcUBB44A","http://www.troma.com/wp-content/uploads/2012/10/TEENAPE.jpg"),
+            ("TERROR FIRMER: The R-Rated Edition","https://www.youtube.com/watch?v=4JmZR7KAAz4","http://www.troma.com/wp-content/uploads/2011/02/TERROR_FIRMER_web.jpg"),
             ("There's Nothing Out There!","https://www.youtube.com/watch?v=jHUFU2gU35I","http://www.troma.com/wp-content/uploads/2011/02/TNOT.jpg"),
             ("They Call Me Macho Woman","https://www.youtube.com/watch?v=jnVtQb0NrgY","http://www.troma.com/wp-content/uploads/2011/02/THEY_CALL_ME_MATCHO_WOMAN_web.jpg"),
             ("Time Barbarians","https://www.youtube.com/watch?v=Y2yzdeLQaAc","http://www.troma.com/wp-content/uploads/2011/02/Time-Barbarians-.jpg"),
@@ -161,6 +163,7 @@ tromavids = [
             ("Toxic Avenger Part II, The","https://www.youtube.com/watch?v=ewd6ZBKNBLw","http://www.troma.com/wp-content/uploads/2011/02/TOXIC_AVENGER_PART_II_web.jpg"),
             ("Toxic Avenger 3, The","https://www.youtube.com/watch?v=wtro6rR9PzY","http://www.troma.com/wp-content/uploads/2011/02/TOXIC_AVENGER_III_web.jpg"),
             ("Toxic Avenger 4, The","https://www.youtube.com/watch?v=UdsoyObJMgc","http://www.troma.com/wp-content/uploads/2011/02/CITIZEN_TOZIE_COVER.jpg"),
+            ("Toxic Crusaders, The Movie","https://www.youtube.com/watch?v=h9iccHm2IVE","http://www.troma.com/wp-content/uploads/2011/02/TCM.jpg"),
             ("Tromas War!","https://www.youtube.com/watch?v=yfDzF2oN7Tc","http://www.troma.com/wp-content/uploads/2011/02/TWAR-poster.jpg"),
             ("Tromeo And Juliet","https://www.youtube.com/watch?v=QI3a_Gc9ddo","http://www.troma.com/wp-content/uploads/2011/02/tromeo_movie.jpg"),
             ("Vegas High Stakes","https://www.youtube.com/watch?v=CrMokG6xtWE","http://www.troma.com/wp-content/uploads/2011/02/VEGAS_HIGH_STAKES_web.jpg"),
@@ -168,6 +171,7 @@ tromavids = [
             ("Video Demons Do Psychotown","https://www.youtube.com/watch?v=s65WCzwZaYc","http://www.troma.com/wp-content/uploads/2011/03/VIDEO_DEMONS_DO_PSYCHO_TOWN_web.jpg"),
             ("Viewer Discretion Advised","https://www.youtube.com/watch?v=YNMsPHmcLI0","http://www.troma.com/wp-content/uploads/2011/02/VIEWER_DISCRETION_ADVISED_web.jpg"),
             ("Viral Assasins","https://www.youtube.com/watch?v=t-W9TXDOpy0","http://www.troma.com/wp-content/uploads/2011/02/Viral-Assassin.jpg"),
+            ("Waitress!","https://www.youtube.com/watch?v=zCEigz8x4eQ","http://www.troma.com/wp-content/uploads/2011/02/WAITRESS_web.jpg"),
             ("Wedding Party, The","https://www.youtube.com/watch?v=TEfHuo2MdKU","http://www.troma.com/wp-content/uploads/2011/02/WEDDING_PARTY_web.jpg"),
             ("When Nature Calls","https://www.youtube.com/watch?v=6m5ydGTauN4","http://www.troma.com/wp-content/uploads/2011/02/WHEN_NATURE_CALLS_web.jpg"),
             ("Where Evil Lives","https://www.youtube.com/watch?v=n0wiVCBVqOM","http://www.troma.com/wp-content/uploads/2011/06/WHERE-EVIL-LIVES-COVER.jpg"),
@@ -181,48 +185,16 @@ tromavids = [
 ]
 
 # Entry point
-def run():
-    plugintools.log("docu.run")
-    
-    # Get params
-    params = plugintools.get_params()
-    
-    if params.get("action") is None:
-        main_list(params)
-    else:
-        url = params.get("action")
-        name = params.get("name")
-        videourl = resolveYT(urllib.unquote_plus(url))
-        iconimage = xbmc.getInfoImage("ListItem.Thumb")
-        listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-        listitem.setInfo('video', {'Title': name})
-        listitem.setProperty("IsPlayable","true")
-        listitem.setPath(str(videourl))     
-        xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)        
-    
-    plugintools.close_item_list()
-    
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("M2EgMjIgKCk6IzU1OjEKCTUzIC4zYyAoIjM4LjIyIikjNTU6MgoJMzkgMWQgMjggNTAgWycnLCcyMS40OC4yOS4yYyddOiM1NTozCgkJYiAuMjYgKCkuZSAoJ2YgMzYgM2QgMWMgMWYnLCczYiBmIDQzIDI4IDI0IDQyIDI3IDM0IDJhJykjNTU6NAoJCTI1IDJkICM1NTo1CgkwID01MyAuNDkgKCkjNTU6NwoJMzkgMCAuMWEgKCI0ZCIpNTEgMmYgOiM1NTo5CgkJMWIgKDAgKSM1NToxMAoJMzIgOiM1NToxMQoJCTUyID0wIC4xYSAoIjRkIikjNTU6MTIKCQk1NCA9MCAuMWEgKCIzMSIpIzU1OjEzCgkJNTcgPTQ1ICgyMyAuZCAoNTIgKSkjNTU6MTQKCQk2ID0zNSAuNGIgKCI4LjJiIikjNTU6MTUKCQk0ZiA9YiAuOCAoNTQgLDQ2ID0iNGUuNDAiLGEgPTYgKSM1NToxNgoJCTRmIC4xZSAoJzQ4Jyx7JzJlJzo1NCB9KSM1NToxNwoJCTRmIC40YyAoIjQ3IiwiMzciKSM1NToxOAoJCTRmIC40NCAoNDEgKDU3ICkpIzU1OjE5CgkJNGEgLmMgKDNmICgzZSAuMzAgWzEgXSksMzMgLDRmICkjNTU6MjAKCTUzIC41NiAoKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"O0OOOOOO00OO000OO|1|2|3|4|5|O00O0O0OOOO00OO0O|7|ListItem|9|thumbnailImage|xbmcgui|setResolvedUrl|unquote_plus|notification|please|10|11|12|13|14|15|16|17|18|19|get|main_list|original|addonID|setInfo|credits|20|plugin|run|urllib|change|return|Dialog|rename|not|xvbmc|addon|Thumb|troma|False|Title|None|argv|name|else|True|this|xbmc|keep|true|docu|if|def|and|log|the|sys|int|png|str|or|do|setPath|resolveYT|iconImage|IsPlayable|video|get_params|xbmcplugin|getInfoImage|setProperty|action|DefaultVideo|OO0O00OO00OOOOO00|in|is|O0OOO0O0O00OOOO0O|plugintools|OOOO00000O000O000|line|close_item_list|OO00OOOOOOO00OOO0".split("|")))
 
-def resolveYT(url):
-    vid = YDStreamExtractor.getVideoInfo(url)
-    videourl = vid.streamURL()
-    return videourl
 
-    
+# Resolve
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("OCA0KDcpOgoJNiA9IDAuMig3KQoJMSA9IDYuMygpCgk1IDE=")))(lambda a,b:b[int("0x"+a.group(1),16)],"YDStreamExtractor|videourl|getVideoInfo|streamURL|resolveYT|return|vid|url|def".split("|")))
+
+
 # Main menu
-def main_list(params):
-    plugintools.log("docu.main_list "+repr(params))
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MjYgMSg2KToKCTJjLjI1KCIyMS4xICIrMjIoNikpCgkyYiAxMCAxNSAyMyBbJycsICcxNi4zLjFkLjFiJ106CgkJZi4xOSgpLjQoJzInLCcxMiAyYSAxNSAxNCAyMCAxYSAyOSAxZSAyNCBlJykKCQkxMyA4CgkyNyBkLCAzLCAxMSAyMyBhOgoJCTcgPSA3ID0gMjguMWZbMF0gKyAiPzU9IiArIDE4LjkoMykKCQkyYy5jKCAKCQkJIzU9IiIsIAoJCQkxYz1kLAoJCQk3PTcsCgkJCWI9MTEsCgkJCTE3PTggKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|main_list|playback_limited|video|notification|action|params|url|False|quote_plus|tromavids|thumbnail|add_item|name|credits|xbmcgui|addonID|img|please|return|change|not|plugin|folder|urllib|Dialog|addon|troma|title|xvbmc|keep|argv|this|docu|repr|in|the|log|def|for|sys|and|do|if|plugintools".split("|")))
 
-    for name, video, img in tromavids:
-        url = url = sys.argv[0] + "?action=" + urllib.quote_plus(video)
-        plugintools.add_item( 
-            #action="", 
-            title=name,
-            url=url,
-            thumbnail=img,
-            folder=False )
-        
-        
 
-    
-run()
+# Exec
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MCgp")))(lambda a,b:b[int("0x"+a.group(1),16)],"run".split("|")))
