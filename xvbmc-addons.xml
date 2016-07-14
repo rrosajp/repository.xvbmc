@@ -493,7 +493,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.xvbmc.troma"
 	name=" [COLOR lime][B]X[/B][/COLOR]vBMC's [COLOR red][B]Troma[/B][/COLOR] Channel ([COLOR white]40 Years of Disrupting Media[/COLOR])"
-	version="1.0.1"
+	version="1.0.2"
 	provider-name="EPiC, XvBMC-Nederland">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
