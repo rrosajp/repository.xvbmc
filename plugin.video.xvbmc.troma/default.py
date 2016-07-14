@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
-#------------------------------------------------------------
-# Documentaries on YouTube by coldkeys used as source project
+#
 #------------------------------------------------------------
 # License: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
 # Based on code from youtube addon
-#
-# Original author: coldkeys [This script is a MOD]
 #------------------------------------------------------------
-
+#
 # ! TROMA movie-addon by EPiC 'XvBMC Nederland' (with special thanks to Patrick Dijkkamp) ... Please keep credits if you copy/paste links, THX !
 
-import os,sys,urllib
-import xbmc,xbmcaddon,xbmcgui,xbmcplugin
 import re,base64,plugintools
-from addon.common.addon import Addon
 
-import YDStreamExtractor
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MCBkLGMsNiw3CjAgYSw0LDUsMwpiIDIuOC4yIDAgOQowIDE=")))(lambda a,b:b[int("0x"+a.group(1),16)],"import|YDStreamExtractor|addon|xbmcplugin|xbmcaddon|xbmcgui|shutil|urllib|common|Addon|xbmc|from|sys|os".split("|")))
 
 addonID = 'plugin.video.xvbmc.troma'
 addon = Addon(addonID, sys.argv)
@@ -154,6 +148,24 @@ tromavids = [
             ("Sucker The Vampire","https://www.youtube.com/watch?v=2sCOHEcJ_YU","http://www.troma.com/wp-content/uploads/2011/02/SUCKER_THE_VAMPIRE_web.jpg"),
             ("SUPERSTARLET A D","https://www.youtube.com/watch?v=G_92vkP5YT4","http://www.troma.com/wp-content/uploads/2011/02/superstarlet-a.jpg"),
             ("Surf Nazis Must Die!","https://www.youtube.com/watch?v=qRk9yRdzgyc","http://www.troma.com/wp-content/uploads/2011/02/SURF_NAZIS_MUST_DIE_web.jpg"),
+            ("The Roan Archive: Abbott and Costello Jack and the beanstock","https://www.youtube.com/watch?v=qqJxBQ-AUDs","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2068.jpg"),
+            ("The Roan Archive: Africa Screams","https://www.youtube.com/watch?v=iVq6IFJAj90","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2068.jpg"),
+            ("The Roan Archive: Albert Schweitzer","https://www.youtube.com/watch?v=EXpiJOUZh2g","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2109.jpg"),
+            ("The Roan Archive: Behind Office Doors","https://www.youtube.com/watch?v=m5ADf8wbr94","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2053.jpg"),
+            ("The Roan Archive: Dead Men Walk","https://www.youtube.com/watch?v=WX76n-5v0lQ","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2023.jpg"),
+            ("The Roan Archive: Illegal","https://www.youtube.com/watch?v=03FDtjhG7Q0","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2098-tm.jpg"),
+            ("The Roan Archive: Lady of Burlesque","https://www.youtube.com/watch?v=UZDy7edycjY","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2077.jpg"),
+            ("The Roan Archive: No Substitute For Victory!","https://www.youtube.com/watch?v=fia1YySybZg","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/ae2113.jpg"),
+            ("The Roan Archive: Patterns","https://www.youtube.com/watch?v=b8iCcmlxcBs","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2099.jpg"),
+            ("The Roan Archive: SECRET OF DR KILDARE","https://www.youtube.com/watch?v=Qn5DUpHNZn8","http://ia.media-imdb.com/images/M/MV5BMjEwNjk5NTE0OV5BMl5BanBnXkFtZTcwMzM5NzIzMQ@@._V1_.jpg"),
+            ("The Roan Archive: SINS OF THE CHILDREN","https://www.youtube.com/watch?v=XabY3uEQJRA","https://www.tromashop.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2120.gif"),
+            ("The Roan Archive: The Ape","https://www.youtube.com/watch?v=sIRkkeDAfuk","https://www.tromashop.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2019.jpg"),
+            ("The Roan Archive: The Corpse Vanishes","https://www.youtube.com/watch?v=oExXcQnrY-s","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2022.jpg"),
+            ("The Roan Archive: The Devil Bat","https://www.youtube.com/watch?v=6OVtrDMCsDA","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2022.jpg"),
+            ("The Roan Archive: The Invisible Ghost","https://www.youtube.com/watch?v=tm15fa6ZABg","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2040.jpg"),
+            ("The Roan Archive: The Milky Way","https://www.youtube.com/watch?v=rpyCsBkc614","https://www.tromashop.com/media/catalog/product/cache/1/image/265x265/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2091.jpg"),
+            ("The Roan Archive: The Monster Maker","https://www.youtube.com/watch?v=Lgq85TRQ1dE","https://www.tromashop.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/a/e/aed2023.jpg"),
+            ("The Roan Archive: White Zombie","https://www.youtube.com/watch?v=XbWUKNzcT0s","https://www.tromashop.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/w/h/white_zombie.jpg"),
             ("Teenape Vs. The Monster Nazi Apocalypse","https://www.youtube.com/watch?v=KTGEcUBB44A","http://www.troma.com/wp-content/uploads/2012/10/TEENAPE.jpg"),
             ("TERROR FIRMER: The R-Rated Edition","https://www.youtube.com/watch?v=4JmZR7KAAz4","http://www.troma.com/wp-content/uploads/2011/02/TERROR_FIRMER_web.jpg"),
             ("There's Nothing Out There!","https://www.youtube.com/watch?v=jHUFU2gU35I","http://www.troma.com/wp-content/uploads/2011/02/TNOT.jpg"),
@@ -175,7 +187,6 @@ tromavids = [
             ("Wedding Party, The","https://www.youtube.com/watch?v=TEfHuo2MdKU","http://www.troma.com/wp-content/uploads/2011/02/WEDDING_PARTY_web.jpg"),
             ("When Nature Calls","https://www.youtube.com/watch?v=6m5ydGTauN4","http://www.troma.com/wp-content/uploads/2011/02/WHEN_NATURE_CALLS_web.jpg"),
             ("Where Evil Lives","https://www.youtube.com/watch?v=n0wiVCBVqOM","http://www.troma.com/wp-content/uploads/2011/06/WHERE-EVIL-LIVES-COVER.jpg"),
-            ("White Zombie","https://www.youtube.com/watch?v=XbWUKNzcT0s","https://www.tromashop.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/w/h/white_zombie.jpg"),
             ("WISEGUYS VS ZOMBIES","https://www.youtube.com/watch?v=V895cCmwcbU","http://www.troma.com/wp-content/uploads/2011/02/wg.jpg"),
             ("Witchcraft 5 : Dance with the Devil","https://www.youtube.com/watch?v=03QfmiI0Q70","http://ia.media-imdb.com/images/M/MV5BMTQ0Mjk4MzU1M15BMl5BanBnXkFtZTgwNDIzNzAxNjE@._V1_.jpg"),
             ("Wizards Of The Demon Sword","https://www.youtube.com/watch?v=HcmCl5esI78","http://www.troma.com/wp-content/uploads/2011/02/WIZARDS_OF_THE_DEMON_SWORD_web.jpg"),
@@ -185,16 +196,13 @@ tromavids = [
 ]
 
 # Entry point
-exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("M2EgMjIgKCk6IzU1OjEKCTUzIC4zYyAoIjM4LjIyIikjNTU6MgoJMzkgMWQgMjggNTAgWycnLCcyMS40OC4yOS4yYyddOiM1NTozCgkJYiAuMjYgKCkuZSAoJ2YgMzYgM2QgMWMgMWYnLCczYiBmIDQzIDI4IDI0IDQyIDI3IDM0IDJhJykjNTU6NAoJCTI1IDJkICM1NTo1CgkwID01MyAuNDkgKCkjNTU6NwoJMzkgMCAuMWEgKCI0ZCIpNTEgMmYgOiM1NTo5CgkJMWIgKDAgKSM1NToxMAoJMzIgOiM1NToxMQoJCTUyID0wIC4xYSAoIjRkIikjNTU6MTIKCQk1NCA9MCAuMWEgKCIzMSIpIzU1OjEzCgkJNTcgPTQ1ICgyMyAuZCAoNTIgKSkjNTU6MTQKCQk2ID0zNSAuNGIgKCI4LjJiIikjNTU6MTUKCQk0ZiA9YiAuOCAoNTQgLDQ2ID0iNGUuNDAiLGEgPTYgKSM1NToxNgoJCTRmIC4xZSAoJzQ4Jyx7JzJlJzo1NCB9KSM1NToxNwoJCTRmIC40YyAoIjQ3IiwiMzciKSM1NToxOAoJCTRmIC40NCAoNDEgKDU3ICkpIzU1OjE5CgkJNGEgLmMgKDNmICgzZSAuMzAgWzEgXSksMzMgLDRmICkjNTU6MjAKCTUzIC41NiAoKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"O0OOOOOO00OO000OO|1|2|3|4|5|O00O0O0OOOO00OO0O|7|ListItem|9|thumbnailImage|xbmcgui|setResolvedUrl|unquote_plus|notification|please|10|11|12|13|14|15|16|17|18|19|get|main_list|original|addonID|setInfo|credits|20|plugin|run|urllib|change|return|Dialog|rename|not|xvbmc|addon|Thumb|troma|False|Title|None|argv|name|else|True|this|xbmc|keep|true|docu|if|def|and|log|the|sys|int|png|str|or|do|setPath|resolveYT|iconImage|IsPlayable|video|get_params|xbmcplugin|getInfoImage|setProperty|action|DefaultVideo|OO0O00OO00OOOOO00|in|is|O0OOO0O0O00OOOO0O|plugintools|OOOO00000O000O000|line|close_item_list|OO00OOOOOOO00OOO0".split("|")))
-
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("NDYgMjkgKCk6IzVmOjEKCTYzIC40NCAoIjNiLjI5IikjNWY6MgoJMyA9MzggLjUyICgnNTknKSM1Zjo0CgkzZCAyYSAzID09JzJjLjFiLjM3LjM5JzojNWY6NQoJCWQgLjMyICgpLjUxICgnNTAgNDEgNGEgNWIgMjUnLCc0OSA1MCA0ZiAyYSAyZCA1ZCAyOCA0MCAzNicpIzVmOjYKCQk2MSA9NGUgLmYgKCc0YzovLzNhLzJlLycrMyApIzVmOjcKCQkzMSAuMzAgKDYxICwxMCA9NGQgKSM1Zjo4CgkJMmYgMzMgIzVmOjkKCTU4ID02MyAuMWEgKCkjNWY6MTEKCTNkIDU4IC41YyAoIjU1Iik1YSAzZSA6IzVmOjEzCgkJMWYgKDU4ICkjNWY6MTQKCTQzIDojNWY6MTUKCQk1ZSA9NTggLjVjICgiNTUiKSM1ZjoxNgoJCTYyID01OCAuNWMgKCIzYyIpIzVmOjE3CgkJNjAgPTFkICgyYiAuNTQgKDVlICkpIzVmOjE4CgkJNjQgPTRlIC41MyAoImEuMzQiKSM1ZjoxOQoJCTAgPWQgLmEgKDYyICwxZSA9IjEyLjQ1IixjID02NCApIzVmOjIwCgkJMCAuMjYgKCcxYicseyczNSc6NjIgfSkjNWY6MjEKCQkwIC41NiAoIjU3IiwiNDIiKSM1ZjoyMgoJCTAgLjI3ICg0NyAoNjAgKSkjNWY6MjMKCQkxYyAuZSAoNGIgKDQ4IC4zZiBbMSBdKSw0ZCAsMCApIzVmOjI0Cgk2MyAuYiAoKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"OO000O0OOO0O00O00|1|2|O000000000OOOO0O0|4|5|6|7|8|9|ListItem|close_item_list|thumbnailImage|xbmcgui|setResolvedUrl|translatePath|ignore_errors|11|DefaultVideo|13|14|15|16|17|18|19|get_params|video|xbmcplugin|resolveYT|iconImage|main_list|20|21|22|23|24|credits|setInfo|setPath|rename|run|not|urllib|plugin|change|addons|return|rmtree|shutil|Dialog|False|Thumb|Title|addon|xvbmc|local|troma|home|docu|name|if|None|argv|this|keep|true|else|log|png|def|str|sys|and|the|int|special|True|xbmc|do|please|notification|getAddonInfo|getInfoImage|unquote_plus|action|setProperty|IsPlayable|O000O0O0OOOO000OO|id|is|original|get|or|OOO0OO00000O00OO0|line|OOOO0OO00O0O0O000|OO000O00OO00O0OO0|OO000000OOOO0000O|plugintools|OOO00000O0OOO0000".split("|")))
 
 # Resolve
-exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("OCA0KDcpOgoJNiA9IDAuMig3KQoJMSA9IDYuMygpCgk1IDE=")))(lambda a,b:b[int("0x"+a.group(1),16)],"YDStreamExtractor|videourl|getVideoInfo|streamURL|resolveYT|return|vid|url|def".split("|")))
-
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("OSA3IChiICk6IzQ6MQoJMCA9YSAuNSAoYiApIzQ6MgoJYyA9MCAuNiAoKSM0OjMKCTggYw==")))(lambda a,b:b[int("0x"+a.group(1),16)],"OO000OOO0OO0OO0O0|1|2|3|line|getVideoInfo|streamURL|resolveYT|return|def|YDStreamExtractor|OO0O0OOO00O0O000O|OO0000OOO00OO0O00".split("|")))
 
 # Main menu
-exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MjYgMSg2KToKCTJjLjI1KCIyMS4xICIrMjIoNikpCgkyYiAxMCAxNSAyMyBbJycsICcxNi4zLjFkLjFiJ106CgkJZi4xOSgpLjQoJzInLCcxMiAyYSAxNSAxNCAyMCAxYSAyOSAxZSAyNCBlJykKCQkxMyA4CgkyNyBkLCAzLCAxMSAyMyBhOgoJCTcgPSA3ID0gMjguMWZbMF0gKyAiPzU9IiArIDE4LjkoMykKCQkyYy5jKCAKCQkJIzU9IiIsIAoJCQkxYz1kLAoJCQk3PTcsCgkJCWI9MTEsCgkJCTE3PTggKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|main_list|playback_limited|video|notification|action|params|url|False|quote_plus|tromavids|thumbnail|add_item|name|credits|xbmcgui|addonID|img|please|return|change|not|plugin|folder|urllib|Dialog|addon|troma|title|xvbmc|keep|argv|this|docu|repr|in|the|log|def|for|sys|and|do|if|plugintools".split("|")))
-
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MTcgMWEgKDFjICk6IzFlOjEKCTUgLjE0ICgiMTIuMWEgIisxMyAoMWMgKSkjMWU6MgoJMTYgMWQgLDMgLDQgMTkgYSA6IzFlOjYKCQkxYiA9MWIgPTE1IC4xMSBbMCBdKyI/ZD0iK2UgLjggKDMgKSMxZTo3CgkJNSAuYiAoMTAgPTFkICwxOCA9MWIgLDkgPTQgLGMgPWYgKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|1|2|OO0000O000OOO0OOO|OO00OOO0O0O0OO0OO|plugintools|6|7|quote_plus|thumbnail|tromavids|add_item|folder|action|urllib|False|title|argv|docu|repr|log|sys|for|def|url|in|main_list|O0OOOOOO0000OOOOO|OOOO00OOOO0000OOO|O000O0O000O0OOOOO|line".split("|")))
 
 # Exec
-exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MCgp")))(lambda a,b:b[int("0x"+a.group(1),16)],"run".split("|")))
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MCAoKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"run".split("|")))
