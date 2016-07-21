@@ -393,7 +393,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon
   id="plugin.video.SportsDevilNL"
-  version="2016.06.20.NL"
+  version="2016.07.20.NL"
   name="SportsDevilNL (XvBMC)"
   provider-name="Hubbab3, Jairox, Sattekop, EPiC XvBMC, MaxMustermann, Al101">
   <requires>
