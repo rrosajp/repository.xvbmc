@@ -1252,7 +1252,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.schoonmaak"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]S[/COLOR]choonmaak/[COLOR red]M[/COLOR]aintenance [I][COLOR green] (kodi schoonmaak)[/COLOR][/I]"
-       version="1.10.09"
+       version="1.10.10"
        provider-name="XvBMC NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
