@@ -22,7 +22,8 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, xbmc, xbmcgui, shutil
+import re,base64,os
+import xbmc,xbmcgui,shutil
 
 
 #		 ProgTitle="XvBMC Raw Maintenance" 		#
@@ -34,7 +35,6 @@ dialog = xbmcgui.Dialog()
 #                          CLASSES
 #######################################################################
 
-
 class cacheEntry:
     def __init__(self, namei, pathi):
         self.name = namei
@@ -45,91 +45,18 @@ class cacheEntry:
 #						Work Functions
 #######################################################################
 
-
-def setupXvbmcEntries():
-    entries = 8 #make sure this reflects the amount of entries you have
-    dialogName = ["NLVIEW", "nl-viewer", "nl-viewer2", "nlv3", "SportCenterHD", "SportsDevil", "NLviewRepo", "TVaddons.nl"]
-    pathName = ["special://home/addons/plugin.video.NLVIEW",
-				"special://home/addons/plugin.video.nl-viewer",
-				"special://home/addons/plugin.video.nl-viewer2",
-				"special://home/addons/plugin.video.nlv3",
-				"special://home/addons/plugin.video.sportcenterhd",
-				"special://home/addons/plugin.video.SportsDevil",
-				"special://home/addons/repository.NLVIEW",
-				"special://home/addons/repository.tvaddons.nl"]
-                    
-    XvbmcEntries = []
-    
-    for x in range(entries):
-        XvbmcEntries.append(cacheEntry(dialogName[x],pathName[x]))
-    
-    return XvbmcEntries
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MjAgZSAoKTojYToxCgk3ID05ICNhOjIKCTI2ID1bImQiLCIxMy0yMiIsIjEzLWYiLCIyMyIsIjEwIiwiYiIsIjFjLTI1IiwiMTUiLCIxOS4xMyJdI2E6MwoJOCA9WyIwOi8vNS8yOC80LjYuZCIsIjA6Ly81LzI4LzQuNi4xMy0yMiIsIjA6Ly81LzI4LzQuNi4xMy1mIiwiMDovLzUvMjgvNC42LjIzIiwiMDovLzUvMjgvNC42LjExIiwiMDovLzUvMjgvNC42LmIiLCIwOi8vNS8yOC80LjYuMWUiLCIwOi8vNS8yOC9jLmQiLCIwOi8vNS8yOC9jLjE4LjEzIl0jYToxMgoJMjcgPVtdI2E6MTQKCTFmIDI5IDI0IDFkICg3ICk6I2E6MTYKCQkyNyAuMWEgKDIxICgyNiBbMjkgXSw4IFsyOSBdKSkjYToxNwoJMWIgMjc=")))(lambda a,b:b[int("0x"+a.group(1),16)],"special|1|2|3|plugin|home|video|OO00000000O00OO0O|O0O0O0OO000000O0O|9|line|SportsDevil|repository|NLVIEW|setupXvbmcEntries|viewer2|SportCenterHD|sportcenterhd|12|nl|14|NLviewRepo|16|17|tvaddons|TVaddons|append|return|Troma|range|troma|for|def|cacheEntry|viewer|nlv3|in|copypaste|O0OOO0OO0O0O0OOOO|O0O0O0O0000O000OO|addons|O0OOO00OO000O0000".split("|")))
 
 
 #######################################################################
 #						CRAPCLEANER
 #######################################################################
-def purgeOLD():
-#   import os,xbmc,shutil
-#   bruteforce removal  #
-#   xvbmc = os.listdir(xbmc.translatePath(os.path.join('special://home/addons/')))
-#   addonfolder = xbmc.translatePath(os.path.join('special://home/addons/'))
-#   for item in xvbmc:
-#       if ('repository.tvaddons.nl') in item:
-#           print str(xvbmc)+str(item)
-#           try:
-#               shutil.rmtree(addonfolder+item, ignore_errors=True)
-#           except:
-#               pass
-#       else:
-#           pass
 
-    XvbmcEntries = setupXvbmcEntries()
-
-    for entry in XvbmcEntries:
-        xvbmcaddons = xbmc.translatePath(entry.path)
-        if os.path.exists(xvbmcaddons)==True:    
-            for root, dirs, files in os.walk(xvbmcaddons):
-                file_count = 0
-                file_count += len(files)
-                if file_count > 0:
-			
-                    for f in files:
-                        try:
-                            os.unlink(os.path.join(root, f))
-                        except OSError:
-                            os.remove(os.path.join(root, f))
-                    for d in dirs:
-                        try:
-                            shutil.rmtree(os.path.join(root, d), ignore_errors=True)
-                        except:
-                            pass
-
-                else:
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.NLVIEW')), ignore_errors=True)
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.nl-viewer')), ignore_errors=True)
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.nl-viewer2')), ignore_errors=True)
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.nlv3')), ignore_errors=True)
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.sportcenterhd')), ignore_errors=True)
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','plugin.video.SportsDevil')), ignore_errors=True)
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','repository.NLVIEW')), ignore_errors=True)
-                    shutil.rmtree(xbmc.translatePath(os.path.join('special://home/addons/','repository.tvaddons.nl')), ignore_errors=True)
-                    dialog.ok("XvBMC Nederland", 'we found some orphaned dependencies...','', 'NOTE: a REBOOT is highly recommended!')
-                    xbmc.executebuiltin("UpdateLocalAddons")
-                    pass
-
-        else:
-          # dialog.ok("XvBMC-NL Purge", "Crap cleaner all done...")
-            pass
-
-    dialog.ok("-= ALL DONE =- ", 'your system seems in good condition','', '(everything is as clean as a whistle)')
-#	return
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("M2UgMjIgKCk6IzNkOjEKCWMgPTE0ICgpIzNkOjE2CgkxYSBiIDFkIGMgOiMzZDoxOAoJCTNhID1lIC41NyAoYiAuZCApIzNkOjE5CgkJNGIgMTAgLmQgLjExICgzYSApPT00YyA6IzNkOjIwCgkJCTFhIDIgLDVhICw3IDFkIDEwIC4yYSAoM2EgKTojM2Q6MjEKCQkJCTQgPTAgIzNkOjI0CgkJCQk0ICs9MzcgKDcgKSMzZDoyNQoJCQkJNGIgNCA+MCA6IzNkOjI2CgkJCQkJMWEgNSAxZCA3IDojM2Q6MjcKCQkJCQkJMWIgOiMzZDoyOAoJCQkJCQkJMTAgLjRkICgxMCAuZCAuMTUgKDIgLDUgKSkjM2Q6MjkKCQkJCQkJZiA1OCA6IzNkOjMwCgkJCQkJCQkxMCAuM2YgKDEwIC5kIC4xNSAoMiAsNSApKSMzZDozMQoJCQkJCTFhIDggMWQgNWEgOiMzZDozMgoJCQkJCQkxYiA6IzNkOjMzCgkJCQkJCQkxMyAuMTIgKDEwIC5kIC4xNSAoMiAsOCApLDkgPTRjICkjM2Q6MzQKCQkJCQkJZiA1OCA6IzNkOjM1CgkJCQkJCQkxMCAuNGYgKDEwIC5kIC4xNSAoMiAsOCApKSMzZDozNgoJCQkJNTAgOiMzZDozOAoJCQkJCTRiIDEwIC5kIC4xMSAoM2EgKTojM2Q6NDIKCQkJCQkJMWIgOiMzZDo0MwoJCQkJCQkJMTMgLjEyICgzYSAsOSA9NGMgKSMzZDo0NgoJCQkJCQkJZSAuMyAoIjYiKSMzZDo0NwoJCQkJCQlmIDoxYyAjM2Q6NDgKCQkJCQk1MCA6IzNkOjQ5CgkJCQkJCWUgLjQwICgzYyAoM2EgKSkjM2Q6NTEKCQkJCQkJZSAuMyAoIjYiKSMzZDo1MgoJCQkJCQkxYyAjM2Q6NTMKCQk0YiAxMCAuZCAuMTEgKDNhICk6IzNkOjU1CgkJCTFiIDojM2Q6NTYKCQkJCTEzIC4xMiAoM2EgLDkgPTRjICkjM2Q6NTkKCQkJCWUgLjMgKCI2IikjM2Q6NDUKCQkJZiA6MWMgIzNkOjM5Cgk1NCAuM2IgKCItPSA0MSAyYiA9LSAiLCcyZSA0YSAyYyAxZCAyZiAxZicsJycsJygxZSAyYyAyZCA0ZSAyZCBhIDIzKScpIzNkOjQ0CgllIC4zICgiMTciKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|1|OO00O0O0O00OO0OO0|executebuiltin|O00OO0OO00O0O0000|O00O000OO0O0O0OO0|UpdateLocalAddons|OO0O000OOOOOOOO0O|O0O00O0000000OO00|ignore_errors|a|O0O0O000OO00O0OOO|OOO0000O000O00000|path|xbmc|except|os|exists|rmtree|shutil|setupXvbmcEntries|join|16|UpdateAddonRepos|18|19|for|try|pass|in|everything|condition|20|21|purgeOLD|whistle|24|25|26|27|28|29|walk|DONE|is|as|your|good|30|31|32|33|34|35|36|len|38|61|OO00O00OOOO0000OO|ok|str|line|def|remove|log|ALL|42|43|63|60|46|47|48|49|system|if|True|unlink|clean|rmdir|else|51|52|53|dialog|55|56|translatePath|OSError|59|OO0O0O00OOO00000O".split("|")))
 
 
 #######################################################################
 #						do some VooDoo
 #######################################################################
 
-
 purgeOLD()
-
