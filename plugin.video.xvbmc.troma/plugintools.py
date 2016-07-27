@@ -366,6 +366,9 @@ def add_item( action="" , title="" , plot="" , url="" , thumbnail="" , fanart=""
     if info_labels is None:
         info_labels = { "Title" : title, "FileName" : title, "Plot" : plot }
     listitem.setInfo( "video", info_labels )
+#   verbose .log_flood xbmc/kodi # Thx. Patrick (Y) # These 2 'Troma lines' (below) pulled it off ;-p
+    video_streaminfo = {'codec': 'h264'}
+    listitem.addStreamInfo('video', video_streaminfo)
 
     if fanart!="":
         listitem.setProperty('fanart_image',fanart)

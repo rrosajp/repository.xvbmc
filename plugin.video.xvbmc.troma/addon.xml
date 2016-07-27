@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.xvbmc.troma"
 	name=" [COLOR lime][B]X[/B][/COLOR]vBMC's [COLOR red][B]Troma[/B][/COLOR] Channel ([COLOR white]40 Years of Disrupting Media[/COLOR])"
-	version="1.0.3"
+	version="1.0.4"
 	provider-name="EPiC, XvBMC-Nederland">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
