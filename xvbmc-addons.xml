@@ -137,24 +137,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="plugin.video.exodus" version="2.0.2b" name="Exodus" provider-name="Exodus">
-	<requires>
-		<import addon="xbmc.python" version="2.19.0" />
-		<import addon="repository.exodus" version="1.0.0" />
-		<import addon="script.module.urlresolver" version="3.0.0"/>
-		<import addon="script.module.metahandler" version="1.0.0" />
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="exodus.py">
-		<provides>video</provides>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Exodus</summary>
-		<description lang="en">Please visit www.tvaddons.ag for Exodus support and assistance! Kindly note that Exodus is not an official part of the media player you are running, and therefore not to be mentioned within official support channels, this addon has nothing to do with the media player itself, nor it’s intended use, it is simply a third party plugin which has been added to your system.</description>
-		<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon. The author does not have any affiliation with the content provider.</disclaimer>
-		<platform>all</platform>
-	</extension>
-</addon>
-
 <addon id="plugin.video.f4mTester" version="2.2.4" name="f4mTester" provider-name="Shani">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
@@ -506,34 +488,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	<summary lang="en">WildHitz</summary>
     <description lang="en">WildHitz</description>
     <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="plugin.video.xvbmc.troma"
-	name=" [COLOR lime][B]X[/B][/COLOR]vBMC's [COLOR red][B]Troma[/B][/COLOR] Channel ([COLOR white]40 Years of Disrupting Media[/COLOR])"
-	version="1.0.4"
-	provider-name="EPiC, XvBMC-Nederland">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.addon.common" version="2.0.0"/>
-    <import addon="plugin.video.youtube" version="5.0.0"/>
-    <import addon="script.module.youtube.dl" />
-	<import addon="repository.xvbmc" version="3.0.1"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en_GB">XvBMC Nederland: EPiC Troma Channel</summary>
-    <description lang="en_GB">XvBMC Nederland: Troma Channel, 40 Years of EPiC Disrupting Media...  |  be sure to check out our support pages @ https://www.fb.com/groups/XvBMCnederland/  |  all credit goes to http://www.Troma.com/ (Y)</description>
-	<disclaimer lang="en_GB">!!! NOT for the faint-hearted mwoehahahahaah !!!  |  be sure to check out our FB-page: https://www.fb.com/groups/XvBMCnederland/  |  CREDITS: http://www.Troma.com/films/  |  (special thanks -2- Patrick Dijkkamp)</disclaimer>
-    <platform>all</platform>
-	<language></language>
-	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007 *and* copyright / intellectual property: Troma Entertaiment, INC. / XvBMC-Nederland.</license>
-	<forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
-	<website>https://www.facebook.com/groups/XvBMCnederland/</website>
-	<source>https://archive.org/download/repository.xvbmc/</source>
-	<email>XvBMCnederland@groups.facebook.com</email>
   </extension>
 </addon>
 
@@ -1051,19 +1005,6 @@ Addons Included
         <description lang="en">Provides sequential torrent downloading for online streaming video and other media over HTTP.</description>
         <email>anteo@academ.org</email>
     </extension>
-</addon>
-
-<addon id="script.module.urlresolver" name="URLResolver" version="3.0.15" provider-name="Eldorado">
-	<requires>
-		<import addon="xbmc.python" version="2.1.0" />
-	</requires>
-	<extension point="xbmc.python.module" library="lib" />
-	<extension point="xbmc.python.pluginsource" library="lib/default.py" />
-	<extension point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<summary lang="en">Resolve common video host URL's to be playable in XBMC/Kodi.</summary>
-		<description lang="en">Resolve common video host URL's to be playable in XBMC/Kodi, simplify addon development of video plugins requiring multi video hosts.</description>
-	</extension>
 </addon>
 
 <addon id="script.module.youtube.dl" name="youtube-dl Control" version="16.627.0" provider-name="Rick Phillips (ruuk)">
