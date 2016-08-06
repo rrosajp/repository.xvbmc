@@ -141,12 +141,11 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="repository.xvbmc" version="1.0.0" />
-		<import addon="script.exodus.artwork" version="1.0.4" />
 		<import addon="script.module.urlresolver" version="3.0.0" />
 		<import addon="script.module.metahandler" version="1.0.0" />
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="eqsodus.py">
-		<provides>executable</provides>
+		<provides></provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Eqsodus</summary>
