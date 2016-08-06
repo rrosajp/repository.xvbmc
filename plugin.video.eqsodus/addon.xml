@@ -7,7 +7,7 @@
 		<import addon="script.module.metahandler" version="1.0.0" />
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="eqsodus.py">
-		<provides></provides>
+		<provides>image</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Eqsodus</summary>
