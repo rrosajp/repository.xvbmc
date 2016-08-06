@@ -145,7 +145,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 		<import addon="script.module.metahandler" version="1.0.0" />
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="eqsodus.py">
-		<provides>executable</provides>
+		<provides>image</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Eqsodus</summary>
