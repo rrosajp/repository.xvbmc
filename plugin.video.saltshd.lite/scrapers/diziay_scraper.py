@@ -17,25 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
-
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.constants import QUALITIES
 import scraper
-
 
 BASE_URL = 'http://diziay.com'
 SEASON_URL = '/posts/filmgonder.php?action=sezongets'
 AJAX_URL = 'http://dizipas.org/player/ajax.php?dizi=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class Diziay_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -49,15 +45,6 @@ class Diziay_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'Diziay'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        if 'subs' in item and item['subs']:
-            label += ' (Turkish subtitles)'
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -87,21 +74,21 @@ class Diziay_Scraper(scraper.Scraper):
     def __get_embedded_sources(self, html):
         sources = []
         # if captions exist, then they aren't hardcoded
-        subs = False if re.search('''"?kind"?\s*:\s*"?captions"?''', html) else True
+        subs = '' if re.search('''"?kind"?\s*:\s*"?captions"?''', html) else 'Turkish subtitles'
         for stream_url in dom_parser.parse_dom(html, 'source', {'type': 'video/mp4'}, ret='src'):
             sources.append(stream_url)
         return {'sources': sources, 'subs': subs}
         
     def __get_linked_sources(self, html):
         sources = []
-        subs = True
+        subs = 'Turkish subtitles'
         match = re.search('fvid\s*=\s*"([^"]+)', html)
         if match:
             ajax_url = AJAX_URL % (match.group(1))
             html = self._http_get(ajax_url, headers=XHR, cache_limit=.5)
             js_result = scraper_utils.parse_json(html, ajax_url)
             # subs are hardcoded if none exist
-            subs = False if 'altyazi' in js_result and js_result['altyazi'] else True
+            subs = '' if 'altyazi' in js_result and js_result['altyazi'] else 'Turkish subtitles'
             if 'success' in js_result:
                 for source in js_result['success']:
                     if 'src' in source:

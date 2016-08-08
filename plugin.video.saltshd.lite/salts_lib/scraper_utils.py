@@ -24,9 +24,9 @@ import urllib
 import urlparse
 import json
 import os.path
-from salts_lib import kodi
+import kodi
+import log_utils
 from salts_lib import pyaes
-from salts_lib import log_utils
 from salts_lib import utils2
 from salts_lib.constants import *
 
@@ -288,6 +288,12 @@ def pathify_url(url):
 def parse_json(html, url=''):
     if html:
         try:
+            if not isinstance(html, unicode):
+                if html.startswith('\xef\xbb\xbf'):
+                    html = html[3:]
+                elif html.startswith('\xfe\xff'):
+                    html = html[2:]
+                
             js_data = json.loads(html)
             if js_data is None:
                 return {}
@@ -307,6 +313,14 @@ def format_size(num, suffix='B'):
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Y', suffix)
 
+def to_bytes(num, unit):
+    unit = unit.upper()
+    if unit.endswith('B'): unit = unit[:-1]
+    units = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']
+    try: mult = pow(1024, units.index(unit))
+    except: mult = sys.maxint
+    return int(float(num) * mult)
+    
 def update_scraper(file_name, scraper_url, scraper_key):
     py_path = os.path.join(kodi.get_path(), 'scrapers', file_name)
     exists = os.path.exists(py_path)

@@ -3,8 +3,8 @@ import os
 import re
 import time
 
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import utils2
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -15,40 +15,40 @@ __all__ = ['scraper',
 'pw_scraper', 
 'nitertv_scraper',
            'movieshd_scraper', 
-		   'hdflix_scraper',
+		   
            'fmovie_scraper', 
-		   'piratejunkies_scraper', 
+		   
 		   'kiwihd_scraper', 
 		   'watch5s_scraper',
            'dizibox_scraper',
-           'stage66_scraper',
+           
            'xmovies8_scraper', 
 		   'vivoto_scraper', 
 		   'moviexk_scraper',
            'pubfilm_scraper', 
 		   'pelispedia_scraper',
-           'dizilab_scraper', 
-		   'dizimag_scraper',
-		   'moviebox_scraper',
+           
+		   'icefilms_scraper',
+		   'tunemovie_scraper',
 		   'm4ufree_scraper',
 		   'serieswatch_scraper',
            'dizigold_scraper', 
 		   'emoviespro_scraper', 
 		    
 		   'sezonlukdizi_scraper',
-           'yesmovies_scraper',
+           
 		   'moviego_scraper',
 		   'hevcbluray_scraper',
            'miradetodo_scraper', 
-		   'xmovies8v2_scraper', 
-		   'rainierland_scraper',
-		   'vu45_scraper',
+		   
+		   'moviezone_scraper',
+		   
            'afdahorg_scraper', 
 		   'farda_scraper', 
 		   'hdmovie14_scraper', 
 		   'dayt_scraper',
            'moviesub_scraper', 
-		   'cloudmovie_scraper']
+		   'hdmoviefree_scraper']
 
 from . import *
     

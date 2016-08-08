@@ -18,10 +18,11 @@
 import re
 import urlparse
 import random
-from salts_lib import kodi
-from salts_lib import log_utils
+import urllib
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import dom_parser
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
@@ -34,7 +35,7 @@ ICONS = {'icon-tr': 'Turkish Subtitles', 'icon-en': 'English Subtitles', 'icon-o
 DEFAULT_SUB = 'Turkish Subtitles'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class Dizilab_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -48,15 +49,6 @@ class Dizilab_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'Dizilab'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        if 'subs' in item and item['subs']:
-            label += ' (%s)' % (item['subs'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -152,7 +144,7 @@ class Dizilab_Scraper(scraper.Scraper):
                         for variant in js_data['variants']:
                             if 'hosts' in variant and variant['hosts']:
                                 stream_host = random.choice(variant['hosts'])
-                                stream_url = STREAM_URL % (stream_host, variant['path'], scraper_utils.get_ua(), page_url)
+                                stream_url = STREAM_URL % (stream_host, variant['path'], scraper_utils.get_ua(), urllib.quote(page_url))
                                 if not stream_url.startswith('http'):
                                     stream_url = 'http://' + stream_url
                                 host = self._get_direct_hostname(stream_url)

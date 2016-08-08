@@ -22,11 +22,11 @@ import xbmc
 import xbmcgui
 import log_utils
 import kodi
+import utils
 import utils2
 from constants import *
 from trakt_api import Trakt_API
 from db_utils import DB_Connection
-import threading
 from scrapers import *  # import all scrapers into this namespace
 
 _db_connection = None
@@ -45,22 +45,11 @@ def _get_db_connection():
         _db_connection = DB_Connection()
     return _db_connection
     
-def choose_list(username=None):
-    lists = trakt_api.get_lists(username)
-    if username is None: lists.insert(0, {'name': 'watchlist', 'ids': {'slug': WATCHLIST_SLUG}})
-    if lists:
-        dialog = xbmcgui.Dialog()
-        index = dialog.select(utils2.i18n('pick_a_list'), [list_data['name'] for list_data in lists])
-        if index > -1:
-            return lists[index]['ids']['slug']
-    else:
-        kodi.notify(msg=utils2.i18n('no_lists_for_user') % (username), duration=5000)
-
 def make_info(item, show=None, people=None):
     if people is None: people = {}
     if show is None: show = {}
-    # log_utils.log('Making Info: Show: %s' % (show), xbmc.LOGDEBUG)
-    # log_utils.log('Making Info: Item: %s' % (item), xbmc.LOGDEBUG)
+    # log_utils.log('Making Info: Show: %s' % (show), log_utils.LOGDEBUG)
+    # log_utils.log('Making Info: Item: %s' % (item), log_utils.LOGDEBUG)
     info = {}
     info['title'] = item['title']
     info['mediatype'] = 'tvshow' if 'aired_episodes' in item else 'movie'
@@ -106,20 +95,20 @@ def make_info(item, show=None, people=None):
     info.update(utils2.make_people(people))
     return info
 
-def update_url(video_type, title, year, source, old_url, new_url, season, episode):
-    log_utils.log('Setting Url: |%s|%s|%s|%s|%s|%s|%s|%s|' % (video_type, title, year, source, old_url, new_url, season, episode), log_utils.LOGDEBUG)
+def update_url(video, source, old_url, new_url):
+    log_utils.log('Setting Url: %s -> |%s|%s|%s|' % (video, source, old_url, new_url), log_utils.LOGDEBUG)
     db_connection = _get_db_connection()
     if new_url:
-        db_connection.set_related_url(video_type, title, year, source, new_url, season, episode)
+        db_connection.set_related_url(video.video_type, video.title, video.year, source, new_url, video.season, video.episode)
     else:
-        db_connection.clear_related_url(video_type, title, year, source, season, episode)
+        db_connection.clear_related_url(video.video_type, video.title, video.year, source, video.season, video.episode)
 
     # clear all episode local urls if tvshow or season url changes
     if new_url != old_url:
-        if video_type == VIDEO_TYPES.TVSHOW:
-            db_connection.clear_related_url(VIDEO_TYPES.EPISODE, title, year, source)
-        elif video_type == VIDEO_TYPES.SEASON:
-            db_connection.clear_related_url(VIDEO_TYPES.EPISODE, title, year, source, season)
+        if video.video_type == VIDEO_TYPES.TVSHOW:
+            db_connection.clear_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, source)
+        elif video.video_type == VIDEO_TYPES.SEASON:
+            db_connection.clear_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, source, video.season)
             
 def make_source_sort_key():
     sso = kodi.get_setting('source_sort_order')
@@ -151,13 +140,43 @@ def get_source_sort_key(item):
     sort_key = make_source_sort_key()
     return -sort_key[item.get_name()]
 
-def parallel_get_progress(q, trakt_id, cached, cache_limit):
-    worker = threading.current_thread()
-    log_utils.log('Worker: %s (%s) for %s progress' % (worker.name, worker, trakt_id), log_utils.LOGDEBUG)
+def parallel_get_progress(trakt_id, cached, cache_limit):
     progress = trakt_api.get_show_progress(trakt_id, full=True, cached=cached, cache_limit=cache_limit)
     progress['trakt'] = trakt_id  # add in a hacked show_id to be used to match progress up to the show its for
-    log_utils.log('Got progress for %s from %s' % (trakt_id, worker), log_utils.LOGDEBUG)
-    q.put(progress)
+    log_utils.log('Got progress for Trakt ID: %s' % (trakt_id), log_utils.LOGDEBUG)
+    return progress
+
+def parallel_get_url(scraper, video):
+    url = scraper.get_url(video)
+    log_utils.log('%s returned url %s' % (scraper.get_name(), url), log_utils.LOGDEBUG)
+    if not url: url = ''
+    if url == FORCE_NO_MATCH:
+        label = '[%s] [COLOR green]%s[/COLOR]' % (scraper.get_name(), utils2.i18n('force_no_match'))
+    else:
+        label = '[%s] %s' % (scraper.get_name(), url)
+    related = {'class': scraper, 'url': url, 'name': scraper.get_name(), 'label': label}
+    return related
+
+def parallel_get_sources(scraper, video):
+    start = time.time()
+    hosters = scraper.get_sources(video)
+    if hosters is None: hosters = []
+    if kodi.get_setting('filter_direct') == 'true':
+        hosters = [hoster for hoster in hosters if not hoster['direct'] or utils2.test_stream(hoster)]
+    found = False
+    for hoster in hosters:
+        if hoster['host'] is None:
+            log_utils.log('Hoster missing host: %s - %s' % (scraper.get_name(), hoster), log_utils.LOGWARNING)
+            found = True
+        elif not hoster['direct']:
+            hoster['host'] = hoster['host'].lower().strip()
+    
+    if found:
+        hosters = [hoster for hoster in hosters if hoster['host'] is not None]
+        
+    log_utils.log('%s returned %s sources in %.2fs' % (scraper.get_name(), len(hosters), time.time() - start), log_utils.LOGDEBUG)
+    result = {'name': scraper.get_name(), 'hosters': hosters}
+    return result
 
 # Run a task on startup. Settings and mode values must match task name
 def do_startup_task(task):
@@ -181,7 +200,7 @@ def do_scheduled_task(task, isPlaying):
             # hack next_run to be in the future
             next_run = now + datetime.timedelta(seconds=1)
 
-        # log_utils.log("Update Status on [%s]: Currently: %s Will Run: %s Last Check: %s" % (task, now, next_run, last_check), xbmc.LOGDEBUG)
+        # log_utils.log("Update Status on [%s]: Currently: %s Will Run: %s Last Check: %s" % (task, now, next_run, last_check), log_utils.LOGDEBUG)
         if now >= next_run:
             is_scanning = xbmc.getCondVisibility('Library.IsScanningVideo')
             if not is_scanning:
@@ -231,7 +250,7 @@ def get_resume_choice(trakt_id, season, episode):
         resume_point = '%s%%' % (trakt_api.get_bookmark(trakt_id, season, episode))
         header = utils2.i18n('trakt_bookmark_exists')
     else:
-        resume_point = utils2.format_time(_get_db_connection().get_bookmark(trakt_id, season, episode))
+        resume_point = utils.format_time(_get_db_connection().get_bookmark(trakt_id, season, episode))
         header = utils2.i18n('local_bookmark_exists')
     question = utils2.i18n('resume_from') % (resume_point)
     dialog = xbmcgui.Dialog()

@@ -19,10 +19,10 @@ import base64
 import re
 import urllib
 import urlparse
-from salts_lib import dom_parser
-from salts_lib import kodi
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
@@ -32,7 +32,7 @@ import scraper
 QUALITY_MAP = {'DVD': QUALITIES.HIGH, 'TS': QUALITIES.MEDIUM, 'CAM': QUALITIES.LOW}
 BASE_URL = 'http://tinklepad.is'
 
-class Movie25_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -62,9 +62,6 @@ class Movie25_Scraper(scraper.Scraper):
                     return link
         else:
                 return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)

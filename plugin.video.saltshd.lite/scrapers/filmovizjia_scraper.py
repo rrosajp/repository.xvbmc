@@ -19,9 +19,9 @@ import re
 import urlparse
 import urllib
 import datetime
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -32,7 +32,7 @@ BASE_URL = 'http://www.filmovizija.studio'
 EP_URL = '/episode.php?vid=%s'
 YT_URL = '/yt.php?p=%s&s=%s&u=%s'
 
-class Filmovizija_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -46,12 +46,6 @@ class Filmovizija_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'Filmovizija'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)

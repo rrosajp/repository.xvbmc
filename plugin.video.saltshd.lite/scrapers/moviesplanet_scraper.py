@@ -19,14 +19,15 @@ import base64
 import re
 import time
 import urlparse
-
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
+from salts_lib.constants import Q_ORDER
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.kodi import i18n
+from salts_lib.utils2 import i18n
 import scraper
 
 
@@ -35,7 +36,7 @@ GK_KEY = base64.urlsafe_b64decode('MllVcmlZQmhTM2swYU9BY0lmTzQ=')
 QUALITY_MAP = {'HD': QUALITIES.HD720}
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class MoviesPlanet_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -51,12 +52,6 @@ class MoviesPlanet_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'MoviesPlanet'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -87,6 +82,8 @@ class MoviesPlanet_Scraper(scraper.Scraper):
                                     temp_sources[redir_html] = temp_sources[source]
                                     del temp_sources[source]
                         sources.update(temp_sources)
+                        for source in dom_parser.parse_dom(html, 'source', {'type': 'video/mp4'}, ret='src'):
+                            sources[source] = {'quality': QUALITIES.HD720, 'direct': True}
                                 
         for source in sources:
             host = self._get_direct_hostname(source)
@@ -94,7 +91,10 @@ class MoviesPlanet_Scraper(scraper.Scraper):
             if host == 'gvideo':
                 quality = scraper_utils.gv_get_quality(source)
             else:
-                quality = QUALITY_MAP.get(sources[source]['quality'], QUALITIES.HIGH)
+                quality = sources[source]['quality']
+                if quality not in Q_ORDER:
+                    quality = QUALITY_MAP.get(sources[source]['quality'], QUALITIES.HIGH)
+                    
             hoster = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
             hosters.append(hoster)
 

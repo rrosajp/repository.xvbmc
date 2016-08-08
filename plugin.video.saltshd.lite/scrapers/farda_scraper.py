@@ -18,9 +18,8 @@
 """
 import re
 import urlparse
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -28,7 +27,7 @@ import scraper
 
 BASE_URL = 'http://dl.fardadownload.ir/Serial'
 
-class Farda_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -42,18 +41,6 @@ class Farda_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'FardaDownload'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        if 'format' in item:
-            label = '[%s] (%s) %s' % (item['quality'], item['format'], item['host'])
-        else:
-            label = '[%s] %s' % (item['quality'], item['host'])
-        if 'size' in item:
-            label += ' (%s)' % (item['size'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -76,6 +63,7 @@ class Farda_Scraper(scraper.Scraper):
                     if 'dubbed' in extra.lower(): continue
                     if match:
                         stream_url = match['url'] + '|User-Agent=%s' % (scraper_utils.get_ua())
+                        stream_url = stream_url.replace(self.base_url, '')
                         hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': scraper_utils.height_get_quality(height), 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                         if 'x265' in extra: hoster['format'] = 'x265'
                         if 'size' in match: hoster['size'] = scraper_utils.format_size(int(match['size']))

@@ -18,19 +18,17 @@
 import re
 import urllib
 import urlparse
-
-from salts_lib import dom_parser
-from salts_lib import kodi
+import kodi
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-
 BASE_URL = 'http://rainierland.com'
 PAGE_LIMIT = 5
 
-class Rainierland_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -45,13 +43,6 @@ class Rainierland_Scraper(scraper.Scraper):
     def get_name(cls):
         return 'Rainierland'
 
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        return label
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
@@ -63,7 +54,8 @@ class Rainierland_Scraper(scraper.Scraper):
                 js_src = dom_parser.parse_dom(fragment[0], 'script', ret='src')
                 if js_src:
                     js_url = urlparse.urljoin(self.base_url, js_src[0])
-                    html = self._http_get(js_url, cache_limit=.5)
+                    headers = {'Referer': url}
+                    html = self._http_get(js_url, headers=headers, cache_limit=.5)
                 else:
                     html = fragment[0]
                     
