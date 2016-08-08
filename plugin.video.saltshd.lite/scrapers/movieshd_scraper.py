@@ -22,22 +22,21 @@ import string
 import random
 import time
 import base64
-from salts_lib import dom_parser
-from salts_lib import kodi
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-
-BASE_URL = 'http://movieshd.tv'
+BASE_URL = 'http://movieshd.is'
 EMBED_URL = '/ajax/embeds.php'
 SEARCH_URL = '/api/v1/cautare/apr'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class MoviesHD_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
     __token = None
     __t = None
@@ -53,12 +52,6 @@ class MoviesHD_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'MoviesHD'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)

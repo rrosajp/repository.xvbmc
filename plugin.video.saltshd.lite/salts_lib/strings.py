@@ -291,6 +291,9 @@ STRINGS = {
     'next_episode': 30282,
     'remaining_over': 30283,
     'remaining_under': 30284,
-    'genres': 30285
+    'genres': 30285,
+    'retr_collection': 30286,
+    'adding_items': 30287,
+    'working': 30288
     
 }

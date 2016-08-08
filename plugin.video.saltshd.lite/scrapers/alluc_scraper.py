@@ -18,16 +18,15 @@
 import urllib
 import urlparse
 
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.kodi import i18n
+from salts_lib.utils2 import i18n
 import scraper
-
 
 Q_LIST = [item[0] for item in sorted(Q_ORDER.items(), key=lambda x:x[1])]
 
@@ -41,7 +40,7 @@ QUALITY_MAP = {
     QUALITIES.HD720: ['720P'],
     QUALITIES.HD1080: ['1080P']}
 
-class Alluc_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -57,15 +56,6 @@ class Alluc_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'alluc.com'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        if 'extra' in item:
-            label += ' [%s]' % (item['extra'])
-        return label
 
     def get_sources(self, video):
         hosters = []

@@ -19,10 +19,10 @@ import scraper
 import urlparse
 import urllib
 import re
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import kodi
-from salts_lib import log_utils
-from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -30,7 +30,7 @@ from salts_lib.constants import QUALITIES
 BASE_URL = 'https://hevcbluray.com'
 QUALITY_MAP = {'HD 720P': QUALITIES.HD720, 'HD 1080P': QUALITIES.HD1080}
 
-class HEVCBluRay_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -44,18 +44,6 @@ class HEVCBluRay_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'HEVCBluRay'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s]' % (item['quality'])
-        if '3D' in item and item['3D']:
-            label += ' (3D)'
-        if 'format' in item:
-            label += ' (%s)' % (item['format'])
-        label += ' %s' % (item['host'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)

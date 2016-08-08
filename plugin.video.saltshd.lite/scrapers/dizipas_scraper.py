@@ -17,8 +17,8 @@
 """
 import re
 import urlparse
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -40,7 +40,7 @@ AJAX_URL = 'http://dizipas.org/player/ajax.php?dizi=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 
-class Dizipas_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -55,13 +55,6 @@ class Dizipas_Scraper(scraper.Scraper):
     def get_name(cls):
         return 'Dizipas'
 
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s (Turkish Subtitles)' % (item['quality'], item['host'])
-        return label
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
@@ -74,7 +67,7 @@ class Dizipas_Scraper(scraper.Scraper):
             for source in sources:
                 stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
                 host = self._get_direct_hostname(source)
-                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': sources[source], 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': sources[source], 'views': None, 'rating': None, 'url': stream_url, 'direct': True, 'subs': 'Turkish subtitles'}
                 hosters.append(hoster)
 
         return hosters

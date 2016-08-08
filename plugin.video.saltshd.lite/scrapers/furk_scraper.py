@@ -19,13 +19,14 @@ import json
 import re
 import urllib
 import urlparse
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.kodi import i18n
+from salts_lib.utils2 import i18n
 import scraper
 import xml.etree.ElementTree as ET
 import xbmcgui
@@ -35,7 +36,7 @@ SEARCH_URL = '/api/plugins/metasearch'
 LOGIN_URL = '/api/login/login'
 MIN_DURATION = 10 * 60 * 1000  # 10 minutes in milliseconds
 
-class Furk_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -71,29 +72,13 @@ class Furk_Scraper(scraper.Scraper):
                     locations.append({'duration': duration / 1000, 'url': location})
 
             if len(locations) > 1:
-                result = xbmcgui.Dialog().select(i18n('choose_stream'), [self.__format_time(location['duration']) for location in locations])
+                result = xbmcgui.Dialog().select(i18n('choose_stream'), [utils.format_time(location['duration']) for location in locations])
                 if result > -1:
                     return locations[result]['url']
             elif locations:
                 return locations[0]['url']
         except Exception as e:
             log_utils.log('Failure during furk playlist parse: %s' % (e), log_utils.LOGWARNING)
-
-    def __format_time(self, seconds):
-        minutes, seconds = divmod(seconds, 60)
-        if minutes > 60:
-            hours, minutes = divmod(minutes, 60)
-            return "%02dh:%02dm:%02ds" % (hours, minutes, seconds)
-        else:
-            return "00h:%02dm:%02ds" % (minutes, seconds)
-        
-    def format_source_label(self, item):
-            label = '[%s] %s' % (item['quality'], item['host'])
-            if 'size' in item:
-                label += ' (%s)' % (item['size'])
-            if 'extra' in item:
-                label += ' [%s]' % (item['extra'])
-            return label
 
     def get_sources(self, video):
         hosters = []
@@ -227,13 +212,14 @@ class Furk_Scraper(scraper.Scraper):
                     log_utils.log('Invalid JSON returned: %s: %s' % (url, result), log_utils.LOGWARNING)
                     js_result = {}
             else:
-                if js_result['status'] == 'error':
-                    if retry and js_result['error'] == 'access denied':
-                        log_utils.log('Logging in for url (%s)' % (url), log_utils.LOGDEBUG)
+                if js_result.get('status') == 'error':
+                    error = js_result.get('error', 'Unknown Error')
+                    if retry and (error == 'access denied' or 'session has expired' in error):
+                        log_utils.log('Logging in for url (%s) - (%s)' % (url, error), log_utils.LOGDEBUG)
                         self.__login()
                         js_result = self._http_get(url, data=data, retry=False, allow_redirect=allow_redirect, cache_limit=0)
                     else:
-                        log_utils.log('Error received from furk.net (%s)' % (js_result['error']), log_utils.LOGWARNING)
+                        log_utils.log('Error received from furk.net (%s)' % (error), log_utils.LOGWARNING)
                         js_result = {}
             
         return js_result
@@ -242,7 +228,7 @@ class Furk_Scraper(scraper.Scraper):
         url = urlparse.urljoin(self.base_url, LOGIN_URL)
         data = {'login': self.username, 'pwd': self.password}
         result = self._http_get(url, data=data, cache_limit=0)
-        if result['status'] != 'ok':
+        if result.get('status') != 'ok':
             raise Exception('furk.net login failed: %s' % (result.get('error', 'Unknown Error')))
     
     def __translate_search(self, url):

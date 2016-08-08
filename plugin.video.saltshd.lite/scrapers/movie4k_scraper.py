@@ -18,8 +18,7 @@
 import re
 import urllib
 import urlparse
-
-from salts_lib import kodi
+import kodi
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -30,7 +29,7 @@ import scraper
 BASE_URL = 'http://movie4k.to'
 QUALITY_MAP = {None: None, '0': QUALITIES.LOW, '1': QUALITIES.LOW, '2': QUALITIES.MEDIUM, '3': QUALITIES.MEDIUM, '4': QUALITIES.HIGH, '5': QUALITIES.HIGH}
 
-class Movie4K_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -51,9 +50,6 @@ class Movie4K_Scraper(scraper.Scraper):
         match = re.search('Check the mirror links on the left menu.*?(?:src|href)="([^"]+)', html, re.DOTALL)
         if match:
             return match.group(1)
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)

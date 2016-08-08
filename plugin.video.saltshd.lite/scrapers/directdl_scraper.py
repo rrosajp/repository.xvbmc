@@ -19,14 +19,13 @@ import re
 import urllib
 import urlparse
 
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
 from salts_lib.constants import VIDEO_TYPES
 import scraper
-
 
 BASE_URL = 'https://directdownload.tv'
 SEARCH_URL = '/api?key=%s&%s&keyword=%s'
@@ -38,7 +37,7 @@ QUALITY_MAP = {'PDTV': QUALITIES.MEDIUM, 'DSR': QUALITIES.MEDIUM, 'DVDRIP': QUAL
                'HDTV': QUALITIES.HIGH, '720P': QUALITIES.HD720, 'WEBDL': QUALITIES.HD720, 'WEBDL1080P': QUALITIES.HD1080,
                '1080P-X265': QUALITIES.HD1080}
 
-class DirectDownload_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -54,12 +53,6 @@ class DirectDownload_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'DD.tv'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] (%s) %s' % (item['quality'], item['dd_qual'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -90,7 +83,7 @@ class DirectDownload_Scraper(scraper.Scraper):
                         
                         hostname = urlparse.urlparse(url).hostname
                         hoster = {'multi-part': False, 'class': self, 'views': None, 'url': url, 'rating': None, 'host': hostname, 'quality': QUALITY_MAP[result['quality']], 'direct': False}
-                        hoster['dd_qual'] = result['quality']
+                        hoster['format'] = result['quality']
                         if 'x265' in result['release'] and result['quality'] != '1080P-X265': hoster['dd_qual'] += '-x265'
                         hosters.append(hoster)
 

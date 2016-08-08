@@ -851,7 +851,7 @@ msgid "Requested Sources from: %s"
 msgstr ""
 
 msgctxt "#30220"
-msgid "Received Sources from: %s - (%s / %s)"
+msgid "Received Sources: (%s / %s) from %s"
 msgstr ""
 
 msgctxt "#30221"
@@ -1112,6 +1112,18 @@ msgstr ""
 
 msgctxt "#30285"
 msgid "Genres"
+msgstr ""
+
+msgctxt "#30286"
+msgid "Retrieving Collection"
+msgstr ""
+
+msgctxt "#30287"
+msgid "Adding Items to Directory"
+msgstr ""
+
+msgctxt "#30288"
+msgid "Working..."
 msgstr ""
 
 msgctxt "#30500"

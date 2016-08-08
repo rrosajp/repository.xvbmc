@@ -15,29 +15,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import json
 import datetime
 import time
 import re
 import os
 import urllib2
 import urllib
-import urlparse
-import threading
-import sys
 import hashlib
 import xml.etree.ElementTree as ET
 import htmlentitydefs
 import log_utils
+import utils
 import xbmc
 import xbmcaddon
 import xbmcvfs
-import xbmcgui
-import xbmcplugin
 import kodi
 import pyaes
 from constants import *
-from kodi import i18n
+from salts_lib import strings
 
 THEME_LIST = ['Shine', 'Luna_Blue', 'Iconic', 'Simple', 'SALTy', 'SALTy (Blended)', 'SALTy (Blue)', 'SALTy (Frog)', 'SALTy (Green)',
               'SALTy (Macaw)', 'SALTier (Green)', 'SALTier (Orange)', 'SALTier (Red)', 'IGDB', 'Simply Elegant', 'IGDB Redux', 'NaCl']
@@ -48,6 +43,7 @@ else:
     themepak_path = kodi.get_path()
 THEME_PATH = os.path.join(themepak_path, 'art', 'themes', THEME)
 PLACE_POSTER = os.path.join(kodi.get_path(), 'resources', 'place_poster.png')
+translations = kodi.Translations(strings.STRINGS)
 
 SORT_FIELDS = [
     (SORT_LIST[int(kodi.get_setting('sort1_field'))], SORT_SIGNS[kodi.get_setting('sort1_order')]),
@@ -89,43 +85,6 @@ def show_id(show):
         queries['show_id'] = ids['slug']
     return queries
 
-def iso_2_utc(iso_ts):
-    if not iso_ts or iso_ts is None: return 0
-    delim = -1
-    if not iso_ts.endswith('Z'):
-        delim = iso_ts.rfind('+')
-        if delim == -1: delim = iso_ts.rfind('-')
-
-    if delim > -1:
-        ts = iso_ts[:delim]
-        sign = iso_ts[delim]
-        tz = iso_ts[delim + 1:]
-    else:
-        ts = iso_ts
-        tz = None
-
-    if ts.find('.') > -1:
-        ts = ts[:ts.find('.')]
-
-    try: d = datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%S')
-    except TypeError: d = datetime.datetime(*(time.strptime(ts, '%Y-%m-%dT%H:%M:%S')[0:6]))
-
-    dif = datetime.timedelta()
-    if tz:
-        hours, minutes = tz.split(':')
-        hours = int(hours)
-        minutes = int(minutes)
-        if sign == '-':
-            hours = -hours
-            minutes = -minutes
-        dif = datetime.timedelta(minutes=minutes, hours=hours)
-    utc_dt = d - dif
-    epoch = datetime.datetime.utcfromtimestamp(0)
-    delta = utc_dt - epoch
-    try: seconds = delta.total_seconds()  # works only on 2.7
-    except: seconds = delta.seconds + delta.days * 24 * 3600  # close enough
-    return seconds
-
 def _title_key(title):
     if title is None: title = ''
     temp = title.upper()
@@ -146,13 +105,6 @@ def _released_key(item):
         return item['first_aired']
     else:
         return 0
-
-def to_slug(username):
-    username = username.strip()
-    username = username.lower()
-    username = re.sub('[^a-z0-9_]', '-', username)
-    username = re.sub('--+', '-', username)
-    return username
 
 def sort_list(sort_key, sort_direction, list_data):
     log_utils.log('Sorting List: %s - %s' % (sort_key, sort_direction), log_utils.LOGDEBUG)
@@ -210,18 +162,6 @@ def make_episodes_watched(episodes, progress):
 
     return episodes
 
-def make_list_item(label, meta):
-    art = make_art(meta)
-    listitem = xbmcgui.ListItem(label, iconImage=art['thumb'], thumbnailImage=art['thumb'])
-    listitem.setProperty('fanart_image', art['fanart'])
-    listitem.setProperty('isPlayable', 'false')
-    listitem.addStreamInfo('video', {})
-    try: listitem.setArt(art)
-    except: pass
-    if 'ids' in meta and 'imdb' in meta['ids']: listitem.setProperty('imdb_id', str(meta['ids']['imdb']))
-    if 'ids' in meta and 'tvdb' in meta['ids']: listitem.setProperty('tvdb_id', str(meta['ids']['tvdb']))
-    return listitem
-
 def make_art(show):
     min_size = int(kodi.get_setting('image_size'))
     art_dict = {'banner': '', 'fanart': art('fanart.jpg'), 'thumb': '', 'poster': PLACE_POSTER}
@@ -267,7 +207,7 @@ def make_people(item):
     return people
 
 def make_air_date(first_aired):
-    utc_air_time = iso_2_utc(first_aired)
+    utc_air_time = utils.iso_2_utc(first_aired)
     try: air_date = time.strftime('%Y-%m-%d', time.localtime(utc_air_time))
     except ValueError:  # windows throws a ValueError on negative values to localtime
         d = datetime.datetime.fromtimestamp(0) + datetime.timedelta(seconds=utc_air_time)
@@ -362,63 +302,6 @@ def make_source_sort_string(sort_key):
     sort_string = '|'.join([element[0] for element in sorted_key])
     return sort_string
 
-def start_worker(q, func, args):
-    worker = threading.Thread(target=func, args=([q] + args))
-    worker.daemon = True
-    worker.start()
-    return worker
-
-def reap_workers(workers, timeout=0):
-    """
-    Reap thread/process workers; don't block by default; return un-reaped workers
-    """
-    log_utils.log('In Reap: %s' % (workers), log_utils.LOGDEBUG)
-    living_workers = []
-    for worker in workers:
-        if worker:
-            log_utils.log('Reaping: %s' % (worker.name), log_utils.LOGDEBUG)
-            worker.join(timeout)
-            if worker.is_alive():
-                log_utils.log('Worker %s still running' % (worker.name), log_utils.LOGDEBUG)
-                living_workers.append(worker)
-    return living_workers
-
-def parallel_get_sources(q, scraper, video):
-    worker = threading.current_thread()
-    log_utils.log('********Worker: %s (%s) for %s sources: %s' % (worker.name, worker, scraper.get_name(), video), log_utils.LOGDEBUG)
-    start = time.time()
-    hosters = scraper.get_sources(video)
-    if hosters is None: hosters = []
-    if kodi.get_setting('filter_direct') == 'true':
-        hosters = [hoster for hoster in hosters if not hoster['direct'] or test_stream(hoster)]
-    found = False
-    for hoster in hosters:
-        if hoster['host'] is None:
-            log_utils.log('Hoster missing host: %s - %s' % (scraper.get_name(), hoster), log_utils.LOGWARNING)
-            found = True
-        elif not hoster['direct']:
-            hoster['host'] = hoster['host'].lower().strip()
-    
-    if found:
-        hosters = [hoster for hoster in hosters if hoster['host'] is not None]
-        
-    log_utils.log('%s returned %s sources from %s in %.2fs' % (scraper.get_name(), len(hosters), worker, time.time() - start), log_utils.LOGDEBUG)
-    result = {'name': scraper.get_name(), 'hosters': hosters}
-    q.put(result)
-
-def parallel_get_url(q, scraper, video):
-    worker = threading.current_thread()
-    log_utils.log('Worker: %s (%s) for %s url' % (worker.name, worker, scraper.get_name()), log_utils.LOGDEBUG)
-    url = scraper.get_url(video)
-    log_utils.log('%s returned url %s from %s' % (scraper.get_name(), url, worker), log_utils.LOGDEBUG)
-    if not url: url = ''
-    if url == FORCE_NO_MATCH:
-        label = '[%s] [COLOR green]%s[/COLOR]' % (scraper.get_name(), i18n('force_no_match'))
-    else:
-        label = '[%s] %s' % (scraper.get_name(), url)
-    related = {'class': scraper, 'url': url, 'name': scraper.get_name(), 'label': label}
-    q.put(related)
-
 def test_stream(hoster):
     # parse_qsl doesn't work because it splits elements by ';' which can be in a non-quoted UA
     try:
@@ -459,26 +342,6 @@ def test_stream(hoster):
 def scraper_enabled(name):
     # return true if setting exists and set to true, or setting doesn't exist (i.e. '')
     return kodi.get_setting('%s-enable' % (name)) in ('true', '')
-
-def set_view(content, set_sort=False):
-    # set content type so library shows more views and info
-    if content:
-        kodi.set_content(content)
-
-    view = kodi.get_setting('%s_view' % (content))
-    if view != '0':
-        log_utils.log('Setting View to %s (%s)' % (view, content), log_utils.LOGDEBUG)
-        xbmc.executebuiltin('Container.SetViewMode(%s)' % (view))
-
-    # set sort methods - probably we don't need all of them
-    if set_sort:
-        xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_UNSORTED)
-        xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_LABEL)
-        xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_RATING)
-        xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_DATE)
-        xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_PROGRAM_COUNT)
-        xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_RUNTIME)
-        xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_GENRE)
 
 def make_day(date):
     try: date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
@@ -588,125 +451,31 @@ def record_failures(fails, counts=None):
         # remove timeouts from counts so they aren't double counted
         if name in counts: del counts[name]
         if int(kodi.get_setting(setting)) > -1:
-            accumulate_setting(setting, 5)
+            kodi.accumulate_setting(setting, 5)
     
     for name in counts:
         setting = '%s_last_results' % (name)
         if counts[name]:
             kodi.set_setting(setting, '0')
         elif int(kodi.get_setting(setting)) > -1:
-            accumulate_setting(setting)
+            kodi.accumulate_setting(setting)
 
 def menu_on(menu):
     return kodi.get_setting('show_%s' % (menu)) == 'true'
-
-def accumulate_setting(setting, addend=1):
-    cur_value = kodi.get_setting(setting)
-    cur_value = int(cur_value) if cur_value else 0
-    kodi.set_setting(setting, cur_value + addend)
-
-def format_time(seconds):
-    minutes, seconds = divmod(seconds, 60)
-    if minutes > 60:
-        hours, minutes = divmod(minutes, 60)
-        return "%02d:%02d:%02d" % (hours, minutes, seconds)
-    else:
-        return "%02d:%02d" % (minutes, seconds)
-
-def download_media(url, path, file_name):
-    try:
-        progress = int(kodi.get_setting('down_progress'))
-        active = not progress == PROGRESS.OFF
-        background = progress == PROGRESS.BACKGROUND
-        with kodi.ProgressDialog(kodi.get_name(), i18n('downloading') % (file_name), background=background, active=active) as pd:
-            try:
-                headers = dict([item.split('=') for item in (url.split('|')[1]).split('&')])
-                for key in headers: headers[key] = urllib.unquote(headers[key])
-            except:
-                headers = {}
-            if 'User-Agent' not in headers: headers['User-Agent'] = USER_AGENT
-            request = urllib2.Request(url.split('|')[0], headers=headers)
-            response = urllib2.urlopen(request)
-            if 'Content-Length' in response.info():
-                content_length = int(response.info()['Content-Length'])
-            else:
-                content_length = 0
-    
-            file_name = file_name.replace('.strm', get_extension(url, response))
-            full_path = os.path.join(path, file_name)
-            log_utils.log('Downloading: %s -> %s' % (url, full_path), log_utils.LOGDEBUG)
-    
-            path = xbmc.makeLegalFilename(path)
-            try:
-                try: xbmcvfs.mkdirs(path)
-                except: os.makedirs(path)
-            except Exception as e:
-                log_utils.log('Path Create Failed: %s (%s)' % (e, path), log_utils.LOGDEBUG)
-    
-            if not path.endswith(os.sep): path += os.sep
-            if not xbmcvfs.exists(path):
-                raise Exception(i18n('failed_create_dir'))
-            
-            file_desc = xbmcvfs.File(full_path, 'w')
-            total_len = 0
-            cancel = False
-            while True:
-                data = response.read(CHUNK_SIZE)
-                if not data:
-                    break
-    
-                if pd.is_canceled():
-                    cancel = True
-                    break
-    
-                total_len += len(data)
-                if not file_desc.write(data):
-                    raise Exception(i18n('failed_write_file'))
-    
-                percent_progress = (total_len) * 100 / content_length if content_length > 0 else 0
-                log_utils.log('Position : %s / %s = %s%%' % (total_len, content_length, percent_progress), log_utils.LOGDEBUG)
-                pd.update(percent_progress)
-            
-            file_desc.close()
-
-        if not cancel:
-            kodi.notify(msg=i18n('download_complete') % (file_name), duration=5000)
-            log_utils.log('Download Complete: %s -> %s' % (url, full_path), log_utils.LOGDEBUG)
-
-    except Exception as e:
-        log_utils.log('Error (%s) during download: %s -> %s' % (str(e), url, file_name), log_utils.LOGERROR)
-        kodi.notify(msg=i18n('download_error') % (str(e), file_name), duration=5000)
-
-def get_extension(url, response):
-    filename = url2name(url)
-    if 'Content-Disposition' in response.info():
-        cd_list = response.info()['Content-Disposition'].split('filename=')
-        if len(cd_list) > 1:
-            filename = cd_list[-1]
-            if filename[0] == '"' or filename[0] == "'":
-                filename = filename[1:-1]
-    elif response.url != url:
-        filename = url2name(response.url)
-    ext = os.path.splitext(filename)[1]
-    if not ext: ext = DEFAULT_EXT
-    return ext
-
-def url2name(url):
-    return os.path.basename(urllib.unquote(urlparse.urlsplit(url)[2]))
 
 def sort_progress(episodes, sort_order):
     if sort_order == TRAKT_SORT.TITLE:
         return sorted(episodes, key=lambda x: title_key(x['show']['title']))
     elif sort_order == TRAKT_SORT.ACTIVITY:
-        return sorted(episodes, key=lambda x: iso_2_utc(x['last_watched_at']), reverse=True)
+        return sorted(episodes, key=lambda x: utils.iso_2_utc(x['last_watched_at']), reverse=True)
     elif sort_order == TRAKT_SORT.LEAST_COMPLETED:
         return sorted(episodes, key=lambda x: (x['percent_completed'], x['completed']))
     elif sort_order == TRAKT_SORT.MOST_COMPLETED:
         return sorted(episodes, key=lambda x: (x['percent_completed'], x['completed']), reverse=True)
     elif sort_order == TRAKT_SORT.PREVIOUSLY_AIRED:
-        return sorted(episodes, key=lambda x: iso_2_utc(x['episode']['first_aired']))
+        return sorted(episodes, key=lambda x: utils.iso_2_utc(x['episode']['first_aired']))
     elif sort_order == TRAKT_SORT.RECENTLY_AIRED:
-        return sorted(episodes, key=lambda x: iso_2_utc(x['episode']['first_aired']), reverse=True)
+        return sorted(episodes, key=lambda x: utils.iso_2_utc(x['episode']['first_aired']), reverse=True)
     else:  # default sort set to activity
         return sorted(episodes, key=lambda x: x['last_watched_at'], reverse=True)
 
@@ -722,11 +491,11 @@ def title_key(title):
         offset = 0
     return title[offset:]
     
-def make_progress_msg(video_type, title, year, season, episode):
-    progress_msg = '%s: %s' % (video_type, title)
-    if year: progress_msg += ' (%s)' % (year)
-    if video_type == VIDEO_TYPES.EPISODE:
-        progress_msg += ' - S%02dE%02d' % (int(season), int(episode))
+def make_progress_msg(video):
+    progress_msg = '%s: %s' % (video.video_type, video.title)
+    if video.year: progress_msg += ' (%s)' % (video.year)
+    if video.video_type == VIDEO_TYPES.EPISODE:
+        progress_msg += ' - S%02dE%02d' % (int(video.season), int(video.episode))
     return progress_msg
 
 def from_playlist():
@@ -765,21 +534,6 @@ def get_and_decrypt(url, password):
         plain_text = decrypter.feed(cipher_text)
         plain_text += decrypter.feed()
         return plain_text
-
-def json_load_as_str(file_handle):
-    return _byteify(json.load(file_handle, object_hook=_byteify), ignore_dicts=True)
-
-def json_loads_as_str(json_text):
-    return _byteify(json.loads(json_text, object_hook=_byteify), ignore_dicts=True)
-
-def _byteify(data, ignore_dicts=False):
-    if isinstance(data, unicode):
-        return data.encode('utf-8')
-    if isinstance(data, list):
-        return [_byteify(item, ignore_dicts=True) for item in data]
-    if isinstance(data, dict) and not ignore_dicts:
-        return dict([(_byteify(key, ignore_dicts=True), _byteify(value, ignore_dicts=True)) for key, value in data.iteritems()])
-    return data
 
 def get_force_title_list():
     return __get_list('force_title_match')
@@ -884,6 +638,9 @@ def get_next_rewatch(trakt_id, plays, progress):
     
     return next_episode
 
+def i18n(string_id):
+    return translations.i18n(string_id)
+    
 def cleanse_title(text):
     def fixup(m):
         text = m.group(0)
@@ -931,4 +688,3 @@ def do_block_check(uninstall=False):
         sys.exit()
     except:
         pass
-    

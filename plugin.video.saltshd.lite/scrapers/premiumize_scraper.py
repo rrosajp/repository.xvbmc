@@ -19,14 +19,14 @@ import re
 import urllib
 import urlparse
 import xbmcgui
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import dom_parser
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
-from salts_lib.kodi import i18n
+from salts_lib.utils2 import i18n
 import scraper
 
 BASE_URL = 'premiumize.me'
@@ -45,7 +45,7 @@ MAGNET_LINK = 'magnet:?xt=urn:btih:%s'
 VIDEO_EXT = ['MKV', 'AVI', 'MP4']
 QUALITY_MAP = {'1080p': QUALITIES.HD1080, '720p': QUALITIES.HD720, '3D': QUALITIES.HD1080}
 
-class Premiumize_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
     movie_base_url = BASE_UR2
     tv_base_url = BASE_URL3
@@ -128,16 +128,6 @@ class Premiumize_Scraper(scraper.Scraper):
                         video = {'label': label, 'url': transcode['url']}
                         videos.append(video)
         return videos
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        if '3D' in item and item['3D']:
-            label += ' (3D)'
-        if 'size' in item:
-            label += ' (%s)' % (item['size'])
-        if 'extra' in item:
-            label += ' [%s]' % (item['extra'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)

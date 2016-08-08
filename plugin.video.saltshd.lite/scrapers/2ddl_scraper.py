@@ -19,21 +19,21 @@ import datetime
 import re
 import urllib
 import urlparse
-from salts_lib import log_utils
-from salts_lib import dom_parser
-from salts_lib import kodi
+import kodi
+import log_utils
+import dom_parser
+from salts_lib.utils2 import i18n
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import SHORT_MONS
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.kodi import i18n
 import scraper
 
 BASE_URL = 'http://2ddl.cc'
 CATEGORIES = {VIDEO_TYPES.MOVIE: '/category/movies/', VIDEO_TYPES.TVSHOW: '/category/tv-shows/'}
 EXCLUDE_LINKS = ['adf.ly', '2ddl.link']
 
-class TwoDDL_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -47,12 +47,6 @@ class TwoDDL_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return '2DDL'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)

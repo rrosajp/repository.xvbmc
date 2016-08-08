@@ -17,21 +17,18 @@
 """
 import re
 import urlparse
-
 import xbmc
-
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import SORT_KEYS
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-
 BASE_URL = ''
 
-class Local_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
         self.def_quality = int(kodi.get_setting('%s-def-quality' % (self.get_name())))
@@ -43,12 +40,6 @@ class Local_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'Local'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s (%s views)' % (item['quality'], item['host'], item['views'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)

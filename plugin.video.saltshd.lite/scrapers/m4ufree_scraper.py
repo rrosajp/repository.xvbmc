@@ -17,9 +17,9 @@
 """
 import re
 import urlparse
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -31,7 +31,7 @@ BASE_URL = 'http://m4ufree.info/'
 AJAX_URL = '/demo.php?v=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class M4UFree_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -45,14 +45,6 @@ class M4UFree_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'm4ufree'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        if item['views'] is not None: label += ' (%s Views)' % (item['views'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -103,7 +95,7 @@ class M4UFree_Scraper(scraper.Scraper):
                 source = urlparse.urljoin(self.base_url, source)
                 
             if self.base_url in source:
-                redir_url = self._http_get(source, allow_redirect=False, method='HEAD', cache_limit=0)
+                redir_url = self._http_get(source, allow_redirect=False, method='HEAD', cache_limit=.25)
                 if redir_url.startswith('http'):
                     source = redir_url
             
