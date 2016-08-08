@@ -4,6 +4,7 @@
     <requires>
         <import addon="xbmc.python" version="2.19.0"/>
         <import addon="script.module.urlresolver" version="3.0.0"/>
+        <import addon="repository.xvbmc" version="3.0.1"/>
         <import addon="script.module.myconnpy" version="1.1.6" />
         <import addon="script.module.tknorris.shared" version="0.0.2"/>
     </requires>
