@@ -47,8 +47,8 @@ base='https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/'
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack 03 (25-06-2016)', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]S[/B]ervice[B]P[/B]ack (00 t/m 03) bulk pack','url', 2,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR red]XvBMC [B]S[/B]ervice[B]P[/B]ack 03 (25-06-2016)[/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR red]XvBMC [B]S[/B]ervice[B]P[/B]ack (00 t/m 03) bulk pack[/COLOR]','url', 2,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 3,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [B]Pi[/B] **only**)', 'url', 4,os.path.join(mediaPath, "dev.png"))	
 	addItem('XvBMC [B]#DEV#[/B] Corner (Firmware-OS-etc)', 'url', 5,os.path.join(mediaPath, "dev.png"))
@@ -285,10 +285,12 @@ if mode==None or url==None or len(url)<1:
 	mainMenu()
 
 elif mode==1:
-	ServicePack(url)
+#	ServicePack(url)
+	dialog.ok("XvBMC NL most recent ServicePacks", 'Disabled: download laatste XvBMC ServicePack','', 'Download onze nieuwe V3-image dd. 09-08-2016 !!!')
 
 elif mode==2:
-	UpdateRollup(url)
+#	UpdateRollup(url)
+	dialog.ok("XvBMC NL ServicePack Update Rollup", 'Disabled: download alle XvBMC SP-updates (all-in-1)','', 'Download onze nieuwe V3-image dd. 09-08-2016 !!!')
 
 elif mode==3:
 	forceRefresh()
