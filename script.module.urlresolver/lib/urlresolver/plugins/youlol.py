@@ -1,6 +1,6 @@
-"""
-    urlresolver XBMC Addon
-    Copyright (C) 2016 lambda
+'''
+    urlresolver Kodi plugin
+    Copyright (C) 2016 Gujal
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,38 +14,40 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+'''
+
 import re
-from lib import jsunpack
 from urlresolver import common
 from urlresolver.resolver import UrlResolver, ResolverError
 
-class ZettahostResolver(UrlResolver):
-    name = 'zettahost.tv'
-    domains = ['zettahost.tv']
-    pattern = '(?://|\.)(zettahost\.tv)/(?:embed-)?([0-9a-zA-Z]+)'
+class YouLOLResolver(UrlResolver):
+    name = "youlol.biz"
+    domains = ["youlol.biz"]
+    pattern = '(?://|\.)(youlol\.biz)/(?:embed-)?([0-9a-zA-Z]+)'
 
     def __init__(self):
         self.net = common.Net()
 
     def get_media_url(self, host, media_id):
         web_url = self.get_url(host, media_id)
+        html = self.net.http_GET(web_url).content
 
-        headers = {'User-Agent': common.IOS_USER_AGENT}
+        if 'Not Found' in html:
+            raise ResolverError('File Removed')
 
-        html = self.net.http_GET(web_url, headers=headers).content
+        if 'Video is processing' in html:
+            raise ResolverError('File still being processed')
 
-        for match in re.finditer('(eval.*?\)\)\))', html, re.DOTALL):
-            js_data = jsunpack.unpack(match.group(1))
+        link = re.search('(?:m3u8").*?"(.*?)"', html)
+        if link:
+            return link.group(1)
 
-            stream_url = re.findall('<param\s+name="src"\s*value="([^"]+)', js_data)
-            stream_url += re.findall('file\s*:\s*[\'|\"](.+?)[\'|\"]', js_data)
-            stream_url = [i for i in stream_url if not i.endswith('.srt')]
-
-            if stream_url:
-                return stream_url[0]
-
-        raise ResolverError('File Not Found or removed')
+        link = re.search('file:"(.*?)",', html)
+        if link:
+            return link.group(1)
+            
+        raise ResolverError('Unable to find youlol video')
 
     def get_url(self, host, media_id):
-        return 'http://zettahost.tv/embed-%s.html' % media_id
+        return 'http://%s/%s.html' % (host, media_id)
+
