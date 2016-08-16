@@ -22,7 +22,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import re,urllib,urllib2,uuid
+import re,base64,urllib,urllib2,uuid
 import xbmc,xbmcgui,xbmcplugin
 import os,shutil,time
 import downloader
@@ -37,7 +37,7 @@ import extract
 addonPath = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'addons'),'script.xvbmc.update')
 mediaPath = os.path.join(addonPath, 'media')
 dialog = xbmcgui.Dialog()
-base='https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/'
+base='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
 #                  ProgTitle="XvBMC Update+Development"               #
 
 
@@ -47,13 +47,13 @@ base='https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/'
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('[COLOR red]XvBMC [B]S[/B]ervice[B]P[/B]ack 03 (25-06-2016)[/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR lime]XvBMC [B]S[/B]ervice[B]P[/B]ack 03 (25-06-2016)[/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR red]XvBMC [B]S[/B]ervice[B]P[/B]ack (00 t/m 03) bulk pack[/COLOR]','url', 2,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 3,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [B]Pi[/B] **only**)', 'url', 4,os.path.join(mediaPath, "dev.png"))	
+	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [COLOR white]Pi[/COLOR] **[B]only[/B]**)', 'url', 4,os.path.join(mediaPath, "dev.png"))	
 	addItem('XvBMC [B]#DEV#[/B] Corner (Firmware-OS-etc)', 'url', 5,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [B]T[/B]weaking', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance (v[COLOR white]3[/COLOR])', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance (v[COLOR white][B]3[/B][/COLOR])', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR white]Back[/COLOR][/B]', 'url', 8,os.path.join(mediaPath, "dev.png"))
 
 
@@ -61,21 +61,6 @@ def mainMenu():
 #						Add to menus
 #######################################################################
 
-def addLink(name,url,iconimage):
-	ok=True
-	liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setInfo( type="Video", infoLabels={ "Title": name } )
-	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addDir(name,url,mode,iconimage):
-	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
-	ok=True
-	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setInfo( type="Video", infoLabels={ "Title": name } )
-	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-	return ok
-	
 def addItem(name,url,mode,iconimage):
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
 	ok=True
@@ -111,52 +96,62 @@ def get_params():
 #######################################################################
 
 def ServicePack(url):
+    verifyplatform()
 #	\update\sp\03-servicepack.zip
-    #  dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?'):
-		url=base+'update/sp/03-servicepack.zip'
-		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
-		dp = xbmcgui.DialogProgress()
-		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'update.zip')
-		try:
-			os.remove(lib)
-		except:
-			pass
-		downloader.download(url, lib, dp)
-		addonfolder = xbmc.translatePath(os.path.join('special://','home'))
-		time.sleep(3)
-		dp.update(0,"", "*Extracting ZiP Please Wait*")
-		print '=== EXCTRACTING ServicePack ==='
-		extract.all(lib,addonfolder,dp)
-		dialog.ok("XvBMC-NL ServicePack-update finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
-		xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/purge.py)')
-		xbmc.executebuiltin("UpdateLocalAddons")
-		xbmc.executebuiltin("UpdateAddonRepos")
+    if dialog.yesno('XvBMC NL most recent ServicePacks','Download de laatste XvBMC ServicePack?',nolabel='Nee, No',yeslabel='Ja, Yes'):
+        url=base64.b64decode(base)+'update/sp/03-servicepack.zip'
+        path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+        if not os.path.exists(path):
+            os.makedirs(path)
+        lib=os.path.join(path, 'update.zip')
+        try:
+            os.remove(lib)
+        except:
+            pass
+        downloader.download(url, lib)
+        if os.path.exists(lib):
+            addonfolder = xbmc.translatePath(os.path.join('special://','home'))
+            time.sleep(2)
+            dp = xbmcgui.DialogProgress()
+            dp.create("XvBMC Nederland - Updater","XvBMC-NL: doing some extracting VOODOO...",'', 'Please Wait')
+            dp.update(0,"", "*Extracting ZiP Please Wait*")
+            extract.all(lib,addonfolder,dp)
+            dp.close()
+            try: os.remove(lib)
+            except: pass
+            dialog.ok("XvBMC-NL ServicePack - Update finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
+            xbmc.executebuiltin("UpdateLocalAddons")
+            xbmc.executebuiltin("UpdateAddonRepos")
+            xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/purge.py)')
 
 def UpdateRollup(url):
+    verifyplatform()
 #	\update\sp\03-sp-rollup.zip
-    #  dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?'):
-		url=base+'update/sp/03-sp-rollup.zip'
-		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
-		dp = xbmcgui.DialogProgress()
-		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'update.zip')
-		try:
-			os.remove(lib)
-		except:
-			pass
-		downloader.download(url, lib, dp)
-		addonfolder = xbmc.translatePath(os.path.join('special://','home'))
-		time.sleep(3)
-		dp.update(0,"", "*Extracting ZiP Please Wait*")
-		print '=== EXCTRACTING Roll-Up ==='
-		extract.all(lib,addonfolder,dp)
-		dialog.ok("XvBMC-NL ServicePack-rollup finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
-		xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/purge.py)')
-		xbmc.executebuiltin("UpdateLocalAddons")
-		xbmc.executebuiltin("UpdateAddonRepos")
+    if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC SP-updates (all-in-1)?',nolabel='Nee, No',yeslabel='Ja, Yes'):
+        url=base64.b64decode(base)+'update/sp/03-sp-rollup.zip'
+        path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+        if not os.path.exists(path):
+            os.makedirs(path)
+        lib=os.path.join(path, 'update.zip')
+        try:
+            os.remove(lib)
+        except:
+            pass
+        downloader.download(url, lib)
+        if os.path.exists(lib):
+            addonfolder = xbmc.translatePath(os.path.join('special://','home'))
+            time.sleep(2)
+            dp = xbmcgui.DialogProgress()
+            dp.create("XvBMC Nederland - Updater","XvBMC-NL: doing some extracting VOODOO...",'', 'Please Wait')
+            dp.update(0,"", "*Extracting ZiP Please Wait*")
+            extract.all(lib,addonfolder,dp)
+            dp.close()
+            try: os.remove(lib)
+            except: pass
+            dialog.ok("XvBMC-NL ServicePack - RollUp finished", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-ons do NOT work you probably should reboot first)')
+            xbmc.executebuiltin("UpdateLocalAddons")
+            xbmc.executebuiltin("UpdateAddonRepos")
+            xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/purge.py)')
 
 
 def forceRefresh():
@@ -164,59 +159,65 @@ def forceRefresh():
 	xbmc.executebuiltin('UpdateLocalAddons')
 	dialog.ok("XvBMC Nederland", "Force Refresh Repos and Update LocalAddons")
 	xbmc.executebuiltin("UpdateAddonRepos")
-#	xbmc.executebuiltin("ReloadSkin()")
+	xbmc.executebuiltin("ReloadSkin()")
 
 
 def xvbmcOverclock(url):
-#	OCmenu  XvBMC Nederland
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.oc')))
     if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.oc)")
     else:
-		url=base+'script.xvbmc.oc/script.xvbmc.oc-3.03.zip'
-		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
-		dp = xbmcgui.DialogProgress()
-		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.xvbmc.oc-3.03.zip')
-		try:
-			os.remove(lib)
-		except:
-			pass
-		downloader.download(url, lib, dp)
-		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
-		time.sleep(3)
-		dp.update(0,"", "Extracting ZiP Please Wait...")
-		print '=== EXCTRACTING Kodi.OC ==='
-		extract.all(lib,addonfolder,dp)
-	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
-		xbmc.executebuiltin("UpdateLocalAddons")
-	#	xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.xvbmc.oc/xvbmc-oc.py)')
-		xbmc.executebuiltin("RunAddon(script.xvbmc.oc)")
+        url=base64.b64decode(base)+'script.xvbmc.oc/script.xvbmc.oc-3.03.zip'
+        path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+        if not os.path.exists(path):
+            os.makedirs(path)
+        lib=os.path.join(path, 'script.xvbmc.oc-3.03.zip')
+        try:
+            os.remove(lib)
+        except:
+            pass
+        downloader.download(url, lib)
+        if os.path.exists(lib):
+            addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
+            time.sleep(2)
+            dp = xbmcgui.DialogProgress()
+            dp.create("XvBMC Nederland - Updater","XvBMC-#OC: doing some extracting VOODOO...",'', 'Please Wait')
+            dp.update(0,"", "*Extracting ZiP Please Wait*")
+            extract.all(lib,addonfolder,dp)
+            dp.close()
+            try: os.remove(lib)
+            except: pass
+            print '=== Kodi.#OC XvBMC Nederland ==='
+            xbmc.executebuiltin("UpdateLocalAddons")
+            xbmc.executebuiltin("RunAddon(script.xvbmc.oc)")
 
 
 def subDEVmenu(url):
-#	DEVmenu XvBMC Nederland
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.dev')))
     if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.dev)")
     else:
-		url=base+'script.xvbmc.dev/script.xvbmc.dev-3.04.zip'
-		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
-		dp = xbmcgui.DialogProgress()
-		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.xvbmc.dev-3.04.zip')
-		try:
-			os.remove(lib)
-		except:
-			pass
-		downloader.download(url, lib, dp)
-		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
-		time.sleep(3)
-		dp.update(0,"", "Extracting ZiP Please Wait...")
-		print '=== EXCTRACTING Kodi.DEV ==='
-		extract.all(lib,addonfolder,dp)
-	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
-		xbmc.executebuiltin("UpdateLocalAddons")
-	#	xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.xvbmc.dev/xvbmc-dev.py)')
-		xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
+        url=base64.b64decode(base)+'script.xvbmc.dev/script.xvbmc.dev-3.04.zip'
+        path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+        if not os.path.exists(path):
+            os.makedirs(path)
+        lib=os.path.join(path, 'script.xvbmc.dev-3.04.zip')
+        try:
+            os.remove(lib)
+        except:
+            pass
+        downloader.download(url, lib)
+        if os.path.exists(lib):
+            addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
+            time.sleep(2)
+            dp = xbmcgui.DialogProgress()
+            dp.create("XvBMC Nederland - Updater","XvBMC-#DEV: doing some extracting VOODOO...",'', 'Please Wait')
+            dp.update(0,"", "*Extracting ZiP Please Wait*")
+            extract.all(lib,addonfolder,dp)
+            dp.close()
+            try: os.remove(lib)
+            except: pass
+            print '=== Kodi.#DEV XvBMC Nederland ==='
+            xbmc.executebuiltin("UpdateLocalAddons")
+            xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
 
 
 def xvbmcTweak():
@@ -228,30 +229,70 @@ def xvbmcMaintenance(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
     else:
-		url=base+'script.schoonmaak/script.schoonmaak-1.10.08.zip'
-		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
-		dp = xbmcgui.DialogProgress()
-		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.schoonmaak-1.10.08.zip')
-		try:
-			os.remove(lib)
-		except:
-			pass
-		downloader.download(url, lib, dp)
-		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
-		time.sleep(3)
-		dp.update(0,"", "Extracting ZiP Please Wait...")
-		print '=== EXCTRACTING Kodi.Schoonmaak ==='
-		extract.all(lib,addonfolder,dp)
-	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
-		xbmc.executebuiltin("UpdateLocalAddons")
-	#   xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/default.py)')
-		xbmc.executebuiltin("RunAddon(script.schoonmaak)")
+        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.10.zip'
+        path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+        if not os.path.exists(path):
+            os.makedirs(path)
+        lib=os.path.join(path, 'script.schoonmaak-1.10.10.zip')
+        try:
+            os.remove(lib)
+        except:
+            pass
+        downloader.download(url, lib)
+        if os.path.exists(lib):
+            addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
+            time.sleep(2)
+            dp = xbmcgui.DialogProgress()
+            dp.create("XvBMC Nederland - Updater","XvBMC-#Maintenance: doing some extracting VOODOO...",'', 'Please Wait')
+            dp.update(0,"", "*Extracting ZiP Please Wait*")
+            extract.all(lib,addonfolder,dp)
+            dp.close()
+            try: os.remove(lib)
+            except: pass
+            print '=== Kodi.#CrapClean XvBMC Nederland ==='
+            xbmc.executebuiltin("UpdateLocalAddons")
+            xbmc.executebuiltin("RunAddon(script.schoonmaak)")
 
 
 def closeandexit():
 #	http://kodi.wiki/view/Keyboard.xml
 	xbmc.executebuiltin('Action(back)')
+
+
+def verifyplatform():
+#   choice = dialog.yesno('XvBMC Nederland (Dutch)', '*verify platform*', 'Would you like to continue?', nolabel='No, Cancel',yeslabel='Yes, Close')
+#   if choice == 0:
+#       return
+#   elif choice == 1:
+#       pass
+    myplatform = platform()
+    print "Platform: " + str(myplatform)
+    if myplatform == 'osx': # OSX
+        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "[COLOR=white]XvBMC[/COLOR]\'s Update(r) should work, but...","No guarantees for OSX [B];-p[/B]")
+    elif myplatform == 'linux': #Linux
+        #dialog.ok("XvBMC NL most recent ServicePacks", "Download de laatste XvBMC (Open-/LibreELEC) ServicePack?",'','')
+        print '=== Download de laatste XvBMC (Open-/LibreELEC) ServicePack ==='	
+    elif myplatform == 'android': # Android  
+        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "There\'s also a specific [COLOR=white]XvBMC[/COLOR]\'s Android add-on update(r)","(enkel en alleen voor specifieke bonus Android add-on updates)")
+    elif myplatform == 'windows': # Windows
+        #dialog.ok("XvBMC NL most recent ServicePacks", "Download de laatste XvBMC (Windows) ServicePack?",'','')
+        print '=== Download de laatste XvBMC (Windows) ServicePack ==='		
+    else: #ATV
+        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "[COLOR=white]XvBMC[/COLOR]\'s Update(r) should work, but...","No guarantees for ATV [B];-p[/B]")    
+
+def platform():
+    if xbmc.getCondVisibility('system.platform.android'):
+        return 'android'
+    elif xbmc.getCondVisibility('system.platform.linux'):
+        return 'linux'
+    elif xbmc.getCondVisibility('system.platform.windows'):
+        return 'windows'
+    elif xbmc.getCondVisibility('system.platform.osx'):
+        return 'osx'
+    elif xbmc.getCondVisibility('system.platform.atv2'):
+        return 'atv2'
+    elif xbmc.getCondVisibility('system.platform.ios'):
+        return 'ios'
 
 
 #######################################################################
@@ -262,7 +303,6 @@ params=get_params()
 url=None
 name=None
 mode=None
-fanart=None
 
 try:
         url=urllib.unquote_plus(params["url"])
@@ -276,21 +316,34 @@ try:
         mode=int(params["mode"])
 except:
         pass
-try:    
-		fanart=urllib.unquote_plus(params["fanart"])
-except: 
-		pass
+
+print "Base: "+str(base)
+print "Mode: "+str(mode)
+print "URL: "+str(url)
+print "Name: "+str(name)
 
 if mode==None or url==None or len(url)<1:
 	mainMenu()
 
 elif mode==1:
 #	ServicePack(url)
-	dialog.ok("XvBMC NL most recent ServicePacks", 'Disabled: download laatste XvBMC ServicePack','', 'Download onze nieuwe V3-image dd. 09-08-2016 !!!')
+#	dialog.ok("XvBMC NL most recent ServicePacks", 'Disabled: download laatste XvBMC ServicePack','', 'Download onze nieuwe (Pi) V3-image dd. 09-08-2016 !!!')
+    myplatform = platform()
+    print "Platform: " + str(myplatform)
+    if myplatform == 'linux': # Open-/LibreELEC
+        dialog.ok("XvBMC NL most recent ServicePacks", 'Disabled: download laatste XvBMC ServicePack','', 'Download onze nieuwe (Pi) V3-image dd. 09-08-2016 !!!')
+    else: #rest
+        ServicePack(url)
 
 elif mode==2:
 #	UpdateRollup(url)
-	dialog.ok("XvBMC NL ServicePack Update Rollup", 'Disabled: download alle XvBMC SP-updates (all-in-1)','', 'Download onze nieuwe V3-image dd. 09-08-2016 !!!')
+#	dialog.ok("XvBMC NL ServicePack Update Rollup", 'Disabled: download alle XvBMC SP-updates (all-in-1)','', 'Download onze nieuwe (Pi) V3-image dd. 09-08-2016 !!!')
+    myplatform = platform()
+    print "Platform: " + str(myplatform)
+    if myplatform == 'linux': # Open-/LibreELEC
+        dialog.ok("XvBMC NL ServicePack Update Rollup", 'Disabled: download alle XvBMC SP-updates (all-in-1)','', 'Download onze nieuwe (Pi) V3-image dd. 09-08-2016 !!!')
+    else: #rest
+        UpdateRollup(url)
 
 elif mode==3:
 	forceRefresh()
