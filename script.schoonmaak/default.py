@@ -22,7 +22,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import re,urllib,urllib2,uuid
+import re,base64,urllib,urllib2,uuid
 import xbmc,xbmcgui,xbmcplugin
 import os,shutil,time
 import downloader
@@ -34,7 +34,7 @@ import sqlite3
 # addon = xbmcaddon.Addon('script.schoonmaak')
 
 
-#                  ProgTitle="XvBMC Raw Maintenance"                  #
+#                    ProgTitle="XvBMC Maintenance"                    #
 thumbnailPath = xbmc.translatePath('special://thumbnails');
 cachePath = os.path.join(xbmc.translatePath('special://home'), 'cache')
 tempPath = xbmc.translatePath('special://temp')
@@ -42,8 +42,8 @@ addonPath = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'add
 mediaPath = os.path.join(addonPath, 'media')
 databasePath = xbmc.translatePath('special://database')
 dialog = xbmcgui.Dialog()
-base='https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/'
-#                  ProgTitle="XvBMC Raw Maintenance"                  #
+base='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
+#                    ProgTitle="XvBMC Maintenance"                    #
 
 
 #######################################################################
@@ -72,7 +72,7 @@ def mainMenu():
 	addItem('[B]R[/B]emove addons.db', 'url', 6,os.path.join(mediaPath, "thumbs.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC About (over & info)', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Build [COLOR red]Purge[/COLOR] (image crap cleaner)', 'url', 8,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Update(r) [B]&[/B] Development (v[COLOR white]3[/COLOR])', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Update(r) [B]&[/B] Development (v[COLOR white][B]3[/B][/COLOR])', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B]K[/B]ill kodi  (force close)', 'url', 10,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[B]K[/B]odi versie (WhoAmI)', 'url', 11,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[B][COLOR white]Back[/COLOR][/B]', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
@@ -83,21 +83,6 @@ def mainMenu():
 #######################################################################
 
 
-def addLink(name,url,iconimage):
-	ok=True
-	liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-	liz.setInfo( type="Video", infoLabels={ "Title": name } )
-	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
-	return ok
-
-def addDir(name,url,mode,iconimage):
-	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
-	ok=True
-	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
-	liz.setInfo( type="Video", infoLabels={ "Title": name } )
-	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-	return ok
-	
 def addItem(name,url,mode,iconimage):
 	u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
 	ok=True
@@ -264,7 +249,7 @@ def clearCache():
                 
 
     
-    dialog.ok("XvBMC Raw Maintenance", "Done Clearing Cache files")
+    dialog.ok("XvBMC Maintenance", "Done Clearing Cache files")
 
 #######################################################################
 #						THUMBS
@@ -313,16 +298,16 @@ def deleteThumbnails():
         except:
             pass
 
-    dialog.ok("XvBMC Raw Maintenance", "Please reboot your system to rebuild thumbnail folder...")
+    dialog.ok("XvBMC Maintenance", "Please reboot your system to rebuild thumbnail folder...")
 
 #######################################################################
 #						REFRESHLOACALADDONS&REPOS
 #######################################################################
 def forceRefresh():
 	xbmc.executebuiltin('UpdateLocalAddons')
-	dialog.ok("XvBMC Raw Maintenance", "Force Refresh Repos and Update LocalAddons")
+	dialog.ok("XvBMC Maintenance", "Force Refresh Repos and Update LocalAddons")
 	xbmc.executebuiltin("UpdateAddonRepos")
-#   xbmc.executebuiltin("ReloadSkin()")
+	xbmc.executebuiltin("ReloadSkin()")
 
 #######################################################################
 #						PACKAGES
@@ -343,16 +328,16 @@ def purgePackages():
                 for d in dirs:
                     shutil.rmtree(os.path.join(root, d))
                 
-                dialog.ok("XvBMC Raw Maintenance", "Deleting Packages all done")
+                dialog.ok("XvBMC Maintenance", "Deleting Packages all done")
             else:
-                dialog.ok("XvBMC Raw Maintenance", "No Packages to Purge")
+                dialog.ok("XvBMC Maintenance", "No Packages to Purge")
 
 
 #######################################################################
 #						WHOAMI/WHOIS
 #######################################################################
 
-def KODIVERSION(url): xbmc_version=xbmc.getInfoLabel("System.BuildVersion"); version=xbmc_version[:4]; print version; dialog.ok("XvBMC Raw Maintenance", "Your Kodi Version : [COLOR lime][B]%s[/B][/COLOR]" % version)
+def KODIVERSION(url): xbmc_version=xbmc.getInfoLabel("System.BuildVersion"); version=xbmc_version[:4]; print version; dialog.ok("XvBMC Maintenance", "Your Kodi Version : [COLOR lime][B]%s[/B][/COLOR]" % version)
 
 #######################################################################
 #						ADDONS??.dB
@@ -374,9 +359,9 @@ def AddonsDatabaseRemoval():
         except:
             removed = False
     if removed:
-        dialog.ok("XvBMC Raw Maintenance", "Please reboot your system to rebuild addons database...")
+        dialog.ok("XvBMC Maintenance", "Please reboot your system to rebuild addons database...")
     else:
-        dialog.ok("XvBMC Raw Maintenance", "Removal failed!", "try manual remove, see http://kodi.wiki/view/Database_version")
+        dialog.ok("XvBMC Maintenance", "Removal failed!", "try manual remove, see http://kodi.wiki/view/Database_version")
 
 #######################################################################
 #						UPDATER
@@ -386,25 +371,29 @@ def xvbmcupdater(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.update')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
     else:
-		url=base+'script.xvbmc.update/script.xvbmc.update-3.10.zip'
-		path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
-		dp = xbmcgui.DialogProgress()
-		dp.create("XvBMC Nederland","Updater: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'script.xvbmc.update-3.10.zip')
-		try:
-			os.remove(lib)
-		except:
-			pass
-		downloader.download(url, lib, dp)
-		addonfolder = xbmc.translatePath(os.path.join('special://home','addons',''))
-		time.sleep(3)
-		dp.update(0,"", "Extracting ZiP Please Wait...")
-		print '=== EXCTRACTING XvBMC.Updater ==='
-		extract.all(lib,addonfolder,dp)
-	#	dialog.ok("Install Complete", 'een REBOOT van uw systeem is SOMS wenselijk...','', '(if add-on does NOT work you probably should reboot first)')
-		xbmc.executebuiltin("UpdateLocalAddons")
-	#   xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.xvbmc.update/xvbmc.py)')
-		xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
+        url=base64.b64decode(base)+'script.xvbmc.update/script.xvbmc.update-3.13.zip'
+        path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+        if not os.path.exists(path):
+            os.makedirs(path)
+        lib=os.path.join(path, 'script.xvbmc.update-3.13.zip')
+        try:
+            os.remove(lib)
+        except:
+            pass
+        downloader.download(url, lib)
+        if os.path.exists(lib):
+            addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
+            time.sleep(2)
+            dp = xbmcgui.DialogProgress()
+            dp.create("XvBMC Nederland - Maintenance","XvBMC-NL: doing some extracting VOODOO...",'', 'Please Wait')
+            dp.update(0,"", "*Extracting ZiP Please Wait*")
+            extract.all(lib,addonfolder,dp)
+            dp.close()
+            try: os.remove(lib)
+            except: pass
+            print '=== Kodi.#Updater XvBMC Nederland ==='
+            xbmc.executebuiltin("UpdateLocalAddons")
+            xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
 
 ###############################################################
 ###FORCE CLOSE KODI - ANDROID ONLY WORKS IF ROOTED#############
@@ -547,7 +536,6 @@ params=get_params()
 url=None
 name=None
 mode=None
-fanart=None
 
 try:
         url=urllib.unquote_plus(params["url"])
@@ -561,10 +549,11 @@ try:
         mode=int(params["mode"])
 except:
         pass
-try:    
-		fanart=urllib.unquote_plus(params["fanart"])
-except: 
-		pass
+
+print "Base: "+str(base)
+print "Mode: "+str(mode)
+print "URL: "+str(url)
+print "Name: "+str(name)
 
 if mode==None or url==None or len(url)<1:
 	mainMenu()
