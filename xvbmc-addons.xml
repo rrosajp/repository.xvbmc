@@ -1283,25 +1283,25 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.schoonmaak"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]S[/COLOR]choonmaak/[COLOR red]M[/COLOR]aintenance [I][COLOR green] (kodi schoonmaak)[/COLOR][/I]"
-       version="1.10.11"
-       provider-name="XvBMC NL">
+       version="1.10.12"
+       provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-	<import addon="repository.xvbmc" version="3.0.1"/>
+    <import addon="repository.xvbmc" version="3.0.1"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>executable</provides>
+    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
     <summary lang="en">XvBMC Nederland - Kodi Schoonmaak v3</summary>
     <description lang="en">XvBMC Maintenance/Schoonmaak ; CrapCleaner + Purge.</description>
-	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
-	<platform>all</platform>
-	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-	<forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
-	<website>https://www.facebook.com/groups/XvBMCnederland/</website>
-	<source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+    <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
+    <platform>all</platform>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
+    <website>https://www.facebook.com/groups/XvBMCnederland/</website>
+    <source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
   </extension>
 </addon>
 
@@ -1375,27 +1375,51 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.xvbmc.update"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]Update(r)[/COLOR] &amp; Development [I][COLOR green] v3[/COLOR][/I]"
-	   version="3.13"
-       provider-name="XvBMC NL">
+       version="3.14"
+       provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-	<import addon="script.schoonmaak" version="1.10.10"/>
-	<import addon="script.xvbmc.dev"  version="3.04" optional="true"/>
-	<import addon="script.xvbmc.oc"   version="3.03" optional="true"/>
-	<import addon="repository.xvbmc"  version="3.0.1"/>
+    <import addon="script.schoonmaak" version="1.10.11"/>
+    <import addon="script.xvbmc.dev"  version="3.04" optional="true"/>
+    <import addon="script.xvbmc.oc"   version="3.03" optional="true"/>
+    <import addon="repository.xvbmc"  version="3.0.1"/>
   </requires>
-   <extension point="xbmc.python.pluginsource" library="xvbmc.py">
-   <provides>executable</provides>
+    <extension point="xbmc.python.pluginsource" library="xvbmc.py">
+    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">XvBMC Nederland - Update(r)+DEVelopment v3</summary>
     <description lang="en">XvBMC Update(r) + DEVelopment ; updates, tweaks, config's (v3 *Final* LibreELEC Jarvis).</description>
-	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
-	<platform>all</platform>
-	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-	<forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
-	<website>https://www.facebook.com/groups/XvBMCnederland/</website>
-	<source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+    <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
+    <platform>all</platform>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
+    <website>https://www.facebook.com/groups/XvBMCnederland/</website>
+    <source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+  </extension>
+</addon>
+
+<addon id="script.xvbmc.update.android"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]Update(r)[/COLOR] [COLOR green]*bonus*[/COLOR] Android Add-ons"
+       version="3.14"
+       provider-name="EPiC XvBMC-NL">
+  <requires>
+    <import addon="xbmc.python" version="2.14.0"/>
+    <import addon="script.schoonmaak" version="1.10.11"/>
+    <import addon="repository.xvbmc"  version="3.0.1"/>
+  </requires>
+    <extension point="xbmc.python.pluginsource" library="xvbmc.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">XvBMC Nederland - Update(r) *extra* Android Add-ons</summary>
+    <description lang="en">XvBMC Update(r) Android Add-ons ; *bonus* Android Add-ons.</description>
+    <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
+    <platform>android</platform>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <forum>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</forum>
+    <website>https://www.facebook.com/groups/XvBMCnederland/</website>
+    <source>https://www.facebook.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
   </extension>
 </addon>
 

@@ -1,4 +1,4 @@
-﻿# REPOsitory.XvBMC
+# REPOsitory.XvBMC
  
 NOTE: XvBMC Nederland (xbmc nl) wij zijn géén helpdesk van/voor boxverkopers
  
