@@ -1375,7 +1375,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.xvbmc.update"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]Update(r)[/COLOR] &amp; Development [I][COLOR green] v3[/COLOR][/I]"
-       version="3.14"
+       version="3.15"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
