@@ -36,6 +36,7 @@ import extract
 #                  ProgTitle="XvBMC Update+Development"               #
 addonPath = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'addons'),'script.xvbmc.update')
 mediaPath = os.path.join(addonPath, 'media')
+xvbmcfanart = os.path.join(addonPath, 'fanart.jpg')
 dialog = xbmcgui.Dialog()
 base='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
 #                  ProgTitle="XvBMC Update+Development"               #
@@ -52,9 +53,10 @@ def mainMenu():
 	addItem('XvBMC [B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 3,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [COLOR white]Pi[/COLOR] **[B]only[/B]**)', 'url', 4,os.path.join(mediaPath, "dev.png"))	
 	addItem('XvBMC [B]#DEV#[/B] Corner (Firmware-OS-etc)', 'url', 5,os.path.join(mediaPath, "dev.png"))
-	addItem('XvBMC [B]T[/B]weaking', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR white]X[/COLOR]vBMC About (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance (v[COLOR white][B]3[/B][/COLOR])', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B][COLOR white]Back[/COLOR][/B]', 'url', 8,os.path.join(mediaPath, "dev.png"))
+	addItem('[COLOR dimgray]XvBMC [B]T[/B]weaking[/COLOR]', 'url', 8,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 9,os.path.join(mediaPath, "dev.png"))
 
 
 #######################################################################
@@ -66,6 +68,7 @@ def addItem(name,url,mode,iconimage):
 	ok=True
 	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setInfo( type="Video", infoLabels={ "Title": name } )
+	liz.setArt({'fanart': xvbmcfanart})
 	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)
 	return ok
 
@@ -259,6 +262,46 @@ def closeandexit():
 	xbmc.executebuiltin('Action(back)')
 
 
+#######################################################################
+#						ABOUT
+#######################################################################
+def AboutXvBMC():
+	text = ''
+	twit = 'https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/readme.xml'
+	req = urllib2.Request(twit)
+	req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+	response = urllib2.urlopen(req)
+	link=response.read()
+	response.close()
+	match=re.compile("<title>(.+?)</title><pubDate>(.+?)</pubDate>",re.DOTALL).findall(link)
+	for status, dte in match:
+	    try:
+			    status = status.decode('ascii', 'ignore')
+	    except:
+			    status = status.decode('utf-8','ignore')
+	    dte = dte[:-15]
+	    status = status.replace('&amp;','')
+	    dte = '[COLOR lime][B]'+dte+'[/B][/COLOR]'
+	    text = text+dte+'\n'+status+'\n'+'\n'
+	infoTXT('[COLOR lime]Over XvBMC Nederland[/COLOR]', text)	
+
+def infoTXT(heading, text):
+    id = 10147
+    xbmc.executebuiltin('ActivateWindow(%d)' % id)
+    xbmc.sleep(100)
+    win = xbmcgui.Window(id)
+    retry = 50
+    while (retry > 0):
+	try:
+	    xbmc.sleep(10)
+	    retry -= 1
+	    win.getControl(1).setLabel(heading)
+	    win.getControl(5).setText(text)
+	    return
+	except:
+	    pass
+
+
 def verifyplatform():
 #   choice = dialog.yesno('XvBMC Nederland (Dutch)', '*verify platform*', 'Would you like to continue?', nolabel='No, Cancel',yeslabel='Yes, Close')
 #   if choice == 0:
@@ -303,6 +346,8 @@ params=get_params()
 url=None
 name=None
 mode=None
+fanart=None
+iconimage=None
 
 try:
         url=urllib.unquote_plus(params["url"])
@@ -316,11 +361,21 @@ try:
         mode=int(params["mode"])
 except:
         pass
+try:    
+		fanart=urllib.unquote_plus(params["fanart"])
+except: 
+		pass
+try:
+        iconimage=urllib.unquote_plus(params["iconimage"])
+except:
+        pass
 
 print "Base: "+str(base)
 print "Mode: "+str(mode)
 print "URL: "+str(url)
 print "Name: "+str(name)
+print "Fanart: "+str(fanart)
+print "IconImage: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
 	mainMenu()
@@ -354,13 +409,16 @@ elif mode==4:
 elif mode==5:
     subDEVmenu(url)
 
-elif mode==6:
-    xvbmcTweak()
+elif mode==6:	
+	AboutXvBMC()
 
 elif mode==7:
 	xvbmcMaintenance(url)
 
 elif mode==8:
+    xvbmcTweak()
+
+elif mode==9:
 	closeandexit()
 
 

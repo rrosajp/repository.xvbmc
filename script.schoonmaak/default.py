@@ -40,6 +40,7 @@ cachePath = os.path.join(xbmc.translatePath('special://home'), 'cache')
 tempPath = xbmc.translatePath('special://temp')
 addonPath = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'addons'),'script.schoonmaak')
 mediaPath = os.path.join(addonPath, 'media')
+xvbmcfanart = os.path.join(addonPath, 'fanart.jpg')
 databasePath = xbmc.translatePath('special://database')
 dialog = xbmcgui.Dialog()
 base='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
@@ -70,12 +71,12 @@ def mainMenu():
 	addItem('[B]F[/B]lush Add-ons (Salts HD/RD lite, Exodus, etc.)', 'url', 4,os.path.join(mediaPath, "packages.png"))
 	addItem('[B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 5,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[B]R[/B]emove addons.db', 'url', 6,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC About (over & info)', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC About (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 7,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Build [COLOR red]Purge[/COLOR] (image crap cleaner)', 'url', 8,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Update(r) [B]&[/B] Development (v[COLOR white][B]3[/B][/COLOR])', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B]K[/B]ill kodi  (force close)', 'url', 10,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]K[/B]odi versie (WhoAmI)', 'url', 11,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B][COLOR white]Back[/COLOR][/B]', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]K[/B]odi versie (WhoAm[B]i[/B])', 'url', 11,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
 
 
 #######################################################################
@@ -88,6 +89,7 @@ def addItem(name,url,mode,iconimage):
 	ok=True
 	liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
 	liz.setInfo( type="Video", infoLabels={ "Title": name } )
+	liz.setArt({'fanart': xvbmcfanart})
 	ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)
 	return ok
 
@@ -536,6 +538,8 @@ params=get_params()
 url=None
 name=None
 mode=None
+fanart=None
+iconimage=None
 
 try:
         url=urllib.unquote_plus(params["url"])
@@ -549,11 +553,21 @@ try:
         mode=int(params["mode"])
 except:
         pass
+try:    
+		fanart=urllib.unquote_plus(params["fanart"])
+except: 
+		pass
+try:
+        iconimage=urllib.unquote_plus(params["iconimage"])
+except:
+        pass
 
 print "Base: "+str(base)
 print "Mode: "+str(mode)
 print "URL: "+str(url)
 print "Name: "+str(name)
+print "Fanart: "+str(fanart)
+print "IconImage: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
 	mainMenu()
