@@ -311,17 +311,17 @@ def verifyplatform():
     myplatform = platform()
     print "Platform: " + str(myplatform)
     if myplatform == 'osx': # OSX
-        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "[COLOR=white]XvBMC[/COLOR]\'s Update(r) should work, but...","No guarantees for OSX [B];-p[/B]")
+        dialog.ok("[COLOR=red][B]!!!  WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "[COLOR=white]XvBMC[/COLOR]\'s Update(r) should work, but...","No guarantees for OSX [B];-p[/B]")
     elif myplatform == 'linux': #Linux
         #dialog.ok("XvBMC NL most recent ServicePacks", "Download de laatste XvBMC (Open-/LibreELEC) ServicePack?",'','')
         print '=== Download de laatste XvBMC (Open-/LibreELEC) ServicePack ==='	
     elif myplatform == 'android': # Android  
-        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "There\'s also a specific [COLOR=white]XvBMC[/COLOR]\'s Android add-on update(r)","(enkel en alleen voor specifieke bonus Android add-on updates)")
+        dialog.ok("[COLOR=red][B]!!!  IMPORTANT  !!![/COLOR][/B]", "There\'s also a specific [COLOR=white]XvBMC[/COLOR]\'s Android add-on update(r)", "...enkel voor specifieke bonus Android add-on updates...","NOTE: This [B]S[/B]ervice[B]P[/B]ack update is [COLOR=red]outdated[/COLOR], the newest [B]Pi[/B]-image is [COLOR=red]not forked[/COLOR], [COLOR=lime][B]yet[/B][/COLOR]...")
     elif myplatform == 'windows': # Windows
-        #dialog.ok("XvBMC NL most recent ServicePacks", "Download de laatste XvBMC (Windows) ServicePack?",'','')
+        dialog.ok("[COLOR=red][B]!!!  WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "this [B]S[/B]ervice[B]P[/B]ack update is [COLOR=red]outdated[/COLOR], ","...the newest XvBMC's [B]Pi[/B]-image is [COLOR=red]not forked[/COLOR], [COLOR=lime][B]yet[/B][/COLOR]...")
         print '=== Download de laatste XvBMC (Windows) ServicePack ==='		
     else: #ATV
-        dialog.ok("[COLOR=red][B]WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "[COLOR=white]XvBMC[/COLOR]\'s Update(r) should work, but...","No guarantees for ATV [B];-p[/B]")    
+        dialog.ok("[COLOR=red][B]!!!  WARNING  !!![/COLOR][/B]", "If you\'re seeing this message read this first.", "[COLOR=white]XvBMC[/COLOR]\'s Update(r) should work, but...","No guarantees for ATV [B];-p[/B]")    
 
 def platform():
     if xbmc.getCondVisibility('system.platform.android'):
