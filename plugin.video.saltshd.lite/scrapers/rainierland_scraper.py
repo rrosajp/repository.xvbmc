@@ -65,8 +65,8 @@ class Scraper(scraper.Scraper):
                     if host == 'gvideo':
                         quality = scraper_utils.gv_get_quality(stream_url)
                     else:
-                        _, _, height, _ = scraper_utils.parse_movie_link(stream_url)
-                        quality = scraper_utils.height_get_quality(height)
+                        meta = scraper_utils.parse_movie_link(stream_url)
+                        quality = scraper_utils.height_get_quality(meta['height'])
                         stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
                         
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}

@@ -81,34 +81,33 @@ class Scraper(scraper.Scraper):
         html = self._http_get(search_url, cache_limit=1)
         results = []
         js_data = scraper_utils.parse_json(html)
-        if 'results' in js_data:
-            norm_title = scraper_utils.normalize_title(title)
-            for item in js_data['results']:
-                if '/watch/' not in item['url'].lower(): continue
-                is_season = re.search('Season\s+(\d+)', item['titleNoFormatting'], re.IGNORECASE)
-                if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
-                    match_title_year = item['titleNoFormatting']
-                    match_title_year = re.sub('^Watch\s+', '', match_title_year)
-                    match_url = item['url']
-                    match_year = ''
-                    if video_type == VIDEO_TYPES.MOVIE:
-                        match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)', match_title_year)
-                        if match:
-                            match_title, match_year = match.groups()
-                        else:
-                            match_title = match_title_year
+        norm_title = scraper_utils.normalize_title(title)
+        for item in js_data.get('results', []):
+            if '/watch/' not in item['url'].lower(): continue
+            is_season = re.search('Season\s+(\d+)', item['titleNoFormatting'], re.IGNORECASE)
+            if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
+                match_title_year = item['titleNoFormatting']
+                match_title_year = re.sub('^Watch\s+', '', match_title_year)
+                match_url = item['url']
+                match_year = ''
+                if video_type == VIDEO_TYPES.MOVIE:
+                    match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)', match_title_year)
+                    if match:
+                        match_title, match_year = match.groups()
                     else:
-                        if season and int(is_season.group(1)) != int(season):
-                            continue
-                        match = re.search('(.*?)\s+\(\d{4}\)', match_title_year)
-                        if match:
-                            match_title = match.group(1)
-                        else:
-                            match_title = match_title_year
-                    
-                    if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
-                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
-                        results.append(result)
+                        match_title = match_title_year
+                else:
+                    if season and int(is_season.group(1)) != int(season):
+                        continue
+                    match = re.search('(.*?)\s+\(\d{4}\)', match_title_year)
+                    if match:
+                        match_title = match.group(1)
+                    else:
+                        match_title = match_title_year
+                
+                if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
+                    result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
+                    results.append(result)
 
         return results
 

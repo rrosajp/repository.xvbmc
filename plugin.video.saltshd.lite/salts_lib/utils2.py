@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import datetime
+import _strptime
 import time
 import re
 import os
@@ -65,27 +66,14 @@ def art(name):
 def show_id(show):
     queries = {}
     ids = show['ids']
-    if 'trakt' in ids and ids['trakt']:
-        queries['id_type'] = 'trakt'
-        queries['show_id'] = ids['trakt']
-    elif 'imdb' in ids and ids['imdb']:
-        queries['id_type'] = 'imdb'
-        queries['show_id'] = ids['imdb']
-    elif 'tvdb' in ids and ids['tvdb']:
-        queries['id_type'] = 'tvdb'
-        queries['show_id'] = ids['tvdb']
-    elif 'tmdb' in ids and ids['tmdb']:
-        queries['id_type'] = 'tmdb'
-        queries['show_id'] = ids['tmdb']
-    elif 'tvrage' in ids and ids['tvrage']:
-        queries['id_type'] = 'tvrage'
-        queries['show_id'] = ids['tvrage']
-    elif 'slug' in ids and ids['slug']:
-        queries['id_type'] = 'slug'
-        queries['show_id'] = ids['slug']
+    for key in ('trakt', 'imdb', 'tvdb', 'tmdb', 'tvrage', 'slug'):
+        if key in ids and ids[key]:
+            queries['id_type'] = key
+            queries['show_id'] = ids[key]
+            break
     return queries
 
-def _title_key(title):
+def title_key(title):
     if title is None: title = ''
     temp = title.upper()
     if temp.startswith('THE '):
@@ -115,7 +103,7 @@ def sort_list(sort_key, sort_direction, list_data):
     elif sort_key == TRAKT_LIST_SORT.RECENTLY_ADDED:
         return sorted(list_data, key=lambda x: x['listed_at'], reverse=reverse)
     elif sort_key == TRAKT_LIST_SORT.TITLE:
-        return sorted(list_data, key=lambda x: _title_key(x[x['type']].get('title', '')), reverse=reverse)
+        return sorted(list_data, key=lambda x: title_key(x[x['type']].get('title')), reverse=reverse)
     elif sort_key == TRAKT_LIST_SORT.RELEASE_DATE:
         return sorted(list_data, key=lambda x: _released_key(x[x['type']]), reverse=reverse)
     elif sort_key == TRAKT_LIST_SORT.RUNTIME:
@@ -163,19 +151,25 @@ def make_episodes_watched(episodes, progress):
     return episodes
 
 def make_art(show):
-    min_size = int(kodi.get_setting('image_size'))
+    min_size = int(kodi.get_setting('image_size')) + 1
     art_dict = {'banner': '', 'fanart': art('fanart.jpg'), 'thumb': '', 'poster': PLACE_POSTER}
-    if 'images' in show:
-        images = show['images']
-        for i in range(0, min_size + 1):
-            if 'banner' in images and IMG_SIZES[i] in images['banner'] and images['banner'][IMG_SIZES[i]]: art_dict['banner'] = images['banner'][IMG_SIZES[i]]
-            if 'fanart' in images and IMG_SIZES[i] in images['fanart'] and images['fanart'][IMG_SIZES[i]]: art_dict['fanart'] = images['fanart'][IMG_SIZES[i]]
-            if 'poster' in images and IMG_SIZES[i] in images['poster'] and images['poster'][IMG_SIZES[i]]: art_dict['thumb'] = art_dict['poster'] = images['poster'][IMG_SIZES[i]]
-            if 'thumb' in images and IMG_SIZES[i] in images['thumb'] and images['thumb'][IMG_SIZES[i]]: art_dict['thumb'] = images['thumb'][IMG_SIZES[i]]
-            if 'screen' in images and IMG_SIZES[i] in images['screen'] and images['screen'][IMG_SIZES[i]]: art_dict['thumb'] = images['screen'][IMG_SIZES[i]]
-            if 'screenshot' in images and IMG_SIZES[i] in images['screenshot'] and images['screenshot'][IMG_SIZES[i]]: art_dict['thumb'] = images['screenshot'][IMG_SIZES[i]]
-            if 'logo' in images and IMG_SIZES[i] in images['logo'] and images['logo'][IMG_SIZES[i]]: art_dict['clearlogo'] = images['logo'][IMG_SIZES[i]]
-            if 'clearart' in images and IMG_SIZES[i] in images['clearart'] and images['clearart'][IMG_SIZES[i]]: art_dict['clearart'] = images['clearart'][IMG_SIZES[i]]
+    images = show.get('images', {})
+    for i in range(min_size):
+        img_size = IMG_SIZES[i]
+        if 'banner' in images and img_size in images['banner'] and images['banner'][img_size]:
+            art_dict['banner'] = images['banner'][img_size]
+        if 'fanart' in images and img_size in images['fanart'] and images['fanart'][img_size]:
+            art_dict['thumb'] = art_dict['fanart'] = images['fanart'][img_size]
+        if 'poster' in images and img_size in images['poster'] and images['poster'][img_size]:
+            art_dict['thumb'] = art_dict['poster'] = images['poster'][img_size]
+        if 'thumb' in images and img_size in images['thumb'] and images['thumb'][img_size]:
+            art_dict['thumb'] = images['thumb'][img_size]
+        if 'screenshot' in images and img_size in images['screenshot'] and images['screenshot'][img_size]:
+            art_dict['thumb'] = images['screenshot'][img_size]
+        if 'logo' in images and img_size in images['logo'] and images['logo'][img_size]:
+            art_dict['clearlogo'] = images['logo'][img_size]
+        if 'clearart' in images and img_size in images['clearart'] and images['clearart'][img_size]:
+            art_dict['clearart'] = images['clearart'][img_size]
     return art_dict
 
 def make_trailer(trailer_url):
@@ -343,21 +337,25 @@ def scraper_enabled(name):
     # return true if setting exists and set to true, or setting doesn't exist (i.e. '')
     return kodi.get_setting('%s-enable' % (name)) in ('true', '')
 
-def make_day(date):
-    try: date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
-    except TypeError: date = datetime.datetime(*(time.strptime(date, '%Y-%m-%d')[0:6])).date()
+def make_day(date, use_words=True):
+    date = to_datetime(date, '%Y-%m-%d').date()
     today = datetime.date.today()
     day_diff = (date - today).days
-    if day_diff == -1:
-        date = 'YDA'
-    elif day_diff == 0:
-        date = 'TDA'
-    elif day_diff == 1:
-        date = 'TOM'
-    elif day_diff > 1 and day_diff < 7:
-        date = date.strftime('%a')
+    date_format = kodi.get_setting('date_format')
+    fallback_format = '%Y-%m-%d'
+    try: day = date.strftime(date_format)
+    except ValueError: day = date.strftime(fallback_format)
+    if use_words:
+        if day_diff == -1:
+            day = 'YDA'
+        elif day_diff == 0:
+            day = 'TDA'
+        elif day_diff == 1:
+            day = 'TOM'
+        elif day_diff > 1 and day_diff < 7:
+            day = date.strftime('%a')
 
-    return date
+    return day
 
 def make_time(utc_ts, setting):
     local_time = time.localtime(utc_ts)
@@ -369,6 +367,16 @@ def make_time(utc_ts, setting):
         time_str = time.strftime(time_format, local_time)
         if time_str[0] == '0': time_str = time_str[1:]
     return time_str
+
+def to_datetime(dt_str, date_format):
+    # strptime mysteriously fails sometimes with TypeError; this is a hacky workaround
+    # note, they aren't 100% equal as time.strptime loses fractional seconds but they are close enough
+    try: dt = datetime.datetime.strptime(dt_str, date_format)
+    except (TypeError, ImportError): dt = datetime.datetime(*(time.strptime(dt_str, date_format)[0:6]))
+    except Exception as e:
+        log_utils.log('Failed dt conversion: (%s) - |%s|%s|' % (e, dt_str, date_format))
+        dt = datetime.datetime.fromtimestamp(0)
+    return dt
 
 def format_sub_label(sub):
     label = '%s - [%s] - (' % (sub['language'], sub['version'])
@@ -479,18 +487,6 @@ def sort_progress(episodes, sort_order):
     else:  # default sort set to activity
         return sorted(episodes, key=lambda x: x['last_watched_at'], reverse=True)
 
-def title_key(title):
-    temp = title.upper()
-    if temp.startswith('THE '):
-        offset = 4
-    elif temp.startswith('A '):
-        offset = 2
-    elif temp.startswith('AN '):
-        offset = 3
-    else:
-        offset = 0
-    return title[offset:]
-    
 def make_progress_msg(video):
     progress_msg = '%s: %s' % (video.video_type, video.title)
     if video.year: progress_msg += ' (%s)' % (video.year)

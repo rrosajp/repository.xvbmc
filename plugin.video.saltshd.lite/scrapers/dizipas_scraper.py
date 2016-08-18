@@ -117,17 +117,16 @@ class Scraper(scraper.Scraper):
             ajax_url = AJAX_URL % (match.group(1))
             html = self._http_get(ajax_url, headers=XHR, cache_limit=.5)
             js_result = scraper_utils.parse_json(html, ajax_url)
-            if 'success' in js_result:
-                for source in js_result['success']:
-                    if 'src' in source:
-                        stream_url = source['src']
-                        if self._get_direct_hostname(stream_url) == 'gvideo':
-                            quality = scraper_utils.gv_get_quality(stream_url)
-                        elif 'label' in source:
-                            quality = scraper_utils.height_get_quality(source['label'])
-                        else:
-                            quality = QUALITIES.HIGH
-                        sources[stream_url] = quality
+            for source in js_result.get('success', []):
+                stream_url = source.get('src')
+                if stream_url is not None:
+                    if self._get_direct_hostname(stream_url) == 'gvideo':
+                        quality = scraper_utils.gv_get_quality(stream_url)
+                    elif 'label' in source:
+                        quality = scraper_utils.height_get_quality(source['label'])
+                    else:
+                        quality = QUALITIES.HIGH
+                    sources[stream_url] = quality
         return sources
     
     def __get_data(self, post_data):

@@ -81,9 +81,11 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search?sitesearch=&q=%s&x=0&y=0')
-        search_url = search_url % (urllib.quote_plus(title))
+        if not year: return results
+        search_url = urlparse.urljoin(self.base_url, '/search/label/%s&max-results=50')
+        search_url = search_url % (year)
         html = self._http_get(search_url, cache_limit=8)
+        norm_title = scraper_utils.normalize_title(title)
         for item in dom_parser.parse_dom(html, 'div', {'class': "[^']*hentry[^']*"}):
             tags = dom_parser.parse_dom(item, 'a', {'rel': 'tag'})
             post_title = dom_parser.parse_dom(item, 'h\d+', {'class': "[^']*post-title[^']*"})
@@ -113,7 +115,7 @@ class Scraper(scraper.Scraper):
                         match_title = match_title_year
                         match_year = ''
                 
-                    if not year or not match_year or year == match_year:
+                    if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
                         result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                         results.append(result)
         return results

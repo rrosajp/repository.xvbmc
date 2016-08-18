@@ -65,16 +65,8 @@ class Scraper(scraper.Scraper):
                 log_utils.log('DD.tv API error: "%s" @ %s' % (js_result['error'], url), log_utils.LOGWARNING)
                 return hosters
 
-            sxe_str = '.S%02dE%02d.' % (int(video.season), int(video.episode))
-            try:
-                airdate_str = video.ep_airdate.strftime('.%Y.%m.%d.')
-            except:
-                airdate_str = ''
-                
             for result in js_result:
-                if sxe_str not in result['release'] and airdate_str not in result['release']:
-                    continue
-                
+                if not scraper_utils.release_check(video, result['release'], require_title=False): continue
                 if result['quality'] in self.q_order:
                     for key in result['links']:
                         url = result['links'][key][0]

@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import time
-import _strptime
 import datetime
 import xbmc
 import xbmcgui
@@ -37,6 +36,7 @@ trakt_timeout = int(kodi.get_setting('trakt_timeout'))
 list_size = int(kodi.get_setting('list_size'))
 offline = kodi.get_setting('trakt_offline') == 'true'
 trakt_api = Trakt_API(TOKEN, use_https, list_size, trakt_timeout, offline)
+GENRES = {}
 
 # delay db_connection until needed to force db errors during recovery try: block
 def _get_db_connection():
@@ -61,8 +61,7 @@ def make_info(item, show=None, people=None):
     if 'episode' in item: info['episode'] = item['episode']
     if 'number' in item: info['episode'] = item['number']
     if 'genres' in item and item['genres']:
-        genres = dict((genre['slug'], genre['name']) for genre in trakt_api.get_genres(SECTIONS.TV))
-        genres.update(dict((genre['slug'], genre['name']) for genre in trakt_api.get_genres(SECTIONS.MOVIES)))
+        genres = get_genres()
         item_genres = [genres[genre] for genre in item['genres'] if genre in genres]
         info['genre'] = ', '.join(item_genres)
     if 'network' in item: info['studio'] = item['network']
@@ -94,6 +93,13 @@ def make_info(item, show=None, people=None):
     info.update(utils2.make_ids(show))
     info.update(utils2.make_people(people))
     return info
+
+def get_genres():
+    global GENRES
+    if not GENRES:
+        GENRES = dict((genre['slug'], genre['name']) for genre in trakt_api.get_genres(SECTIONS.TV))
+        GENRES.update(dict((genre['slug'], genre['name']) for genre in trakt_api.get_genres(SECTIONS.MOVIES)))
+    return GENRES
 
 def update_url(video, source, old_url, new_url):
     log_utils.log('Setting Url: %s -> |%s|%s|%s|' % (video, source, old_url, new_url), log_utils.LOGDEBUG)
@@ -216,14 +222,9 @@ def do_scheduled_task(task, isPlaying):
                 log_utils.log('Service: Scanning... Busy... Postponing [%s]' % (task), log_utils.LOGDEBUG)
 
 def get_next_run(task):
-    # strptime mysteriously fails sometimes with TypeError; this is a hacky workaround
-    # note, they aren't 100% equal as time.strptime loses fractional seconds but they are close enough
-    try:
-        last_run_string = _get_db_connection().get_setting(task + '-last_run')
-        if not last_run_string: last_run_string = LONG_AGO
-        last_run = datetime.datetime.strptime(last_run_string, "%Y-%m-%d %H:%M:%S.%f")
-    except (TypeError, ImportError):
-        last_run = datetime.datetime(*(time.strptime(last_run_string, '%Y-%m-%d %H:%M:%S.%f')[0:6]))
+    last_run_string = _get_db_connection().get_setting(task + '-last_run')
+    if not last_run_string: last_run_string = LONG_AGO
+    last_run = utils2.to_datetime(last_run_string, "%Y-%m-%d %H:%M:%S.%f")
     interval = datetime.timedelta(hours=float(kodi.get_setting(task + '-interval')))
     return (last_run + interval)
 

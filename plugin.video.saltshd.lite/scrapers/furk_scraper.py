@@ -119,33 +119,21 @@ class Scraper(scraper.Scraper):
                 if 'av_result' in item and item['av_result'] in ['warning', 'infected']: checks[2] = True
                 if 'video_info' not in item: checks[3] = True
                 if 'video_info' in item and item['video_info'] and not re.search('#0:(?:0|1)(?:\(eng\)|\(und\))?:\s*Audio:', item['video_info']): checks[4] = True
-                if video.video_type == VIDEO_TYPES.EPISODE:
-                    sxe = '[. ][Ss]%02d[Ee]%02d[. ]' % (int(video.season), int(video.episode))
-                    if not re.search(sxe, item['name']):
-                        if video.ep_airdate:
-                            airdate_pattern = '[. ]%s[. ]%02d[. ]%02d[. ]' % (video.ep_airdate.year, video.ep_airdate.month, video.ep_airdate.day)
-                            if not re.search(airdate_pattern, item['name']): checks[5] = True
-                    
+                if not scraper_utils.release_check(video, item['name']): checks[5] = True
                 if any(checks):
                     log_utils.log('Furk.net result excluded: %s - |%s|' % (checks, item['name']), log_utils.LOGDEBUG)
                     continue
                 
-                match = re.search('(\d{3,})\s?x\s?(\d{3,})', item['video_info'])
+                match = re.search('(\d{3,})\s*x\s*(\d{3,})', item['video_info'])
                 if match:
-                    width, _ = match.groups()
+                    width, _height = match.groups()
                     quality = scraper_utils.width_get_quality(width)
                 else:
                     if video.video_type == VIDEO_TYPES.MOVIE:
-                        _, _, height, _ = scraper_utils.parse_movie_link(item['name'])
-                        quality = scraper_utils.height_get_quality(height)
-                    elif video.video_type == VIDEO_TYPES.EPISODE:
-                        _, _, _, height, _ = scraper_utils.parse_episode_link(item['name'])
-                        if int(height) > -1:
-                            quality = scraper_utils.height_get_quality(height)
-                        else:
-                            quality = QUALITIES.HIGH
+                        meta = scraper_utils.parse_movie_link(item['name'])
                     else:
-                        quality = QUALITIES.HIGH
+                        meta = scraper_utils.parse_episode_link(item['name'])
+                    quality = scraper_utils.height_get_quality(meta['height'])
                     
                 if 'url_pls' in item:
                     size_gb = scraper_utils.format_size(int(item['size']), 'B')
@@ -214,7 +202,7 @@ class Scraper(scraper.Scraper):
             else:
                 if js_result.get('status') == 'error':
                     error = js_result.get('error', 'Unknown Error')
-                    if retry and (error == 'access denied' or 'session has expired' in error):
+                    if retry and any(e for e in ['access denied', 'session has expired', 'clear cookies'] if e in error):
                         log_utils.log('Logging in for url (%s) - (%s)' % (url, error), log_utils.LOGDEBUG)
                         self.__login()
                         js_result = self._http_get(url, data=data, retry=False, allow_redirect=allow_redirect, cache_limit=0)

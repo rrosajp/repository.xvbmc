@@ -5,6 +5,7 @@
         visible="false"/>
         <setting id="mute_notifications" type="bool" label="30658" default="true"/>
         <setting id="calendar-day" type="slider" label="30502" default="0" range="-7,7" option="int"/>
+        <setting id="date_format" type="text" label="30707" default="%Y-%m-%d"/>
         <setting id="calendar_time" type="enum" label="30503" default="0" lvalues="30511|30512|30513"/>
         <setting id="sort_collection" type="enum" label="30504" lvalues="30514|30515|30516|30517" default="0"/>
         <setting id="Movies_genre_list" type="enum" label="30693" lvalues="30695|30696|30697|30698|30699|30700|30701|30702|30703|30704|30705|30706" default="0"/>
@@ -15,8 +16,8 @@
         <setting id="show_unknown" type="bool" label="30510" default="true" enable="eq(-2,false)"/>
         <setting id="TV_search_head" type="number" default="-1" visible="false"/>
         <setting id="Movies_search_head" type="number" default="-1" visible="false"/>
-        <setting id="TV_main" type="string" default="imdb-highest-rated-tv-series@hulkhorgen" visible="false"/>
-        <setting id="Movies_main" type="string" default="top-rated@movistapp" visible="false"/>
+        <setting id="TV_main" type="text" default="imdb-highest-rated-tv-series@hulkhorgen" visible="false"/>
+        <setting id="Movies_main" type="text" default="top-rated@movistapp" visible="false"/>
         <setting id="source_sort_order" type="text" label="Source Sort Order" enable="false" visible="false"/>
         <setting id="prev_responses" type="text" label="Previous Auto-Conf Responses" enable="false" visible="false"/>
         <setting id="pd_force_disable" type="bool" default="false" visible="false"/>

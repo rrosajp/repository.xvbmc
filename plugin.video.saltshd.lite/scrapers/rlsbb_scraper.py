@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import datetime
-import time
 import re
 import urllib
 import urlparse
@@ -141,10 +140,7 @@ class Scraper(scraper.Scraper):
         if filter_days and post_date:
             today = datetime.date.today()
             try:
-                date_format = '%Y-%m-%d %H:%M:%S'
-                try: post_date = datetime.datetime.strptime(post_date, date_format)
-                except: post_date = datetime.datetime(*(time.strptime(post_date, date_format)[0:6]))
-                post_date = post_date.date()
+                post_date = scraper_utils.to_datetime(post_date, '%Y-%m-%d %H:%M:%S').date()
                 if today - post_date > filter_days:
                     return True
             except ValueError:

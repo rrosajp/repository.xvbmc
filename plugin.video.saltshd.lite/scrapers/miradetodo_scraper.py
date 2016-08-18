@@ -131,16 +131,15 @@ class Scraper(scraper.Scraper):
             headers = {'Referer': iframe_url}
             html = self._http_get(self.gk_url, data=data, headers=headers, cache_limit=.5)
             js_data = scraper_utils.parse_json(html, self.gk_url)
-            if 'link' in js_data:
-                for link in js_data['link']:
-                    stream_url = link['link']
-                    if self._get_direct_hostname(stream_url) == 'gvideo':
-                        quality = scraper_utils.gv_get_quality(stream_url)
-                    elif 'label' in link:
-                        quality = scraper_utils.height_get_quality(link['label'])
-                    else:
-                        quality = QUALITIES.HIGH
-                    sources[stream_url] = quality
+            for link in js_data.get('link', []):
+                stream_url = link['link']
+                if self._get_direct_hostname(stream_url) == 'gvideo':
+                    quality = scraper_utils.gv_get_quality(stream_url)
+                elif 'label' in link:
+                    quality = scraper_utils.height_get_quality(link['label'])
+                else:
+                    quality = QUALITIES.HIGH
+                sources[stream_url] = quality
         return sources
         
     def search(self, video_type, title, year, season=''):

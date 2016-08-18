@@ -112,9 +112,8 @@ class Scraper(scraper.Scraper):
             headers = {'Referer': link}
             html = self._http_get(GK_URL, data=data, headers=headers, cache_limit=.5)
             js_data = scraper_utils.parse_json(html, data)
-            if 'link' in js_data:
-                for link in js_data['link']:
-                    sources.append({'host': '', 'link': link['link']})
+            for link in js_data.get('link', []):
+                sources.append({'host': '', 'link': link['link']})
                     
         return sources
     

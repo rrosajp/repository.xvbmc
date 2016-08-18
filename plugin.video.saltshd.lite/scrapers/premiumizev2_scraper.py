@@ -111,10 +111,10 @@ class Scraper(scraper.Scraper):
             return scraper_utils.height_get_quality(item['height'])
         elif 'name' in item:
             if video.video_type == VIDEO_TYPES.MOVIE:
-                _title, _year, height, _extra = scraper_utils.parse_movie_link(item['name'])
+                meta = scraper_utils.parse_movie_link(item['name'])
             else:
-                _title, _season, _episode, height, _extra = scraper_utils.parse_episode_link(item['name'])
-            return scraper_utils.height_get_quality(height)
+                meta = scraper_utils.parse_episode_link(item['name'])
+            return scraper_utils.height_get_quality(meta['height'])
         else:
             return QUALITIES.HIGH
         
