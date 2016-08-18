@@ -137,11 +137,10 @@ class Scraper(scraper.Scraper):
         meta = xbmc.executeJSONRPC(cmd)
         meta = scraper_utils.parse_json(meta)
         log_utils.log('Search Meta: %s' % (meta), log_utils.LOGDEBUG)
-        if 'result' in meta and result_key in meta['result']:
-            for item in meta['result'][result_key]:
-                if video_type == VIDEO_TYPES.MOVIE and item['file'].endswith('.strm'):
-                    continue
+        for item in meta.get('result', {}).get(result_key, {}):
+            if video_type == VIDEO_TYPES.MOVIE and item['file'].endswith('.strm'):
+                continue
 
-                result = {'title': item['title'], 'year': item['year'], 'url': 'video_type=%s&id=%s' % (video_type, item[id_key])}
-                results.append(result)
+            result = {'title': item['title'], 'year': item['year'], 'url': 'video_type=%s&id=%s' % (video_type, item[id_key])}
+            results.append(result)
         return results

@@ -59,13 +59,12 @@ class Scraper(scraper.Scraper):
                         if re.search('\.part\.?\d+', q_str, re.I) or '.rar' in q_str or 'sample' in q_str or q_str.endswith('.nfo'): continue
                         host = urlparse.urlparse(stream_url).hostname
                         if video.video_type == VIDEO_TYPES.MOVIE:
-                            _title, _year, height, extra = scraper_utils.parse_movie_link(q_str)
+                            meta = scraper_utils.parse_movie_link(q_str)
                         else:
-                            _title, _season, _episode, height, extra = scraper_utils.parse_episode_link(q_str)
-                        quality = scraper_utils.height_get_quality(height)
+                            meta = scraper_utils.parse_episode_link(q_str)
+                        quality = scraper_utils.height_get_quality(meta['height'])
                         hoster = {'multi-part': False, 'host': host, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'quality': quality, 'direct': False}
-                        extra = extra.upper()
-                        if 'X265' in extra or 'HEVC' in extra: hoster['format'] = 'x265'
+                        if 'format' in meta: hoster['format'] = meta['format']
                         hosters.append(hoster)
         return hosters
 

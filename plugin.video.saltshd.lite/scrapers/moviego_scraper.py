@@ -90,8 +90,7 @@ class Scraper(scraper.Scraper):
             headers.update(XHR)
             html = self._http_get(ajax_url, headers=headers, cache_limit=.5)
             js_data = scraper_utils.parse_json(html, ajax_url)
-            if 'file' in js_data:
-                stream_url = js_data['file']
+            stream_url = js_data.get('file', '')
         return stream_url
     
     def search(self, video_type, title, year, season=''):

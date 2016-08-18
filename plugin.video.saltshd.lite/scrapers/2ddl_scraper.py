@@ -29,7 +29,7 @@ from salts_lib.constants import SHORT_MONS
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://2ddl.cc'
+BASE_URL = 'http://2ddl.online'
 CATEGORIES = {VIDEO_TYPES.MOVIE: '/category/movies/', VIDEO_TYPES.TVSHOW: '/category/tv-shows/'}
 EXCLUDE_LINKS = ['adf.ly', '2ddl.link']
 
@@ -88,13 +88,9 @@ class Scraper(scraper.Scraper):
         return settings
 
     def _get_episode_url(self, show_url, video):
-        sxe = '(\.|_| )S%02dE%02d(\.|_| )' % (int(video.season), int(video.episode))
         force_title = scraper_utils.force_title(video)
         title_fallback = kodi.get_setting('title-fallback') == 'true'
         norm_title = scraper_utils.normalize_title(video.ep_title)
-        try: airdate_pattern = video.ep_airdate.strftime('(\.|_| )%Y(\.|_| )%m(\.|_| )%d(\.|_| )')
-        except: airdate_pattern = ''
-        
         page_url = [show_url]
         too_old = False
         while page_url and not too_old:
@@ -110,7 +106,7 @@ class Scraper(scraper.Scraper):
                     if match:
                         url, title = match.groups()
                         if not force_title:
-                            if re.search(sxe, title) or (airdate_pattern and re.search(airdate_pattern, title)):
+                            if scraper_utils.release_check(video, title, require_title=False):
                                 return scraper_utils.pathify_url(url)
                         else:
                             if title_fallback and norm_title:

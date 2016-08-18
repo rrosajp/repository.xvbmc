@@ -1,4 +1,3 @@
-import datetime
 import os
 import re
 import time
@@ -15,34 +14,34 @@ __all__ = ['scraper',
 'pw_scraper', 
 'nitertv_scraper',
            'movieshd_scraper', 
-		   
+		   'stage66_scraper',
            'fmovie_scraper', 
 		   
 		   'kiwihd_scraper', 
 		   'watch5s_scraper',
            'dizibox_scraper',
-           
+           'heydl_scraper',
            'xmovies8_scraper', 
 		   'vivoto_scraper', 
 		   'moviexk_scraper',
            'pubfilm_scraper', 
 		   'pelispedia_scraper',
-           
+           'xmovies8v2_scraper',
 		   'icefilms_scraper',
 		   'tunemovie_scraper',
 		   'm4ufree_scraper',
 		   'serieswatch_scraper',
            'dizigold_scraper', 
 		   'emoviespro_scraper', 
-		    
+		   'ventures_scraper', 
 		   'sezonlukdizi_scraper',
-           
+           'movieflix_scraper',
 		   'moviego_scraper',
 		   'hevcbluray_scraper',
            'miradetodo_scraper', 
 		   
 		   'moviezone_scraper',
-		   
+		   'piratejunkies_scraper',
            'afdahorg_scraper', 
 		   'farda_scraper', 
 		   'hdmovie14_scraper', 
@@ -64,10 +63,7 @@ class ScraperVideo:
         if isinstance(ep_title, unicode): self.ep_title = ep_title.encode('utf-8')
         else: self.ep_title = ep_title
         self.trakt_id = trakt_id
-        self.ep_airdate = None
-        if ep_airdate:
-            try: self.ep_airdate = datetime.datetime.strptime(ep_airdate, "%Y-%m-%d").date()
-            except (TypeError, ImportError): self.ep_airdate = datetime.date(*(time.strptime(ep_airdate, '%Y-%m-%d')[0:3]))
+        self.ep_airdate = utils2.to_datetime(ep_airdate, "%Y-%m-%d").date() if ep_airdate else None
 
     def __str__(self):
         return '|%s|%s|%s|%s|%s|%s|%s|' % (self.video_type, self.title, self.year, self.season, self.episode, self.ep_title, self.ep_airdate)

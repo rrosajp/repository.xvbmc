@@ -140,23 +140,22 @@ class Scraper(scraper.Scraper):
                     headers = {'Referer': page_url}
                     html = self._http_get(link_url, headers=headers, cache_limit=.5)
                     js_data = scraper_utils.parse_json(html, link_url)
-                    if 'variants' in js_data:
-                        for variant in js_data['variants']:
-                            if 'hosts' in variant and variant['hosts']:
-                                stream_host = random.choice(variant['hosts'])
-                                stream_url = STREAM_URL % (stream_host, variant['path'], scraper_utils.get_ua(), urllib.quote(page_url))
-                                if not stream_url.startswith('http'):
-                                    stream_url = 'http://' + stream_url
-                                host = self._get_direct_hostname(stream_url)
-                                if 'width' in variant:
-                                    quality = scraper_utils.width_get_quality(variant['width'])
-                                elif 'height' in variant:
-                                    quality = scraper_utils.height_get_quality(variant['height'])
-                                else:
-                                    quality = QUALITIES.HIGH
-                                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                                hoster['subs'] = sub
-                                hosters.append(hoster)
+                    for variant in js_data.get('variants', {}):
+                        stream_host = random.choice(variant.get('hosts', []))
+                        if stream_host:
+                            stream_url = STREAM_URL % (stream_host, variant['path'], scraper_utils.get_ua(), urllib.quote(page_url))
+                            if not stream_url.startswith('http'):
+                                stream_url = 'http://' + stream_url
+                            host = self._get_direct_hostname(stream_url)
+                            if 'width' in variant:
+                                quality = scraper_utils.width_get_quality(variant['width'])
+                            elif 'height' in variant:
+                                quality = scraper_utils.height_get_quality(variant['height'])
+                            else:
+                                quality = QUALITIES.HIGH
+                            hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                            hoster['subs'] = sub
+                            hosters.append(hoster)
         return hosters
     
     def _get_episode_url(self, show_url, video):
@@ -172,10 +171,10 @@ class Scraper(scraper.Scraper):
         norm_title = scraper_utils.normalize_title(title)
         match_year = ''
         js_data = scraper_utils.parse_json(html, url)
-        if 'data' in js_data:
-            for item in js_data['data']:
-                if 'adi' in item and 'url' in item and norm_title in scraper_utils.normalize_title(item['adi']):
-                    result = {'url': scraper_utils.pathify_url(item['url']), 'title': scraper_utils.cleanse_title(item['adi']), 'year': match_year}
-                    results.append(result)
+        for item in js_data.get('data', []):
+            match_title = item.get('adi', '')
+            if 'url' in item and norm_title in scraper_utils.normalize_title(match_title):
+                result = {'url': scraper_utils.pathify_url(item['url']), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                results.append(result)
 
         return results

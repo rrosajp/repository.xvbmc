@@ -75,13 +75,9 @@ class Scraper(scraper.Scraper):
         return settings
 
     def _get_episode_url(self, show_url, video):
-        sxe = '.S%02dE%02d.' % (int(video.season), int(video.episode))
         force_title = scraper_utils.force_title(video)
         title_fallback = kodi.get_setting('title-fallback') == 'true'
         norm_title = scraper_utils.normalize_title(video.ep_title)
-        try: ep_airdate = video.ep_airdate.strftime('.%Y.%m.%d.')
-        except: ep_airdate = ''
-        
         page_url = [show_url]
         too_old = False
         while page_url and not too_old:
@@ -96,7 +92,7 @@ class Scraper(scraper.Scraper):
                 if CATEGORIES[VIDEO_TYPES.TVSHOW] in post and show_url in post:
                     url, title = heading
                     if not force_title:
-                        if (sxe in title) or (ep_airdate and ep_airdate in title):
+                        if scraper_utils.release_check(video, title, require_title=False):
                             return scraper_utils.pathify_url(url)
                     else:
                         if title_fallback and norm_title:

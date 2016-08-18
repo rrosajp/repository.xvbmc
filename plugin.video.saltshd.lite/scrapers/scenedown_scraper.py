@@ -66,8 +66,8 @@ class Scraper(scraper.Scraper):
                 fragment = '<strong>' + fragment.group(1)
                 release = dom_parser.parse_dom(fragment, 'strong')
                 if release:
-                    _title, _season, _episode, height, _extra = scraper_utils.parse_episode_link(release[0])
-                    release_quality = scraper_utils.height_get_quality(height)
+                    meta = scraper_utils.parse_episode_link(release[0])
+                    release_quality = scraper_utils.height_get_quality(meta['height'])
                     for link in dom_parser.parse_dom(fragment, 'a', ret='href'):
                         host = urlparse.urlparse(link).hostname
                         quality = scraper_utils.get_quality(video, host, release_quality)

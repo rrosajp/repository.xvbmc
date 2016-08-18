@@ -185,7 +185,7 @@ def view_bookmarks(section):
         if kodi.get_setting('trakt_bookmark') == 'true':
             pause_label = '[COLOR blue]%.2f%%[/COLOR] %s ' % (bookmark['progress'], i18n('on'))
         paused_at = time.strftime('%Y-%m-%d', time.localtime(utils.iso_2_utc(bookmark['paused_at'])))
-        pause_label += '[COLOR deeppink]%s[/COLOR]' % (paused_at)
+        pause_label += '[COLOR deeppink]%s[/COLOR]' % (utils2.make_day(paused_at, use_words=False))
         label = '[%s] %s ' % (pause_label, label)
         liz.setLabel(label)
         xbmcplugin.addDirectoryItem(int(sys.argv[1]), liz_url, liz, isFolder=False, totalItems=0)
@@ -531,7 +531,7 @@ def show_history(section, page=1):
             
         label = liz.getLabel()
         watched_at = time.strftime('%Y-%m-%d', time.localtime(utils.iso_2_utc(item['watched_at'])))
-        header = '[COLOR deeppink]%s[/COLOR]' % (watched_at)
+        header = '[COLOR deeppink]%s[/COLOR]' % (utils2.make_day(watched_at, use_words=False))
         label = '[%s] %s' % (header, label)
         liz.setLabel(label)
         
@@ -2129,12 +2129,12 @@ def write_strm(stream, path, video_type, title, year, trakt_id, season='', episo
         except Exception as e:
             log_utils.log('Failed to create directory %s: %s' % (path, str(e)), log_utils.LOGERROR, 'subscriptions')
 
-    old_strm_string = ''
     try:
         f = xbmcvfs.File(path, 'r')
         old_strm_string = f.read()
         f.close()
-    except: pass
+    except:
+        old_strm_string = ''
 
     # print "Old String: %s; New String %s" %(old_strm_string,strm_string)
     # string will be blank if file doesn't exist or is blank
@@ -2162,19 +2162,23 @@ def make_dir_from_list(section, list_data, slug=None, query=None, page=None):
     watched = {}
     in_collection = {}
     if TOKEN:
-        watched_history = trakt_api.get_watched(section)
-        for item in watched_history:
+        for item in trakt_api.get_watched(section):
             if section == SECTIONS.MOVIES:
                 watched[item['movie']['ids']['trakt']] = item['plays'] > 0
             else:
                 watched[item['show']['ids']['trakt']] = len([e for s in item['seasons'] if s['number'] != 0 for e in s['episodes']])
-        collection = trakt_api.get_collection(section, full=False)
-        in_collection = dict.fromkeys([show['ids']['trakt'] for show in collection], True)
-
+                
+        if slug == COLLECTION_SLUG:
+            in_collection = dict.fromkeys([show['ids']['trakt'] for show in list_data], True)
+        else:
+            collection = trakt_api.get_collection(section, full=False)
+            in_collection = dict.fromkeys([show['ids']['trakt'] for show in collection], True)
+            
     total_items = len(list_data)
     for show in list_data:
         menu_items = []
         show_id = utils2.show_id(show)
+        trakt_id = show['ids']['trakt']
         if slug and slug != COLLECTION_SLUG:
             queries = {'mode': MODES.REM_FROM_LIST, 'slug': slug, 'section': section}
             queries.update(show_id)
@@ -2187,7 +2191,6 @@ def make_dir_from_list(section, list_data, slug=None, query=None, page=None):
                 queries.update(show_id)
                 menu_items.append((i18n('subscribe'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
             elif section == SECTIONS.TV:
-                trakt_id = show['ids']['trakt']
                 if utils2.show_requires_source(trakt_id):
                     label = i18n('require_aired_only')
                 else:
@@ -2196,15 +2199,15 @@ def make_dir_from_list(section, list_data, slug=None, query=None, page=None):
                 menu_items.append((label, 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
 
         if section == SECTIONS.MOVIES:
-            show['watched'] = watched.get(show['ids']['trakt'], False)
+            show['watched'] = watched.get(trakt_id, False)
         else:
             try:
-                log_utils.log('%s/%s: Watched: %s - Aired: %s' % (show['ids']['trakt'], show['ids']['slug'], watched.get(show['ids']['trakt'], 'NaN'), show['aired_episodes']), log_utils.LOGDEBUG)
-                show['watched'] = watched[show['ids']['trakt']] >= show['aired_episodes']
-                show['watched_count'] = watched[show['ids']['trakt']]
+                log_utils.log('%s/%s: Watched: %s - Aired: %s' % (trakt_id, show['ids']['slug'], watched.get(trakt_id, 'NaN'), show['aired_episodes']), log_utils.LOGDEBUG)
+                show['watched'] = watched[trakt_id] >= show['aired_episodes']
+                show['watched_count'] = watched[trakt_id]
             except: show['watched'] = False
 
-        show['in_collection'] = in_collection.get(show['ids']['trakt'], False)
+        show['in_collection'] = in_collection.get(trakt_id, False)
 
         liz, liz_url = make_item(section_params, show, menu_items)
         xbmcplugin.addDirectoryItem(int(sys.argv[1]), liz_url, liz, isFolder=section_params['folder'], totalItems=total_items)
@@ -2218,8 +2221,7 @@ def make_dir_from_list(section, list_data, slug=None, query=None, page=None):
     kodi.end_of_directory()
 
 def make_dir_from_cal(mode, start_date, days):
-    try: start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
-    except TypeError: start_date = datetime.datetime(*(time.strptime(start_date, '%Y-%m-%d')[0:6]))
+    start_date = utils2.to_datetime(start_date, '%Y-%m-%d')
     last_week = start_date - datetime.timedelta(days=7)
     next_week = start_date + datetime.timedelta(days=7)
     last_str = datetime.datetime.strftime(last_week, '%Y-%m-%d')
@@ -2385,7 +2387,7 @@ def make_episode_item(show, episode, show_subs=True, menu_items=None):
     queries.update(show_id)
     menu_items.append((i18n('add_show_to_list'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
 
-    if 'watched' in episode and episode['watched']:
+    if episode.get('watched', False):
         watched = False
         label = i18n('mark_as_unwatched')
     else:
@@ -2396,7 +2398,7 @@ def make_episode_item(show, episode, show_subs=True, menu_items=None):
         show_id = utils2.show_id(show)
         queries = {'mode': MODES.RATE, 'section': SECTIONS.TV, 'season': episode['season'], 'episode': episode['number']}
         # favor imdb_id for ratings to work with official trakt addon
-        if 'imdb' in show['ids'] and show['ids']['imdb']:
+        if show['ids'].get('imdb'):
             queries.update({'id_type': 'imdb', 'show_id': show['ids']['imdb']})
         else:
             queries.update(show_id)
@@ -2468,7 +2470,7 @@ def make_item(section_params, show, menu_items=None):
 
     if TOKEN:
         show_id = utils2.show_id(show)
-        if 'in_collection' in show and show['in_collection']:
+        if show.get('in_collection', False):
             queries = {'mode': MODES.REM_FROM_COLL, 'section': section_params['section']}
             queries.update(show_id)
             menu_items.append((i18n('remove_from_collection'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
@@ -2483,7 +2485,7 @@ def make_item(section_params, show, menu_items=None):
 
         queries = {'mode': MODES.RATE, 'section': section_params['section']}
         # favor imdb_id for ratings to work with official trakt addon
-        if 'imdb' in show['ids'] and show['ids']['imdb']:
+        if show['ids'].get('imdb'):
             queries.update({'id_type': 'imdb', 'show_id': show['ids']['imdb']})
         else:
             queries.update(show_id)
@@ -2493,7 +2495,7 @@ def make_item(section_params, show, menu_items=None):
     menu_items.append((i18n('add_to_library'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
 
     if TOKEN:
-        if 'watched' in show and show['watched']:
+        if show.get('watched', False):
             watched = False
             label = i18n('mark_as_unwatched')
         else:

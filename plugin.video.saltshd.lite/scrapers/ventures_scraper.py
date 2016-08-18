@@ -25,7 +25,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://dl.fardadownload.ir/Serial'
+BASE_URL = 'http://onad.ventures/files/tv'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -40,7 +40,7 @@ class Scraper(scraper.Scraper):
 
     @classmethod
     def get_name(cls):
-        return 'FardaDownload'
+        return 'Ventures'
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -61,6 +61,7 @@ class Scraper(scraper.Scraper):
                         
                     if match:
                         if meta['dubbed']: continue
+                        if not match['url'].lower().endswith(('.mkv', '.mp4', '.avi')): continue
                         stream_url = match['url'] + '|User-Agent=%s' % (scraper_utils.get_ua())
                         stream_url = stream_url.replace(self.base_url, '')
                         quality = scraper_utils.height_get_quality(meta['height'])
@@ -76,7 +77,7 @@ class Scraper(scraper.Scraper):
         if not force_title:
             show_url = self.base_url + show_url
             html = self._http_get(show_url, cache_limit=48)
-            match = re.search('href="(S%02d/)"' % (int(video.season)), html)
+            match = re.search('href="(Season\s+0*%s/)"' % (int(video.season)), html, re.I)
             if match:
                 season_url = urlparse.urljoin(show_url, match.group(1))
             else:

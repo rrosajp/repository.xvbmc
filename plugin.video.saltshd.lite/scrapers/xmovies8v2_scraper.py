@@ -18,6 +18,7 @@
 import re
 import urllib
 import urlparse
+import time
 import kodi
 import log_utils
 import dom_parser
@@ -30,7 +31,7 @@ from salts_lib.constants import XHR
 import scraper
 
 BASE_URL = 'http://xmovies8.tv'
-PLAYER_URL = '/ajax/movie/load_player'
+PLAYER_URL = '/ajax/movie/load_player_v2'
 EPISODES_URL = '/ajax/movie/load_episodes'
 
 class Scraper(scraper.Scraper):
@@ -59,29 +60,28 @@ class Scraper(scraper.Scraper):
             players = list(set(re.findall("load_player\(\s*'([^']+)'\s*,\s*'?(\d+)\s*'?", html)))
             player_url = urlparse.urljoin(self.base_url, PLAYER_URL)
             for link_id, height in players:
-                headers = {'Referer': page_url, 'Accept-Formating': 'application/json, text/javascript', 'Server': 'cloudflare-nginx'}
+                params = {'id': link_id, 'quality': height, '_': int(time.time() * 1000)}
+                player_url2 = player_url + '?' + urllib.urlencode(params)
+                headers = {'Referer': page_url, 'Accept-Encoding': 'gzip, deflate', 'Server': 'cloudflare-nginx', 'Accept-Formating': 'application/json, text/javascript'}
                 headers.update(XHR)
-                data = {'id': link_id, 'quality': height, 'from': 'v3'}
-                html = self._http_get(player_url, data=data, headers=headers, cache_limit=.5)
-                iframe_url = dom_parser.parse_dom(html, 'iframe', {'class': 'frame-player\d*'}, ret='src')
-                if iframe_url:
-                    iframe_url = iframe_url[0]
-                    if 'player.php' in iframe_url:
-                        iframe_url = urlparse.urljoin(self.base_url, iframe_url)
-                        video_url = dom_parser.parse_dom(html, 'input', {'type': 'hidden'}, ret='value')
-                        if video_url:
-                            headers = {'Referer': page_url}
-                            html = self._http_get(video_url[0], headers=headers, allow_redirect=False, method='HEAD', cache_limit=.25)
-                            if html.startswith('http'):
-                                if self._get_direct_hostname(html) == 'gvideo':
-                                    quality = scraper_utils.gv_get_quality(html)
-                                else:
-                                    quality = scraper_utils.height_get_quality(height)
+                html = self._http_get(player_url2, headers=headers, cache_limit=0)
+                js_data = scraper_utils.parse_json(html, player_url)
+                if 'link' in js_data and js_data['link']:
+                    link_url = js_data['link']
+                    if 'player_v2.php' in link_url:
+                        headers = {'Referer': page_url}
+                        html = self._http_get(link_url, headers=headers, allow_redirect=False, method='HEAD', cache_limit=.25)
+                        if html.startswith('http'):
+                            if self._get_direct_hostname(html) == 'gvideo':
+                                quality = scraper_utils.gv_get_quality(html)
                                 sources[html] = {'quality': quality, 'direct': True}
-                                if not kodi.get_setting('scraper_url') and Q_ORDER[quality] >= Q_ORDER[QUALITIES.HD720]: break
-                                
-                    else:
-                        sources[iframe_url] = {'quality': QUALITIES.HIGH, 'direct': False}
+                            else:
+                                if height != '0':
+                                    quality = scraper_utils.height_get_quality(height)
+                                else:
+                                    quality = QUALITIES.HIGH
+                                sources[html] = {'quality': quality, 'direct': False}
+                            if not kodi.get_setting('scraper_url') and Q_ORDER[quality] >= Q_ORDER[QUALITIES.HD720]: break
                     
             for source in sources:
                 direct = sources[source]['direct']
@@ -108,8 +108,13 @@ class Scraper(scraper.Scraper):
         return html
     
     def _get_episode_url(self, season_url, video):
+        season_url = urlparse.urljoin(self.base_url, season_url)
+        html = self._http_get(season_url, cache_limit=.5)
+        html = self.__get_players(html, season_url)
         episode_pattern = 'href="([^"]+)[^>]+class="[^"]*btn-episode[^>]*>%s<' % (video.episode)
-        return self._default_get_episode_url(season_url, video, episode_pattern)
+        match = re.search(episode_pattern, html)
+        if match:
+            return scraper_utils.pathify_url(match.group(1))
 
     def search(self, video_type, title, year, season=''):
         results = []

@@ -1963,3 +1963,7 @@ msgctxt "#30706"
 msgid "Most Collected (All)"
 msgstr ""
 
+msgctxt "#30707"
+msgid "Date Format"
+msgstr ""
+

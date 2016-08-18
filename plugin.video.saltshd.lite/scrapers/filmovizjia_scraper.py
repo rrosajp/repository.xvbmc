@@ -141,7 +141,11 @@ class Scraper(scraper.Scraper):
         if fragment:
             for item in dom_parser.parse_dom(fragment[0], 'li'):
                 match_url = dom_parser.parse_dom(item, 'a', ret='href')
-                match_title_year = dom_parser.parse_dom(item, 'a', ret='title')
+                match_title_year = ''
+                link_frag = dom_parser.parse_dom(item, 'a')
+                if link_frag:
+                    match_title_year = dom_parser.parse_dom(link_frag[0], 'div')
+                    
                 if match_url and match_title_year:
                     match_url = match_url[0]
                     match_title_year = match_title_year[0]
@@ -149,7 +153,7 @@ class Scraper(scraper.Scraper):
                     if match:
                         match_title, match_year = match.groups()
                     else:
-                        match_title = match_title
+                        match_title = match_title_year
                         match_year = ''
             
                     if not year or not match_year or year == match_year:

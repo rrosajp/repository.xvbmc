@@ -83,14 +83,14 @@ class Scraper(scraper.Scraper):
             if search_url:
                 html = self._http_get(search_url, cache_limit=.5)
                 js_result = scraper_utils.parse_json(html, search_url)
-                if 'status' in js_result and js_result['status'] == 'success':
+                if js_result.get('status') == 'success':
                     for result in js_result['result']:
                         if len(result['hosterurls']) > 1: continue
                         if result['extension'] == 'rar': continue
                         
                         stream_url = result['hosterurls'][0]['url']
                         if stream_url not in seen_urls:
-                            if scraper_utils.title_check(video, result['title']):
+                            if scraper_utils.release_check(video, result['title']):
                                 host = urlparse.urlsplit(stream_url).hostname
                                 quality = scraper_utils.get_quality(video, host, self._get_title_quality(result['title']))
                                 hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'host': host, 'quality': quality, 'direct': False}
@@ -98,7 +98,7 @@ class Scraper(scraper.Scraper):
                                 hosters.append(hoster)
                                 seen_urls.add(stream_url)
                 else:
-                    log_utils.log('Alluc API Error: %s: %s' % (search_url, js_result['message']), log_utils.LOGWARNING)
+                    log_utils.log('Alluc API Error: %s: %s' % (search_url, js_result.get('message', 'Unknown Error')), log_utils.LOGWARNING)
 
         return hosters
         

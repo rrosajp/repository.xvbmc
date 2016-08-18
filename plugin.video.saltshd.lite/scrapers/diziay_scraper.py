@@ -89,10 +89,9 @@ class Scraper(scraper.Scraper):
             js_result = scraper_utils.parse_json(html, ajax_url)
             # subs are hardcoded if none exist
             subs = '' if 'altyazi' in js_result and js_result['altyazi'] else 'Turkish subtitles'
-            if 'success' in js_result:
-                for source in js_result['success']:
-                    if 'src' in source:
-                        sources.append(source['src'])
+            for source in js_result.get('success', []):
+                if 'src' in source:
+                    sources.append(source['src'])
                         
         return {'sources': sources, 'subs': subs}
     

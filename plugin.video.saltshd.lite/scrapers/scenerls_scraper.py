@@ -28,6 +28,8 @@ from salts_lib.utils2 import i18n
 import scraper
 
 BASE_URL = 'http://scene-rls.com'
+MULTI_HOST = 'nfo.scene-rls.com'
+CATEGORIES = {VIDEO_TYPES.MOVIE: '/category/movies/"', VIDEO_TYPES.EPISODE: '/category/tvshows/"'}
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -50,32 +52,29 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, require_debrid=True, cache_limit=.5)
-            sources = self.__get_post_links(html, video)
+            sources = self.__get_post_links(html)
             for source in sources:
                 if re.search('\.part\.?\d+', source) or '.rar' in source or 'sample' in source or source.endswith('.nfo'): continue
                 host = urlparse.urlparse(source).hostname
-                quality = sources[source]['quality']
+                quality = scraper_utils.blog_get_quality(video, sources[source]['release'], host)
                 hoster = {'multi-part': False, 'host': host, 'class': self, 'views': None, 'url': source, 'rating': None, 'quality': quality, 'direct': False}
-                if 'format' in sources[source]: hoster['format'] = sources[source]['format']
+                if 'X265' in sources[source]['release'] or 'HEVC' in sources[source]['release']:
+                    hoster['format'] = 'x265'
                 hosters.append(hoster)
         return hosters
 
-    def __get_post_links(self, html, video):
+    def __get_post_links(self, html):
         sources = {}
         post = dom_parser.parse_dom(html, 'div', {'class': 'postContent'})
         if post:
-            for result in re.finditer('<p\s+style="text-align:\s*center;">(.*?)<br.*?<h2(.*?)(?:<h4|<h3|</div>)', post[0], re.DOTALL):
+            for result in re.finditer('<p\s+style="text-align:\s*center;">(.*?)<br.*?<h2(.*?)(?:<h4|<h3|</div>|$)', post[0], re.DOTALL):
                 release, links = result.groups()
                 release = re.sub('</?[^>]*>', '', release)
                 release = release.upper()
-                is_x265 = 'X265' in release or 'HEVC' in release
                 for match in re.finditer('href="([^"]+)', links):
                     stream_url = match.group(1)
-                    host = urlparse.urlparse(stream_url).hostname
-                    quality = scraper_utils.blog_get_quality(video, release, host)
-                    sources[stream_url] = {'quality': quality}
-                    if is_x265:
-                        sources[stream_url]['format'] = 'x265'
+                    if MULTI_HOST in stream_url: continue
+                    sources[stream_url] = {'release': release}
         return sources
         
     def get_url(self, video):
@@ -93,7 +92,13 @@ class Scraper(scraper.Scraper):
     def search(self, video_type, title, year, season=''):
         search_url = urlparse.urljoin(self.base_url, '/?s=%s&submit=Find')
         search_url = search_url % (urllib.quote_plus(title))
-        html = self._http_get(search_url, require_debrid=True, cache_limit=1)
+        all_html = self._http_get(search_url, require_debrid=True, cache_limit=1)
+        
+        html = ''
+        for post in dom_parser.parse_dom(all_html, 'div', {'class': 'post'}):
+            if CATEGORIES[video_type] in post and self.__get_post_links(post):
+                html += post
+                
         post_pattern = 'class="postTitle">.*?href="(?P<url>[^"]+)[^>]*>(?P<post_title>[^<]+).*?Published on:\s*(?P<date>[^ ]+ 0*\d+, \d+)'
         date_format = '%b %d, %Y'
         return self._blog_proc_results(html, post_pattern, date_format, video_type, title, year)

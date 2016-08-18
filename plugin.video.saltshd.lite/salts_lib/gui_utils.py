@@ -54,16 +54,16 @@ def perform_auto_conf(responses):
         if responses[10]:
             tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
                      ['IFlix', 'torba.se', 'MoviesPlanet', '123Movies', '9Movies', 'DayT.se', 'niter.tv', 'YesMovies', 'HDFlix', 'HDMovie14', 'ororo.tv'],
-                     ['StreamLord', 'CyberReel', 'm4ufree', 'tunemovie', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD', 'HDMovieFree'],
+                     ['StreamLord', 'MovieFlix', 'CyberReel', 'm4ufree', 'tunemovie', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD', 'HDMovieFree'],
                      ['MovieGo', 'MovieXK', 'Stage66', 'PelisPedia', 'FardaDownload', 'vu45', 'PutMV', 'PirateJunkies', 'FireMoviesHD', 'SeriesWatch', 'VidNow4K'],
-                     ['HEVCBluRay', 'MovieZone', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
+                     ['HeyDL', 'HEVCBluRay', 'MovieZone', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
                      ['scene-rls', 'DDLValley', '2DDL', 'DDLSeries', 'Crazy4TV', 'SceneDown', 'CinemaMKV', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net'],
                      ['vivo.to', 'IceFilms', 'Flixanity', 'Watch5s', 'Rainierland', 'WatchEpisodes', 'WatchItVideos', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries'],
                      ['TVWTVS', 'MWM', 'WatchSeries', 'RLSeries', 'Putlocker', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K'],
                      ['MovieHubs', 'tvrush', 'afdah', 'MiraDeTodo', 'Filmovizija', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now', 'SnagFilms'],
-                     ['yshows', 'iWatchOnline', 'vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD'],
+                     ['Ventures', 'yshows', 'iWatchOnline', 'vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD'],
                      ['LosMovies', 'wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu', 'clickplay.to'],
-                     ['MovieTube', 'FilmStreaming.in', 'Bobby']]
+                     ['MovieTube', 'FilmStreaming.in']]
         
             sso = []
             random_sso = kodi.get_setting('random_sso') == 'true'

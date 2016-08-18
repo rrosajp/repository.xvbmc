@@ -55,30 +55,61 @@ class Scraper(scraper.Scraper):
             if re.search('Şu an fragman*', html, re.I):
                 return hosters
             
-            match = re.search('''url\s*:\s*"([^"]+)"\s*,\s*data:'id=''', html)
-            if match:
-                ajax_url = match.group(1)
-                for data_id in re.findall("kaynakdegis\('([^']+)", html):
-                    url = urlparse.urljoin(self.base_url, ajax_url)
-                    headers = {'Referer': page_url}
-                    headers.update(XHR)
-                    data = {'id': data_id}
-                    result = self._http_get(url, data=data, headers=headers, cache_limit=.5)
-                    for match in re.finditer('"videolink\d*"\s*:\s*"([^"]+)","videokalite\d*"\s*:\s*"?(\d+)p?', result):
-                        stream_url, height = match.groups()
-                        stream_url = stream_url.replace('\\/', '/')
-                        host = self._get_direct_hostname(stream_url)
-                        if host == 'gvideo':
-                            quality = scraper_utils.gv_get_quality(stream_url)
-                        else:
-                            quality = scraper_utils.height_get_quality(height)
-                            stream_url += '|User-Agent=%s&Referer=%s&Cookie=%s' % (scraper_utils.get_ua(), urllib.quote(page_url), self._get_stream_cookies())
-    
-                        hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                        hosters.append(hoster)
-    
+            hosters = self.__get_embed_sources(html, page_url)
+            if not hosters:
+                hosters = self.__get_ajax_sources(html, page_url)
+                
         return hosters
 
+    def __get_embed_sources(self, html, page_url):
+        hosters = []
+        match = re.search('var\s+kaynaklar\d+\s*=\s*\[(.*?)\]', html, re.DOTALL)
+        if match:
+            for match in re.finditer('''['"]?file['"]?\s*:\s*['"]([^'"]+)['"][^}]*['"]?label['"]?\s*:\s*['"]([^'"]*)''', match.group(1), re.DOTALL):
+                stream_url, label = match.groups()
+                stream_url = stream_url.replace('\\x', '').decode('hex')
+                log_utils.log(stream_url)
+                hoster = self.__create_source(stream_url, label, page_url)
+                hosters.append(hoster)
+                    
+        return hosters
+        
+    def __get_ajax_sources(self, html, page_url):
+        hosters = []
+        match = re.search('''url\s*:\s*"([^"]+)"\s*,\s*data:'id=''', html)
+        if match:
+            ajax_url = match.group(1)
+            for data_id in re.findall("kaynakdegis\('([^']+)", html):
+                url = urlparse.urljoin(self.base_url, ajax_url)
+                data = {'id': data_id}
+                headers = {'Referer': page_url}
+                headers.update(XHR)
+                result = self._http_get(url, data=data, headers=headers, cache_limit=.5)
+                for match in re.finditer('"videolink\d*"\s*:\s*"([^"]+)","videokalite\d*"\s*:\s*"?(\d+)p?', result):
+                    stream_url, height = match.groups()
+                    hoster = self.__create_source(stream_url, height, page_url)
+                    hosters.append(hoster)
+        return hosters
+        
+    def __create_source(self, stream_url, height, page_url):
+        stream_url = stream_url.replace('\\/', '/')
+        if self._get_direct_hostname(stream_url) != 'gvideo':
+            headers = {'Referer': page_url}
+            redir_url = self._http_get(stream_url, headers=headers, allow_redirect=False, cache_limit=.25)
+            if redir_url.startswith('http'):
+                stream_url = redir_url
+                stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
+            else:
+                stream_url += '|User-Agent=%s&Referer=%s&Cookie=%s' % (scraper_utils.get_ua(), urllib.quote(page_url), self._get_stream_cookies())
+                
+        host = self._get_direct_hostname(stream_url)
+        if host == 'gvideo':
+            quality = scraper_utils.gv_get_quality(stream_url)
+        else:
+            quality = scraper_utils.height_get_quality(height)
+        hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+        return hoster
+        
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+/%s-sezon-%s-bolum[^"]*)"' % (video.season, video.episode)
         title_pattern = 'class="gizle".*?href="(?P<url>[^"]+)">(?P<title>[^<]+)'

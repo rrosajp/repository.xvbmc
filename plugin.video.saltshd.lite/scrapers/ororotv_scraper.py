@@ -18,7 +18,6 @@
 import urlparse
 import base64
 import datetime
-import time
 import kodi
 import log_utils
 from salts_lib import scraper_utils
@@ -78,8 +77,7 @@ class Scraper(scraper.Scraper):
                     if kodi.get_setting('airdate-fallback') == 'true' and video.ep_airdate:
                         for episode in js_data['episodes']:
                             if 'airdate' in episode:
-                                try: ep_airdate = datetime.datetime.strptime(episode['airdate'], "%Y-%m-%d").date()
-                                except (TypeError, ImportError): ep_airdate = datetime.date(*(time.strptime(episode['airdate'], '%Y-%m-%d')[0:3]))
+                                ep_airdate = scraper_utils.to_datetime(episode['airdate'], "%Y-%m-%d").date()
                                 if video.ep_airdate == (ep_airdate - datetime.timedelta(days=1)):
                                     return scraper_utils.pathify_url('?id=%s' % (episode['id']))
                 else:

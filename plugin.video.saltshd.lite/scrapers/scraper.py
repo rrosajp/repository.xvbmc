@@ -73,6 +73,7 @@ class Scraper(object):
     db_connection = None
     worker_id = None
     debrid_resolvers = None
+    row_pattern = '\s*<a\s+href="(?P<link>[^"]+)">(?P<title>[^<]+)</a>\s+(?P<date>\d+-[a-zA-Z]+-\d+ \d+:\d+)\s+(?P<size>-|\d+)'
 
     def __init__(self, timeout=DEFAULT_TIMEOUT):
         pass
@@ -463,10 +464,11 @@ class Scraper(object):
             if match:
                 show_title, search_sxe = match.groups()
             else:
-                match = re.search('(.*?)\s*(\d{4})[ .]?(\d{2})[ .]?(\d{2})\s*', title)
+                match = re.search('(.*?)\s*(\d{4})[._ -]?(\d{2})[._ -]?(\d{2})\s*', title)
                 if match:
                     show_title, search_year, search_month, search_day = match.groups()
-                    search_date = '%s%s%s' % (search_year, search_month, search_day)
+                    search_date = '%s-%s-%s' % (search_year, search_month, search_day)
+                    search_date = scraper_utils.to_datetime(search_date, "%Y-%m-%d").date()
                 else:
                     show_title = title
         else:
@@ -484,13 +486,10 @@ class Scraper(object):
             if filter_days and date_format and 'date' in post_data:
                 post_data['date'] = post_data['date'].strip()
                 filter_days = datetime.timedelta(days=filter_days)
-                try: post_date = datetime.datetime.strptime(post_data['date'], date_format).date()
-                except TypeError:
-                    try:
-                        post_date = datetime.datetime(*(time.strptime(post_data['date'], date_format)[0:6])).date()
-                    except Exception as e:
-                        log_utils.log('Failed date Check in %s: |%s|%s|%s|' % (self.get_name(), post_data['date'], date_format, e), log_utils.LOGWARNING)
-                        post_date = today
+                post_date = scraper_utils.to_datetime(post_data['date'], date_format).date()
+                if not post_date:
+                    log_utils.log('Failed date Check in %s: |%s|%s|%s|' % (self.get_name(), post_data['date'], date_format), log_utils.LOGWARNING)
+                    post_date = today
                         
                 if today - post_date > filter_days:
                     continue
@@ -500,30 +499,24 @@ class Scraper(object):
             match_sxe = ''
             match_title = full_title = post_title
             if video_type == VIDEO_TYPES.MOVIE:
-                match = re.search('(.*?)\s*[\[( ](\d{4})[)\] ]\s*(.*)', post_title)
-                if match:
-                    match_title, match_year, extra_title = match.groups()
-                    full_title = '%s [%s]' % (match_title, extra_title)
+                meta = scraper_utils.parse_movie_link(post_title)
+                match_year = meta['year']
             else:
-                match = re.search('(.*?)\s*(S\d+E\d+)\s*(.*)', post_title)
-                if match:
-                    match_title, match_sxe, extra_title = match.groups()
-                    full_title = '%s [%s]' % (match_title, extra_title)
-                else:
-                    match = re.search('(.*?)\s*(\d{4})[ .]?(\d{2})[ .]?(\d{2})\s*(.*)', post_title)
-                    if match:
-                        match_title, match_year2, match_month, match_day, extra_title = match.groups()
-                        match_date = '%s%s%s' % (match_year2, match_month, match_day)
-                        full_title = '%s [%s]' % (match_title, extra_title)
+                meta = scraper_utils.parse_episode_link(post_title)
+                match_sxe = 'S%02dE%02d' % (int(meta['season']), int(meta['episode']))
+                match_date = meta['airdate']
 
+            match_title = meta['title']
+            full_title = '%s (%sp) [%s]' % (meta['title'], meta['height'], meta['extra'])
             norm_title = scraper_utils.normalize_title(show_title)
             match_norm_title = scraper_utils.normalize_title(match_title)
             title_match = norm_title and (match_norm_title in norm_title or norm_title in match_norm_title)
             year_match = not year or not match_year or year == match_year
-            date_match = not search_date or (search_date == match_date)
             sxe_match = not search_sxe or (search_sxe == match_sxe)
-            log_utils.log('Blog Results: |%s|%s|%s| - |%s|%s|%s| - |%s|%s|%s| - |%s|%s|%s|' %
-                          (match_norm_title, norm_title, title_match, year, match_year, year_match, search_date, match_date, date_match, search_sxe, match_sxe, sxe_match),
+            date_match = not search_date or (search_date == match_date)
+            log_utils.log('Blog Results: |%s|%s|%s| - |%s|%s|%s| - |%s|%s|%s| - |%s|%s|%s| (%s)' %
+                          (match_norm_title, norm_title, title_match, year, match_year, year_match,
+                           search_date, match_date, date_match, search_sxe, match_sxe, sxe_match, self.get_name()),
                           log_utils.LOGDEBUG)
             if title_match and year_match and date_match and sxe_match:
                 result = {'url': scraper_utils.pathify_url(post_data['url']), 'title': scraper_utils.cleanse_title(full_title), 'year': match_year}
@@ -639,7 +632,7 @@ class Scraper(object):
                                                 sources = self.__extract_video(item2)
             except Exception as e:
                 log_utils.log('Google Plus Parse failure: %s - %s' % (link, e), log_utils.LOGWARNING)
-            return sources
+        return sources
 
     def __extract_video(self, item):
         sources = []
@@ -704,7 +697,7 @@ class Scraper(object):
     def _get_files(self, url, cache_limit=.5):
         sources = []
         for row in self._parse_directory(self._http_get(url, cache_limit=cache_limit)):
-            source_url = urlparse.urljoin(url, row['link'])
+            source_url = scraper_utils.urljoin(url, row['link'])
             if row['directory'] and not row['link'].startswith('..'):
                 sources += self._get_files(source_url, cache_limit=cache_limit)
             else:
@@ -714,8 +707,7 @@ class Scraper(object):
     
     def _parse_directory(self, html):
         rows = []
-        row_pattern = '\s*<a\s+href="(?P<link>[^"]+)">(?P<title>[^<]+)</a>\s+(?P<date>\d+-[a-zA-Z]+-\d+ \d+:\d+)\s+(?P<size>-|\d+)'
-        for match in re.finditer(row_pattern, html):
+        for match in re.finditer(self.row_pattern, html):
             row = match.groupdict()
             row['link'] = urllib.unquote(row['link'])
             if row['title'].endswith('/'): row['title'] = row['title'][:-1]

@@ -107,7 +107,7 @@ class Scraper(scraper.Scraper):
     @classmethod
     def get_settings(cls):
         settings = super(cls, cls).get_settings()
-        settings.append('         <setting id="%s-default_url" type="string" visible="false"/>' % (cls.get_name()))
+        settings.append('         <setting id="%s-default_url" type="text" visible="false"/>' % (cls.get_name()))
         return settings
 
 # if no default url has been set, then pick one and set it. If one has been set, use it
