@@ -19,10 +19,9 @@ import random
 import re
 import urllib
 import urlparse
-
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -31,7 +30,7 @@ import scraper
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 VIDEO_URL = '/video_info/iframe'
 
-class XMovies8_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
@@ -51,9 +50,6 @@ class XMovies8_Scraper(scraper.Scraper):
             return html
         else:
             return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -111,14 +107,14 @@ class XMovies8_Scraper(scraper.Scraper):
     @classmethod
     def get_settings(cls):
         settings = super(cls, cls).get_settings()
-        settings.append('         <setting id="%s-default_url" type="string" visible="false"/>' % (cls.get_name()))
+        settings.append('         <setting id="%s-default_url" type="text" visible="false"/>' % (cls.get_name()))
         return settings
 
 # if no default url has been set, then pick one and set it. If one has been set, use it
-default_url = kodi.get_setting('%s-default_url' % (XMovies8_Scraper.get_name()))
+default_url = kodi.get_setting('%s-default_url' % (Scraper.get_name()))
 if not default_url:
     BASE_URL = random.choice(['https://xmovies8.org', 'http://genvideos.org'])
-    XMovies8_Scraper.base_url = BASE_URL
-    kodi.set_setting('%s-default_url' % (XMovies8_Scraper.get_name()), BASE_URL)
+    Scraper.base_url = BASE_URL
+    kodi.set_setting('%s-default_url' % (Scraper.get_name()), BASE_URL)
 else:
-    XMovies8_Scraper.base_url = default_url
+    Scraper.base_url = default_url

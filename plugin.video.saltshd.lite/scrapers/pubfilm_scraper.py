@@ -127,7 +127,7 @@ class Scraper(scraper.Scraper):
     
     def __get_episode_links(self, html):
         links = dom_parser.parse_dom(html, 'a', {'target': 'EZWebPlayer'}, ret='href')
-        labels = dom_parser.parse_dom(html, 'input', {'class': '[^"]*abutton[^"]*'}, ret='value')
+        labels = dom_parser.parse_dom(html, 'a', {'target': 'EZWebPlayer'})
         labels = [re.sub('[^\d]', '', label) for label in labels]
         episodes = [(label, link) for label, link in zip(labels, links) if label.isdigit()]
         return episodes

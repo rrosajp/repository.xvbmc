@@ -18,9 +18,8 @@
 """
 import re
 import urlparse
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -28,7 +27,7 @@ import scraper
 
 BASE_URL = 'http://dl.fardadownload.ir/Serial'
 
-class Farda_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -43,18 +42,6 @@ class Farda_Scraper(scraper.Scraper):
     def get_name(cls):
         return 'FardaDownload'
 
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        if 'format' in item:
-            label = '[%s] (%s) %s' % (item['quality'], item['format'], item['host'])
-        else:
-            label = '[%s] %s' % (item['quality'], item['host'])
-        if 'size' in item:
-            label += ' (%s)' % (item['size'])
-        return label
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
@@ -65,19 +52,20 @@ class Farda_Scraper(scraper.Scraper):
                 if not line['directory']:
                     match = {}
                     if video.video_type == VIDEO_TYPES.MOVIE:
-                        match_title, _match_year, height, extra = scraper_utils.parse_movie_link(line['link'])
-                        if norm_title in scraper_utils.normalize_title(match_title):
+                        meta = scraper_utils.parse_movie_link(line['link'])
+                        if norm_title in scraper_utils.normalize_title(meta['title']):
                             match = line
-                    else:
-                        _show_title, season, episode, height, extra = scraper_utils.parse_episode_link(line['link'])
-                        if int(video.season) == int(season) and int(video.episode) == int(episode):
-                            match = line
+                    elif self.__episode_match(line, video):
+                        match = line
+                        meta = scraper_utils.parse_episode_link(line['link'])
                         
-                    if 'dubbed' in extra.lower(): continue
                     if match:
+                        if meta['dubbed']: continue
                         stream_url = match['url'] + '|User-Agent=%s' % (scraper_utils.get_ua())
-                        hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': scraper_utils.height_get_quality(height), 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                        if 'x265' in extra: hoster['format'] = 'x265'
+                        stream_url = stream_url.replace(self.base_url, '')
+                        quality = scraper_utils.height_get_quality(meta['height'])
+                        hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                        if 'format' in meta: hoster['format'] = meta['format']
                         if 'size' in match: hoster['size'] = scraper_utils.format_size(int(match['size']))
                         hosters.append(hoster)
             
@@ -95,10 +83,12 @@ class Farda_Scraper(scraper.Scraper):
                 season_url = show_url
 
             for item in self._get_files(season_url, cache_limit=8):
-                match = re.search('[._ -]S%02d[._ -]?E%02d[._ -]' % (int(video.season), int(video.episode)), item['title'], re.I)
-                if match:
+                if self.__episode_match(item, video):
                     return scraper_utils.pathify_url(season_url)
 
+    def __episode_match(self, line, video):
+        return scraper_utils.release_check(video, line['link'], require_title=False)
+    
     def search(self, video_type, title, year, season=''):
         results = []
         norm_title = scraper_utils.normalize_title(title)

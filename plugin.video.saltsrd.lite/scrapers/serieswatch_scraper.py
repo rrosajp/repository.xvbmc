@@ -17,9 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urlparse
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -27,7 +26,7 @@ import scraper
 
 BASE_URL = 'http://cdn.serieswatch.tv/2'
 
-class SeriesWatch_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -42,34 +41,25 @@ class SeriesWatch_Scraper(scraper.Scraper):
     def get_name(cls):
         return 'SeriesWatch'
 
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        if 'format' in item:
-            label = '[%s] (%s) %s' % (item['quality'], item['format'], item['host'])
-        else:
-            label = '[%s] %s' % (item['quality'], item['host'])
-        if 'size' in item:
-            label += ' (%s)' % (item['size'])
-        return label
-
     def get_sources(self, video):
         hosters = []
         source_url = self.get_url(video)
         if source_url and source_url != FORCE_NO_MATCH:
             if video.video_type == VIDEO_TYPES.MOVIE:
-                _title, _year, height, extra = scraper_utils.parse_movie_link(source_url)
-                stream_url = self.base_url + source_url + '|User-Agent=%s' % (scraper_utils.get_ua())
-                hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': scraper_utils.height_get_quality(height), 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                if 'x265' in extra: hoster['format'] = 'x265'
+                meta = scraper_utils.parse_movie_link(source_url)
+                stream_url = source_url + '|User-Agent=%s' % (scraper_utils.get_ua())
+                quality = scraper_utils.height_get_quality(meta['height'])
+                hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                if 'format' in meta: hoster['format'] = meta['format']
                 hosters.append(hoster)
             else:
                 for episode in self.__match_episode(source_url, video):
-                    _show_title, _season, _episode, height, extra = scraper_utils.parse_episode_link(episode['title'])
-                    stream_url = urlparse.urljoin(self.base_url, episode['url']) + '|User-Agent=%s' % (scraper_utils.get_ua())
-                    hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': scraper_utils.height_get_quality(height), 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                    if 'x265' in extra: hoster['format'] = 'x265'
+                    meta = scraper_utils.parse_episode_link(episode['title'])
+                    stream_url = episode['url'] + '|User-Agent=%s' % (scraper_utils.get_ua())
+                    stream_url = stream_url.replace(self.base_url, '')
+                    quality = scraper_utils.height_get_quality(meta['height'])
+                    hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                    if 'format' in meta: hoster['format'] = meta['format']
                     if 'size' in episode: hoster['size'] = scraper_utils.format_size(int(episode['size']))
                     hosters.append(hoster)
         return hosters
@@ -106,11 +96,11 @@ class SeriesWatch_Scraper(scraper.Scraper):
         html = self._http_get(self.base_url, cache_limit=48)
         for item in self._parse_directory(html):
             if not item['directory']:
-                match_title, match_year, height, extra = scraper_utils.parse_movie_link(item['title'])
-                if 'dubbed' in extra.lower(): continue
-                if (norm_title in scraper_utils.normalize_title(match_title)) and (not year or not match_year or year == match_year):
-                    match_title = match_title.replace('.', ' ')
-                    match_title += ' [%sp.%s]' % (height, extra)
-                    result = {'url': scraper_utils.pathify_url(item['link']), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                meta = scraper_utils.parse_movie_link(item['title'])
+                if meta['dubbed']: continue
+                if (norm_title in scraper_utils.normalize_title(meta['title'])) and (not year or not meta['year'] or year == meta['year']):
+                    match_title = meta['title'].replace('.', ' ')
+                    match_title += ' [%sp.%s]' % (meta['height'], meta['extra'])
+                    result = {'url': scraper_utils.pathify_url(item['link']), 'title': scraper_utils.cleanse_title(match_title), 'year': meta['year']}
                     results.append(result)
         return results

@@ -1,5 +1,5 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.salts
+# Addon id: plugin.video.saltshd.lite
 # Addon Provider: TV Addons
 msgid ""
 msgstr ""
@@ -1114,6 +1114,18 @@ msgctxt "#30285"
 msgid "Genres"
 msgstr ""
 
+msgctxt "#30286"
+msgid "Retrieving Collection"
+msgstr ""
+
+msgctxt "#30287"
+msgid "Adding Items to Directory"
+msgstr ""
+
+msgctxt "#30288"
+msgid "Working..."
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""
@@ -1949,5 +1961,9 @@ msgstr ""
 
 msgctxt "#30706"
 msgid "Most Collected (All)"
+msgstr ""
+
+msgctxt "#30707"
+msgid "Date Format"
 msgstr ""
 

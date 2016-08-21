@@ -19,9 +19,9 @@ import re
 import urlparse
 import urllib
 import datetime
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -32,7 +32,7 @@ BASE_URL = 'http://www.filmovizija.studio'
 EP_URL = '/episode.php?vid=%s'
 YT_URL = '/yt.php?p=%s&s=%s&u=%s'
 
-class Filmovizija_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -46,12 +46,6 @@ class Filmovizija_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'Filmovizija'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -147,7 +141,11 @@ class Filmovizija_Scraper(scraper.Scraper):
         if fragment:
             for item in dom_parser.parse_dom(fragment[0], 'li'):
                 match_url = dom_parser.parse_dom(item, 'a', ret='href')
-                match_title_year = dom_parser.parse_dom(item, 'a', ret='title')
+                match_title_year = ''
+                link_frag = dom_parser.parse_dom(item, 'a')
+                if link_frag:
+                    match_title_year = dom_parser.parse_dom(link_frag[0], 'div')
+                    
                 if match_url and match_title_year:
                     match_url = match_url[0]
                     match_title_year = match_title_year[0]
@@ -155,7 +153,7 @@ class Filmovizija_Scraper(scraper.Scraper):
                     if match:
                         match_title, match_year = match.groups()
                     else:
-                        match_title = match_title
+                        match_title = match_title_year
                         match_year = ''
             
                     if not year or not match_year or year == match_year:

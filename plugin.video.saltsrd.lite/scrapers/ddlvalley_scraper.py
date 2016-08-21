@@ -19,14 +19,14 @@ import datetime
 import re
 import urllib
 import urlparse
-from salts_lib import log_utils
-from salts_lib import dom_parser
-from salts_lib import kodi
+import log_utils
+import kodi
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import SHORT_MONS
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.kodi import i18n
+from salts_lib.utils2 import i18n
 import scraper
 
 
@@ -34,7 +34,7 @@ BASE_URL = 'http://www.ddlvalley.cool'
 CATEGORIES = {VIDEO_TYPES.MOVIE: '/category/movies/', VIDEO_TYPES.TVSHOW: '/category/tv-shows/'}
 LOCAL_UA = 'SALTS for Kodi/%s' % (kodi.get_version())
 
-class DDLValley_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -48,12 +48,6 @@ class DDLValley_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'DDLValley'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -81,13 +75,9 @@ class DDLValley_Scraper(scraper.Scraper):
         return settings
 
     def _get_episode_url(self, show_url, video):
-        sxe = '.S%02dE%02d.' % (int(video.season), int(video.episode))
         force_title = scraper_utils.force_title(video)
         title_fallback = kodi.get_setting('title-fallback') == 'true'
         norm_title = scraper_utils.normalize_title(video.ep_title)
-        try: ep_airdate = video.ep_airdate.strftime('.%Y.%m.%d.')
-        except: ep_airdate = ''
-        
         page_url = [show_url]
         too_old = False
         while page_url and not too_old:
@@ -102,7 +92,7 @@ class DDLValley_Scraper(scraper.Scraper):
                 if CATEGORIES[VIDEO_TYPES.TVSHOW] in post and show_url in post:
                     url, title = heading
                     if not force_title:
-                        if (sxe in title) or (ep_airdate and ep_airdate in title):
+                        if scraper_utils.release_check(video, title, require_title=False):
                             return scraper_utils.pathify_url(url)
                     else:
                         if title_fallback and norm_title:

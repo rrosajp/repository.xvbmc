@@ -20,59 +20,11 @@ import time
 import kodi
 import random
 import json
-import urllib2
+import log_utils
 from utils2 import reset_base_url, i18n
-from trakt_api import Trakt_API
-from salts_lib import log_utils
 
 INTERVALS = 5
-
-def auth_trakt():
-    start = time.time()
-    use_https = kodi.get_setting('use_https') == 'true'
-    trakt_timeout = int(kodi.get_setting('trakt_timeout'))
-    trakt_api = Trakt_API(use_https=use_https, timeout=trakt_timeout)
-    result = trakt_api.get_code()
-    code, expires, interval = result['device_code'], result['expires_in'], result['interval']
-    time_left = expires - int(time.time() - start)
-    line1 = i18n('verification_url') % (result['verification_url'])
-    line2 = i18n('prompt_code') % (result['user_code'])
-    line3 = i18n('code_expires') % (time_left)
-    with kodi.ProgressDialog(i18n('trakt_acct_auth'), line1=line1, line2=line2, line3=line3) as pd:
-        pd.update(100)
-        while time_left:
-            for _ in range(INTERVALS):
-                kodi.sleep(interval * 1000 / INTERVALS)
-                if pd.is_canceled(): return
-
-            try:
-                result = trakt_api.get_device_token(code)
-                break
-            except urllib2.URLError as e:
-                # authorization is pending; too fast
-                if e.code in [400, 429]:
-                    pass
-                elif e.code == 418:
-                    kodi.notify(msg=i18n('user_reject_auth'), duration=3000)
-                    return
-                elif e.code == 410:
-                    break
-                else:
-                    raise
-                
-            time_left = expires - int(time.time() - start)
-            progress = time_left * 100 / expires
-            pd.update(progress, line3=i18n('code_expires') % (time_left))
-        
-    try:
-        kodi.set_setting('trakt_oauth_token', result['access_token'])
-        kodi.set_setting('trakt_refresh_token', result['refresh_token'])
-        trakt_api = Trakt_API(result['access_token'], use_https=use_https, timeout=trakt_timeout)
-        profile = trakt_api.get_user_profile(cached=False)
-        kodi.set_setting('trakt_user', '%s (%s)' % (profile['username'], profile['name']))
-        kodi.notify(msg=i18n('trakt_auth_complete'), duration=3000)
-    except Exception as e:
-        log_utils.log('Trakt Authorization Failed: %s' % (e), log_utils.LOGDEBUG)
+COMPONENT = __name__
 
 def perform_auto_conf(responses):
     with kodi.WorkingDialog():
@@ -101,15 +53,15 @@ def perform_auto_conf(responses):
     
         if responses[10]:
             tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
-                     ['IFlix', 'torba.se', 'MoviesPlanet', 'TVWTVS', 'MWM', '123Movies', 'niter.tv', 'YesMovies', 'HDFlix', 'HDMovie14', 'ororo.tv'],
-                     ['DayT.se', 'StreamLord', 'CyberReel', 'm4ufree', 'tunemovie', 'MovieBox', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD'],
+                     ['IFlix', 'torba.se', 'MoviesPlanet', '123Movies', '9Movies', 'DayT.se', 'niter.tv', 'YesMovies', 'HDFlix', 'HDMovie14', 'ororo.tv'],
+                     ['StreamLord', 'MovieFlix', 'CyberReel', 'm4ufree', 'tunemovie', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD', 'HDMovieFree'],
                      ['MovieGo', 'MovieXK', 'Stage66', 'PelisPedia', 'FardaDownload', 'vu45', 'PutMV', 'PirateJunkies', 'FireMoviesHD', 'SeriesWatch', 'VidNow4K'],
-                     ['HEVCBluRay', 'MovieZone', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
-                     ['vivo.to', 'CloudMovie', 'DDLValley', '2DDL', 'DDLSeries', 'CinemaMKV', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net'],
-                     ['IceFilms', 'Flixanity', 'Watch5s', 'Rainierland', 'WatchEpisodes', 'WatchItVideos', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries'],
-                     ['WatchSeries', 'RLSeries', 'Putlocker', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K'],
-                     ['afdah', 'SolarMovie', 'MiraDeTodo', 'Filmovizija', 'UFlix.org', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now'],
-                     ['yshows', 'iWatchOnline', 'vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD'],
+                     ['HeyDL', 'HEVCBluRay', 'MovieZone', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
+                     ['scene-rls', 'DDLValley', '2DDL', 'DDLSeries', 'Crazy4TV', 'SceneDown', 'CinemaMKV', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net'],
+                     ['vivo.to', 'IceFilms', 'Flixanity', 'Watch5s', 'Rainierland', 'WatchEpisodes', 'WatchItVideos', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries'],
+                     ['TVWTVS', 'MWM', 'WatchSeries', 'RLSeries', 'Putlocker', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K'],
+                     ['MovieHubs', 'tvrush', 'afdah', 'MiraDeTodo', 'Filmovizija', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now', 'SnagFilms'],
+                     ['Ventures', 'yshows', 'iWatchOnline', 'vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD'],
                      ['LosMovies', 'wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu', 'clickplay.to'],
                      ['MovieTube', 'FilmStreaming.in']]
         
@@ -143,7 +95,7 @@ def do_ip_auth(scraper, visit_url, qr_code):
     
     class IpAuthDialog(xbmcgui.WindowXMLDialog):
         def onInit(self):
-            # log_utils.log('onInit:', log_utils.LOGDEBUG)
+            # log_utils.log('onInit:', log_utils.LOGDEBUG, COMPONENT)
             self.cancel = False
             self.getControl(INSTR_LABEL).setLabel(i18n('ip_auth_line1') + visit_url + i18n('ip_auth_line2'))
             self.progress = self.getControl(PROGRESS_CTRL)
@@ -153,21 +105,21 @@ def do_ip_auth(scraper, visit_url, qr_code):
                 img.setImage(qr_code)
             
         def onAction(self, action):
-            # log_utils.log('Action: %s' % (action.getId()), log_utils.LOGDEBUG)
+            # log_utils.log('Action: %s' % (action.getId()), log_utils.LOGDEBUG, COMPONENT)
             if action == ACTION_PREVIOUS_MENU or action == ACTION_BACK:
                 self.cancel = True
                 self.close()
 
         def onControl(self, control):
-            # log_utils.log('onControl: %s' % (control), log_utils.LOGDEBUG)
+            # log_utils.log('onControl: %s' % (control), log_utils.LOGDEBUG, COMPONENT)
             pass
 
         def onFocus(self, control):
-            # log_utils.log('onFocus: %s' % (control), log_utils.LOGDEBUG)
+            # log_utils.log('onFocus: %s' % (control), log_utils.LOGDEBUG, COMPONENT)
             pass
 
         def onClick(self, control):
-            # log_utils.log('onClick: %s' % (control), log_utils.LOGDEBUG)
+            # log_utils.log('onClick: %s' % (control), log_utils.LOGDEBUG, COMPONENT)
             if control == CANCEL_BUTTON:
                 self.cancel = True
                 self.close()
@@ -203,7 +155,7 @@ def do_auto_config():
 
     class AutoConfDialog(xbmcgui.WindowXMLDialog):
         def onInit(self):
-            log_utils.log('onInit:', log_utils.LOGDEBUG)
+            log_utils.log('onInit:', log_utils.LOGDEBUG, COMPONENT)
             self.OK = False
             
             try: responses = json.loads(kodi.get_setting('prev_responses'))
@@ -215,24 +167,23 @@ def do_auto_config():
                 self.getControl(button).setSelected(response)
             
         def onAction(self, action):
-            # log_utils.log('Action: %s' % (action.getId()), log_utils.LOGDEBUG)
+            # log_utils.log('Action: %s' % (action.getId()), log_utils.LOGDEBUG, COMPONENT)
             if action == ACTION_PREVIOUS_MENU or action == ACTION_BACK:
                 self.close()
 
         def onControl(self, control):
-            # log_utils.log('onControl: %s' % (control), log_utils.LOGDEBUG)
+            # log_utils.log('onControl: %s' % (control), log_utils.LOGDEBUG, COMPONENT)
             pass
 
         def onFocus(self, control):
-            # log_utils.log('onFocus: %s' % (control), log_utils.LOGDEBUG)
+            # log_utils.log('onFocus: %s' % (control), log_utils.LOGDEBUG, COMPONENT)
             pass
 
         def onClick(self, control):
-            # log_utils.log('onClick: %s' % (control), log_utils.LOGDEBUG)
+            # log_utils.log('onClick: %s' % (control), log_utils.LOGDEBUG, COMPONENT)
             focus_button = self.getControl(control)
             if focus_button.getId() == RADIO_BUTTONS[-1]:
                 all_status = focus_button.isSelected()
-                log_utils.log(all_status)
                 for button in RADIO_BUTTONS:
                     self.getControl(button).setSelected(all_status)
             

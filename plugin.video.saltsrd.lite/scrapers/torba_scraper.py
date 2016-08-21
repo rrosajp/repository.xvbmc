@@ -20,16 +20,15 @@ import re
 import urllib
 import urlparse
 import xbmcvfs
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib import gui_utils
-from salts_lib import utils2
 import scraper
-
 
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 BASE_URL = 'http://torba.se'
@@ -47,7 +46,7 @@ M3U8_TEMPLATE = [
     '{video_stream}']
                   
 
-class TorbaSe_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -102,17 +101,13 @@ class TorbaSe_Scraper(scraper.Scraper):
         if not self.auth_url:
             return True, None
         
-        js_data = utils2.json_loads_as_str(self._http_get(self.auth_url, cache_limit=0))
+        js_data = utils.json_loads_as_str(self._http_get(self.auth_url, cache_limit=0))
         if 'url' in js_data:
             authorized = False
         else:
             authorized = True
         return authorized, js_data
     
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        return label
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []

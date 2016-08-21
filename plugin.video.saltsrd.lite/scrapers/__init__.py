@@ -1,10 +1,9 @@
-import datetime
 import os
 import re
 import time
 
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import utils2
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -12,79 +11,63 @@ from salts_lib.constants import VIDEO_TYPES
 __all__ = ['scraper', 
  'proxy', 
  'local_scraper', 
- 'mwm_proxy', 
-#'afdahorg_scraper', 
-#'123movies_scraper', (kapot)
-#'clickplay_scraper', (kapot)
- 'cloudmovie_scraper', 
  'dayt_scraper', 
-#'dizibox_scraper', 
  'dizigold_scraper', 
-#'dizilab_scraper', 
-#'dizimag_scraper', 
+ 'dizimag_scraper', 
  'emoviespro_scraper', 
  'farda_scraper', 
-#'fmovie_scraper', 
-#'ganool_scraper', (kapot)
-#'hdmovie14_scraper', 
-#'hevcbluray_scraper', 
- 'kiwihd_scraper', 
+ 'hdmovie14_scraper', 
+ 'hevcbluray_scraper', 
+ 'heydl_scraper', 
+ 'icefilms_scraper', 
+ 'm4ufree_scraper', 
  'miradetodo_scraper', 
-#'movieshd_scraper', 
+ 'movieflix_scraper', 
+ 'moviego_scraper', 
  'moviesub_scraper', 
  'moviexk_scraper', 
-#'nitertv_scraper', 
+ 'moviezone_scraper', 
  'pelispedia_scraper', 
  'piratejunkies_scraper', 
  'pubfilm_scraper', 
  'putmv_scraper', 
  'pw_scraper', 
+ 'rainierland_scraper', 
  'serieswatch_scraper', 
  'sezonlukdizi_scraper', 
+ 'spacemov_scraper', 
  'stage66_scraper', 
+ 'tunemovie_scraper', 
+ 'ventures_scraper', 
  'vivoto_scraper', 
- 'vu45_scraper', 
  'watch5s_scraper', 
-#'watchhd_scraper', (kapot)
-#'xmovies8_scraper', 
+ 'xmovies8_scraper', 
  'xmovies8v2_scraper', 
-#'2ddl_scraper', 
  'alluc_scraper', 
- 'cloudmovie_scraper', 
  'ddlseries_scraper', 
-#'ddlvalley_scraper', 
- 'directdl_scraper', 
-#'diziay_scraper', 
  'filmikz_scraper', 
- 'filmovizjia_scraper', 
-#'filmstreaming_scraper', 
- 'firemovies_scraper', 
- 'icefilms_scraper', 
-#'iwatch_scraper', 
- 'm4ufree_scraper', 
+ 'filmovizjia_scraper',  
+ 'iwatch_scraper', 
  'movie25_scraper', 
  'myvideolinks_scraper', 
-#'oneclicktvshows_scraper', 
+ 'oneclicktvshows_scraper', 
  'ororotv_scraper', 
  'pftv_scraper', 
  'putlocker_scraper', 
-#'rainierland_scraper', 
  'rlsbb_scraper', 
  'rlssource_scraper', 
- 'solar_scraper', 
  'tunemovie_scraper', 
-#'tvonline_scraper', 
- 'tvwtvs_proxy', 
-#'uflix_scraper', 
+ 'tvonline_scraper', 
  'vidics_scraper', 
  'watchfree_scraper', 
  'watchseries_scraper', 
-#'cinemamkv_scraper', 
-#'hdflix_scraper', 
- 'moviebox_scraper', 
- 'moviego_scraper', 
-#'watchitvideos_scraper', 
- 'yesmovies_scraper']
+ 'moviehubs_scraper', 
+ 'moviestorm_scraper', 
+ 'moviewatcher_scraper', 
+ 'tvrush_scraper', 
+ 'viooz_scraper', 
+ 'yesmovies_scraper', 
+ 'yshows_scraper']
 
 from . import *
     
@@ -100,10 +83,7 @@ class ScraperVideo:
         if isinstance(ep_title, unicode): self.ep_title = ep_title.encode('utf-8')
         else: self.ep_title = ep_title
         self.trakt_id = trakt_id
-        self.ep_airdate = None
-        if ep_airdate:
-            try: self.ep_airdate = datetime.datetime.strptime(ep_airdate, "%Y-%m-%d").date()
-            except (TypeError, ImportError): self.ep_airdate = datetime.date(*(time.strptime(ep_airdate, '%Y-%m-%d')[0:3]))
+        self.ep_airdate = utils2.to_datetime(ep_airdate, "%Y-%m-%d").date() if ep_airdate else None
 
     def __str__(self):
         return '|%s|%s|%s|%s|%s|%s|%s|' % (self.video_type, self.title, self.year, self.season, self.episode, self.ep_title, self.ep_airdate)

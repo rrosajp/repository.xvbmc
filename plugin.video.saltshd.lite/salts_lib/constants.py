@@ -68,7 +68,7 @@ TRIG_DB_UPG = False
 # sort keys need to be defined such that "best" have highest values
 # unknown (i.e. None) is always worst
 SORT_KEYS = {}
-SORT_KEYS['quality'] = {None: 0, QUALITIES.LOW: 1, QUALITIES.MEDIUM: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
+SORT_KEYS['quality'] = {None: 0, QUALITIES.HIGH: 1, QUALITIES.HIGH: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
 SORT_LIST = ['none', 'source', 'quality', 'views', 'rating', 'direct', 'debrid']
 SORT_SIGNS = {'0': -1, '1': 1}  # 0 = Best to Worst; 1 = Worst to Best
 
@@ -82,8 +82,8 @@ DISABLE_SETTINGS = __enum(OFF='0', PROMPT='1', ON='2')
 BLOG_Q_MAP = {}
 BLOG_Q_MAP[QUALITIES.LOW] = [' CAM ', ' TS ', ' R6 ', 'CAMRIP']
 BLOG_Q_MAP[QUALITIES.MEDIUM] = ['-XVID', '-MP4', 'MEDIUM']
-BLOG_Q_MAP[QUALITIES.HIGH] = ['HDRIP', 'DVDRIP', 'BRRIP', 'BDRIP', '480P', 'HDTV']
-BLOG_Q_MAP[QUALITIES.HD720] = ['720', 'HDTS', ' HD ']
+BLOG_Q_MAP[QUALITIES.HIGH] = ['HDRIP', 'DVDRIP', '480P', 'HDTV']
+BLOG_Q_MAP[QUALITIES.HD720] = ['720', 'HDTS', 'BRRIP', 'BDRIP', ' HD ']
 BLOG_Q_MAP[QUALITIES.HD1080] = ['1080']
 
 HOST_Q = {}
@@ -94,7 +94,7 @@ HOST_Q[QUALITIES.HIGH] = ['vidspot', 'mrfile', 'divxstage', 'streamcloud', 'moos
 HOST_Q[QUALITIES.HD720] = ['thefile', 'sharesix', 'filenuke', 'vidxden', 'movshare', 'nowvideo', 'vidbux', 'streamin.to', 'allvid.ch', 'weshare']
 HOST_Q[QUALITIES.HD1080] = ['hugefiles', '180upload', 'mightyupload', 'videomega', 'allmyvideos']
 
-Q_ORDER = {QUALITIES.LOW: 1, QUALITIES.MEDIUM: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
+Q_ORDER = {QUALITIES.HIGH: 1, QUALITIES.HIGH: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
 
 IMG_SIZES = ['full', 'medium', 'thumb']
 

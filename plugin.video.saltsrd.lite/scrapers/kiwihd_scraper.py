@@ -18,10 +18,10 @@
 import re
 import urllib
 import urlparse
-from salts_lib import dom_parser
-from salts_lib import kodi
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
@@ -29,7 +29,7 @@ import scraper
 
 BASE_URL = 'http://www.kiwihd.com'
 
-class KiwiHD_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -44,12 +44,6 @@ class KiwiHD_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'KiwiHD'
-
-    def resolve_link(self, link):
-        return link
-        
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -87,9 +81,11 @@ class KiwiHD_Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search?sitesearch=&q=%s&x=0&y=0')
-        search_url = search_url % (urllib.quote_plus(title))
+        if not year: return results
+        search_url = urlparse.urljoin(self.base_url, '/search/label/%s&max-results=50')
+        search_url = search_url % (year)
         html = self._http_get(search_url, cache_limit=8)
+        norm_title = scraper_utils.normalize_title(title)
         for item in dom_parser.parse_dom(html, 'div', {'class': "[^']*hentry[^']*"}):
             tags = dom_parser.parse_dom(item, 'a', {'rel': 'tag'})
             post_title = dom_parser.parse_dom(item, 'h\d+', {'class': "[^']*post-title[^']*"})
@@ -119,7 +115,7 @@ class KiwiHD_Scraper(scraper.Scraper):
                         match_title = match_title_year
                         match_year = ''
                 
-                    if not year or not match_year or year == match_year:
+                    if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
                         result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                         results.append(result)
         return results

@@ -19,17 +19,17 @@ import scraper
 import urlparse
 import urllib
 import re
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import kodi
-from salts_lib import log_utils
-from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
 BASE_URL = 'http://vu45.com'
 
-class VU45_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -51,9 +51,6 @@ class VU45_Scraper(scraper.Scraper):
                 return sources[0]
         else:
             return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -96,7 +93,7 @@ class VU45_Scraper(scraper.Scraper):
         sources = []
         direct = True
         headers = {'Referer': page_url}
-        html = self._http_get(iframe_url, headers=headers, cache_limit=0)
+        html = self._http_get(iframe_url, headers=headers, cache_limit=2)
         iframe_url2 = dom_parser.parse_dom(html, 'iframe', ret='src')
         if iframe_url2 and 'token=&' not in iframe_url2[0]:
             headers = {'Referer': iframe_url}
