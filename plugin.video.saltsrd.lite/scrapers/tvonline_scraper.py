@@ -18,19 +18,18 @@
 import re
 import urlparse
 import base64
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
 import scraper
 
-
 BASE_URL = 'http://opentuner.is'
 
-class TVOnlineTW_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -45,25 +44,25 @@ class TVOnlineTW_Scraper(scraper.Scraper):
     def get_name(cls):
         return 'tvonline'
 
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        return label
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=.25)
-            for match in re.finditer('''/go.php\?url=([^"&]+)''', html):
-                stream_url = base64.b64decode(match.group(1))
-                host = urlparse.urlparse(stream_url).hostname
-                quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
-                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
-                hosters.append(hoster)
+            for button in dom_parser.parse_dom(html, 'li', {'class': 'playing_button'}):
+                try:
+                    link = dom_parser.parse_dom(button, 'a', ret='href')
+                    match = re.search('php\?.*?=?([^"]+)', link[0])
+                    stream_url = base64.b64decode(match.group(1))
+                    match = re.search('(http://.*)', stream_url)
+                    stream_url = match.group(1)
+                    host = urlparse.urlparse(stream_url).hostname
+                    quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': False}
+                    hosters.append(hoster)
+                except Exception as e:
+                    log_utils.log('Exception during tvonline source: %s - |%s|' % (e, button), log_utils.LOGDEBUG)
     
         return hosters
 
@@ -75,9 +74,11 @@ class TVOnlineTW_Scraper(scraper.Scraper):
     def search(self, video_type, title, year, season=''):
         results = []
         if title:
-            search_url = '/alphabet/%s/' % (title[:1].lower())
+            first_letter = title[:1].lower()
+            if first_letter.isdigit(): first_letter = '0-9'
+            search_url = '/alphabet/%s/' % (first_letter)
             search_url = urlparse.urljoin(self.base_url, search_url)
-            html = self._http_get(search_url, cache_limit=8)
+            html = self._http_get(search_url, cache_limit=24)
             fragment = dom_parser.parse_dom(html, 'div', {'class': 'home'})
             if fragment:
                 norm_title = scraper_utils.normalize_title(title)

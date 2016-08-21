@@ -18,19 +18,18 @@
 import urlparse
 import base64
 import datetime
-import time
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.kodi import i18n
+from salts_lib.utils2 import i18n
 import scraper
 
 BASE_URL = 'https://ororo.tv'
 
-class OroroTV_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -46,13 +45,6 @@ class OroroTV_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'ororo.tv'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -85,8 +77,7 @@ class OroroTV_Scraper(scraper.Scraper):
                     if kodi.get_setting('airdate-fallback') == 'true' and video.ep_airdate:
                         for episode in js_data['episodes']:
                             if 'airdate' in episode:
-                                try: ep_airdate = datetime.datetime.strptime(episode['airdate'], "%Y-%m-%d").date()
-                                except (TypeError, ImportError): ep_airdate = datetime.date(*(time.strptime(episode['airdate'], '%Y-%m-%d')[0:3]))
+                                ep_airdate = scraper_utils.to_datetime(episode['airdate'], "%Y-%m-%d").date()
                                 if video.ep_airdate == (ep_airdate - datetime.timedelta(days=1)):
                                     return scraper_utils.pathify_url('?id=%s' % (episode['id']))
                 else:

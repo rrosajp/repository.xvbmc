@@ -18,24 +18,24 @@
 import re
 import urllib
 import urlparse
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib.kodi import i18n
+from salts_lib.utils2 import i18n
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://www.moviesub.net'
-BASE_URL2 = 'http://www.moviesub.tv'
+BASE_URL = 'http://moviesub.net'
+BASE_URL2 = 'http://moviesub.tv'
 LINK_URL = '/ip.temp/swf/plugins/ipplugins.php'
 LINK_URL2 = '/Htplugins/Loader.php'
 LINK_URL3 = '/ip.temp/swf/ipplayer/ipplayer.php?u=%s&w=100%%&h=450'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class MovieSub_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
     tv_base_url = BASE_URL2
 
@@ -51,13 +51,6 @@ class MovieSub_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'MovieSub'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -110,17 +103,17 @@ class MovieSub_Scraper(scraper.Scraper):
             server_id = dom_parser.parse_dom(link, 'a', ret='data-server')
             if film_id and name_id and server_id:
                 data = {'ipplugins': 1, 'ip_film': film_id[0], 'ip_server': server_id[0], 'ip_name': name_id[0]}
-                headers = XHR
-                headers['Referer'] = page_url
+                headers = {'Referer': page_url}
+                headers.update(XHR)
                 url = urlparse.urljoin(self.__get_base_url(video_type), LINK_URL)
                 html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
                 js_data = scraper_utils.parse_json(html, url)
                 if 's' in js_data and isinstance(js_data['s'], basestring):
                     url = urlparse.urljoin(self.__get_base_url(video_type), LINK_URL3)
                     url = url % (js_data['s'])
-                    html = self._http_get(url, headers=headers, cache_limit=0)
+                    html = self._http_get(url, headers=headers, cache_limit=.25)
                     js_data = scraper_utils.parse_json(html, url)
-                    if 'data' in js_data:
+                    if 'data' in js_data and js_data['data']:
                         if isinstance(js_data['data'], basestring):
                             sources[js_data['data']] = QUALITIES.HIGH
                         else:

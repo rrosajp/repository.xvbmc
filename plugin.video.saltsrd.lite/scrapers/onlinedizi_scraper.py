@@ -18,9 +18,9 @@
 import re
 import urlparse
 import urllib
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -30,7 +30,7 @@ import scraper
 
 BASE_URL = 'http://onlinedizi.co'
 
-class OnlineDizi_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -44,13 +44,6 @@ class OnlineDizi_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'OnlineDizi'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)

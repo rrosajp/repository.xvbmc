@@ -18,10 +18,9 @@
 import re
 import urllib
 import urlparse
-
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -33,7 +32,7 @@ BASE_URL = 'http://pubfilm.com'
 GK_URL = 'http://player.pubfilm.com/smplayer/plugins/gkphp/plugins/gkpluginsphp.php'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class PubFilm_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -47,15 +46,6 @@ class PubFilm_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'pubfilm'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        if 'views' in item and item['views']:
-            label += ' (%s views)' % item['views']
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -137,7 +127,7 @@ class PubFilm_Scraper(scraper.Scraper):
     
     def __get_episode_links(self, html):
         links = dom_parser.parse_dom(html, 'a', {'target': 'EZWebPlayer'}, ret='href')
-        labels = dom_parser.parse_dom(html, 'input', {'class': '[^"]*abutton[^"]*'}, ret='value')
+        labels = dom_parser.parse_dom(html, 'a', {'target': 'EZWebPlayer'})
         labels = [re.sub('[^\d]', '', label) for label in labels]
         episodes = [(label, link) for label, link in zip(labels, links) if label.isdigit()]
         return episodes

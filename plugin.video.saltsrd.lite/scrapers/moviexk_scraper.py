@@ -18,10 +18,9 @@
 import re
 import urllib
 import urlparse
-
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -31,7 +30,7 @@ import scraper
 
 BASE_URL = 'http://moviexk.org'
 
-class MoxieXK_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -45,12 +44,6 @@ class MoxieXK_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'MovieXK'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -90,7 +83,7 @@ class MoxieXK_Scraper(scraper.Scraper):
                     else:
                         quality = QUALITIES.HIGH
                 
-                stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), url)
+                stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), urllib.quote(url))
                 source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
                 sources.append(source)
 

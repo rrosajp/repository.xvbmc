@@ -18,22 +18,21 @@
 import re
 import urllib
 import urlparse
-import json
-from salts_lib import dom_parser
-from salts_lib import kodi
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.kodi import i18n
+from salts_lib.utils2 import i18n
 import scraper
 
 BASE_URL = 'http://hdflix.tv'
 SEARCH_URL = '/newmov.php?menu=%s&query=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class HDFlix_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -50,18 +49,14 @@ class HDFlix_Scraper(scraper.Scraper):
     def get_name(cls):
         return 'HDFlix'
 
-    def resolve_link(self, link):
-        return link
-        
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=.5)
+            hosters += self.__add_sources(dom_parser.parse_dom(html, 'a', {'rel': 'nofollow'}, ret='href'), video)
+            
             sources = []
             for match in re.finditer('''\$\.get\('([^']+)'\s*,\s*(\{.*?\})''', html):
                 ajax_url, params = match.groups()
@@ -72,24 +67,27 @@ class HDFlix_Scraper(scraper.Scraper):
                 html = self._http_get(ajax_url, headers=headers, auth=False, cache_limit=.5)
                 sources += dom_parser.parse_dom(html, 'source', {'type': '''video[^'"]*'''}, ret='src')
                 sources += dom_parser.parse_dom(html, 'iframe', ret='src')
-            
-            for source in sources:
-                if self._get_direct_hostname(source) == 'gvideo':
-                    host = self._get_direct_hostname(source)
-                    quality = scraper_utils.gv_get_quality(source)
-                    stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
-                    direct = True
-                else:
-                    host = urlparse.urlparse(source).hostname
-                    quality = QUALITIES.HIGH
-                    stream_url = source
-                    direct = False
-                
-                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': direct}
-                hosters.append(hoster)
-
+            hosters += self.__add_sources(sources, video, QUALITIES.HD720)
         return hosters
 
+    def __add_sources(self, sources, video, quality=QUALITIES.HIGH):
+        hosters = []
+        for source in sources:
+            if self._get_direct_hostname(source) == 'gvideo':
+                host = self._get_direct_hostname(source)
+                quality = scraper_utils.gv_get_quality(source)
+                stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+                direct = True
+            else:
+                host = urlparse.urlparse(source).hostname
+                quality = scraper_utils.get_quality(video, host, quality)
+                stream_url = source
+                direct = False
+            
+            hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': direct}
+            hosters.append(hoster)
+        return hosters
+        
     def _get_episode_url(self, season_url, video):
         episode_pattern = 'href="([^"]*/season/0*%s/episode/0*%s(?!\d)[^"]*)' % (video.season, video.episode)
         title_pattern = 'href="(?P<url>[^"]+)">\s*Episode.*?class="tv_episode_name"[^>]*>\s*(?P<title>[^<]+)'
@@ -103,7 +101,7 @@ class HDFlix_Scraper(scraper.Scraper):
         else:
             search = 'searchshow'
         search_url = search_url % (search, urllib.quote(title))
-        html = self._http_get(search_url, cache_limit=0)
+        html = self._http_get(search_url, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'movie'}):
             match_url = dom_parser.parse_dom(item, 'a', {'class': 'poster'}, ret='href')
             match_title = dom_parser.parse_dom(item, 'div', {'class': 'title'})

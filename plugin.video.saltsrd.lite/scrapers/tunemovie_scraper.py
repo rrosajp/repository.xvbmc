@@ -19,15 +19,14 @@ import re
 import urllib
 import urlparse
 import base64
-from salts_lib import dom_parser
-from salts_lib import kodi
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import log_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
-
 
 BASE_URL = 'http://tunemovies.to'
 LINK_URL = '/ip.temp/swf/plugins/ipplugins.php'
@@ -35,7 +34,7 @@ LINK_URL2 = '/ip.temp/swf/ipplayer/ipplayer.php?u=%s&w=100%%&h=420'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 GK_KEY = base64.b64decode('Q05WTmhPSjlXM1BmeFd0UEtiOGg=')
 
-class TuneMovie_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -49,15 +48,6 @@ class TuneMovie_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'tunemovie'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        if 'views' in item and item['views']:
-            label += ' (%s views)' % item['views']
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)

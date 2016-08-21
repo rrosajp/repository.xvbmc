@@ -19,19 +19,19 @@ import scraper
 import urlparse
 import urllib
 import re
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import kodi
-from salts_lib import log_utils
-from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
-BASE_URL = 'http://moviego.co'
+BASE_URL = 'http://moviego.cc'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 Q_MAP = {'HD1080': QUALITIES.HD1080, 'HD720': QUALITIES.HD720, 'SD480': QUALITIES.HIGH, 'CAMRIP': QUALITIES.LOW}
 
-class MovieGo_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -45,12 +45,6 @@ class MovieGo_Scraper(scraper.Scraper):
     @classmethod
     def get_name(cls):
         return 'MovieGo'
-
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -79,7 +73,7 @@ class MovieGo_Scraper(scraper.Scraper):
                     else:
                         quality = page_quality
                         
-                    stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), page_url)
+                    stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), urllib.quote(page_url))
                     source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
                     sources.append(source)
 
@@ -96,29 +90,29 @@ class MovieGo_Scraper(scraper.Scraper):
             headers.update(XHR)
             html = self._http_get(ajax_url, headers=headers, cache_limit=.5)
             js_data = scraper_utils.parse_json(html, ajax_url)
-            if 'file' in js_data:
-                stream_url = js_data['file']
+            stream_url = js_data.get('file', '')
         return stream_url
     
     def search(self, video_type, title, year, season=''):
         results = []
         data = {'subaction': 'search', 'do': 'search', 'story': urllib.quote(title)}
         html = self._http_get(self.base_url, data=data, cache_limit=8)
-        for item in dom_parser.parse_dom(html, 'div', {'class': 'short_content'}):
-            match = re.search('href="([^"]+)', item)
-            match_title_year = dom_parser.parse_dom(item, 'div', {'class': 'short_header'})
-            if match and match_title_year:
-                url = match.group(1)
-                match_title_year = match_title_year[0]
-                match = re.search('(.*?)\s+\((\d{4})\)\s*', match_title_year)
-                if match:
-                    match_title, match_year = match.groups()
-                else:
-                    match_title = match_title_year
-                    match_year = ''
-                
-                if not year or not match_year or year == match_year:
-                    result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(url)}
-                    results.append(result)
+        if dom_parser.parse_dom(html, 'div', {'class': 'sresult'}):
+            for item in dom_parser.parse_dom(html, 'div', {'class': 'short_content'}):
+                match = re.search('href="([^"]+)', item)
+                match_title_year = dom_parser.parse_dom(item, 'div', {'class': 'short_header'})
+                if match and match_title_year:
+                    url = match.group(1)
+                    match_title_year = match_title_year[0]
+                    match = re.search('(.*?)\s+\((\d{4})\)\s*', match_title_year)
+                    if match:
+                        match_title, match_year = match.groups()
+                    else:
+                        match_title = match_title_year
+                        match_year = ''
+                    
+                    if not year or not match_year or year == match_year:
+                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(url)}
+                        results.append(result)
 
         return results

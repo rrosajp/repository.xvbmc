@@ -20,18 +20,20 @@ import re
 import urllib2
 import urllib
 import urlparse
-from salts_lib import log_utils
+import log_utils
 from salts_lib import recaptcha_v2
 from salts_lib.constants import USER_AGENT
 
+COMPONENT = __name__
+
 class NoRedirection(urllib2.HTTPErrorProcessor):
     def http_response(self, request, response):
-        log_utils.log('Stopping Redirect', log_utils.LOGDEBUG)
+        log_utils.log('Stopping Redirect', log_utils.LOGDEBUG, COMPONENT)
         return response
 
     https_response = http_response
 
-def solve(url, cj, user_agent=None):
+def solve(url, cj, user_agent=None, name=None):
     if user_agent is None: user_agent = USER_AGENT
     headers = {'User-Agent': user_agent, 'Referer': url}
     request = urllib2.Request(url)
@@ -45,7 +47,7 @@ def solve(url, cj, user_agent=None):
     match = re.search('data-sitekey="([^"]+)', html)
     match1 = re.search('data-ray="([^"]+)', html)
     if match and match1:
-        token = recaptcha_v2.UnCaptchaReCaptcha().processCaptcha(match.group(1), lang='en')
+        token = recaptcha_v2.UnCaptchaReCaptcha().processCaptcha(match.group(1), lang='en', name=name)
         if token:
             data = {'g-recaptcha-response': token, 'id': match1.group(1)}
             scheme = urlparse.urlparse(url).scheme
@@ -57,28 +59,28 @@ def solve(url, cj, user_agent=None):
                 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
                 urllib2.install_opener(opener)
 
-        request = urllib2.Request(url)
-        for key in headers: request.add_header(key, headers[key])
-        try:
-            opener = urllib2.build_opener(NoRedirection)
-            urllib2.install_opener(opener)
-            response = urllib2.urlopen(request)
-            while response.getcode() in [301, 302, 303, 307]:
-                if cj is not None:
-                    cj.extract_cookies(response, request)
-                request = urllib2.Request(response.info().getheader('location'))
+            try:
+                request = urllib2.Request(url)
                 for key in headers: request.add_header(key, headers[key])
-                if cj is not None:
-                    cj.add_cookie_header(request)
-                    
+                opener = urllib2.build_opener(NoRedirection)
+                urllib2.install_opener(opener)
                 response = urllib2.urlopen(request)
-            final = response.read()
-            if cj is not None:
-                cj.save()
-                
-            return final
-        except urllib2.HTTPError as e:
-            log_utils.log('CF Captcha Error: %s on url: %s' % (e.code, url), log_utils.LOGWARNING)
-            return False
+                while response.getcode() in [301, 302, 303, 307]:
+                    if cj is not None:
+                        cj.extract_cookies(response, request)
+                    request = urllib2.Request(response.info().getheader('location'))
+                    for key in headers: request.add_header(key, headers[key])
+                    if cj is not None:
+                        cj.add_cookie_header(request)
+                        
+                    response = urllib2.urlopen(request)
+                final = response.read()
+                if cj is not None:
+                    cj.save()
+                    
+                return final
+            except urllib2.HTTPError as e:
+                log_utils.log('CF Captcha Error: %s on url: %s' % (e.code, url), log_utils.LOGWARNING, COMPONENT)
+                return False
     else:
-        log_utils.log('CF Captcha without sitekey/data-ray: %s' % (url), log_utils.LOGWARNING)
+        log_utils.log('CF Captcha without sitekey/data-ray: %s' % (url), log_utils.LOGWARNING, COMPONENT)

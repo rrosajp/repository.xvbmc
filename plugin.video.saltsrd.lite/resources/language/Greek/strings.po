@@ -2,16 +2,17 @@
 # Addon id: plugin.video.saltshd.lite
 # Addon Provider: TV Addons
 # Translators:
-# maikkoum <maiko77@pathfinder.gr>, 2016
-# maikkoum <maiko77@pathfinder.gr>, 2016
-# maikkoum <maiko77@pathfinder.gr>, 2016
-# maikkoum <maiko77@pathfinder.gr>, 2016
-# maikkoum <maiko77@pathfinder.gr>, 2016
+# Maiko77 <maiko77@pathfinder.gr>, 2016
+# Maiko77 <maiko77@pathfinder.gr>, 2016
+# Maiko77 <maiko77@pathfinder.gr>, 2016
+# Maiko77 <maiko77@pathfinder.gr>, 2016
+# Maiko77 <maiko77@pathfinder.gr>, 2016
+# Spiros Moshopoulos <spirosmoshopoulos@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2016-05-06 02:47+0000\n"
+"PO-Revision-Date: 2016-07-09 06:39+0000\n"
 "Last-Translator: tknorris\n"
 "Language-Team: Greek (http://www.transifex.com/tv-addons/salts/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +99,7 @@ msgstr "Οι Συνδρομές μου"
 
 msgctxt "#30019"
 msgid "My Watchlist"
-msgstr "Η Λιστα Παρακολουθησης μου"
+msgstr "Η Λίστα Παρακολούθησης μου"
 
 msgctxt "#30020"
 msgid "My Lists"
@@ -408,14 +409,6 @@ msgctxt "#30124"
 msgid "Next Week"
 msgstr "Επόμενη Εβδομάδα"
 
-msgctxt "#30125"
-msgid "Mark as Unwatched"
-msgstr "Σήμανση ως μη προβληθέν"
-
-msgctxt "#30126"
-msgid "Mark as Watched"
-msgstr "Σήμανση ως προβληθέν"
-
 msgctxt "#30127"
 msgid "Rate on trakt.tv"
 msgstr "Αξιολογήσει σε trakt.tv"
@@ -615,10 +608,6 @@ msgstr "Ο Σελιδοδείκτης Διαγράφηκε"
 msgctxt "#30218"
 msgid "Getting Sources"
 msgstr "Λαμβάνει Πηγές"
-
-msgctxt "#30220"
-msgid "Received %s Sources from: %s"
-msgstr "Ελήφθηκαν %s Πηγές από: %s"
 
 msgctxt "#30226"
 msgid "Failed: [%s] %s from %s"

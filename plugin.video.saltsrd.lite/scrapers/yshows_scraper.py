@@ -18,9 +18,9 @@
 import re
 import urlparse
 import urllib
-from salts_lib import dom_parser
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -28,9 +28,10 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 BASE_URL = 'http://yshow.me'
+QUALITY_MAP = {'DVD': QUALITIES.HIGH, 'TS': QUALITIES.MEDIUM, 'CAM': QUALITIES.LOW}
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class YShows_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -39,7 +40,7 @@ class YShows_Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE])
+        return frozenset([VIDEO_TYPES.MOVIE])
 
     @classmethod
     def get_name(cls):
@@ -52,41 +53,36 @@ class YShows_Scraper(scraper.Scraper):
         if match:
             return match.group(1)
 
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        return label
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=.25)
-            for td in dom_parser.parse_dom(html, 'td', {'class': '[^"]*text-xs-left[^"]*'}):
-                link = dom_parser.parse_dom(td, 'a', ret='href')
-                host = dom_parser.parse_dom(td, 'img', ret='alt')
+            for tr in dom_parser.parse_dom(html, 'tr'):
+                link = dom_parser.parse_dom(tr, 'a', ret='href')
+                host = dom_parser.parse_dom(tr, 'a')
+                q_str = dom_parser.parse_dom(tr, 'span')
                 if link and host:
                     host = host[0]
                     link = link[0]
-                    quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
+                    q_str = q_str[0] if q_str else ''
+                    quality = scraper_utils.get_quality(video, host, QUALITY_MAP.get(q_str.upper(), QUALITIES.HIGH))
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': link, 'direct': False}
                     hosters.append(hoster)
         return hosters
-
-    def _get_episode_url(self, show_url, video):
-        episode_pattern = 'href="([^"]+-[sS]%s[Ee]%s[^"]+)' % (video.season, video.episode)
-        title_pattern = 'href="(?P<url>[^"]+[Ss]\d+-?[Ee]\d+[^"]+).*?Episode\s+\d+\s*:\s*(?P<title>[^<]+)'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year, season=''):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search?q=%s')
         search_url = search_url % (urllib.quote_plus(title))
         html = self._http_get(search_url, cache_limit=8)
-        fragment = dom_parser.parse_dom(html, 'div', {'class': 'col-md-9'})
+        fragment = dom_parser.parse_dom(html, 'div', {'class': 'col-sm-9'})
         if fragment:
-            for match in re.finditer('href="([^"]+)[^>]+>([^<]+)', fragment[0]):
-                url, match_title = match.groups()
-                result = {'url': scraper_utils.pathify_url(url), 'title': scraper_utils.cleanse_title(match_title), 'year': ''}
+            links = dom_parser.parse_dom(fragment[0], 'a', ret='href')
+            titles = dom_parser.parse_dom(fragment[0], 'a')
+            for match_url, match_title in zip(links, titles):
+                match_title = re.sub('</?[^>]*>', '', match_title)
+                result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': ''}
                 results.append(result)
         return results

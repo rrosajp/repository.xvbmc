@@ -21,9 +21,8 @@ import re
 import string
 import urllib
 import urlparse
-
-from salts_lib import kodi
-from salts_lib import log_utils
+import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -36,7 +35,7 @@ BASE_URL = 'http://www.icefilms.info'
 LIST_URL = BASE_URL + '/membersonly/components/com_iceplayer/video.php?h=374&w=631&vid=%s&img='
 AJAX_URL = '/membersonly/components/com_iceplayer/video.phpAjaxResp.php?id=%s&s=%s&iqs=&url=&m=%s&cap= &sec=%s&t=%s'
 
-class IceFilms_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -45,7 +44,7 @@ class IceFilms_Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE, VIDEO_TYPES.MOVIE])
+        return frozenset([VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE])
 
     @classmethod
     def get_name(cls):
@@ -63,10 +62,6 @@ class IceFilms_Scraper(scraper.Scraper):
         if match:
             url = urllib.unquote_plus(match.group(1))
             return url
-
-    def format_source_label(self, item):
-        label = '[%s] %s%s' % (item['quality'], item['label'], item['host'])
-        return label
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -106,7 +101,7 @@ class IceFilms_Scraper(scraper.Scraper):
                     pattern = '''onclick='go\((\d+)\)'>([^<]+)(<span.*?)</a>'''
                     for match in re.finditer(pattern, fragment):
                         link_id, label, host_fragment = match.groups()
-                        source = {'multi-part': False, 'quality': quality, 'class': self, 'label': label, 'rating': None, 'views': None, 'direct': False}
+                        source = {'multi-part': False, 'quality': quality, 'class': self, 'version': label, 'rating': None, 'views': None, 'direct': False}
                         source['host'] = re.sub('(<[^>]+>|</span>)', '', host_fragment)
                         s = s_start + random.randint(3, 1000)
                         m = m_start + random.randint(21, 1000)

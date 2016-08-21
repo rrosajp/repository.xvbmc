@@ -36,7 +36,7 @@ MODES = __enum(
     PLAYED='played', WATCHED='watched', COLLECTED='collected', SHOW_BOOKMARKS='show_bookmarks', DELETE_BOOKMARK='delete_bookmark', SHOW_HISTORY='show_history',
     RESET_FAILS='reset_failures', MANAGE_PROGRESS='toggle_progress', AUTOPLAY='autoplay', INSTALL_THEMES='install_themes', RESET_REL_URLS='reset_rel_urls',
     ANTICIPATED='anticipated', SHOW_REWATCH='show_rewatch', PICK_REWATCH_LIST='pick_rewatch_list', SET_REWATCH_LIST='set_rewatch_list', MANAGE_REWATCH='manage_rewatch',
-    BUILD_SOURCE_DIR='build_source_dir', GENRES='genres', SHOW_GENRE='show_genre')
+    BUILD_SOURCE_DIR='build_source_dir', GENRES='genres', SHOW_GENRE='show_genre', PRUNE_CACHE='prune_cache')
 SECTIONS = __enum(TV='TV', MOVIES='Movies')
 VIDEO_TYPES = __enum(TVSHOW='TV Show', MOVIE='Movie', EPISODE='Episode', SEASON='Season')
 CONTENT_TYPES = __enum(TVSHOWS='tvshows', MOVIES='movies', SEASONS='seasons', EPISODES='episodes', FILES='files')
@@ -48,7 +48,7 @@ TRAKT_LIST_SORT = __enum(RANK='rank', RECENTLY_ADDED='added', TITLE='title', REL
 TRAKT_SORT_DIR = __enum(ASCENDING='asc', DESCENDING='desc')
 SORT_MAP = [TRAKT_SORT.ACTIVITY, TRAKT_SORT.TITLE, TRAKT_SORT.MOST_COMPLETED, TRAKT_SORT.LEAST_COMPLETED, TRAKT_SORT.RECENTLY_AIRED,
             TRAKT_SORT.PREVIOUSLY_AIRED]
-QUALITIES = __enum(LOW='Low', MEDIUM='Medium', HIGH='High', HD720='HD720', HD1080='HD1080')
+QUALITIES = __enum(LOW='High', MEDIUM='High', HIGH='High', HD720='HD720', HD1080='HD1080')
 DIRS = __enum(UP='up', DOWN='down')
 REWATCH_METHODS = __enum(LAST_WATCHED='last_watched', LEAST_WATCHED='min_watched', MOST_WATCHED='max_watched')
 GENRE_LIST = __enum(TRENDING=0, POPULAR=1, ANTICIPATED=2, MOST_WATCHED_WEEK=3, MOST_WATCHED_MONTH=4, MOST_WATCHED_ALL=5,
@@ -68,7 +68,7 @@ TRIG_DB_UPG = False
 # sort keys need to be defined such that "best" have highest values
 # unknown (i.e. None) is always worst
 SORT_KEYS = {}
-SORT_KEYS['quality'] = {None: 0, QUALITIES.LOW: 1, QUALITIES.MEDIUM: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
+SORT_KEYS['quality'] = {None: 0, QUALITIES.HIGH: 1, QUALITIES.HIGH: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
 SORT_LIST = ['none', 'source', 'quality', 'views', 'rating', 'direct', 'debrid']
 SORT_SIGNS = {'0': -1, '1': 1}  # 0 = Best to Worst; 1 = Worst to Best
 
@@ -82,8 +82,8 @@ DISABLE_SETTINGS = __enum(OFF='0', PROMPT='1', ON='2')
 BLOG_Q_MAP = {}
 BLOG_Q_MAP[QUALITIES.LOW] = [' CAM ', ' TS ', ' R6 ', 'CAMRIP']
 BLOG_Q_MAP[QUALITIES.MEDIUM] = ['-XVID', '-MP4', 'MEDIUM']
-BLOG_Q_MAP[QUALITIES.HIGH] = ['HDRIP', 'DVDRIP', 'BRRIP', 'BDRIP', '480P', 'HDTV']
-BLOG_Q_MAP[QUALITIES.HD720] = ['720', 'HDTS', ' HD ']
+BLOG_Q_MAP[QUALITIES.HIGH] = ['HDRIP', 'DVDRIP', '480P', 'HDTV']
+BLOG_Q_MAP[QUALITIES.HD720] = ['720', 'HDTS', 'BRRIP', 'BDRIP', ' HD ']
 BLOG_Q_MAP[QUALITIES.HD1080] = ['1080']
 
 HOST_Q = {}
@@ -94,19 +94,22 @@ HOST_Q[QUALITIES.HIGH] = ['vidspot', 'mrfile', 'divxstage', 'streamcloud', 'moos
 HOST_Q[QUALITIES.HD720] = ['thefile', 'sharesix', 'filenuke', 'vidxden', 'movshare', 'nowvideo', 'vidbux', 'streamin.to', 'allvid.ch', 'weshare']
 HOST_Q[QUALITIES.HD1080] = ['hugefiles', '180upload', 'mightyupload', 'videomega', 'allmyvideos']
 
-Q_ORDER = {QUALITIES.LOW: 1, QUALITIES.MEDIUM: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
+Q_ORDER = {QUALITIES.HIGH: 1, QUALITIES.HIGH: 2, QUALITIES.HIGH: 3, QUALITIES.HD720: 4, QUALITIES.HD1080: 5}
 
 IMG_SIZES = ['full', 'medium', 'thumb']
 
+XHR = {'X-Requested-With': 'XMLHttpRequest'}
 USER_AGENT = "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
 BR_VERS = [
-    ['%s.0' % i for i in xrange(18, 47)],
+    ['%s.0' % i for i in xrange(18, 48)],
     ['37.0.2062.103', '37.0.2062.120', '37.0.2062.124', '38.0.2125.101', '38.0.2125.104', '38.0.2125.111', '39.0.2171.71', '39.0.2171.95', '39.0.2171.99', '40.0.2214.93', '40.0.2214.111',
      '40.0.2214.115', '42.0.2311.90', '42.0.2311.135', '42.0.2311.152', '43.0.2357.81', '43.0.2357.124', '44.0.2403.155', '44.0.2403.157', '45.0.2454.101', '45.0.2454.85', '46.0.2490.71',
      '46.0.2490.80', '46.0.2490.86', '47.0.2526.73', '47.0.2526.80', '48.0.2564.116', '49.0.2623.112', '50.0.2661.86'],
-    ['11.0']]
+    ['11.0'],
+    ['8.0', '9.0', '10.0', '10.6']]
 WIN_VERS = ['Windows NT 10.0', 'Windows NT 7.0', 'Windows NT 6.3', 'Windows NT 6.2', 'Windows NT 6.1', 'Windows NT 6.0', 'Windows NT 5.1', 'Windows NT 5.0']
 FEATURES = ['; WOW64', '; Win64; IA64', '; Win64; x64', '']
 RAND_UAS = ['Mozilla/5.0 ({win_ver}{feature}; rv:{br_ver}) Gecko/20100101 Firefox/{br_ver}',
             'Mozilla/5.0 ({win_ver}{feature}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{br_ver} Safari/537.36',
-            'Mozilla/5.0 ({win_ver}{feature}; Trident/7.0; rv:{br_ver}) like Gecko']
+            'Mozilla/5.0 ({win_ver}{feature}; Trident/7.0; rv:{br_ver}) like Gecko',
+            'Mozilla/5.0 (compatible; MSIE {br_ver}; {win_ver}{feature}; Trident/6.0)']

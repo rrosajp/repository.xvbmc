@@ -37,11 +37,12 @@ QP_URL = '/ajax/v2_movie_quick_play/%s/%s/%s.html'
 SL_URL = '/ajax/v3_movie_get_episodes/%s/%s/%s/%s.html'
 PLAYLIST_URL1 = '/ajax/movie_load_embed/%s.html'
 PLAYLIST_URL2 = '/ajax/v4_episode_get_sources/%s/%s.html'
+PLAYLIST_URL3 = '/ajax/get_sources/%s/%s.html'
 SEARCH_KEY = ''
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
-COOKIE1 = base64.b64decode('Mm1lNmNmaDk=')
-COOKIE2 = base64.b64decode('YTZyMzY1d2c=')
-KEY = base64.b64decode('SE92OVlLNmVncA==')
+COOKIE1 = base64.b64decode('eHdoMzhpZjM5dWN4')
+COOKIE2 = base64.b64decode('OHFoZm05b3lxMXV4')
+KEY = base64.b64decode('Y3RpdzR6bHJuMDl0YXU3a3F2YzE1M3Vv')
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -93,8 +94,11 @@ class Scraper(scraper.Scraper):
                     token = self.__get_token()
                     cookie = {'%s%s%s' % (COOKIE1, link_id, COOKIE2): token}
                     url_hash = hashlib.md5(link_id + token + KEY).hexdigest()
-                    url = urlparse.urljoin(self.base_url, PLAYLIST_URL2 % (link_id, url_hash))
-                    sources = self.__get_links_from_xml(url, video, page_url, cookie)
+                    url = urlparse.urljoin(self.base_url, PLAYLIST_URL3 % (link_id, url_hash))
+                    sources = self.__get_links_from_json2(url, page_url, cookie)
+                    if not sources:
+                        url = urlparse.urljoin(self.base_url, PLAYLIST_URL2 % (link_id, url_hash))
+                        sources = self.__get_links_from_xml(url, video, page_url, cookie)
             
                 for source in sources:
                     if not source.lower().startswith('http'): continue
@@ -121,6 +125,23 @@ class Scraper(scraper.Scraper):
         js_result = scraper_utils.parse_json(html, url)
         if 'embed_url' in js_result:
             sources[js_result['embed_url']] = {'quality': QUALITIES.HIGH, 'direct': False}
+        return sources
+    
+    def __get_links_from_json2(self, url, page_url, cookies):
+        sources = {}
+        headers = {'Referer': page_url}
+        html = self._http_get(url, cookies=cookies, headers=headers, cache_limit=.5)
+        js_data = scraper_utils.parse_json(html, url)
+        playlist = js_data.get('playlist', [])
+        if playlist:
+            for source in playlist[0].get('sources', []):
+                stream_url = source['file']
+                if self._get_direct_hostname(stream_url) == 'gvideo':
+                    quality = scraper_utils.gv_get_quality(stream_url)
+                else:
+                    quality = scraper_utils.height_get_quality(source.get('label', ''))
+                sources[stream_url] = {'quality': quality, 'direct': True}
+                log_utils.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
         return sources
     
     def __get_links_from_xml(self, url, video, page_url, cookies):

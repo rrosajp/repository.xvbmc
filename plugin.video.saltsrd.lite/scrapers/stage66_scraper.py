@@ -19,17 +19,18 @@ import scraper
 import urlparse
 import urllib
 import re
+import base64
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import kodi
-from salts_lib import log_utils
-from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
 BASE_URL = 'http://stage66.tv'
 
-class Stage66_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -52,9 +53,6 @@ class Stage66_Scraper(scraper.Scraper):
         else:
             return link
 
-    def format_source_label(self, item):
-        return '[%s] %s' % (item['quality'], item['host'])
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         sources = []
@@ -63,43 +61,57 @@ class Stage66_Scraper(scraper.Scraper):
             html = self._http_get(url, cache_limit=.5)
             fragment = dom_parser.parse_dom(html, 'div', {'id': 'player-container'})
             if fragment:
-                iframe_urls = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
                 labels = dom_parser.parse_dom(fragment[0], 'a', {'href': '#play-\d+'})
+                players = self.__get_players(html)
                 
-                for iframe_url, label in zip(iframe_urls, labels):
+                for fragment, label in zip(players, labels):
                     if re.search('\(Part?\s+\d+\)', label):
                         multipart = True
                         continue  # skip multipart
                     else:
                         multipart = False
                         
-                    for stream_url in self.__get_links(iframe_url):
-                        if stream_url:
-                            host = self._get_direct_hostname(stream_url)
-                            if host == 'gvideo':
-                                quality = scraper_utils.gv_get_quality(stream_url)
-                                direct = True
-                            else:
-                                direct = False
-                                host = urlparse.urlparse(stream_url).hostname
-                                match = re.search('\((\d+)p\)', label)
-                                if match:
-                                    quality = scraper_utils.height_get_quality(match.group(1))
+                    iframe_url = dom_parser.parse_dom(fragment, 'iframe', ret='src')
+                    if iframe_url:
+                        for stream_url in self.__get_links(iframe_url[0], url):
+                            if stream_url:
+                                host = self._get_direct_hostname(stream_url)
+                                if host == 'gvideo':
+                                    quality = scraper_utils.gv_get_quality(stream_url)
+                                    direct = True
                                 else:
-                                    quality = QUALITIES.HIGH
-                                
-                            stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
-                            source = {'multi-part': multipart, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': direct}
-                            sources.append(source)
+                                    direct = False
+                                    host = urlparse.urlparse(stream_url).hostname
+                                    match = re.search('\((\d+)p\)', label)
+                                    if match:
+                                        quality = scraper_utils.height_get_quality(match.group(1))
+                                    else:
+                                        quality = QUALITIES.HIGH
+                                    
+                                stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
+                                source = {'multi-part': multipart, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': direct}
+                                sources.append(source)
 
         return sources
 
-    def __get_links(self, iframe_url):
+    def __get_players(self, html):
+        players = []
+        match = re.search("var\s+defaultFrame\s*=\s*'([^']+)", html, re.DOTALL)
+        if match:
+            players.append(match.group(1))
+        
+        players += re.findall("loadPlayer\('play-\d+'\s*,\s*'([^']+)", html)
+        players = [base64.b64decode(player) for player in players]
+        return players
+    
+    def __get_links(self, iframe_url, page_url):
         sources = []
-        html = self._http_get(iframe_url, cache_limit=1)
+        headers = {'Referer': page_url}
+        html = self._http_get(iframe_url, headers=headers, cache_limit=.5)
         iframe_url2 = dom_parser.parse_dom(html, 'iframe', ret='src')
         if iframe_url2 and 'token=&' not in iframe_url2[0]:
-            html = self._http_get(iframe_url2[0], allow_redirect=False, cache_limit=1)
+            headers = {'Referer': iframe_url}
+            html = self._http_get(iframe_url2[0], headers=headers, allow_redirect=False, cache_limit=.5)
             if html.startswith('http'):
                 sources += [html]
             elif 'fmt_stream_map' in html:

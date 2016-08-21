@@ -19,17 +19,17 @@ import scraper
 import urlparse
 import urllib
 import re
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import kodi
-from salts_lib import log_utils
-from salts_lib import dom_parser
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
 BASE_URL = 'http://moviezone.ch'
 
-class MovieZone_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -44,18 +44,6 @@ class MovieZone_Scraper(scraper.Scraper):
     def get_name(cls):
         return 'MovieZone'
 
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s]' % (item['quality'])
-        if '3D' in item and item['3D']:
-            label += ' (3D)'
-        if 'format' in item:
-            label += ' (%s)' % (item['format'])
-        label += ' %s' % (item['host'])
-        return label
-
     def get_sources(self, video):
         hosters = []
         source_url = self.get_url(video)
@@ -64,7 +52,6 @@ class MovieZone_Scraper(scraper.Scraper):
             html = self._http_get(url, cache_limit=8)
             sources = dom_parser.parse_dom(html, 'source', ret='src')
             for fragment in dom_parser.parse_dom(html, 'div', {'id': 'div\d+'}):
-                log_utils.log(fragment)
                 iframes = dom_parser.parse_dom(fragment, 'iframe', ret='src')
                 for iframe_url in iframes:
                     iframe_url = urlparse.urljoin(self.base_url, iframe_url)

@@ -124,14 +124,11 @@ class Scraper(scraper.Scraper):
         search_url = search_url % (urllib.quote_plus(title))
         html = self._http_get(search_url, headers=headers, require_debrid=True, cache_limit=1)
         js_data = scraper_utils.parse_json(html, search_url)
-        try:
-            for post in js_data['results']:
-                if self.__too_old(post): continue
-                result = self._blog_proc_results(post.get('post_title', ''), '(?P<post_title>.+)(?P<url>.*?)', '', video_type, title, year)
-                result[0]['url'] = scraper_utils.pathify_url(post['post_name'])
-                results.append(result[0])
-        except Exception as e:
-            log_utils.log('Exception in rlsbb search: %s' % (e), log_utils.LOGWARNING)
+        for post in js_data.get('results', []):
+            if self.__too_old(post): continue
+            result = self._blog_proc_results(post.get('post_title', ''), '(?P<post_title>.+)(?P<url>.*?)', '', video_type, title, year)
+            result[0]['url'] = scraper_utils.pathify_url(post['post_name'])
+            results.append(result[0])
         return results
 
     def __too_old(self, post):

@@ -18,10 +18,11 @@
 import re
 import urlparse
 import random
-from salts_lib import kodi
-from salts_lib import log_utils
+import urllib
+import kodi
+import log_utils
+import dom_parser
 from salts_lib import scraper_utils
-from salts_lib import dom_parser
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
@@ -34,7 +35,7 @@ ICONS = {'icon-tr': 'Turkish Subtitles', 'icon-en': 'English Subtitles', 'icon-o
 DEFAULT_SUB = 'Turkish Subtitles'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
-class Dizilab_Scraper(scraper.Scraper):
+class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
@@ -49,15 +50,6 @@ class Dizilab_Scraper(scraper.Scraper):
     def get_name(cls):
         return 'Dizilab'
 
-    def resolve_link(self, link):
-        return link
-
-    def format_source_label(self, item):
-        label = '[%s] %s' % (item['quality'], item['host'])
-        if 'subs' in item and item['subs']:
-            label += ' (%s)' % (item['subs'])
-        return label
-
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
@@ -66,7 +58,7 @@ class Dizilab_Scraper(scraper.Scraper):
             html = self._http_get(page_url, cache_limit=.5)
             videos = re.findall('''onclick\s*=\s*"loadVideo\('([^']+)''', html)
             subs = self.__get_subs(html)
-            for v_id, icon in zip(videos, subs):
+            for v_id, icon in map(None, videos, subs):
                 ajax_url = urlparse.urljoin(self.base_url, AJAX_URL)
                 data = {'vid': v_id, 'tip': 1, 'type': 'loadVideo'}
                 headers = XHR
@@ -83,7 +75,7 @@ class Dizilab_Scraper(scraper.Scraper):
 
     def __get_subs(self, html):
         subs = []
-        fragment = dom_parser.parse_dom(html, 'ul', {'class': '[^"]*language[^"]*'})
+        fragment = dom_parser.parse_dom(html, 'ul', {'class': 'language alternative'})
         if fragment:
             subs = dom_parser.parse_dom(fragment[0], 'span', {'class': 'icon-[^"]*'}, ret='class')
         return subs
@@ -148,23 +140,22 @@ class Dizilab_Scraper(scraper.Scraper):
                     headers = {'Referer': page_url}
                     html = self._http_get(link_url, headers=headers, cache_limit=.5)
                     js_data = scraper_utils.parse_json(html, link_url)
-                    if 'variants' in js_data:
-                        for variant in js_data['variants']:
-                            if 'hosts' in variant and variant['hosts']:
-                                stream_host = random.choice(variant['hosts'])
-                                stream_url = STREAM_URL % (stream_host, variant['path'], scraper_utils.get_ua(), page_url)
-                                if not stream_url.startswith('http'):
-                                    stream_url = 'http://' + stream_url
-                                host = self._get_direct_hostname(stream_url)
-                                if 'width' in variant:
-                                    quality = scraper_utils.width_get_quality(variant['width'])
-                                elif 'height' in variant:
-                                    quality = scraper_utils.height_get_quality(variant['height'])
-                                else:
-                                    quality = QUALITIES.HIGH
-                                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                                hoster['subs'] = sub
-                                hosters.append(hoster)
+                    for variant in js_data.get('variants', {}):
+                        stream_host = random.choice(variant.get('hosts', []))
+                        if stream_host:
+                            stream_url = STREAM_URL % (stream_host, variant['path'], scraper_utils.get_ua(), urllib.quote(page_url))
+                            if not stream_url.startswith('http'):
+                                stream_url = 'http://' + stream_url
+                            host = self._get_direct_hostname(stream_url)
+                            if 'width' in variant:
+                                quality = scraper_utils.width_get_quality(variant['width'])
+                            elif 'height' in variant:
+                                quality = scraper_utils.height_get_quality(variant['height'])
+                            else:
+                                quality = QUALITIES.HIGH
+                            hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                            hoster['subs'] = sub
+                            hosters.append(hoster)
         return hosters
     
     def _get_episode_url(self, show_url, video):
@@ -174,16 +165,16 @@ class Dizilab_Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        html = self._http_get(self.base_url, cache_limit=24)
+        url = urlparse.urljoin(self.base_url, AJAX_URL)
+        data = {'type': 'getDizi'}
+        html = self._http_get(url, data=data, headers=XHR, cache_limit=48)
         norm_title = scraper_utils.normalize_title(title)
         match_year = ''
-        fragment = dom_parser.parse_dom(html, 'div', {'class': 'search-result'})
-        if fragment:
-            urls = dom_parser.parse_dom(fragment[0], 'a', ret='href')
-            titles = dom_parser.parse_dom(fragment[0], 'span', {'class': 'title'})
-            for match_url, match_title in zip(urls, titles):
-                if norm_title in scraper_utils.normalize_title(match_title):
-                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
-                    results.append(result)
+        js_data = scraper_utils.parse_json(html, url)
+        for item in js_data.get('data', []):
+            match_title = item.get('adi', '')
+            if 'url' in item and norm_title in scraper_utils.normalize_title(match_title):
+                result = {'url': scraper_utils.pathify_url(item['url']), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                results.append(result)
 
         return results
