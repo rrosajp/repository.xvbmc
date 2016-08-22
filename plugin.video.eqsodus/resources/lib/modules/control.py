@@ -183,7 +183,7 @@ def selectDialog(list, heading=addonInfo('name')):
 def moderator():
     netloc = [urlparse.urlparse(sys.argv[0]).netloc, '', 'plugin.video.live.streamspro', 'plugin.video.phstreams', 'plugin.video.tinklepad', 'plugin.video.metalliq']
 
-    if not infoLabel('Container.PluginName') in netloc: pass
+    if not infoLabel('Container.PluginName') in netloc: sys.exit()
 
     if '.strm' in str(infoLabel('ListItem.FileName')): pass
 

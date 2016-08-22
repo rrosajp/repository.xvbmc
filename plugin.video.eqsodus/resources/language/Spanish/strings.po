@@ -1,5 +1,5 @@
 # Addon Name: Exodus
-# Addon id: plugin.video.eqsodus
+# Addon id: plugin.video.exodus
 # Addon Provider: Exodus
 msgid ""
 msgstr ""

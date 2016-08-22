@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 	<category label="32310">
-		<setting id="appearance.alt" type="action" label="32311" default="-" option="close" action="RunPlugin(plugin://plugin.video.eqsodus/?action=artwork)" visible="!System.HasAddon(script.exodus.artwork)" />
+		<setting id="appearance.alt" type="action" label="32311" default="-" option="close" action="RunPlugin(plugin://plugin.video.exodus/?action=artwork)" visible="!System.HasAddon(script.exodus.artwork)" />
 		<setting id="appearance.1" type="select" label="32311" values="-|Exuary|Exodus|Genesis" default="Exodus" visible="System.HasAddon(script.exodus.artwork)" />
 		<setting id="scrapers.timeout.1" type="slider" label="32312" default="30" range="10,60" option="int" />
 		<setting id="trakt.user" type="text" default="" visible="false" />
@@ -67,7 +67,7 @@
 	</category>
 	<category label="32346">
 		<setting type="lsep" label="Trakt" />
-		<setting id="trakt.user" type="action" label="32306" option="close" action="RunPlugin(plugin://plugin.video.eqsodus/?action=authTrakt)" />
+		<setting id="trakt.user" type="action" label="32306" option="close" action="RunPlugin(plugin://plugin.video.exodus/?action=authTrakt)" />
 		<setting id="trakt.token" type="text" option="hidden" visible="false" label="" default="" />
 		<setting id="trakt.refresh" type="text" option="hidden" visible="false" label="" default="" />
 		<setting type="lsep" label="IMDb" />
@@ -82,7 +82,7 @@
 		<setting id="ororo.user" type="text" label="32304" option="hidden" default="" />
 		<setting id="ororo.pass" type="text" option="hidden" label="32307" default="" />
 		<setting type="lsep" label="RealDebrid" />
-		<setting id="realdebrid.auth" type="action" option="close" label="32306" action="RunPlugin(plugin://plugin.video.eqsodus/?action=rdAuthorize)" />
+		<setting id="realdebrid.auth" type="action" option="close" label="32306" action="RunPlugin(plugin://plugin.video.exodus/?action=rdAuthorize)" />
 		<setting id="realdebrid.id" type="text" option="hidden" visible="false" label="" default="" />
 		<setting id="realdebrid.secret" type="text" option="hidden" visible="false" label="" default="" />
 		<setting id="realdebrid.token" type="text" option="hidden" visible="false" label="" default="" />
