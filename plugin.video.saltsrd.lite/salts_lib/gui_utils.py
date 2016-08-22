@@ -62,7 +62,7 @@ def perform_auto_conf(responses):
                      ['TVWTVS', 'MWM', 'WatchSeries', 'RLSeries', 'Putlocker', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K'],
                      ['MovieHubs', 'tvrush', 'afdah', 'MiraDeTodo', 'Filmovizija', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now', 'SnagFilms'],
                      ['Ventures', 'yshows', 'iWatchOnline', 'vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac', 'view47', 'MoviesHD'],
-                     ['LosMovies', 'wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu', 'clickplay.to'],
+                     ['SpaceMov', 'LosMovies', 'wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu', 'clickplay.to'],
                      ['MovieTube', 'FilmStreaming.in']]
         
             sso = []

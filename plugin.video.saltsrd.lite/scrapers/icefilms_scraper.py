@@ -23,6 +23,7 @@ import urllib
 import urlparse
 import kodi
 import log_utils
+import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -30,7 +31,8 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 
-QUALITY_MAP = {'HD 720P': QUALITIES.HD720, 'HD 720P+': QUALITIES.HD720, 'DVDRIP / STANDARD DEF': QUALITIES.HIGH, 'DVD SCREENER': QUALITIES.HIGH}
+QUALITY_MAP = {'HD720P': QUALITIES.HD720, 'HD720P+': QUALITIES.HD720, 'DVDRIP/STANDARDDEF': QUALITIES.HIGH,
+               'SD/DVD480P': QUALITIES.HIGH, 'DVDSCREENER': QUALITIES.HIGH, 'FASTSTREAM/LOWQUALITY': QUALITIES.HIGH}
 BASE_URL = 'http://www.icefilms.info'
 LIST_URL = BASE_URL + '/membersonly/components/com_iceplayer/video.php?h=374&w=631&vid=%s&img='
 AJAX_URL = '/membersonly/components/com_iceplayer/video.phpAjaxResp.php?id=%s&s=%s&iqs=&url=&m=%s&cap= &sec=%s&t=%s'
@@ -44,7 +46,7 @@ class Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE])
+        return frozenset([VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE, VIDEO_TYPES.MOVIE])
 
     @classmethod
     def get_name(cls):
@@ -69,13 +71,12 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             try:
                 url = urlparse.urljoin(self.base_url, source_url)
-                html = self._http_get(url, cache_limit=.5)
+                html = self._http_get(url, cache_limit=2)
 
                 pattern = '<iframe id="videoframe" src="([^"]+)'
                 match = re.search(pattern, html)
-                frame_url = match.group(1)
-                url = urlparse.urljoin(self.base_url, frame_url)
-                html = self._http_get(url, cache_limit=.1)
+                url = urlparse.urljoin(self.base_url, match.group(1))
+                html = self._http_get(url, cache_limit=.5)
 
                 match = re.search('lastChild\.value="([^"]+)"(?:\s*\+\s*"([^"]+))?', html)
                 secret = ''.join(match.groups(''))
@@ -89,20 +90,19 @@ class Scraper(scraper.Scraper):
                 match = re.search('(?:\s+|,)m\s*=(\d+)', html)
                 m_start = int(match.group(1))
                 
-                pattern = '<div class=ripdiv>(.*?)</div>'
-                for container in re.finditer(pattern, html):
-                    fragment = container.group(0)
-                    match = re.match('<div class=ripdiv><b>(.*?)</b>', fragment)
+                for fragment in dom_parser.parse_dom(html, 'div', {'class': 'ripdiv'}):
+                    match = re.match('<b>(.*?)</b>', fragment)
                     if match:
-                        quality = QUALITY_MAP.get(match.group(1).upper(), QUALITIES.HIGH)
+                        q_str = match.group(1).replace(' ', '').upper()
+                        quality = QUALITY_MAP.get(q_str, QUALITIES.HIGH)
                     else:
-                        quality = None
+                        quality = QUALITIES.HIGH
 
                     pattern = '''onclick='go\((\d+)\)'>([^<]+)(<span.*?)</a>'''
                     for match in re.finditer(pattern, fragment):
                         link_id, label, host_fragment = match.groups()
                         source = {'multi-part': False, 'quality': quality, 'class': self, 'version': label, 'rating': None, 'views': None, 'direct': False}
-                        source['host'] = re.sub('(<[^>]+>|</span>)', '', host_fragment)
+                        source['host'] = re.sub('(</?[^>]*>)', '', host_fragment)
                         s = s_start + random.randint(3, 1000)
                         m = m_start + random.randint(21, 1000)
                         url = AJAX_URL % (link_id, s, m, secret, t)
@@ -113,6 +113,7 @@ class Scraper(scraper.Scraper):
         return sources
 
     def search(self, video_type, title, year, season=''):
+        results = []
         if video_type == VIDEO_TYPES.MOVIE:
             url = urlparse.urljoin(self.base_url, '/movies/a-z/')
         else:
@@ -131,17 +132,20 @@ class Scraper(scraper.Scraper):
             first_letter = search_title[:1]
         url = url + first_letter.upper()
         
-        html = self._http_get(url, cache_limit=.25)
-        h = HTMLParser.HTMLParser()
-        html = unicode(html, 'windows-1252')
-        html = h.unescape(html)
+        html = self._http_get(url, cache_limit=48)
         norm_title = scraper_utils.normalize_title(title)
-        pattern = 'class=star.*?href=([^>]+)>(.*?)(?:\s*\((\d+)\))?</a>'
-        results = []
+        pattern = 'class=star.*?href=([^>]+)>(.*?)</a>'
         for match in re.finditer(pattern, html, re.DOTALL):
-            url, match_title, match_year = match.groups('')
+            match_url, match_title_year = match.groups()
+            match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
+            if match:
+                match_title, match_year = match.groups()
+            else:
+                match_title = match_title_year
+                match_year = ''
+            
             if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
-                result = {'url': url, 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                result = {'url': match_url, 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
                 results.append(result)
         return results
 
