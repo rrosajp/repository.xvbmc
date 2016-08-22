@@ -544,7 +544,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="plugin.video.youtube" name="YouTube" version="5.2.2" provider-name="h0d3nt3uf3l, jdf76, bromix">
+<addon id="plugin.video.youtube" name="YouTube" version="5.2.2x" provider-name="h0d3nt3uf3l, jdf76, bromix">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 	</requires>
