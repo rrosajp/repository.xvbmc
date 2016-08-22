@@ -56,7 +56,7 @@ class Scraper(scraper.Scraper):
             if match:
                 page_quality = QUALITY_MAP.get(match.group(1), QUALITIES.HIGH)
             else:
-                page_quality = QUALITIES.HIGH
+                page_quality = QUALITIES.HD720
 
             match = re.search("onClick=\"javascript:replaceb64Text.*?,\s*'([^']+)", html)
             if match:

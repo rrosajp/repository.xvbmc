@@ -138,6 +138,8 @@ class SRT_Scraper():
         else:
             filename = 'addic7ed_subtitle.srt'
         filename = re.sub('[^\x00-\x7F]', '', filename)
+        filename = re.sub('[<>:"/\\|?*]', '_', filename)
+        filename = re.sub('_+', '_', filename)
 
         final_path = os.path.join(kodi.get_setting('subtitle-folder'), filename)
         final_path = kodi.translate_path(final_path)
