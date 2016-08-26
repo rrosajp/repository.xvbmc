@@ -264,6 +264,50 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
+<addon id="plugin.video.moviepool"
+       name="MoviePool"
+       version="1.0.0"
+       provider-name="The Mint Team">
+  <requires>
+ <import addon="xbmc.python" version="2.1.0"/>
+ <import addon="script.module.beautifulsoup4" version="4.3.1" />
+ <import addon="script.module.requests" version="2.3.0" />
+ <import addon="script.module.html5lib" version="0.999.0" />
+ <import addon="script.module.metahandler" version="2.9.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en"></summary>
+<description lang="he">
+</description>
+    <platform>all</platform>
+ <language>en</language>
+ <disclaimer></disclaimer>
+  </extension>
+</addon>
+
+<addon id="plugin.video.nlplks" name="NL Shizzle" version="1.0.4" provider-name="Prometheus">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.urlresolver"  version="3.0.12"/>
+    <import addon="script.module.metahandler" version="2.5.1"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en"></summary>
+    <description lang="en"></description>
+    <disclaimer lang="en"></disclaimer>
+    <language>en</language>
+    <platform>all</platform>
+    <website></website>
+    <email></email>
+  </extension>
+</addon>
+
 <addon id="plugin.video.nlsports" name="NL Sports" version="2.3.2" provider-name="NLSPORTS">
 	<requires>
 		<import addon="plugin.video.veetle" version="0.3.1" optional="false"/>
@@ -392,7 +436,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<addon id="plugin.video.saltsrd.lite" version="1.0.143a" name="Salts RD Lite" provider-name="TKnorris (EPiC XvBMC MOD)">
+<addon id="plugin.video.saltsrd.lite" version="1.0.143b" name="Salts RD Lite" provider-name="TKnorris (EPiC XvBMC MOD)">
     <requires>
         <import addon="xbmc.python" version="2.19.0"/>
         <import addon="script.module.urlresolver" version="3.0.0"/>
