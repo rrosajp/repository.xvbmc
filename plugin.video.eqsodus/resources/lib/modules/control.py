@@ -149,10 +149,7 @@ def addonNext():
 
 
 def artPath():
-    theme = appearance()
-    if theme in ['-', '']: return
-    elif condVisibility('System.HasAddon(script.exodus.artwork)'):
-        return os.path.join(xbmcaddon.Addon('script.exodus.artwork').getAddonInfo('path'), 'resources', 'media', theme)
+    return "https://raw.githubusercontent.com/OpenELEQ/Style/master/MetalliQ/default/"
 
 
 def appearance():

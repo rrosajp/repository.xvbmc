@@ -2,6 +2,7 @@
 - Updated indexers
 - Updated providers
 - Code cosmetics
+- Removed artwork at the request of j-gfx
 
 [B]2.0.6[/B]
 - Updated providers
