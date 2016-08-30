@@ -137,25 +137,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="plugin.video.eqsodus" version="2.0.7" name="Eqsodus" provider-name="Eqsodus">
-	<requires>
-		<import addon="xbmc.python" version="2.19.0" />
-		<import addon="repository.xvbmc" version="1.0.0" />
-		<import addon="script.module.urlresolver" version="3.0.0" />
-		<import addon="script.module.metahandler" version="1.0.0" />
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="eqsodus.py">
-		<provides>image</provides>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Eqsodus</summary>
-		<description lang="en">This is a mod of the Exodus addon. Changes are minimal: just 3 lines edited to regain compatibility with [COLOR ff0084ff]M[/COLOR]etalli[COLOR ff0084ff]Q[/COLOR] and all references to the original artwork removed. This fork is not meant to be run other then integrated from [COLOR ff0084ff]M[/COLOR]etalli[COLOR ff0084ff]Q[/COLOR] or kodi-library.</description>
-		<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon. The author does not have any affiliation with the content provider.</disclaimer>
-		<platform>all</platform>
-		<news></news>
-	</extension>
-</addon>
-
 <addon id="plugin.video.f4mTester" version="2.2.5" name="f4mTester" provider-name="Shani">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
