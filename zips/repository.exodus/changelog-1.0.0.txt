@@ -1,2 +1,2 @@
 v1.0.0
-- initial release (used-4-script.module.urlresolver)
+- initial release (l*m*d*)
