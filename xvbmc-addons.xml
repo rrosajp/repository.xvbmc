@@ -1075,7 +1075,7 @@ Addons Included
   </extension>
 </addon>
 
-<addon id="script.module.tknorris.shared" name="TKNorris Common Libraries" version="0.0.3" provider-name="tknorris">
+<addon id="script.module.tknorris.shared" name="TKNorris Common Libraries" version="0.0.3x" provider-name="tknorris">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 	</requires>
@@ -1610,17 +1610,6 @@ Other languages with a great number of subtitles are: Danish, French, Swedish, D
     <summary lang="en">Configure and manage VPN connections using openVPN</summary>
     <description lang="en">Establish a connection to a VPN provider and automatically switch VPN locations based on the add-on being used.  Also supports automatic reconnect and connection at boot time.  And with some simple configuring (see README and remote.xml file in add-on directory), you can cycle through VPN connections using a remote button.</description>
   </extension>
-</addon>
-
-<addon id="script.module.tknorris.shared" name="TKNorris Common Libraries" version="0.0.3x" provider-name="tknorris">
-	<requires>
-		<import addon="xbmc.python" version="2.1.0" />
-	</requires>
-	<extension point="xbmc.python.module" library="lib" />
-	<extension point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<summary lang="en">Reusable Modules used by several of tknorris's addons</summary>
-	</extension>
 </addon>
 
 <addon id="xbmc.python" version="2.25.0" provider-name="Team Kodi">
