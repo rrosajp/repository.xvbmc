@@ -48,8 +48,8 @@ base='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibW
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('[COLOR lime]XvBMC [B]S[/B]ervice[B]P[/B]ack 03 (25-06-2016)[/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[COLOR red]XvBMC [B]S[/B]ervice[B]P[/B]ack (00 t/m 03) bulk pack[/COLOR]','url', 2,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR lime]XvBMC [B]S[/B]ervice[B]P[/B]ack[/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR red]XvBMC [B]S[/B]ervice[B]P[/B]ack bulk pack[/COLOR]','url', 2,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 3,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [COLOR white]Pi[/COLOR] **[B]only[/B]**)', 'url', 4,os.path.join(mediaPath, "dev.png"))	
 	addItem('XvBMC [B]#DEV#[/B] Corner (Firmware-OS-etc)', 'url', 5,os.path.join(mediaPath, "dev.png"))
@@ -232,11 +232,11 @@ def xvbmcMaintenance(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
     else:
-        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.10.zip'
+        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.12.zip'
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.schoonmaak-1.10.10.zip')
+        lib=os.path.join(path, 'script.schoonmaak-1.10.12.zip')
         try:
             os.remove(lib)
         except:
@@ -382,21 +382,21 @@ if mode==None or url==None or len(url)<1:
 
 elif mode==1:
 #	ServicePack(url)
-#	dialog.ok("XvBMC NL most recent ServicePacks", 'Disabled: download laatste XvBMC ServicePack','', 'Download onze nieuwe (Pi) V3-image dd. 09-08-2016 !!!')
+#	dialog.ok("XvBMC NL most recent ServicePacks", 'Disabled: download laatste XvBMC ServicePack','', 'Download onze nieuwe (Pi) v3.1 *final* image dd. 26-08-2016 !!!')
     myplatform = platform()
     print "Platform: " + str(myplatform)
     if myplatform == 'linux': # Open-/LibreELEC
-        dialog.ok("XvBMC NL most recent ServicePacks", 'Disabled: download laatste XvBMC ServicePack','', 'Download onze nieuwe (Pi) V3-image dd. 09-08-2016 !!!')
+        dialog.ok("XvBMC NL most recent ServicePacks", 'Disabled: download laatste XvBMC ServicePack','', 'Download onze nieuwe (Pi) v3.1 *final* image dd. 26-08-2016 !!!')
     else: #rest
         ServicePack(url)
 
 elif mode==2:
 #	UpdateRollup(url)
-#	dialog.ok("XvBMC NL ServicePack Update Rollup", 'Disabled: download alle XvBMC SP-updates (all-in-1)','', 'Download onze nieuwe (Pi) V3-image dd. 09-08-2016 !!!')
+#	dialog.ok("XvBMC NL ServicePack Update Rollup", 'Disabled: download alle XvBMC SP-updates (all-in-1)','', 'Download onze nieuwe (Pi) v3.1 *final* image dd. 26-08-2016 !!!')
     myplatform = platform()
     print "Platform: " + str(myplatform)
     if myplatform == 'linux': # Open-/LibreELEC
-        dialog.ok("XvBMC NL ServicePack Update Rollup", 'Disabled: download alle XvBMC SP-updates (all-in-1)','', 'Download onze nieuwe (Pi) V3-image dd. 09-08-2016 !!!')
+        dialog.ok("XvBMC NL ServicePack Update Rollup", 'Disabled: download alle XvBMC SP-updates (all-in-1)','', 'Download onze nieuwe (Pi) v3.1 *final* image dd. 26-08-2016 !!!')
     else: #rest
         UpdateRollup(url)
 
