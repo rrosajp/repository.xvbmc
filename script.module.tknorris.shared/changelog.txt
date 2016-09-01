@@ -1,3 +1,6 @@
+[B]Version 0.0.3x[/B]
+add countdown dialog
+
 [B]Version 0.0.3[/B]
 Force strptime import to avoid python bug
 
