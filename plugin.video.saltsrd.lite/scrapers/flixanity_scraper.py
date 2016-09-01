@@ -35,7 +35,7 @@ import scraper
 
 BASE_URL = 'http://www.flixanity.is'
 EMBED_URL = '/ajax/embeds.php'
-SEARCH_URL = '/api/v1/cautare/apr'
+SEARCH_URL = '/api/v1/cautare/aug'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Scraper(scraper.Scraper):
@@ -166,16 +166,6 @@ class Scraper(scraper.Scraper):
     
     def __get_search_url(self):
         search_url = SEARCH_URL
-        html = super(self.__class__, self)._http_get(self.base_url, cache_limit=24)
-        for match in re.finditer('<script[^>]+src="([^"]+)', html):
-            script = match.group(1)
-            if 'flixanity' in script:
-                html = super(self.__class__, self)._http_get(script, cache_limit=24)
-                match = re.search('=\s*"([^"]*/cautare/[^"]*)', html)
-                if match:
-                    search_url = match.group(1)
-                    search_url = search_url.replace('\\', '')
-                    break
         return search_url
     
     def __get_token(self, html=''):

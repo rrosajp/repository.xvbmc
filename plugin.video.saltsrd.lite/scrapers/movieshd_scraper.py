@@ -29,12 +29,12 @@ from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
+from salts_lib.constants import XHR
 import scraper
 
-BASE_URL = 'http://movieshd.is'
+BASE_URL = 'http://movieshd.tv'
 EMBED_URL = '/ajax/embeds.php'
-SEARCH_URL = '/api/v1/cautare/apr'
-XHR = {'X-Requested-With': 'XMLHttpRequest'}
+SEARCH_URL = '/api/v1/cautare/upd'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -59,36 +59,43 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=2)
+            match = re.search('defaultStream.movie\s*=\s*"([^"]+)', html)
+            links = [match.group(1)] if match else []
+            
             if video.video_type == VIDEO_TYPES.MOVIE:
                 action = 'getMovieEmb'
             else:
                 action = 'getEpisodeEmb'
-            match = re.search('elid\s*=\s*"([^"]+)', html)
+                
             if self.__token is None:
                 self.__get_token()
                 
+            match = re.search('elid\s*=\s*"([^"]+)', html)
             if match and self.__token is not None:
                 elid = urllib.quote(base64.encodestring(str(int(time.time()))).strip())
                 data = {'action': action, 'idEl': match.group(1), 'token': self.__token, 'elid': elid}
                 ajax_url = urlparse.urljoin(self.base_url, EMBED_URL)
-                headers = XHR
-                headers['Authorization'] = 'Bearer %s' % (self.__get_bearer())
-                html = self._http_get(ajax_url, data=data, headers=headers, cache_limit=.5)
+                headers = {'Authorization': 'Bearer %s' % (self.__get_bearer()), 'Referer': url}
+                headers.update(XHR)
+                html = self._http_get(ajax_url, data=data, headers=headers, allow_redirect=False, cache_limit=0)
+                ajax_url += '?ckattempt=1'
+                html = self._http_get(ajax_url, data=data, headers=headers, cache_limit=0)
                 html = html.replace('\\"', '"').replace('\\/', '/')
-                 
-                for iframe_url in dom_parser.parse_dom(html, 'iframe', ret='src'):
-                    host = self._get_direct_hostname(iframe_url)
-                    if host == 'gvideo':
-                        direct = True
-                        quality = scraper_utils.gv_get_quality(iframe_url)
-                    else:
-                        if 'vk.com' in url and iframe_url.endswith('oid='): continue  # skip bad vk.com links
-                        direct = False
-                        host = urlparse.urlparse(iframe_url).hostname
-                        quality = scraper_utils.get_quality(video, host, QUALITIES.HD720)
-    
-                    source = {'multi-part': False, 'url': iframe_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': direct}
-                    sources.append(source)
+                links += dom_parser.parse_dom(html, 'iframe', ret='src')
+                
+            for stream_url in links:
+                host = self._get_direct_hostname(stream_url)
+                if host == 'gvideo':
+                    direct = True
+                    quality = scraper_utils.gv_get_quality(stream_url)
+                else:
+                    if 'vk.com' in url and stream_url.endswith('oid='): continue  # skip bad vk.com links
+                    direct = False
+                    host = urlparse.urlparse(stream_url).hostname
+                    quality = scraper_utils.get_quality(video, host, QUALITIES.HD720)
+
+                source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': direct}
+                sources.append(source)
 
         return sources
 
@@ -125,16 +132,6 @@ class Scraper(scraper.Scraper):
     
     def __get_search_url(self):
         search_url = SEARCH_URL
-        html = super(self.__class__, self)._http_get(self.base_url, cache_limit=48)
-        for match in re.finditer('<script[^>]+src="([^"]+)', html):
-            script = match.group(1)
-            if self.base_url in script:
-                html = super(self.__class__, self)._http_get(script, cache_limit=24)
-                match = re.search('=\s*"([^"]*/cautare/[^"]*)', html)
-                if match:
-                    search_url = match.group(1)
-                    search_url = search_url.replace('\\', '')
-                    break
         return search_url
     
     def __get_token(self, html=''):

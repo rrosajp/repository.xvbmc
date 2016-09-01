@@ -91,7 +91,7 @@ class Scraper(scraper.Scraper):
         referer = referer % (urllib.quote_plus(title))
         headers = {'Referer': referer}
         headers.update(XHR)
-        html = self._http_get(search_url, headers=headers, cache_limit=2)
+        html = self._http_get(search_url, headers=headers, auth=False, cache_limit=2)
         js_data = scraper_utils.parse_json(html, search_url)
         if 'results' in js_data:
             for result in js_data['results']:
