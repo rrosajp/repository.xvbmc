@@ -1,27 +1,22 @@
 # -*- coding: utf-8 -*-
-import sys
-import os
 import time
 import xbmc
 import xbmcaddon
 import xbmcgui
 
-
-__addon__ = xbmcaddon.Addon(id='script.pinsentry')
-__icon__ = __addon__.getAddonInfo('icon')
-__cwd__ = __addon__.getAddonInfo('path').decode("utf-8")
-__resource__ = xbmc.translatePath(os.path.join(__cwd__, 'resources').encode("utf-8")).decode("utf-8")
-__lib__ = xbmc.translatePath(os.path.join(__resource__, 'lib').encode("utf-8")).decode("utf-8")
-
-sys.path.append(__lib__)
-
 # Import the common settings
-from settings import log
-from settings import Settings
+from resources.lib.settings import log
+from resources.lib.settings import Settings
+from resources.lib.numberpad import NumberPad
+from resources.lib.database import PinSentryDB
+from resources.lib.background import Background
+from resources.lib.mpaaLookup import MpaaLookup
 
-from numberpad import NumberPad
-from database import PinSentryDB
-from background import Background
+ADDON = xbmcaddon.Addon(id='script.pinsentry')
+ICON = ADDON.getAddonInfo('icon')
+
+# Global value to highlight when the last time something happened
+lastActivityTime = 0
 
 
 # Class to handle core Pin Sentry behaviour
@@ -103,6 +98,13 @@ class PinSentry():
             log("PinSentry: Incorrect Pin Value Entered, required level %d entered level %d" % (requiredLevel, pinMatchLevel))
             userHasAccess = False
 
+        # Reset the last activity time as we will later we waiting for a time when
+        # nothing happens to detect Kodi being in sleep, so we want to ensure we
+        # don't think we have been inactive if the user has left the dialog open
+        # for a long time
+        global lastActivityTime
+        lastActivityTime = time.time()
+
         return userHasAccess
 
     @staticmethod
@@ -112,19 +114,19 @@ class PinSentry():
         if notifType == Settings.INVALID_PIN_NOTIFICATION_POPUP:
             cmd = ""
             if Settings.getNumberOfLevels() > 1:
-                cmd = 'Notification("{0}", "{1} {2}", 3000, "{3}")'.format(__addon__.getLocalizedString(32104).encode('utf-8'), __addon__.getLocalizedString(32211).encode('utf-8'), str(level), __icon__)
+                cmd = 'Notification("{0}", "{1} {2}", 3000, "{3}")'.format(ADDON.getLocalizedString(32104).encode('utf-8'), ADDON.getLocalizedString(32211).encode('utf-8'), str(level), ICON)
             else:
-                cmd = 'Notification("{0}", "{1}", 3000, "{2}")'.format(__addon__.getLocalizedString(32001).encode('utf-8'), __addon__.getLocalizedString(32104).encode('utf-8'), __icon__)
+                cmd = 'Notification("{0}", "{1}", 3000, "{2}")'.format(ADDON.getLocalizedString(32001).encode('utf-8'), ADDON.getLocalizedString(32104).encode('utf-8'), ICON)
             xbmc.executebuiltin(cmd)
         elif notifType == Settings.INVALID_PIN_NOTIFICATION_DIALOG:
             line3 = None
             if Settings.getNumberOfLevels() > 1:
-                line3 = "%s %d" % (__addon__.getLocalizedString(32211), level)
-            xbmcgui.Dialog().ok(__addon__.getLocalizedString(32001).encode('utf-8'), __addon__.getLocalizedString(32104).encode('utf-8'), line3)
+                line3 = "%s %d" % (ADDON.getLocalizedString(32211), level)
+            xbmcgui.Dialog().ok(ADDON.getLocalizedString(32001).encode('utf-8'), ADDON.getLocalizedString(32104).encode('utf-8'), line3)
         # Remaining option is to not show any error
 
 
-# Class to detect shen something in the system has changed
+# Class to detect when something in the system has changed
 class PinSentryMonitor(xbmc.Monitor):
     def onSettingsChanged(self):
         log("PinSentryMonitor: Notification of settings change received")
@@ -159,8 +161,23 @@ class PinSentryPlayer(xbmc.Player):
         if not PinSentry.isPinSentryEnabled():
             return
 
+        # Get the path of the file being played
+        filePath = xbmc.getInfoLabel("Player.Folderpath")
+        if filePath in [None, ""]:
+            filePath = xbmc.getInfoLabel("Player.Filenameandpath")
+        if filePath in [None, ""]:
+            filePath = xbmc.getInfoLabel("ListItem.FolderPath")
+        if filePath in [None, ""]:
+            filePath = xbmc.getInfoLabel("ListItem.FileNameAndPath")
+        log("PinSentryPlayer: File being played is: %s" % filePath)
+
         isMusicVideo = False
         isTvShow = False
+
+        # Check if this is a pvr file, in which case we set it as TV
+        if filePath.startswith("pvr://"):
+            isTvShow = True
+
         # Get the information for what is currently playing
         # http://kodi.wiki/view/InfoLabels#Video_player
         title = xbmc.getInfoLabel("VideoPlayer.TVShowTitle")
@@ -211,16 +228,6 @@ class PinSentryPlayer(xbmc.Player):
         # Now perform the check that restricts if a file is in a file source
         # that should not be played
         if securityLevel < 1 and Settings.isActiveFileSource() and Settings.isActiveFileSourcePlaying():
-            # Get the path of the file being played
-            filePath = xbmc.getInfoLabel("Player.Folderpath")
-            if filePath in [None, ""]:
-                filePath = xbmc.getInfoLabel("Player.Filenameandpath")
-            if filePath in [None, ""]:
-                filePath = xbmc.getInfoLabel("ListItem.FolderPath")
-            if filePath in [None, ""]:
-                filePath = xbmc.getInfoLabel("ListItem.FileNameAndPath")
-            log("PinSentryPlayer: Checking file path: %s" % filePath)
-
             # Get all the sources that are protected
             pinDB = PinSentryDB()
             securityDetails = pinDB.getAllFileSourcesPathsSecurity()
@@ -235,8 +242,19 @@ class PinSentryPlayer(xbmc.Player):
         # Now check to see if this item has a certificate restriction
         if securityLevel < 1:
             cert = xbmc.getInfoLabel("VideoPlayer.mpaa")
-            if cert in [None, ""]:
+            if cert in [None, "", "N/A"]:
                 cert = xbmc.getInfoLabel("ListItem.Mpaa")
+
+            # If there is no MPAA rating, then perform a lookup to find it using the
+            # title of the program
+            if (title not in [None, ""]) and (cert in [None, "", "N/A"]):
+                # Get the year if it is set, as that will help
+                year = xbmc.getInfoLabel("VideoPlayer.Year")
+                if year in [None, ""]:
+                    year = xbmc.getInfoLabel("ListItem.Year")
+                mpaaLookup = MpaaLookup()
+                cert = mpaaLookup.getMpaaRatings(title, year)
+                del mpaaLookup
 
             if cert not in [None, ""]:
                 log("PinSentryPlayer: Checking for certification restrictions: %s" % str(cert))
@@ -245,10 +263,10 @@ class PinSentryPlayer(xbmc.Player):
                 cert = cert.strip().split(':')[-1]
                 cert = cert.strip().split()[-1]
                 pinDB = PinSentryDB()
-                if isTvShow:
+                if isTvShow or filePath.startswith("pvr://"):
                     # Look up the TV Shows Certificate to see if it is restricted
                     securityLevel = pinDB.getTvClassificationSecurityLevel(cert)
-                else:
+                if (securityLevel < 1) and ((not isTvShow) or filePath.startswith("pvr://")):
                     # Look up the Movies Certificate to see if it is restricted
                     securityLevel = pinDB.getMovieClassificationSecurityLevel(cert)
                 del pinDB
@@ -564,7 +582,7 @@ class NavigationRestrictions():
             log("NavigationRestrictions: Allowed access to settings")
             # Allow the user 5 minutes to change the settings
             self.canChangeSettings = int(time.time()) + 300
-            xbmcgui.Dialog().notification(__addon__.getLocalizedString(32001).encode('utf-8'), __addon__.getLocalizedString(32110).encode('utf-8'), __icon__, 3000, False)
+            xbmcgui.Dialog().notification(ADDON.getLocalizedString(32001).encode('utf-8'), ADDON.getLocalizedString(32110).encode('utf-8'), ICON, 3000, False)
 
             # Open the dialogs that should be shown, we don't reopen the Information dialog
             # as if we do the Close Dialog will not close it and the pin screen will not show correctly
@@ -622,7 +640,7 @@ class NavigationRestrictions():
             log("NavigationRestrictions: Allowed access to settings")
             # Allow the user 5 minutes to change the settings
             self.canChangeSettings = int(time.time()) + 300
-            xbmcgui.Dialog().notification(__addon__.getLocalizedString(32001).encode('utf-8'), __addon__.getLocalizedString(32110).encode('utf-8'), __icon__, 3000, False)
+            xbmcgui.Dialog().notification(ADDON.getLocalizedString(32001).encode('utf-8'), ADDON.getLocalizedString(32110).encode('utf-8'), ICON, 3000, False)
         else:
             log("NavigationRestrictions: Not allowed access to settings which has security level %d" % securityLevel)
             self.canChangeSettings = False
@@ -682,6 +700,102 @@ class NavigationRestrictions():
             self.lastFileSource = ""
             PinSentry.displayInvalidPinMessage(securityLevel)
 
+    # Checks to see if the PinSentry is being requested to be shown
+    def checkForcedDisplay(self):
+        # Check if the property is set
+        if xbmcgui.Window(10000).getProperty("PinSentryPrompt") != 'true':
+            return
+
+        # Set the lowest security level for the forced display
+        securityLevel = 1
+
+        # Before we prompt the user we need to close the dialog, otherwise the pin
+        # dialog will appear behind it
+        xbmc.executebuiltin("Dialog.Close(all, true)", True)
+        xbmc.executebuiltin("ActivateWindow(home)", True)
+
+        # Prompt the user for the pin, returns True if they knew it
+        if PinSentry.promptUserForPin(securityLevel):
+            log("NavigationRestrictions: Forced Pin Display Unlocked")
+            xbmcgui.Window(10000).clearProperty("PinSentryPrompt")
+        else:
+            log("NavigationRestrictions: Not allowed access after forced lock at security level %d" % securityLevel)
+            # The pin dalog will be automatically re-opened as the window property has not been cleared
+
+
+# Class to detect when using the PVR if the channel changes
+class PvrMonitor():
+    def __init__(self):
+        self.lastPvrChannelNumber = None
+        self.lastPlayedTitle = None
+
+    def hasPvrChannelChanged(self):
+        # Only need to handle PVR if we are configured to check playing videos
+        if (not Settings.isActiveVideoPlaying()) or (not xbmc.Player().isPlayingVideo()):
+            self.lastPvrChannelNumber = None
+            self.lastPlayedTitle = None
+            return False
+
+        # Get the channel that is currently being played
+        channelNumber = xbmc.getInfoLabel("VideoPlayer.ChannelNumber")
+
+        # If there is no channel, then this is not PVR and there is nothing to do
+        if channelNumber in [None, ""]:
+            self.lastPvrChannelNumber = None
+            self.lastPlayedTitle = None
+            return False
+
+        # Get the path of the file being played
+        filePath = xbmc.getInfoLabel("Player.Folderpath")
+        if filePath in [None, ""]:
+            filePath = xbmc.getInfoLabel("Player.Filenameandpath")
+        if filePath in [None, ""]:
+            # No file currently playing, skip
+            self.lastPvrChannelNumber = None
+            self.lastPlayedTitle = None
+            return False
+
+        # Check if this is a pvr file
+        if not filePath.startswith("pvr://"):
+            self.lastPvrChannelNumber = None
+            self.lastPlayedTitle = None
+            return False
+
+        # At this point we must be playing something using the PVR so get the title
+        title = xbmc.getInfoLabel("VideoPlayer.TVShowTitle")
+        if title in [None, ""]:
+            # Not a TvShow, so check for the Movie Title
+            title = xbmc.getInfoLabel("VideoPlayer.Title")
+
+        # Now we want to check if the channel has changed, if this is the first
+        # item played, then we do not want to do anything as that will be picked
+        # up my the normal player notifications
+        if self.lastPvrChannelNumber in [None, ""]:
+            log("PvrMonitor: Channel number selected is %s" % str(channelNumber))
+            self.lastPvrChannelNumber = channelNumber
+            self.lastPlayedTitle = title
+            return False
+
+        # If the channel being played is the same as the current channel, then
+        # there is nothing to do unless what is playing on that channel has changed
+        if self.lastPvrChannelNumber == channelNumber:
+            programHasChanged = False
+            # Check if there has been a change in what is being played
+            if (self.lastPlayedTitle not in [None, ""]) and (title not in [None, ""]):
+                if self.lastPlayedTitle != title:
+                    # So we are on the same channel and the program has changed
+                    log("PvrMonitor: Channel remained on %s but program changed" % str(channelNumber))
+                    programHasChanged = True
+            self.lastPlayedTitle = title
+            return programHasChanged
+
+        # If we reach here then we have a different channel being played so we
+        # need to force the check to see if the pin should be displayed
+        log("PvrMonitor: Channel number changed from %s to %s" % (str(self.lastPvrChannelNumber), str(channelNumber)))
+        self.lastPvrChannelNumber = channelNumber
+        self.lastPlayedTitle = title
+        return True
+
 
 # Class the handle user control
 class UserPinControl():
@@ -734,7 +848,7 @@ class UserPinControl():
                 log("UserPinControl: Unknown pin entered, offering retry")
                 # This is not a valid user, so display the error message and work out
                 # if we should prompt the user again or shutdown the system
-                tryAgain = xbmcgui.Dialog().yesno(__addon__.getLocalizedString(32001).encode('utf-8'), __addon__.getLocalizedString(32104).encode('utf-8'), __addon__.getLocalizedString(32129).encode('utf-8'))
+                tryAgain = xbmcgui.Dialog().yesno(ADDON.getLocalizedString(32001).encode('utf-8'), ADDON.getLocalizedString(32104).encode('utf-8'), ADDON.getLocalizedString(32129).encode('utf-8'))
 
                 if not tryAgain:
                     # Need to stop this user accessing the system
@@ -791,12 +905,12 @@ class UserPinControl():
             displayRemainingTime = 0
 
         # Do a notification to let the user know how long they have left today
-        summaryUserName = "%s:    %s" % (__addon__.getLocalizedString(32035), usersName)
-        summaryLimit = "%s:    %d" % (__addon__.getLocalizedString(32033), viewingLimit)
-        summaryLimitRemaining = "%s:    %d" % (__addon__.getLocalizedString(32131), displayRemainingTime)
-        summaryAccess = "%s:    %s - %s" % (__addon__.getLocalizedString(32132), displayStartTime, displayEndTime)
+        summaryUserName = "%s:    %s" % (ADDON.getLocalizedString(32035), usersName)
+        summaryLimit = "%s:    %d" % (ADDON.getLocalizedString(32033), viewingLimit)
+        summaryLimitRemaining = "%s:    %d" % (ADDON.getLocalizedString(32131), displayRemainingTime)
+        summaryAccess = "%s:    %s - %s" % (ADDON.getLocalizedString(32132), displayStartTime, displayEndTime)
         fullSummary = "%s\n%s\n%s\n%s" % (summaryUserName, summaryLimit, summaryLimitRemaining, summaryAccess)
-        xbmcgui.Dialog().ok(__addon__.getLocalizedString(32001).encode('utf-8'), fullSummary)
+        xbmcgui.Dialog().ok(ADDON.getLocalizedString(32001).encode('utf-8'), fullSummary)
 
     # Check the current user access status
     def check(self):
@@ -855,8 +969,8 @@ class UserPinControl():
                 self.warningDisplayed = True
                 # Calculate the time left
                 remainingTime = viewingLimit - self.usedViewingLimit
-                msg = "%d %s" % (remainingTime, __addon__.getLocalizedString(32134))
-                xbmcgui.Dialog().notification(__addon__.getLocalizedString(32001).encode('utf-8'), msg, __icon__, 3000, False)
+                msg = "%d %s" % (remainingTime, ADDON.getLocalizedString(32134))
+                xbmcgui.Dialog().notification(ADDON.getLocalizedString(32001).encode('utf-8'), msg, ICON, 3000, False)
 
         return True
 
@@ -871,7 +985,7 @@ class UserPinControl():
 
         # Display a notification to let the user know why we are about to shut down
         if reason > 0:
-            cmd = 'Notification("{0}", "{1}", 3000, "{2}")'.format(__addon__.getLocalizedString(32001).encode('utf-8'), __addon__.getLocalizedString(reason).encode('utf-8'), __icon__)
+            cmd = 'Notification("{0}", "{1}", 3000, "{2}")'.format(ADDON.getLocalizedString(32001).encode('utf-8'), ADDON.getLocalizedString(reason).encode('utf-8'), ICON)
             xbmc.executebuiltin(cmd)
 
         # Give the user time to see why we are shutting down
@@ -888,7 +1002,7 @@ class UserPinControl():
 # Main of the PinSentry Service
 ##################################
 if __name__ == '__main__':
-    log("Starting Pin Sentry Service %s" % __addon__.getAddonInfo('version'))
+    log("Starting Pin Sentry Service %s" % ADDON.getAddonInfo('version'))
 
     # Tidy up any old pins and set any warnings when we first start
     Settings.checkPinSettings()
@@ -900,15 +1014,39 @@ if __name__ == '__main__':
 
     # Check to see if we need to restrict based on a given user to ensure they
     # are allowed to use the system
-    userCtrl = UserPinControl()
-    userCtrl.startupCheck()
+    userCtrl = None
 
     playerMonitor = PinSentryPlayer()
     systemMonitor = PinSentryMonitor()
     navRestrictions = NavigationRestrictions()
+    pvrMonitor = PvrMonitor()
 
     loopsUntilUserControlCheck = 0
     while (not xbmc.abortRequested):
+        # There are two types of startup, the first is a genuine startup when
+        # kodi is booted from cold, the second is when kodi is resumed from
+        # a sleep state, if restoring from sleep in memory then the PinSentry
+        # service will be restored from where it was and will not be a clean
+        # start, so we keep track of the current time and then, if too long has
+        # passed since the last time we updated the timer, we know the system
+        # has been in a sleep mode for a while
+        currentTime = int(time.time())
+        # Add on 10 seconds to detect sleep
+        if (lastActivityTime == 0) or ((lastActivityTime + 10) < currentTime):
+            # Check if we need to prompt for the pin when the system starts
+            if Settings.isPromptForPinOnStartup():
+                log("PinSentry: Prompting for pin on startup")
+                xbmcgui.Window(10000).setProperty("PinSentryPrompt", "true")
+            # Also need to reset the User pin control that restricts the amount of
+            # time that the user is allowed to view kodi for
+            if userCtrl not in [None, ""]:
+                del userCtrl
+            userCtrl = UserPinControl()
+            userCtrl.startupCheck()
+
+        # Make sure the last loop is recorded
+        lastActivityTime = currentTime
+
         # No need to perform the user control check every fraction of a second
         # about every minute will be OK
         if loopsUntilUserControlCheck < 1:
@@ -935,8 +1073,17 @@ if __name__ == '__main__':
             navRestrictions.checkPlugins()
             navRestrictions.checkSettings()
             navRestrictions.checkSystemSettings()
+            # Check if the dialog is being forced to display
+            navRestrictions.checkForcedDisplay()
+
+            # Check if the PVR channel has changed
+            if pvrMonitor.hasPvrChannelChanged():
+                # Need to force the notification for the player as changing
+                # channel will not do this
+                playerMonitor.onPlayBackStarted()
 
     log("Stopping Pin Sentry Service")
+    del pvrMonitor
     del userCtrl
     del navRestrictions
     del playerMonitor
