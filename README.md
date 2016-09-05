@@ -6,24 +6,27 @@ NOTE: XvBMC Nederland (xbmc nl) wij zijn géén helpdesk van/voor boxverkopers
    
 #XvBMC_Nederland:
 https://www.fb.com/groups/XvBMCnederland/ | http://bit.ly/XvBMC-NL
-
+ 
 #XvBMC_Pi:
 https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/ | http://bit.ly/XvBMC-Pi
-
+ 
 #XvBMC_Android:
 https://www.fb.com/groups/xbmcvoorbeginners.android/ | http://bit.ly/XvBMC-Android
-
+ 
 #XvBMC_FilmsSeriesMuziek:
 https://www.fb.com/groups/XbmcvoorbeginnersfilmsForum/ | http://bit.ly/XvBMC-Media
-
+ 
 #XvBMC_Sports:
 https://www.fb.com/groups/XbmcVoorBeginnersSportChat/ | http://bit.ly/XvBMC-Sport
-
+ 
 #XvBMC_retro-Games:
 https://www.fb.com/groups/XvBMCretroGames/ | http://bit.ly/XvBMC-Retro
-
+ 
 #XvBMC_Marktplaats:
 https://www.fb.com/groups/xbmckoopenverkoop/ | http://bit.ly/XvBMC-Marktplaats
+ 
+#XvBMC_YouTube:
+https://www.youtube.com/user/onlinefilmskijken/ | http://bit.ly/XvBMC-YouTube
    
   
  
