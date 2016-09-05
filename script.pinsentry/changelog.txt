@@ -1,3 +1,26 @@
+v2.2.3 (2016-08-29)
+- Support prompting for a pin when returning from resume
+
+v2.2.1 (2016-08-19)
+- Moved to robwebset repository
+
+v2.1.0 (2016-08-10)
+- Add support for Classification checks for Live TV/PVR
+
+v2.0.0 (2016-06-03)
+- Clean up number pad
+
+v1.3.2 (2016-05-26)
+- Clear pin settings if length changes
+
+v1.3.1 (2016-04-05)
+- Tidy up import, globals and plugin provides
+
+v1.3.0 (2016-03-19)
+- Add French classifications
+- Add screensaver option that triggers a prompt for the pin
+- Allow the pin to be prompted for on startup
+
 v1.2.0 (2016-01-27)
 - Fix character encoding issue for file source section
 - Add option to block system settings with a pin
