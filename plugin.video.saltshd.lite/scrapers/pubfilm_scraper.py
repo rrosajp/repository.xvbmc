@@ -28,7 +28,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import USER_AGENT
 import scraper
 
-BASE_URL = 'http://pubfilm.com'
+BASE_URL = 'http://pidtv.com'
 GK_URL = 'http://player.pubfilm.com/smplayer/plugins/gkphp/plugins/gkpluginsphp.php'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 

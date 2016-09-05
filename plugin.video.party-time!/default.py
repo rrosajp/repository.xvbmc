@@ -44,7 +44,7 @@ YOUTUBE_CHANNEL_ID_22 = "PLc7Yv2cfKlFO8aMD8cyK3p9aPkW3s8wY4"
 YOUTUBE_CHANNEL_ID_23 = "UCDuy-lMZwCgl0m2MoR6r1JA"
 YOUTUBE_CHANNEL_ID_24 = "UCG1DdsRO_Pgc45DlSUmL5Cg"
 YOUTUBE_CHANNEL_ID_25 = "PLdhR_67FhdOIXcBvXFH61u4snn43br821"
-YOUTUBE_CHANNEL_ID_26 = "PLECA8FA17D15EAD90"
+YOUTUBE_CHANNEL_ID_26 = "PLKWlnm--uOLsu6vzpKCsyI2y2A6LPJxwE"
 YOUTUBE_CHANNEL_ID_27 = "PLDTZz_MRm8Alg9qRG0iIDzQ1R9XOVZcA7"
 YOUTUBE_CHANNEL_ID_28 = "PLkW4U4l9-2eZ34E-74pli20NVs-oDgkET"
 YOUTUBE_CHANNEL_ID_29 = "UCzLrqgcpWLnlfAmud_pvHkQ/playlists"
@@ -58,6 +58,9 @@ YOUTUBE_CHANNEL_ID_36 = "PL1828054F5D85FB02"
 YOUTUBE_CHANNEL_ID_37 = "PLFnF0LpDmVwPfDbx7Ko5eUOgD1PvsKc4I"
 YOUTUBE_CHANNEL_ID_38 = "PLoqIMZ8dn0SfDfILhQZQQAeswZeY6mIc1"
 YOUTUBE_CHANNEL_ID_39 = "PLwSubaI0YUrsNUmHt-g3HdRsU2pgvrWAd"
+YOUTUBE_CHANNEL_ID_40 = "PLb9P84z4PHc3nhEJsruspgslWxPO0s9-N"
+YOUTUBE_CHANNEL_ID_41 = "PLQjtO2fjgHKUEq2FW8sL7lFvGNYq-NTum"
+YOUTUBE_CHANNEL_ID_42 = "PLc7Yv2cfKlFN9dygA3w-SgZ1oF6Dc6XKn"
 
 
 
@@ -119,9 +122,9 @@ def main_list(params):
     plugintools.add_item( 
         #action="", 
         title="B2S tv season 7",
-        url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_6+"/",
+        url="plugin://plugin.video.youtube/watch?v=V098E44ISI4&list/"+YOUTUBE_CHANNEL_ID_6+"/",
         thumbnail="https://yt3.ggpht.com/-SDzReof35B4/AAAAAAAAAAI/AAAAAAAAAAA/HxsezOhV9zc/s100-c-k-no/photo.jpg",
-        folder=True )                
+        folder=False )                
 
     plugintools.add_item( 
         #action="", 
@@ -260,7 +263,7 @@ plugintools.add_item(
 		
 plugintools.add_item( 
         #action="", 
-        title="Endymion - Make Some Noise (Documentary & Tour)",
+        title="DJ Docu's",
         url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_26+"/",
         thumbnail="http://www.dance.nl/uploads/images/articles/org/3125.jpg",
         folder=True )
@@ -354,6 +357,27 @@ plugintools.add_item(
         title="Hard Bass 2013/2012",
         url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_39+"/",
         thumbnail="http://s3-eu-west-1.amazonaws.com/btrb-prd-flyers/hx65ix70pi47.jpg",
+        folder=True )
+		
+plugintools.add_item( 
+        #action="", 
+        title="Mysteryland",
+        url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_40+"/",
+        thumbnail="http://www.lesflyers.eu/bc-media/flyers/crop/1073/mysteryland_21-08-2004.jpg",
+        folder=True )
+		
+plugintools.add_item( 
+        #action="", 
+        title="Defqon.1 Weekend Festival 2016 | Live Sets",
+        url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_41+"/",
+        thumbnail="http://www.guestzone.nl/user_files/image/winspecials/defqon1-2016-cd.jpg",
+        folder=True )
+		
+plugintools.add_item( 
+        #action="", 
+        title="Red Bull Culture Clash 2016",
+        url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_42+"/",
+        thumbnail="http://tribecompany.com/wp-content/uploads/2016/03/red-bull-culture-clash-tribe-07.jpg",
         folder=True )
 		
 		

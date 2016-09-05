@@ -14,10 +14,10 @@ __all__ = ['scraper',
 'pw_scraper', 
 'nitertv_scraper',
            'movieshd_scraper', 
-		   'stage66_scraper',
+		   
            'fmovie_scraper', 
 		   
-		   'kiwihd_scraper', 
+		   
 		   'watch5s_scraper',
            'dizibox_scraper',
            'heydl_scraper',
@@ -41,7 +41,7 @@ __all__ = ['scraper',
 		   'hevcbluray_scraper',
            'miradetodo_scraper', 
 		   
-		   'moviezone_scraper',
+		   
 		   'piratejunkies_scraper',
            'afdahorg_scraper', 
 		   'farda_scraper', 

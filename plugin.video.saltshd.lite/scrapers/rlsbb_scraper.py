@@ -31,6 +31,7 @@ import scraper
 
 
 BASE_URL = 'http://rlsbb.com'
+OLD_BASE_URL = 'http://old.rlsbb.com'
 SEARCH_BASE_URL = 'http://search.rlsbb.com'
 CATEGORIES = {VIDEO_TYPES.MOVIE: '/category/movies/"', VIDEO_TYPES.EPISODE: '/category/tv-shows/"'}
 
@@ -56,6 +57,10 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, require_debrid=True, cache_limit=.5)
+            if not html:
+                url = urlparse.urljoin(OLD_BASE_URL, source_url)
+                html = self._http_get(url, require_debrid=True, cache_limit=.5)
+                
             sources.update(self.__get_post_links(html, video))
             
             if kodi.get_setting('%s-include_comments' % (self.get_name())) == 'true':

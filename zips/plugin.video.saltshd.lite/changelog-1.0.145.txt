@@ -1,3 +1,6 @@
+[B]Version 1.0.145[/B]
++ Scotty doesn't know ;-P (scrapers)
+
 [B]Version 1.0.144[/B]
 + Scotty doesn't know ;-P (scrapers)
 

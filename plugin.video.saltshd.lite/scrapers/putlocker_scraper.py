@@ -19,6 +19,7 @@ import re
 import urllib
 import urlparse
 import kodi
+import log_utils
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -59,28 +60,28 @@ class Scraper(scraper.Scraper):
         return hosters
 
     def search(self, video_type, title, year, season=''):
+        results = []
         search_url = urlparse.urljoin(self.base_url, '/search/advanced_search.php?q=%s' % (urllib.quote_plus(title)))
-        if not year: year = 'Year'
-        search_url += '&year_from=%s&year_to=%s' % (year, year)
+        search_year = 'Year' if not year else year
+        search_url += '&year_from=%s&year_to=%s' % (search_year, search_year)
         if video_type in [VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE]:
             search_url += '&section=2'
         else:
             search_url += '&section=1'
 
         html = self._http_get(search_url, cache_limit=.25)
-        results = []
         if not re.search('Sorry.*?find.*?looking\s+for', html, re.I):
             r = re.search('Search Results For: "(.*?)</table>', html, re.DOTALL)
             if r:
                 fragment = r.group(1)
-                pattern = r'<a\s+href="([^"]+)"\s+title="([^"]+)'
-                for match in re.finditer(pattern, fragment):
-                    url, title_year = match.groups('')
-                    match = re.search('(.*)\s+\((\d{4})\)', title_year)
+                for match in re.finditer('href="([^"]+)"\s+title="([^"]+)', fragment):
+                    log_utils.log(match.groups())
+                    url, match_title_year = match.groups('')
+                    match = re.search('(.*)\s+\((\d{4})\)', match_title_year)
                     if match:
                         match_title, match_year = match.groups()
                     else:
-                        match_title = title_year
+                        match_title = match_title_year
                         match_year = ''
 
                     if not year or not match_year or year == match_year:

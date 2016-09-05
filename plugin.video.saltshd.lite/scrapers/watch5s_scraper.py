@@ -54,22 +54,13 @@ class Scraper(scraper.Scraper):
         sources = {}
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(page_url, cache_limit=2)
-            match1 = re.search('source\s*:\s*"([^"]+)', html)
-            match2 = re.search('subCDN\s*:\s*"([^"]+)', html)
-            match3 = re.search('subURL\s*:\s*"([^"]+)', html)
-            label = dom_parser.parse_dom(html, 'a', {'class': '[^"]*btn-eps[^"]*'})
-            if match1 and match2 and match3:
-                data = {'source': match1.group(1), 'subCDN': match2.group(1), 'subURL': match3.group(1)}
-                player_url = urlparse.urljoin(self.base_url, '/player/')
-                headers = {'Referer': page_url}
-                headers.update(XHR)
-                html = self._http_get(player_url, data=data, headers=headers, cache_limit=1)
-                match = re.search('url_playlist\s*=\s*"([^"]+)', html)
-                if match:
-                    headers = {'Referer': page_url}
-                    label = label[0] if label else ''
-                    sources.update(self.__get_links_from_xml(match.group(1), headers, label))
+            sources.update(self.__scrape_sources(page_url))
+            if video.video_type == VIDEO_TYPES.MOVIE:
+                html = self._http_get(page_url, cache_limit=2)
+                pages = set(dom_parser.parse_dom(html, 'a', {'class': '[^"]*btn-eps[^"]*'}, ret='href'))
+                active = set(dom_parser.parse_dom(html, 'a', {'class': '[^"]*active[^"]*'}, ret='href'))
+                for page_url in list(pages - active):
+                    sources.update(self.__scrape_sources(page_url))
         
         for source in sources:
             if not source.lower().startswith('http'): continue
@@ -86,6 +77,17 @@ class Scraper(scraper.Scraper):
             hosters.append(hoster)
         return hosters
 
+    def __scrape_sources(self, page_url):
+        html = self._http_get(page_url, cache_limit=2)
+        match = re.search('url_playlist\s*=\s*"([^"]+)', html)
+        if match:
+            headers = {'Referer': page_url}
+            label = dom_parser.parse_dom(html, 'a', {'class': '[^"]*active[^"]*'})
+            label = label[0] if label else ''
+            return self.__get_links_from_xml(match.group(1), headers, '')
+        else:
+            return {}
+    
     def __get_links_from_xml(self, xml_url, headers, button_label):
         sources = {}
         try:
