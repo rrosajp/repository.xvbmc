@@ -14,13 +14,13 @@ import plugintools
 import xbmc,xbmcaddon
 from addon.common.addon import Addon
 
-addonID = 'plugin.video.carpool-karaoke'
+addonID = 'plugin.video.djRegard'
 addon = Addon(addonID, sys.argv)
 local = xbmcaddon.Addon(id=addonID)
 icon = local.getAddonInfo('icon')
 
-YOUTUBE_CHANNEL_ID_1 = "PLZ1f3amS4y1ffYEhGZDtawaEyRQQu69Bw"
-YOUTUBE_CHANNEL_ID_2 = "UCJ0uqCI0Vqr2Rrt1HseGirg"
+
+YOUTUBE_CHANNEL_ID_1 = "UCw39ZmFGboKvrHv4n6LviCA"
 
 
 
@@ -45,18 +45,12 @@ def run():
 def main_list(params):
     plugintools.log("docu.main_list "+repr(params))
 
-    plugintools.add_item( 
-        #action="", 
-        title="Carpool Karaoke by James Corden and special guests",
-        url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_1+"/",
-        thumbnail="http://i4.mirror.co.uk/incoming/article4843959.ece/ALTERNATES/s615b/James-Corden.jpg",
-        folder=True )
-		
+   
 plugintools.add_item( 
         #action="", 
-        title="James Corden Late Night Show",
-        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_2+"/",
-        thumbnail="http://i4.mirror.co.uk/incoming/article4843959.ece/ALTERNATES/s615b/James-Corden.jpg",
+        title="DjRegard Official",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_1+"/",
+        thumbnail="https://yt3.ggpht.com/-Z6Mnb8qdA7A/AAAAAAAAAAI/AAAAAAAAAAA/CeU6rdpFLHI/s900-c-k-no-rj-c0xffffff/photo.jpg",
         folder=True )
 
     

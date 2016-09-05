@@ -95,7 +95,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.carpool-karaoke"
 	name="Carpool Karaoke"
-	version="1.0.3"
+	version="1.0.4"
 	provider-name="Scott Marten">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -107,6 +107,27 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">The Late Late Show with James Corden</summary>
+    <description lang="en"> </description>
+    <platform>all</platform>
+    <forum>n/a</forum>
+    <website>n/a</website>
+  </extension>
+</addon>
+
+<addon id="plugin.video.djRegard"
+	name="DjRegard Official"
+	version="1.0.4"
+	provider-name="Scott Marten">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.0.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Best Of Vocal Deep House Music</summary>
     <description lang="en"> </description>
     <platform>all</platform>
     <forum>n/a</forum>
@@ -332,7 +353,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.party-time!"
 	name="Party Time!"
-	version="1.0.4"
+	version="1.0.5"
 	provider-name="Scott Marten">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -396,7 +417,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 </addon>
 
 <!--suppress ALL -->
-<addon id="plugin.video.saltshd.lite" version="1.0.144" name="Salts HD Lite" provider-name="tknorris">
+<addon id="plugin.video.saltshd.lite" version="1.0.145" name="Salts HD Lite" provider-name="tknorris">
     <requires>
         <import addon="xbmc.python" version="2.19.0"/>
         <import addon="script.module.urlresolver" version="3.0.0"/>

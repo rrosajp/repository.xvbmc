@@ -27,7 +27,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
-BASE_URL = 'http://www.spacemov.net'
+BASE_URL = 'http://moviepool.net'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Scraper(scraper.Scraper):
@@ -43,7 +43,7 @@ class Scraper(scraper.Scraper):
 
     @classmethod
     def get_name(cls):
-        return 'SpaceMov'
+        return 'MoviePool'
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -51,30 +51,25 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=8)
-            fragment = dom_parser.parse_dom(html, 'div', {'class': 'video'})
-            if fragment:
-                for source in dom_parser.parse_dom(fragment[0], 'iframe', ret='src') + dom_parser.parse_dom(fragment[0], 'script', ret='src'):
-                    if 'validateemb' in source: continue
-                    host = urlparse.urlparse(source).hostname
-                    source = {'multi-part': False, 'url': source, 'host': host, 'class': self, 'quality': QUALITIES.HD720, 'views': None, 'rating': None, 'direct': False}
-                    sources.append(source)
+            for stream_url in dom_parser.parse_dom(html, 'iframe', ret='src'):
+                host = urlparse.urlparse(stream_url).hostname
+                quality = QUALITIES.HD720
+                source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': False}
+                sources.append(source)
 
         return sources
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/wp-admin/admin-ajax.php?s=%s&action=dwls_search')
+        search_url = urlparse.urljoin(self.base_url, '/?s=%s')
         search_url = search_url % (urllib.quote_plus(title))
-        referer = urlparse.urljoin(self.base_url, '/?s=%s&submit=Search')
-        referer = referer % (urllib.quote_plus(title))
-        headers = {'Referer': referer}
-        headers.update(XHR)
-        html = self._http_get(search_url, headers=headers, cache_limit=8)
-        js_data = scraper_utils.parse_json(html, search_url)
-        for match in js_data.get('results', []):
-            match_title_year = match.get('post_title')
-            match_url = match.get('permalink')
-            if match_url and match_title_year:
+        html = self._http_get(search_url, cache_limit=8)
+        fragment = dom_parser.parse_dom(html, 'ul', {'class': '[^"]*listing-videos[^"]*'})
+        if fragment:
+            urls = dom_parser.parse_dom(fragment[0], 'a', ret='href')
+            labels = dom_parser.parse_dom(fragment[0], 'a')
+            for match_url, match_title_year in zip(urls, labels):
+                match_title_year = re.sub('</?[^>]*>', '', match_title_year)
                 match = re.search('(.*?)\s+\((\d{4})\)\s*', match_title_year)
                 if match:
                     match_title, match_year = match.groups()
