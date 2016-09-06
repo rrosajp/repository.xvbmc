@@ -22,6 +22,7 @@ import string
 import random
 import time
 import base64
+import hashlib
 import kodi
 import log_utils
 import dom_parser
@@ -32,9 +33,10 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import XHR
 import scraper
 
-BASE_URL = 'http://movieshd.tv'
+BASE_URL = 'http://movieshd.watch'
 EMBED_URL = '/ajax/embeds.php'
 SEARCH_URL = '/api/v1/cautare/upd'
+KEY = 'MEE2cnUzNXl5aTV5bjRUSFlwSnF5MFg4MnRFOTVidFY='
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -106,10 +108,12 @@ class Scraper(scraper.Scraper):
             search_url = urlparse.urljoin(self.base_url, self.__get_search_url())
             timestamp = int(time.time() * 1000)
             s = self.__get_s()
-            query = {'q': title, 'limit': '100', 'timestamp': timestamp, 'verifiedCheck': self.__token, 'set': s, 'rt': self.__get_rt(self.__token + s)}
+            query = {'q': title, 'limit': '100', 'timestamp': timestamp, 'verifiedCheck': self.__token, 'set': s,
+                     'rt': self.__get_rt(self.__token + s), 'sl': self.__get_sl(search_url)}
             headers = XHR
             headers['Referer'] = self.base_url
             html = self._http_get(search_url, data=query, headers=headers, cache_limit=8)
+            log_utils.log(html)
             if video_type in [VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE]:
                 media_type = 'TV SHOW'
             else:
@@ -157,3 +161,10 @@ class Scraper(scraper.Scraper):
                 new_code -= 26
             s2 += chr(new_code)
         return s2
+
+    def __get_sl(self, url):
+        u = url.split('/')[-1]
+        return hashlib.md5(KEY + u).hexdigest()
+        
+        
+        

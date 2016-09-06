@@ -22,6 +22,7 @@ import urllib
 import urlparse
 import string
 import random
+import hashlib
 import kodi
 import log_utils
 import dom_parser
@@ -29,14 +30,16 @@ from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
+from salts_lib.constants import XHR
 from salts_lib.utils2 import i18n
 import scraper
 
 
-BASE_URL = 'http://www.flixanity.is'
+BASE_URL = 'http://www.flixanity.me'
 EMBED_URL = '/ajax/embeds.php'
-SEARCH_URL = '/api/v1/cautare/aug'
-XHR = {'X-Requested-With': 'XMLHttpRequest'}
+SEARCH_URL = '/api/v1/cautare/upd'
+KEY = 'MEE2cnUzNXl5aTV5bjRUSFlwSnF5MFg4MnRFOTVidFY='
+
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -75,8 +78,8 @@ class Scraper(scraper.Scraper):
                 elid = urllib.quote(base64.encodestring(str(int(time.time()))).strip())
                 data = {'action': action, 'idEl': match.group(1), 'token': self.__token, 'elid': elid}
                 ajax_url = urlparse.urljoin(self.base_url, EMBED_URL)
-                headers = XHR
-                headers['Authorization'] = 'Bearer %s' % (self.__get_bearer())
+                headers = {'Authorization': 'Bearer %s' % (self.__get_bearer())}
+                headers.update(XHR)
                 html = self._http_get(ajax_url, data=data, headers=headers, cache_limit=.5)
                 html = html.replace('\\"', '"').replace('\\/', '/')
                  
@@ -105,9 +108,10 @@ class Scraper(scraper.Scraper):
             search_url = urlparse.urljoin(self.base_url, self.__get_search_url())
             timestamp = int(time.time() * 1000)
             s = self.__get_s()
-            query = {'q': title, 'limit': '100', 'timestamp': timestamp, 'verifiedCheck': self.__token, 'set': s, 'rt': self.__get_rt(self.__token + s)}
-            headers = XHR
-            headers['Referer'] = self.base_url
+            query = {'q': title, 'limit': '100', 'timestamp': timestamp, 'verifiedCheck': self.__token, 'set': s, 'rt': self.__get_rt(self.__token + s),
+                     'sl': self.__get_sl(search_url)}
+            headers = {'Referer': self.base_url}
+            headers.update(XHR)
             html = self._http_get(search_url, data=query, headers=headers, cache_limit=1)
             if video_type in [VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE]:
                 media_type = 'TV SHOW'
@@ -191,3 +195,7 @@ class Scraper(scraper.Scraper):
                 new_code -= 26
             s2 += chr(new_code)
         return s2
+
+    def __get_sl(self, url):
+        u = url.split('/')[-1]
+        return hashlib.md5(KEY + u).hexdigest()

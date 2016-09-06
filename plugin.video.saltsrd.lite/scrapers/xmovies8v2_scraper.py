@@ -111,7 +111,7 @@ class Scraper(scraper.Scraper):
         season_url = urlparse.urljoin(self.base_url, season_url)
         html = self._http_get(season_url, cache_limit=.5)
         html = self.__get_players(html, season_url)
-        episode_pattern = 'href="([^"]+)[^>]+class="[^"]*btn-episode[^>]*>%s<' % (video.episode)
+        episode_pattern = 'href="([^"]+)[^>]+class="[^"]*btn-episode[^>]*>(?:Episode)?\s*0*%s<' % (video.episode)
         match = re.search(episode_pattern, html)
         if match:
             return scraper_utils.pathify_url(match.group(1))
@@ -121,12 +121,12 @@ class Scraper(scraper.Scraper):
         search_url = urlparse.urljoin(self.base_url, '/movies/search?s=%s' % urllib.quote_plus(title))
         html = self._http_get(search_url, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': '[^"]*c-content-product-2[^"]*'}):
-            match_title_year = dom_parser.parse_dom(item, 'p', {'class': '[^"]*c-title[^"]*'})
+            match_title_year = dom_parser.parse_dom(item, 'h2', {'class': '[^"]*c-title[^"]*'})
             match_url = dom_parser.parse_dom(item, 'a', ret='href')
-            is_season = dom_parser.parse_dom(item, 'div', {'class': '[^"]*c-bg-red[^'"]*"})
             if match_title_year and match_url:
                 match_title_year = match_title_year[0]
                 match_url = match_url[0]
+                is_season = re.search('Season\s+\d+', match_title_year, re.I)
                 if (video_type == VIDEO_TYPES.MOVIE and not is_season) or (video_type == VIDEO_TYPES.SEASON and is_season):
                     match_year = ''
                     if video_type == VIDEO_TYPES.SEASON:
@@ -134,7 +134,7 @@ class Scraper(scraper.Scraper):
                         if season and not re.search('Season\s+(%s)\s+' % (season), match_title_year, re.I):
                             continue
                     else:
-                        match = re.search('(.*?)\s+(\d{4})$', match_title_year)
+                        match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
                         if match:
                             match_title, match_year = match.groups()
                         else:
