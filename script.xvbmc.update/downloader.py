@@ -32,7 +32,7 @@ def download(url, dest):
             raise StopDownloading('Stopped Downloading')
         
     dp = xbmcgui.DialogProgress()
-    dp.create("XvBMC Nederland - Updater","XvBMC-NL: doing some download VOODOO...")
+    dp.create("XvBMC Nederland - Updater","XvBMC-NL: pulling some crazy ass download VOODOO...")
     start = time.clock()
     try:
         urllib.urlretrieve(url,dest,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))

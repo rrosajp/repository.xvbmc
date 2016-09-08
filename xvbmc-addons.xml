@@ -1143,7 +1143,7 @@ Addons Included
     </extension>
 </addon>
 
-<addon id="script.module.urlresolver" name="URLResolver" version="3.0.19" provider-name="Eldorado">
+<addon id="script.module.urlresolver" name="URLResolver" version="3.0.20" provider-name="Eldorado">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 	</requires>
@@ -1479,8 +1479,8 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 </addon>
 
 <addon id="script.xvbmc.update"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]Update(r)[/COLOR] &amp; Development [I][COLOR green] v3.1[/COLOR][/I]"
-       version="3.16"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; Development [COLOR green] [I](v4)[/I][/COLOR]"
+       version="4.00"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -1493,8 +1493,8 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
     <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC Nederland - Update(r)+DEVelopment v3</summary>
-    <description lang="en">XvBMC Update(r) + DEVelopment ; updates, tweaks, config's (v3.1 *Final* LibreELEC 7.02 Jarvis 16.1).</description>
+    <summary lang="en">XvBMC Nederland - UPDATE(r)+DEVelopment v4 beta</summary>
+    <description lang="en">XvBMC's UPDATE(r) + DEVelopment ; updates, tweaks, config's (v4.0 *BETA* LibreELEC Krypto).</description>
     <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
     <platform>all</platform>
     <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
