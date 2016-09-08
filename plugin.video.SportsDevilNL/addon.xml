@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="plugin.video.SportsDevilNL"
-  version="2016.08.22.NL"
+  version="2016.09.06.NL"
   name="SportsDevilNL (XvBMC)"
   provider-name="Hubbab3, Jairox, Sattekop, EPiC XvBMC, MaxMustermann, Al101">
   <requires>
@@ -18,9 +18,6 @@
     library="default.py">
    <provides>video</provides>
   </extension>
-  <extension 
-      point="xbmc.python.script"
-      library="lib/livestreamerXBMCLocalProxy.py" />
   <extension point="xbmc.addon.metadata">
     <summary>Play videos of different sports streaming sites (+NL-sausje +XvBMC-NL_versionnr.)</summary>
     <description>Play videos of different sports streaming sites (ALL CREDiTS -2- Hubbab3, Jairox, Sattekop, MaxMustermann, Al101).</description>
