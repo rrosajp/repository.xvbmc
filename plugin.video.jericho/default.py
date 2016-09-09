@@ -27,7 +27,7 @@ except:
     import simplejson as json
 import time
 import random
-import utils, xite, foxsports, ziggosporttotaal, slamfm40
+import utils, xite, foxsports, ziggosporttotaal, slamfm40, streamhd
 
 xbmcplugin.setContent(utils.addon_handle, 'movies')
 addon = xbmcaddon.Addon(id=utils.__scriptid__)
@@ -56,14 +56,12 @@ class NoRedirection(urllib2.HTTPErrorProcessor):
    https_response = http_response
 
 JerichoBase2  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2plcmljaG8tMjAxNi9KZXJpY2hvL21hc3Rlci9YTUwvaW5kZXgyLnhtbA=='
-SportBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2plcmljaG8tMjAxNi9KZXJpY2hvL21hc3Rlci9YTUwvc3BvcnQueG1s'
-BvlsBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2plcmljaG8tMjAxNi9KZXJpY2hvL21hc3Rlci9YTUwvdm9ldGJhbC54bWw='
+#BvlsBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2plcmljaG8tMjAxNi9KZXJpY2hvL21hc3Rlci9YTUwvdm9ldGJhbC54bWw='
 MusicBase  ='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2plcmljaG8tMjAxNi9KZXJpY2hvL21hc3Rlci9YTUwvbXV6aWVrLnhtbA=='
 
 
 
-
-sourceSitebvls = 'http://www.bvls2016.sc/'   
+#sourceSitebvls = 'http://www.bvls2016.sc/'   
 
 addon = xbmcaddon.Addon('plugin.video.jericho')
 addon_version = addon.getAddonInfo('version')
@@ -263,17 +261,17 @@ def streamNpo(source):
     finalUrl = resolve_http_redirect(prostream)
     return finalUrl
 
-def findStream(page) :
-    frameHtml = bitly.OPEN_URL2(page, sourceSitebvls, bitly.getUserAgent())
-    if 'window.atob' in frameHtml:
-        b64coded = bitly.getBaseEncodedString(frameHtml)
-        streamUrl = bitly.getStreamUrl(b64coded)
-    else:
-        liveresolvelink = re.compile('player.*?src="([^"]+)"', re.DOTALL | re.IGNORECASE).findall(frameHtml)[0]
-        import liveresolver
-        streamUrl = liveresolver.resolve(liveresolvelink)
-        xbmc.log(streamUrl)
-    return streamUrl
+#def findStream(page):
+ #   frameHtml = bitly.OPEN_URL2(page, sourceSitebvls, bitly.getUserAgent())
+  #  if 'window.atob' in frameHtml:
+   #     b64coded = bitly.getBaseEncodedString(frameHtml)
+    #    streamUrl = bitly.getStreamUrl(b64coded)
+    #else:
+     #   liveresolvelink = re.compile('player.*?src="([^"]+)"', re.DOTALL | re.IGNORECASE).findall(frameHtml)[0]
+     #   import liveresolver
+     #   streamUrl = liveresolver.resolve(liveresolvelink)
+     #   xbmc.log(streamUrl)
+    #return streamUrl
 
 def addon_log(string):
     if debug == 'true':
@@ -301,7 +299,7 @@ def makeRequest(url, headers=None):
 
 def JerichoIndex():
     addon_log("JerichoIndex")
-    addDir('News','News',46,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/nieuws.png',  FANART,'','','','',isItFolder=False)
+    addDir('Addon News','News',46,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/nieuws.png',  FANART,'','','','',isItFolder=False)
     addDir('Information','Privacy Policy',45,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/informatie.png',fanart,'','','','',isItFolder=False)    
     addDir('Sports','',70,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/sport.png' ,  fanart,'','','','')
     addDir('Music','',75,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/muziek.png' ,  fanart,'','','','')
@@ -311,21 +309,21 @@ def JerichoIndex():
 def indexsport():
     addon_log("indexsport")
     addDir('Live Sport','',72,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/livesport.png',fanart,"","","","","",)
-    getData(base64.b64decode(SportBase),'')
     addDir('FOX Sports Videos *Dutch*','http://www.foxsports.nl/video/',227,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fs.png' ,  fanart,'','','','')
     addDir('Ziggo Sport Totaal Replays and Clips','http://www.ziggosporttotaal.nl/video/',232,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/zst.png' ,  fanart,'','','','')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def indexlivesport():
-    addon_log("indexlivesport")
-    addDir('BVLS2016.sc','',63,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-    addDir('Sport365 - From ZemTV','',47,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/sport365.png',fanart,"","","","","",)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+	addon_log("indexlivesport")
+    #addDir('BVLS2016.sc','',63,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
+	addDir('Sport365 - From ZemTV','',47,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/sport365.png',fanart,"","","","","",)
+	addDir('StreamHD.eu/','',242,'http://www.streamhd.eu/images/logo.png',fanart,"","","","","",)
+	xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
-def indexbvls():
-    addon_log("indexbvls")
-    getData(base64.b64decode(BvlsBase),'')
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+#def indexbvls():
+ #   addon_log("indexbvls")
+  #  getData(base64.b64decode(BvlsBase),'')
+   # xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def indexmuziek():
     addon_log("indexmuziek")
@@ -355,27 +353,27 @@ def striphtml(data):
     re.DOTALL | re.IGNORECASE)
     return p.sub('', data)
     
-def getbvlsSchedule():
-    bvlspage = getHtml('http://www.bvls2016.sc/')
-    datum = re.compile('<div class="date_time" id="date_time">.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(bvlspage)[0]
-    addDir(datum,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","")
+#def getbvlsSchedule():
+ #   bvlspage = getHtml('http://www.bvls2016.sc/')
+  #  datum = re.compile('<div class="date_time" id="date_time">.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(bvlspage)[0]
+   # addDir(datum,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","")
     
-    match = re.compile(r'(<p>(?:<b>)?<span class="time".*?</p>)\s+(?:<HR|<div)', re.DOTALL | re.IGNORECASE).findall(bvlspage)
-    for wedstrijd in match:
-        try:
-            eggs = re.compile("(<p>.*?)<a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)[0]
-            eggs = striphtml(eggs).replace('\n','')
-            addDir(eggs,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-            try:
-                streams = re.compile("<a[^>]+>(.*?)</a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)
-                for stream in streams:
-                    stream = striphtml(stream)
-                    tekstregel = '             [COLOR yellow]' + stream + ' [/COLOR] '
-                    addDir(tekstregel,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-            except: pass
-        except:
-            addDir('Error with the agenda, go to the streams','',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    #match = re.compile(r'(<p>(?:<b>)?<span class="time".*?</p>)\s+(?:<HR|<div)', re.DOTALL | re.IGNORECASE).findall(bvlspage)
+    #for wedstrijd in match:
+    #    try:
+     #       eggs = re.compile("(<p>.*?)<a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)[0]
+      #      eggs = striphtml(eggs).replace('\n','')
+       #     addDir(eggs,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
+        #    try:
+         #       streams = re.compile("<a[^>]+>(.*?)</a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)
+          #      for stream in streams:
+           #         stream = striphtml(stream)
+            #        tekstregel = '             [COLOR yellow]' + stream + ' [/COLOR] '
+             #       addDir(tekstregel,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
+            #except: pass
+        #except:
+         #   addDir('Error with the agenda, go to the streams','',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
+    #xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def getHtml(url, referer=None, hdr=None, data=None):
     USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
@@ -787,17 +785,22 @@ def getItems(items,fanart):
                 elif len(item('bvls')) >0:
                     for i in item('bvls'):
                         if not i.string == None:
-                            title = item('title')[0].string 
+                            title = item('title')[0].string
+                            color = 'none'
+                            titlesup = ''
                             streamUrl = findStream(i.string)
-                            if (bitly.getResponse(streamUrl)) :
-                                color = 'yellow'
+                            if streamUrl.startswith('rtmp'):
+                                color = 'orange'
+                                titlesup = '(RTMP)'
+                            elif (bitly.getResponse(streamUrl)):
+                                color = 'lime'
+                                titlesup = '(OTHER)'
                                 if streamUrl[-4:] == '.flv' :
                                     streamUrl = bitly.VeetleId(streamUrl)
-                            else :
-                                color = 'none'
-                            name='[COLOR '+color+']' + title + '[/COLOR]' 
+                                    titlesup = '(VEETLE)'
+                            name='[COLOR %s]%s %s[/COLOR]' % (color, title, titlesup) 
                             bvls = streamUrl
-                            url.append(bvls)                                                    
+                            url.append(bvls)
                 elif len(item('ytch')) >0:
                     for i in item('ytch'):
                         thumbnail = item('thumbnail')[0].string
@@ -840,12 +843,12 @@ def getItems(items,fanart):
                         for i in item('f4m'):
                             if not i.string is None:
                                 if '.f4m' in i.string:
-                                    f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)
+                                    f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;name='+name
                                 elif '.m3u8' in i.string:
-                                    f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;streamtype=HLS'
+                                    f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;streamtype=HLS'+'&amp;name='+name
                                     
                                 else:
-                                    f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;streamtype=TSDOWNLOADER'
+                                    f4m = 'plugin://plugin.video.f4mTester/?url='+urllib.quote_plus(i.string)+'&amp;streamtype=TSDOWNLOADER'+'&amp;name='+name
                         url.append(f4m)
                 elif len(item('ftv')) >0:
                     for i in item('ftv'):
@@ -2476,8 +2479,8 @@ elif mode==61:
 elif mode==62:
     getgoatSchedule()
 
-elif mode==63:
-    getbvlsSchedule()
+#elif mode==63:
+ #   getbvlsSchedule()
 
 if mode==70:
     addon_log("indexsport")
@@ -2490,9 +2493,9 @@ if mode==72:
     addon_log("indexlivesport")
     indexlivesport()
     
-if mode==74:
-    addon_log("indexbvls")
-    indexbvls()
+#if mode==74:
+ #   addon_log("indexbvls")
+  #  indexbvls()
     
 if mode==75:
     addon_log("indexmuziek")
@@ -2526,5 +2529,7 @@ elif mode == 239: foxsports.MainInterviews()
 elif mode == 240: slamfm40.Main()
 elif mode == 241: slamfm40.List(url)
 elif mode == 300: utils.playyt(url, name)
+elif mode == 242: streamhd.List()
+elif mode == 243: streamhd.Playvid(url, name)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

@@ -225,7 +225,7 @@ def getLinks():
             if len(lng)>0:
                 lng=Colored("[" +lng+"]","orange")
             if len(qty)>0:
-                qty=Colored("["+qty+"]","red")
+                qty=Colored("["+qty+"]","lime")
                 
             
             if not lnk.startswith("http"):
@@ -420,7 +420,7 @@ def select365(url):
                     print curl
                     cname=cname.encode('ascii', 'ignore').decode('ascii')
                     #if not cname.startswith('link'):
-                    cname='source# '+str(ino)
+                    cname='Link# '+str(ino)
                     available_source.append(cname)
                     links+=[[cname,curl]]
                 except:
@@ -430,7 +430,7 @@ def select365(url):
             if len(curl)==1:
                 return links[0][1]
             dialog = xbmcgui.Dialog()
-            index = dialog.select('Choose your link', available_source)
+            index = dialog.select('Kies een link', available_source)
             if index > -1:
                 return links[index][1]    
 

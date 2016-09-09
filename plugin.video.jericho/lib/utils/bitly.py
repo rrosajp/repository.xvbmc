@@ -30,15 +30,16 @@ def OPEN_URL2(page, referer=None, ua=None):
         req.add_header('Accept-Language', 'nl,en-US;q=0.7,en;q=0.3')                                              
         req.add_header('Accept-Encoding', 'deflate')                                                        
         req.add_header('Connection', 'keep-alive')                                                                
-        response = urllib2.urlopen(req)                                            
+        response = urllib2.urlopen(req, timeout=5)                                            
         data = response.read()                                                                                    
         response.close()                                                                                          
         if(ua is None) :                                                                                          
             print(data)                                                                            
         return str(data)                                                                           
     except :                                                                                       
+        xbmc.log('We failed to open '+url)
         return ''                                                                                  
-        print('We failed to open '+url)
+
 
 def getPage(page, referer=None, ua=None):                                
     url = page                                                           
@@ -84,7 +85,7 @@ def getUa():
 
 def getResponse(url):
     try:
-        response = urllib2.urlopen(url, timeout=10)
+        response = urllib2.urlopen(url, timeout=5)
         if response and response.getcode() == 200:
             return response
         else :

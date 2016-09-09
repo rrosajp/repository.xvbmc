@@ -1,29 +1,32 @@
-# REPOsitory.XvBMC
+#REPOsitory.XvBMC
  
 NOTE: XvBMC Nederland (xbmc nl) wij zijn géén helpdesk van/voor boxverkopers
  
   
    
 #XvBMC_Nederland:
-https://www.facebook.com/groups/XvBMCnederland/ 
-
+http://bit.ly/XvBMC-NL | https://www.fb.com/groups/XvBMCnederland/
+ 
 #XvBMC_Pi:
-https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/ 
-
+http://bit.ly/XvBMC-Pi | https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/
+ 
 #XvBMC_Android:
-https://www.fb.com/groups/xbmcvoorbeginners.android/ 
-
+http://bit.ly/XvBMC-Android | https://www.fb.com/groups/xbmcvoorbeginners.android/
+ 
 #XvBMC_FilmsSeriesMuziek:
-https://www.fb.com/groups/XbmcvoorbeginnersfilmsForum/ 
-
+http://bit.ly/XvBMC-Media | https://www.fb.com/groups/XbmcvoorbeginnersfilmsForum/
+ 
 #XvBMC_Sports:
-https://www.fb.com/groups/XbmcVoorBeginnersSportChat/ 
-
+http://bit.ly/XvBMC-Sport | https://www.fb.com/groups/XbmcVoorBeginnersSportChat/
+ 
 #XvBMC_retro-Games:
-https://www.facebook.com/groups/XvBMCretroGames/ 
-
+http://bit.ly/XvBMC-Retro | https://www.fb.com/groups/XvBMCretroGames/
+ 
 #XvBMC_Marktplaats:
-https://www.fb.com/groups/xbmckoopenverkoop/ 
+http://bit.ly/XvBMC-Marktplaats | https://www.fb.com/groups/xbmckoopenverkoop/
+ 
+#XvBMC_YouTube:
+http://bit.ly/XvBMC-YouTube | https://www.youtube.com/user/onlinefilmskijken/
    
   
  
