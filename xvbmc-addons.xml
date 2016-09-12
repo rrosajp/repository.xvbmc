@@ -28,6 +28,29 @@
     </extension>
 </addon>
 
+<addon id="net.rieter.xot.channel.nos"
+       version="4.1.1.2"
+       name="Retrospect Dutch NOS Channels"
+       provider-name="Bas Rieter">
+
+    <requires>
+        <!--import addon="net.rieter.xot" version="x.x.x" optional="false" /-->
+    </requires>
+
+    <extension point="xbmc.python.pluginsource"
+               library="">
+        <!--provides>video</provides-->
+    </extension>
+
+    <extension point="xbmc.addon.metadata">
+        <summary>Retrospect (a.k.a. XBMC Online TV) is an add-on that allows the playback of a lot of TV shows that are available (legally) via the broadcasters websites.</summary>
+        <description>Set of NOS related channels for Retrospect. Nederland 1, 2, 3, Z@pp and the new NOS beta channel.</description>
+        <nofanart>true</nofanart>
+        <disclaimer>Retrospect is provided as is. We do not take any responsibility for possible (but highly unlikely) damage cause to your system. Nor do we take responsibility for the content that can be watched via this add-on.</disclaimer>
+        <language>nl</language>
+    </extension>
+</addon>
+
 <addon id="net.rieter.xot.repository"
         name="Retrospect (formerly XBMC Online TV) Add-ons"
         version="1.0.5"
@@ -132,32 +155,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <platform>all</platform>
     <forum>n/a</forum>
     <website>n/a</website>
-  </extension>
-</addon>
-
-<addon id="plugin.video.dss"
-       name="Dutch Sport Streams"
-       version="5.4.1"
-       provider-name="DSS">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="script.module.urlresolver" version="1.0.0"/>
-	<import addon="plugin.video.youtube" version="2.9.2" optional="true"/>
-    <import addon="script.module.simplejson" version="3.3.0"/>
-    <import addon="script.module.elementtree" version="1.2.8"/>
-    <import addon="plugin.video.f4mTester" version="2.2.3" optional="true" />
-	<import addon="script.module.liveresolver"  />
-	<import addon="plugin.video.veetle" version="0.3.1" optional="false"/>
-
-
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-	<provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-	<summary lang="en">Dutch Sport Streams</summary>
-    <description lang="en">Dutch Sport Streams</description>
-    <platform>all</platform>
   </extension>
 </addon>
 
@@ -288,23 +285,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <website></website>
     <email></email>
   </extension>
-</addon>
-
-<addon id="plugin.video.nlsports" name="NL Sports" version="2.3.2" provider-name="NLSPORTS">
-	<requires>
-		<import addon="plugin.video.veetle" version="0.3.1" optional="false"/>
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="default.py">
-		<provides>video</provides>
-	</extension>
-	<extension  point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<summary lang="nl">Bekijk NL sport streams van diverse Nederlandse stream providers op uw XBMC / Kodi.</summary>
-		<description lang="nl">Met deze addon is het mogelijk om streams van Nederlandse stream providers te bekijken.[CR]Let op: Veetle dient te zijn geinstalleerd.</description>
-		<disclaimer></disclaimer>
-		<language>nl</language>
-		<platform>all</platform>
-	</extension>
 </addon>
 
 <addon id="plugin.video.nlv4" name="NL viewer V4" version="1.2.6"
