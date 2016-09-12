@@ -15,6 +15,7 @@
     <import addon="script.common.plugin.cache" />
     <import addon="script.module.liveresolver" />
     <import addon="plugin.video.veetle" />
+    <import addon="plugin.video.SportsDevil" />
 
 
   </requires>

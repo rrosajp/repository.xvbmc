@@ -5,7 +5,7 @@ import utils, sqlite3
 
 
 def Main():
-    utils.addDir('Slam','http://www.slam.nl/slam40/',241,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/zst.png','',fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg')
+    utils.addDir('Slam','http://www.slam.nl/slam40/',241,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/xite.png','',fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg')
     xbmcplugin.endOfDirectory(utils.addon_handle)
 
 

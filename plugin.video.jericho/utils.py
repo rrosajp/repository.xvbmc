@@ -148,6 +148,7 @@ def cleantext(text):
     text = text.replace('&iacute;','í')
     text = text.replace('&acute;','´')
     text = text.replace('&bull;','-')
+    text = text.replace('&ndash;','-')
     return text
 
 
@@ -190,6 +191,8 @@ def playyt(url, name):
     iconimage = xbmc.getInfoImage("ListItem.Thumb")
     liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
     liz.setInfo( type="Video", infoLabels={ "Title": name } )
+    dp = xbmcgui.DialogProgress()
+    dp.create("Jericho","Please wait")  
     xbmc.Player().play(url, liz, False)
 
 def addDir(name, url, mode, iconimage, page=None, channel=None, section=None, keyword='', Folder=True, fanart=None):

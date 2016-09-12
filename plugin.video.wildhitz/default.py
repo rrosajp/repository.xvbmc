@@ -11,9 +11,17 @@ import random
 import base64
 from operator import itemgetter
 import traceback,cookielib
+from resources.lib.modules import control
+from resources.lib.modules.log_utils import log
+
+try:
+    import json
+except:
+    import simplejson as json
 
 wildlink = base64.b64decode('aHR0cDovL3dpbGRoaXR6LnJyLmtwbnN0cmVhbWluZy5ubC9obHMvdm9kL3dpbGRoaXR6L21wNHMv')          
 wildqt = base64.b64decode('LzcyMHAyMDAwLm1wNA==')
+API = base64.b64decode('aHR0cDovL3dpbGRoaXR6Lm5sL0FQSS9zb25ncy9HZXRTb25ncy5waHA/JnR5cGU9')
     
 addon = xbmcaddon.Addon('plugin.video.wildhitz')
 addonname = addon.getAddonInfo('name')
@@ -119,11 +127,16 @@ def sorted_nicely( l ):
 
 def Addtypes():
    addDir('Live On Air' ,playlist,2,icon ,  FANART,'','','','')
-   addDir('Weekend Mix' ,'weekendmix',3,icon ,  FANART,'','','','')
-   addDir('Daily Mix' ,'dailymix',5,icon ,  FANART,'','','','')
-   addDir('Top 3' ,'top3',4,icon ,  FANART,'','','','')
+   addDir('Recent' ,API+'recent',9,icon ,  FANART,'','','','')
+   addDir('Popular' ,API+'popular',9,icon ,  FANART,'','','','')
+   addDir('Weekend Mix' ,'http://pastebin.com/raw/C0H0i8f9',5,icon ,  FANART,'','','','')
+   addDir('Daily Mix' ,'http://pastebin.com/raw/Sv1vLn0X',5,icon ,  FANART,'','','','')
+   #addDir('Top 3' ,'top3',4,icon ,  FANART,'','','','')
    addDir('Playlist' ,'top3',6,icon ,  FANART,'','','','')
    addDir('VideoClips' ,'jukebox',8,icon ,  FANART,'','','','')
+   addDir('Search' ,'Search',12,icon ,  FANART,'','','','')
+   from resources.lib.modules import cache, control, changelog
+   cache.get(changelog.get, 600000000, control.addonInfo('version'), table='changelog')
 
 
 
@@ -200,7 +213,7 @@ def CatJukebox():
 
 
 def Jukebox(cat):
-   url = base64.b64decode('aHR0cDovL2RjdHYuY29tbHUuY29tL3htbC93aWxkamIueG1s')
+   url = base64.b64decode('aHR0cDovL3d3dy5kdXRjaHNwb3J0c3RyZWFtcy5jb20veG1sL25ldy1kYXRhLnhtbA==')
    content = make_request(url)
    root = ET.fromstring(content)
    items = root.findall('item')
@@ -219,20 +232,38 @@ def Jukebox(cat):
             if title3 == cat:
                addDir(title ,link,10,icon ,  FANART,'','','','')
 
+def Wildscan(url):
+   
+   try:
+      livejson = GetHTML(url)
+      livejson = json.loads(livejson)
+      streamlist = livejson["items"]
+      for items in streamlist:
+         artist = items["artist"]
+         title = items["title"]
+         link = items["preview"].replace("272p400","720p2000").replace(base64.b64decode('aHR0cDovL3dpbGRoaXRzdmlkZW92b2QuZG93bmxvYWQua3Buc3RyZWFtaW5nLm5sLw=='),base64.b64decode('aHR0cDovL3dpbGRoaXR6LnJyLmtwbnN0cmVhbWluZy5ubC9obHMvdm9kL3dpbGRoaXR6Lw=='))
+         song = artist+' - '+title
+         song = song.replace("&amp;","and").replace("&","and")
+         addDir(song ,link,10,icon ,  FANART,'','','','')
+
+   except:
+      pass
+   
+
+def Search():
+   keyboard = xbmc.Keyboard('', 'Enter Artits/Title:', False)
+   keyboard.doModal()
+   if keyboard.isConfirmed():
+      query = keyboard.getText()
+   else:
+      return
+   Wildscan(API+'search&search='+query)
+
+   
 
 
-def Weekendmix():
-   url = 'http://pastebin.com/raw/C0H0i8f9'
-   content = make_request(url)
-   root = ET.fromstring(content)
-   items = root.findall('item')
-   for item in items:
-      title = item.find('title').text
-      link = item.find('link').text
-      addDir(title ,link,10,icon ,  FANART,'','','','')
 
-def Dailymix():
-   url = 'http://pastebin.com/raw/Sv1vLn0X'
+def Wildmix(url):
    content = make_request(url)
    root = ET.fromstring(content)
    items = root.findall('item')
@@ -385,15 +416,20 @@ try:
    elif mode==4 :
       Wildhitz_top3()
    elif mode==5 :
-      Dailymix()
+      Wildmix(url)
    elif mode==6 :
       Addplaylist()
    elif mode==7 :
       Jukebox(url)
    elif mode==8 :
       CatJukebox()
+   elif mode==9 :
+      Wildscan(url)
    elif mode==10 :
       playmix(name,url)
+
+   elif mode==12 :
+      Search()
 
 
 
@@ -403,7 +439,7 @@ except:
 	
 
 		
-if not ( (mode==2 or mode==4 or mode==9 or mode==10 or mode==15 or mode==21 or mode==22 or mode==27 or mode==33 or mode==35 or mode==37 or mode==40 or mode==42 or mode==0)  )  :
+if not ( (mode==2 or mode==4 or mode==19 or mode==10 or mode==15 or mode==21 or mode==22 or mode==27 or mode==33 or mode==35 or mode==37 or mode==40 or mode==42 or mode==0)  )  :
 	if mode==144:
 		xbmcplugin.endOfDirectory(int(sys.argv[1]),updateListing=True)
 	else:

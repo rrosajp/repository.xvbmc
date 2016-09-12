@@ -27,7 +27,7 @@ except:
     import simplejson as json
 import time
 import random
-import utils, xite, foxsports, ziggosporttotaal, slamfm40, streamhd
+import utils, xite, foxsports, ziggosporttotaal, slamfm40, streamhd, Hesgoals, stream2watch, livetvru, fromhot, livefootballvideohighlights, livefootballvideo, sportp2p, showsporttv, hdfree, mamahd, Sportstream365, woopio, footlive
 
 xbmcplugin.setContent(utils.addon_handle, 'movies')
 addon = xbmcaddon.Addon(id=utils.__scriptid__)
@@ -311,14 +311,36 @@ def indexsport():
     addDir('Live Sport','',72,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/livesport.png',fanart,"","","","","",)
     addDir('FOX Sports Videos *Dutch*','http://www.foxsports.nl/video/',227,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fs.png' ,  fanart,'','','','')
     addDir('Ziggo Sport Totaal Replays and Clips','http://www.ziggosporttotaal.nl/video/',232,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/zst.png' ,  fanart,'','','','')
+    addDir('Fullmatchesandshows.com','http://fullmatchesandshows.com/',301,'http://www.fullmatchesandshows.com/wp-content/uploads/2014/12/FMS-logo-n-text-SMALL.png' ,  fanart,'','','','')
+    addDir('UFC','http://mmanext.com/',77,'http://mmanext.com/wp-content/uploads/2015/06/mmanext111.png',fanart,"","","","","",)
+    addDir('MamaHD','',275,'http://mamahd.com/images/logo.png',fanart,"","","","","",)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 def indexlivesport():
-	addon_log("indexlivesport")
-    #addDir('BVLS2016.sc','',63,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-	addDir('Sport365 - From ZemTV','',47,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/sport365.png',fanart,"","","","","",)
-	addDir('StreamHD.eu/','',242,'http://www.streamhd.eu/images/logo.png',fanart,"","","","","",)
-	xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    addon_log("indexlivesport")
+    addDir('SEBN.SC','',63,'http://sebn.sc/images/logo.png',fanart,"","","","","",)
+    addDir('Sport365 - From ZemTV (Geoblocked)','',47,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/sport365.png',fanart,"","","","","",)
+    #addDir('Feed2allnow.eu','',104,'http://cdn.cdnco.us/feed2all/logo.png',fanart,"","","","","",)
+    addDir('StreamHD.eu/','',242,'http://www.streamhd.eu/images/logo.png',fanart,"","","","","",)
+    addDir('Wizhdsports.to','',114,'http://wizhdsports.to/images/wiz.jpg',fanart,"","","","","",)
+    addDir('Hesgoals.sc','',244,'https://2.bp.blogspot.com/-nPM2WTm78RY/V0I1k04gNUI/AAAAAAAAA-M/wWeh_Bwn63oW6QRQCJQiWV__IaCDscXXQCLcB/s1600/hesgoal.png',fanart,"","","","","",)
+    addDir('Showsport-tv.com','',270,'http://showsport-tv.com/images/logo.png',fanart,"","","","","",)
+    addDir('HDFree.Tv','',273,icon,fanart,"","","","","",)
+    #addDir('Stream2watch.co','',248,'http://www.stream2watch.co/images/logo.png',fanart,"","","","","",)
+    #addDir('LiveTV.sx','',251,'http://cdn.livetvcdn.net/img/oglogo.png',fanart,"","","","","",)
+    #addDir('Woop.io','',308,'https://i.imgsafe.org/924ffb8.png',fanart,"","","","","",)
+    #addDir('Wiz1.net','',106,'http://i39.tinypic.com/3128vb9.png',fanart,"","","","","",)
+    #addDir('Foot-live.info','',115,icon,fanart,"","","","","",)
+    addDir('Sportstream365.com','',306,'http://sportstream365.com/img/logo_en.png',fanart,"","","","","",)
+    addDir('Tuttosportweb.com','',111,icon,fanart,"","","","","",)
+    addDir('Golden Arrows Channel (Darts)','',112,icon,fanart,"","","","","",)
+    #addDir('FromHot.com','',254,'http://www.u-bet.be/wp-content/uploads/2015/10/FromHot.png', fanart,"","","","","",)
+    #addDir('Goatd.net','',107,icon,fanart,"","","","","",)
+    #addDir('SportP2P','',268,'http://www.sportp2p.com/images/logo.png',fanart,"","","","","",)
+    #addDir('LiveFootballVideo.com','',264,'http://livefootballvideo.com/images/xlivefootballvideologo.png.pagespeed.ic.3kxaAupa3O.png',fanart,"","","","","",)
+    #addDir('Live9.net','',108,icon,fanart,"","","","","",)
+    #addDir('Vipbox.nu','',109,'http://cdn.vipboxoc.co//images/vipbox-logo.png',fanart,"","","","","",)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 #def indexbvls():
  #   addon_log("indexbvls")
@@ -335,17 +357,18 @@ def indexmuziek():
 
 
 def playLiveResolver(url, name):
+    dp = xbmcgui.DialogProgress()
+    dp.create("Jericho","Please wait")  
     import liveresolver
     resolved = liveresolver.resolve(url) 
     if resolved:
         #if 'p2pcast' in resolved:
         #    resolved = 'plugin://plugin.video.f4mTester/?streamtype=HLS&amp;url=' + urllib.quote_plus(resolved)
-        xbmc.Player().play(resolved)
+        liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png",thumbnailImage="DefaultVideo.png")
+        liz.setInfo( type="Video", infoLabels={ "Title": name } )
+        xbmc.Player().play(resolved, liz)  
     else:
-        xbmc.executebuiltin("XBMC.Notification(Jericho,No playable link found. - ,5000)")
-    liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png",thumbnailImage="DefaultVideo.png")
-    liz.setInfo( type="Video", infoLabels={ "Title": name } )
-    xbmc.Player().play(resolved, liz)
+        xbmc.executebuiltin("XBMC.Notification(Jericho,No playable link found. - ,5000)")  
     
    
 def striphtml(data):
@@ -353,27 +376,250 @@ def striphtml(data):
     re.DOTALL | re.IGNORECASE)
     return p.sub('', data)
     
-#def getbvlsSchedule():
- #   bvlspage = getHtml('http://www.bvls2016.sc/')
-  #  datum = re.compile('<div class="date_time" id="date_time">.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(bvlspage)[0]
-   # addDir(datum,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","")
+def getbvlsSchedule():
+    bvlspage = getHtml('http://sebn.sc/')
+    datum = re.compile('<h1>(.*?)</h1>', re.DOTALL | re.IGNORECASE).findall(bvlspage)[0]
+    utils.addDir(datum,'',63,'http://sebn.sc/images/logo.png','',fanart)
+    utils.addDir('','',63,'http://sebn.sc/images/logo.png','',fanart)
     
-    #match = re.compile(r'(<p>(?:<b>)?<span class="time".*?</p>)\s+(?:<HR|<div)', re.DOTALL | re.IGNORECASE).findall(bvlspage)
-    #for wedstrijd in match:
-    #    try:
-     #       eggs = re.compile("(<p>.*?)<a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)[0]
-      #      eggs = striphtml(eggs).replace('\n','')
-       #     addDir(eggs,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-        #    try:
-         #       streams = re.compile("<a[^>]+>(.*?)</a", re.DOTALL | re.IGNORECASE).findall(wedstrijd)
-          #      for stream in streams:
-           #         stream = striphtml(stream)
-            #        tekstregel = '             [COLOR yellow]' + stream + ' [/COLOR] '
-             #       addDir(tekstregel,'',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-            #except: pass
-        #except:
-         #   addDir('Error with the agenda, go to the streams','',74,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/bvls.png',fanart,"","","","","",)
-    #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    match = re.compile(r'<td class="rt-td"> <p class="sports">(.*?)</p>.*?sports1">(.*?)</p>.*?sports">(.*?)</p>.*?href="(.*?)"', re.DOTALL | re.IGNORECASE).findall(bvlspage)
+    for tijd, categorie, name, videopage in match:
+        name = tijd + ' - [' + categorie + '] ' + name
+        videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+        utils.addDir(name,videopage,300,'http://sebn.sc/images/logo.png','',fanart)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+def getwizhdSchedule(url):
+    bvlspage = getHtml(url)
+    match = re.compile(r'<div class="match" id="match.*?">(.*?)\$\("#channel.*?" \)\.slideDown\( 100 \);', re.IGNORECASE | re.DOTALL).findall(bvlspage)
+    for wedstrijd in match:
+        try:
+            eggs = re.compile('<span id="startTime.*?Span">\n\t\t(.*?)</span>.*?<div class="name">(.*?)</div>', re.IGNORECASE | re.DOTALL).findall(wedstrijd)
+            for tijd, name in eggs:
+                try:
+                    dt = datetime.strptime(tijd, "%H:%M")
+                    tijd = str(dt.hour+1).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
+                except :
+                    pass
+                utils.addDir(tijd+' - '+name,'',113,'http://wizhdsports.to/images/wiz.jpg', '', fanart)
+            try:
+                streams = re.compile('<div style="float:left;"><a href="(.*?)">(.*?)</a>', re.IGNORECASE | re.DOTALL).findall(wedstrijd)
+                for videopage, streamname in streams:
+                    tekstregel = '             [COLOR yellow]' + streamname + ' [/COLOR] '
+                    videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+                    utils.addDir(tekstregel,videopage,300,'http://wizhdsports.to/images/wiz.jpg', '', fanart)
+            except: pass
+        except:
+            addDir('Error with the agenda.','',113,'http://wizhdsports.to/images/wiz.jpg',fanart,"","","","","",)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+def getwizhdcats():
+    listhtml = utils.getHtml('http://wizhdsports.to/index.html','http://wizhdsports.to/index.html')
+    match = re.compile("""<li onclick="location='(.*?)'.*?src="(.*?)".*?<div style="float:left">(.*?)</div>""", re.IGNORECASE | re.DOTALL).findall(listhtml)
+    for page, img, name in match:
+        if 'P2P' in name:
+            pass
+        else:
+            name = name.replace('Home', 'All')
+            utils.addDir(name,page,113,img,'',fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg')
+    xbmcplugin.endOfDirectory(utils.addon_handle)
+    
+def getUFC():
+    ufcpage = getHtml('http://mmanext.com/ufc-videos/')
+    match = re.compile('story-contain-img.*?src.*?http(.*?).jpg.*?<h2>(.*?)</h2>.*?text-date left">(.*?)</span>.*?href="(.*?)".*?Read More', re.IGNORECASE | re.DOTALL).findall(ufcpage)
+    for img, name, datum, videopage in match:
+        name = utils.cleantext(name)
+        img = img.replace('s://','://')
+        img = 'http' + img + '.jpg'
+        videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+        utils.addDir(datum + ': '+ name,videopage,300,img, '', FANART)
+    try:
+        nextp = re.compile("""class="current">.*?</span>.*?href='(.*?)'""", re.IGNORECASE | re.DOTALL).findall(ufcpage)[0]
+        next = nextp.replace("&amp;","&")
+        utils.addDir('Volgende Pagina', next, 79,'', '')
+    except: pass
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+def getUFCnext(url):
+    ufcpage = getHtml(url)
+    match = re.compile('story-contain-img.*?src.*?http(.*?).jpg.*?<h2>(.*?)</h2>.*?text-date left">(.*?)</span>.*?href="(.*?)".*?Read More', re.IGNORECASE | re.DOTALL).findall(ufcpage)
+    for img, name, datum, videopage in match:
+        name = utils.cleantext(name)
+        img = img.replace('s://','://')
+        img = 'http' + img + '.jpg'
+        videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+        utils.addDir(datum + ': '+ name,videopage,300,img, '', FANART)
+    try:
+        nextp = re.compile("""class="current">.*?</span>.*?href='(.*?)'""", re.IGNORECASE | re.DOTALL).findall(ufcpage)[0]
+        next = nextp.replace("&amp;","&")
+        utils.addDir('Volgende Pagina', next, 79,'', '')
+    except: pass
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        
+def PlayYouTube(url, name):
+        dp = xbmcgui.DialogProgress()
+        dp.create("Jericho","Please wait")  
+        import YDStreamExtractor
+        YDStreamExtractor.disableDASHVideo(True)
+        vid = YDStreamExtractor.getVideoInfo(url,quality=1)
+        stream_url = vid.streamURL()
+        print "stream_url =", stream_url
+        img = " "
+        listitem = xbmcgui.ListItem(name, iconImage=img, thumbnailImage=img)
+        playfile = xbmc.Player()
+        playfile.play(stream_url, listitem)
+
+def Catfeed2all():
+        addDir('Football' ,'football.html',105,icon ,  FANART,'','','','')
+        addDir('AM. Football' ,'american-football.html',105,icon ,  FANART,'','','','')
+        addDir('Basketball' ,'basketball.html',105,icon ,  FANART,'','','','')
+        addDir('Boxing/WWE/UFC' ,'boxing-wwe-ufc.html',105,icon ,  FANART,'','','','')
+        addDir('Rugby' ,'rugby.html',105,icon ,  FANART,'','','','')
+        addDir('Ice Hockey' ,'ice-hockey.html',105,icon ,  FANART,'','','','')
+        addDir('Tennis' ,'tennis.html',105,icon ,  FANART,'','','','')
+        addDir('Motorsport' ,'motosport.html',105,icon ,  FANART,'','','','')
+        addDir('Golf' ,'golf.html',105,icon ,  FANART,'','','','')
+        addDir('Baseball' ,'baseball.html',105,icon ,  FANART,'','','','')
+        addDir('Darts' ,'darts.html',105,icon ,  FANART,'','','','')
+        addDir('Snooker' ,'snooker.html',105,icon ,  FANART,'','','','')
+        addDir('Handball' ,'handball.html',105,icon ,  FANART,'','','','')
+        addDir('Cricket' ,'cricket.html',105,icon ,  FANART,'','','','')
+        addDir('Aussie Rules' ,'aussie-rules.html',105,icon ,  FANART,'','','','')
+        addDir('Others' ,'others.html',105,icon ,  FANART,'','','','')
+        return
+
+
+
+def Addthefeed2all(url):
+    pagecontent=bitly.OPEN_URL2('http://www.nowfeed2all.eu/type/'+url,'http://www.feed2allnow.eu/',bitly.getUserAgent())
+    match1=re.compile('<span>\s*([^<]+)</span>\s*([^<]+) </a> </h3>.+?\s*.+?href=\'(.*?)\'',re.DOTALL).findall(pagecontent)
+    for tijd,wedstrijd,videopage in match1:
+        videopage = 'http://www.feed2allnow.eu' + videopage
+        if (bitly.getResponse(videopage)):
+        
+            videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+            utils.addDir(wedstrijd, videopage, 300, icon, '', FANART)
+            #utils.addDir(wedstrijd, videopage, 60, icon, '', FANART)
+    #except:
+        #pass
+    try:
+        pagecontent=bitly.OPEN_URL2('http://www.nowfeed2all.eu/type/'+url,'http://www.feed2allnow.eu/',bitly.getUserAgent())
+        match1=re.compile('<span class="matchtime">([^<]+)</span> </span>\s*([^<]+)</a> </h3>.+?\s*.+?href=\'([^<]+)\'',re.DOTALL).findall(pagecontent)
+        for tijd,wedstrijd,videopage in match1:
+            try:
+                dt = datetime.strptime(tijd, "%H:%M")
+                tijd = str(dt.hour+1).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
+            except :
+                pass        
+            videopage = 'http://www.feed2allnow.eu' + videopage
+            if (bitly.getResponse(videopage)):
+                videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+                utils.addDir('('+tijd+') '+ wedstrijd, videopage, 300, icon, '', FANART)
+                #utils.addDir('('+tijd+') '+ wedstrijd, videopage, 60, icon, '', FANART)
+    except:
+        pass
+    
+def Catvipbox():
+        addDir('Football' ,'football.html',110,icon ,  FANART,'','','','')
+        addDir('AM. Football' ,'american-football.html',110,icon ,  FANART,'','','','')
+        addDir('Basketball' ,'basketball.html',110,icon ,  FANART,'','','','')
+        addDir('Boxing/WWE/UFC' ,'boxing-wwe-ufc.html',110,icon ,  FANART,'','','','')
+        addDir('Rugby' ,'rugby.html',110,icon ,  FANART,'','','','')
+        addDir('Ice Hockey' ,'ice-hockey.html',110,icon ,  FANART,'','','','')
+        addDir('Tennis' ,'tennis.html',110,icon ,  FANART,'','','','')
+        addDir('Motorsport' ,'motosport.html',110,icon ,  FANART,'','','','')
+        addDir('Golf' ,'golf.html',110,icon ,  FANART,'','','','')
+        addDir('Baseball' ,'baseball.html',110,icon ,  FANART,'','','','')
+        addDir('Darts' ,'darts.html',110,icon ,  FANART,'','','','')
+        addDir('Snooker' ,'snooker.html',110,icon ,  FANART,'','','','')
+        addDir('Handball' ,'handball.html',110,icon ,  FANART,'','','','')
+        addDir('Cricket' ,'cricket.html',110,icon ,  FANART,'','','','')
+        addDir('Aussie Rules' ,'aussie-rules.html',110,icon ,  FANART,'','','','')
+        addDir('Others' ,'others.html',110,icon ,  FANART,'','','','')
+        return
+
+
+
+def Addvipbox(url):
+    pagecontent=bitly.OPEN_URL2('http://nl.vipbox.nu/sports/'+url,'http://nl.vipbox.nu/',bitly.getUserAgent())
+    match1 = re.compile("""matchtime">(.*?)</span> (.*?)</a>.*?gameLinks.*?href='(.*?)'>Link 1""", re.IGNORECASE | re.DOTALL).findall(pagecontent)
+    for tijd,wedstrijd,videopage in match1:
+        try:
+            dt = datetime.strptime(tijd, "%H:%M")
+            tijd = str(dt.hour+1).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
+        except:
+            pass    
+        tijd = tijd.replace('24','00').replace('25','01').replace('26','02')    
+        videopage = 'http://nl.vipbox.nu/' + videopage
+        if (bitly.getResponse(videopage)):
+            videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+            utils.addDir('('+tijd+') '+ wedstrijd, videopage, 300, icon, '', FANART)
+            #addDir('('+tijd+') '+ wedstrijd, videopage, 60, icon, FANART,'','','','')
+
+def Addwiz():
+    pagecontent = bitly.OPEN_URL2('http://www.wiz1.net/lag10_home.php','http://www.wiz1.net/',bitly.getUserAgent())
+    match = re.compile(r'(\d{2}:\d{2}) <font color="#5185C9"><b>([^<]+)</b></font> ([^<]+)<a href="([^"]+)"', re.DOTALL | re.IGNORECASE).findall(pagecontent)
+    for tijd, sport, wedstrijd, videopage in match:
+        videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+        try:
+            dt = datetime.strptime(tijd, "%H:%M")
+            tijd = str(dt.hour+0).rjust(2,'0') + ':' + str(dt.minute).rjust(2,'0')
+        except :
+            pass
+        utils.addDir(sport+': '+ tijd + ' - '+ wedstrijd, videopage, 300, icon, '', FANART)
+        #addDir(sport+': '+ tijd + ' - '+ wedstrijd, videopage, 60, icon, FANART,'','','','')
+        
+def AddDarts():
+    pagecontent = bitly.OPEN_URL2('http://goldenarrowschannel.jouwweb.nl/schedule','http://goldenarrowschannel.jouwweb.nl/',bitly.getUserAgent())
+    match = re.compile("""<tr style='mso-yfti-irow:.*?'>.*?<td width=56 valign=top style='width:42.15pt;border:solid windowtext 1.5pt;.*?border-top:none;mso-border-top-alt:solid windowtext 1.5pt;padding:0cm 5.4pt 0cm 5.4pt'>(.*?)</p>.*?<td width=66 valign=top style='width:49.6pt;border-top:none;border-left:none;.*?border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;.*?mso-border-top-alt:solid windowtext 1.5pt;mso-border-left-alt:solid windowtext 1.5pt;.*?padding:0cm 5.4pt 0cm 5.4pt'>(.*?)</p>.*?<td width=66 valign=top style='width:49.6pt;border-top:none;border-left:none;.*?border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;.*?mso-border-top-alt:solid windowtext 1.5pt;mso-border-left-alt:solid windowtext 1.5pt;.*?padding:0cm 5.4pt 0cm 5.4pt'>(.*?)</p>.*?<td width=538 valign=top style='width:403.65pt;border-top:none;border-left:.*?none;border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;.*?mso-border-top-alt:solid windowtext 1.5pt;mso-border-left-alt:solid windowtext 1.5pt;.*?padding:0cm 5.4pt 0cm 5.4pt'>(.*?)</p>.*?href="(.*?)">""", re.IGNORECASE | re.DOTALL).findall(pagecontent)
+    for datum, UKtijd, EUtijd, name, videopage in match:
+        datum = striphtml(datum)
+        datum = datum.replace('\n','').replace('\t','').replace(' ','')
+        UKtijd = striphtml(UKtijd)
+        UKtijd = UKtijd.replace('\n','').replace('\t','').replace(' ','')
+        EUtijd = striphtml(EUtijd)
+        EUtijd = EUtijd.replace('\n','').replace('\t','').replace(' ','')
+        name = striphtml(name)
+        name = name.replace('\n','').replace('\t','').replace(' ','')
+        videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+        utils.addDir(datum + ' - ' + EUtijd + ' - ' + name, videopage, 300, icon, '', FANART)
+        #addDir(sport+': '+ tijd + ' - '+ wedstrijd, videopage, 60, icon, FANART,'','','','')
+
+def Addtuttosport():
+    pagecontent = bitly.OPEN_URL2('http://tuttoserie.blogspot.nl/p/daily.html','http://tuttoserie.blogspot.nl/p/daily.html',bitly.getUserAgent())
+    match = re.compile(r'(\d{2}:\d{2}) (.*?) - <a.*?href="(.*?)".*?">(.*?)</a>', re.IGNORECASE | re.DOTALL).findall(pagecontent)
+    for tijd, name, videopage, title in match:
+        wedstrijd = striphtml(name)
+        videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+        utils.addDir(tijd + ' - ' + name + ' - (' + title + ')', videopage, '', icon, '', FANART)
+        #addDir(tijd1 + tijd2 + tijd3 + ' - ' + wedstrijd + '(' + competitie + ')', videopage, 60, icon, FANART,'','','','')
+        
+def Addgoatd():
+    jsport=''
+    goatpage = bitly.OPEN_URL2('http://goatd.net/','http://goatd.net/',bitly.getUserAgent())
+    match = re.compile(r'<b>ET</b></td>\s+<td[^<]+><img src="([^"]+)".*?href="([^"]+)"[^>]+>([^<]+)<.*?<b>([^<]+)<.*?<b>([^<]+)<', re.DOTALL | re.IGNORECASE).findall(goatpage)
+    for img, videopage, wedstrijd, tijd, zone in match:
+        try:
+            sport = re.compile('http://.*?/.*?/.*?/.*?/.*?/.*?/(.*?).gif', re.DOTALL | re.IGNORECASE).findall(img)
+            if sport > 0 :
+                for jsport in sport:
+                    jsport = re.sub("[^A-Za-z]", "", jsport) 
+        except:
+            pass
+        videopage = 'http://goatd.net/' + videopage
+        videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+        utils.addDir(jsport + ': ' + tijd + ' - ' + zone +' '+ wedstrijd, videopage, 300, img, '', FANART)
+        #addDir(jsport + ': ' + tijd + ' - ' + zone +' '+ wedstrijd, videopage, 60, img, FANART,'','','','')
+        
+def Addlive9():
+    live9page = bitly.OPEN_URL2('http://live9.net/','http://live9.net/',bitly.getUserAgent())
+    match = re.compile(r'(\d{2}:\d{2}) <font color="#ffea01"><b>([^<]+)</b></font> ([^<]+)<a href="([^"]+)"', re.DOTALL | re.IGNORECASE).findall(live9page)
+    for tijd, sport, wedstrijd, videopage in match:
+        name = tijd + ' - ' + sport + ' - ' + wedstrijd
+        videopage = videopage.replace("t/live","t/lives")
+        videopage = 'plugin://plugin.video.SportsDevil/?mode=1&item=catcher%3dstreams%26url=' + videopage
+        utils.addDir(name, videopage, 300,icon , '', FANART)
+        #addDir(name, videopage, 60,icon ,  FANART,'','','','')
     
 def getHtml(url, referer=None, hdr=None, data=None):
     USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
@@ -2472,15 +2718,12 @@ elif mode==53:
     
 elif mode==60:
     playLiveResolver(url, name)
-
+    
 elif mode==61:
-    getWizSchedule()    
+    livestreamer(url,filter)
 
-elif mode==62:
-    getgoatSchedule()
-
-#elif mode==63:
- #   getbvlsSchedule()
+elif mode==63:
+    getbvlsSchedule()
 
 if mode==70:
     addon_log("indexsport")
@@ -2501,14 +2744,62 @@ if mode==75:
     addon_log("indexmuziek")
     indexmuziek()
 
-#elif mode==72:
-#   getwizhdSchedule()
+elif mode==77:
+    getUFC()
+
+elif mode==78:
+    PlayYouTube(url, name)
+
+elif mode==79:
+    getUFCnext(url)
     
-elif mode==73:
-    getlive9Schedule()
+elif mode==104:
+    Catfeed2all()
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
-elif mode==76:
-    gettpsoccerSchedule()
+elif mode==105:
+    Addthefeed2all(url)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+elif mode==106:
+    Addwiz()
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+elif mode==107:
+    Addgoatd()
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+elif mode==108:
+    Addlive9()
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+elif mode==109:
+    Catvipbox()
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+elif mode==110:
+    Addvipbox(url)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+elif mode==111:
+    Addtuttosport()
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+elif mode==112:
+    AddDarts()
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+elif mode == 113:
+    getwizhdSchedule(url)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
+elif mode == 114:
+    getwizhdcats()
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+elif mode == 115: footlive.Main()
+elif mode == 116: footlive.List(url)
+elif mode == 117: footlive.Liststreams(url)
     
 elif mode == 220: xite.Main()
 elif mode == 221: xite.List(url)
@@ -2528,8 +2819,43 @@ elif mode == 238: foxsports.MainDoelpunten()
 elif mode == 239: foxsports.MainInterviews()
 elif mode == 240: slamfm40.Main()
 elif mode == 241: slamfm40.List(url)
-elif mode == 300: utils.playyt(url, name)
 elif mode == 242: streamhd.List()
 elif mode == 243: streamhd.Playvid(url, name)
+elif mode == 244: Hesgoals.Main()
+elif mode == 245: Hesgoals.ListRacing(url)
+elif mode == 246: Hesgoals.ListFootball(url)
+elif mode == 247: Hesgoals.Playvid(url, name)
+elif mode == 248: stream2watch.Main()
+elif mode == 249: stream2watch.List(url)
+elif mode == 250: stream2watch.ListStream(url)
+elif mode == 251: livetvru.Main()
+elif mode == 252: livetvru.List(url)
+elif mode == 253: livetvru.ListStream(url)
+elif mode == 254: fromhot.Main()
+elif mode == 255: fromhot.List(url)
+elif mode == 264: livefootballvideo.Main()
+elif mode == 265: livefootballvideo.List(url)
+elif mode == 266: livefootballvideo.ListTeams(url)
+elif mode == 267: livefootballvideo.ListStreams(url)
+elif mode == 268: sportp2p.List(url)
+elif mode == 269: sportp2p.ListStreams(url)
+elif mode == 270: showsporttv.Main()
+elif mode == 271: showsporttv.List(url)
+elif mode == 272: showsporttv.ListStream(url)
+elif mode == 273: hdfree.Main()
+elif mode == 274: hdfree.List(url)
+elif mode == 275: mamahd.Main()
+elif mode == 300: utils.playyt(url, name)
+elif mode == 301: livefootballvideohighlights.ListHighlights(url)
+elif mode == 302: livefootballvideohighlights.ListLatest(url)
+elif mode == 303: livefootballvideohighlights.ListLElse(url)
+elif mode == 304: livefootballvideohighlights.ListStream(url)
+elif mode == 305: livefootballvideohighlights.get_PLAYlink(url)
+elif mode == 306: Sportstream365.Main()
+elif mode == 307: Sportstream365.List(url)
+elif mode == 308: woopio.Main()
+elif mode == 309: woopio.Competitions()
+elif mode == 310: woopio.List(url)
+elif mode == 311: woopio.Liststreams(url)
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
