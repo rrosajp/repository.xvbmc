@@ -96,6 +96,25 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
+<addon id="plugin.video.arrowtv"
+       name="ARROW.TV"
+       version="1.0.2"
+       provider-name="DSS">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+
+
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+	<provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+	<summary lang="en">AARROW.TV</summary>
+    <description lang="en">ARROW.TV</description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon id="plugin.video.avp" name="Alien vs Predator" version="1.0.1" provider-name="Morpheus">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -467,6 +486,26 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
         <forum>http://forum.xbmc.org/showthread.php?tid=</forum>
         <email>AddonScriptorDE at yahoo dot de</email>
         <website></website>
+    </extension>
+</addon>
+
+<addon id="plugin.video.top40nl"
+       name="Top40.nl"
+       version="1.0.3"
+       provider-name="DSS">
+    <requires>
+        <import addon="xbmc.python" version="2.19.0"/>
+        <import addon="script.module.simplejson" version="2.0.10" optional="true"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource"
+               library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <license>GPL 2.0</license>
+        <summary lang="en">Nederlandse top40 hitlijsten</summary>
+        <description lang="en">Nederlandse top40 hitlijsten</description>
     </extension>
 </addon>
 
