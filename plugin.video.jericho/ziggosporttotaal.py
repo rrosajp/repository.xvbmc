@@ -5,11 +5,11 @@ import utils, sqlite3
 
 
 def Main():
-    utils.addDir('Zoeken','http://www.ziggosporttotaal.nl/zoeken.html?s=',235,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/zst.png','',fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg') 
-    utils.addDir('Laatste video','http://www.ziggosporttotaal.nl/video/?sort=recent',233,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/zst.png','',fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg') 
-    utils.addDir('Meest bekeken','http://www.ziggosporttotaal.nl/video/?sort=most',233,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/zst.png','',fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg') 
-    utils.addDir('Voetbal','http://www.ziggosporttotaal.nl/video/1-voetbal/',233,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/zst.png','',fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg') 
-    utils.addDir('Racing','http://www.ziggosporttotaal.nl/video/22-racing/',233,'https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/zst.png','',fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg')
+    utils.addDir('Zoeken','http://www.ziggosporttotaal.nl/zoeken.html?s=',235,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/icon.png','',fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg') 
+    utils.addDir('Laatste video','http://www.ziggosporttotaal.nl/video/?sort=recent',233,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/icon.png','',fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg') 
+    utils.addDir('Meest bekeken','http://www.ziggosporttotaal.nl/video/?sort=most',233,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/icon.png','',fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg') 
+    utils.addDir('Voetbal','http://www.ziggosporttotaal.nl/video/1-voetbal/',233,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/icon.png','',fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg') 
+    utils.addDir('Racing','http://www.ziggosporttotaal.nl/video/22-racing/',233,'https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/icon.png','',fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg')
     xbmcplugin.endOfDirectory(utils.addon_handle)
 
 
@@ -20,7 +20,7 @@ def List(url):
         name = utils.cleantext(name) + ' - ' + datum
         videopage = "http://www.ziggosporttotaal.nl" + videopage
         img = "http://www.ziggosporttotaal.nl" + img
-        utils.addDownLink(name, videopage, 236, img, '', fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg')
+        utils.addDownLink(name, videopage, 236, img, '', fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg')
     try:
         nextp=re.compile('href="([^"]+)" class="nav-link icon-chevron-right"', re.DOTALL | re.IGNORECASE).findall(listhtml)[0]
         next = "http://www.ziggosporttotaal.nl" + nextp.replace("&amp;","&")
@@ -35,7 +35,7 @@ def SearchList(url):
         name = utils.cleantext(name)
         videopage = "http://www.ziggosporttotaal.nl" + videopage
         img = "http://www.ziggosporttotaal.nl" + img
-        utils.addDownLink(name, videopage, 236, img, '', fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg')
+        utils.addDownLink(name, videopage, 236, img, '', fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg')
     try:
         nextp=re.compile(r'nav-link active">\d+<.*?href="([^"]+)" class="nav-link', re.DOTALL | re.IGNORECASE).findall(listhtml)[0]
         next = "http://www.ziggosporttotaal.nl/zoeken.html" + nextp.replace("&amp;","&").replace(" ","+")

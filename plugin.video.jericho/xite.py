@@ -15,7 +15,7 @@ def List(url):
     for img, name, videopage in match:
         name = utils.cleantext(name)
         videopage = "http://xite.nl" + videopage
-        utils.addDownLink(name, videopage, 222, img, '', fanart='https://raw.githubusercontent.com/doki1/repo/master/NLView%20XML/fanart.jpg')
+        utils.addDownLink(name, videopage, 222, img, '', fanart='https://raw.githubusercontent.com/jericho-2016/Jericho/master/XML/fanart.jpg')
 #    if len(match) == 15:
 #        npage = page + 1        
 #        url = url.replace('/'+str(page)+'/','/'+str(npage)+'/')
