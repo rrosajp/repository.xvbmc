@@ -196,7 +196,7 @@ class Scraper(scraper.Scraper):
         
     def _get_episode_url(self, season_url, video):
         _movie_id, _sl_url, html = self.__get_source_page(video.video_type, season_url)
-        titles = dom_parser.parse_dom(html, 'a', {'href': '#player-area'}, ret='title')
+        titles = dom_parser.parse_dom(html, 'a', {'href': 'javascript[^"]*'}, ret='title')
         if any([self.__episode_match(video, title) for title in titles]):
             return season_url
     
@@ -217,27 +217,29 @@ class Scraper(scraper.Scraper):
         
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/ajax/movie_suggest_search.html')
+        search_url = urlparse.urljoin(self.base_url, '/search/')
         title = re.sub('[^A-Za-z0-9 ]', '', title)
-        search_token = hashlib.md5(title + SEARCH_KEY).hexdigest()
-        data = {'keyword': title, 'hash': search_token}
-        headers = {'Referer': self.base_url}
-        headers.update(XHR)
-        html = self._http_get(search_url, data=data, headers=headers, cache_limit=8)
-        js_data = scraper_utils.parse_json(html, search_url)
-        html = js_data.get('content', '')
-        html = html.replace('\"', '"')
-        titles = dom_parser.parse_dom(html, 'a', {'class': 'ss-title'})
-        urls = dom_parser.parse_dom(html, 'a', {'class': 'ss-title'}, ret='href')
-        match_year = ''
-        for match_title, match_url in zip(titles, urls):
-            is_season = re.search('Season\s+(\d+)', match_title, re.I)
-            if (video_type == VIDEO_TYPES.MOVIE and not is_season) or (video_type == VIDEO_TYPES.SEASON and is_season):
-                if video_type == VIDEO_TYPES.SEASON:
-                    if season and int(season) != int(is_season.group(1)): continue
-                    
-                if not year or not match_year or year == match_year:
-                    result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
-                    results.append(result)
+        search_url += '%s.html' % (title)
+        html = self._http_get(search_url, cache_limit=8)
+        for item in dom_parser.parse_dom(html, 'div', {'class': 'ml-item'}):
+            match_title = dom_parser.parse_dom(item, 'span', {'class': 'mli-info'})
+            match_url = re.search('href="([^"]+)', item, re.DOTALL)
+            match_year = re.search('class="jt-info">(\d{4})<', item)
+            is_episodes = dom_parser.parse_dom(item, 'span', {'class': 'mli-eps'})
+            
+            if (video_type == VIDEO_TYPES.MOVIE and not is_episodes) or (video_type == VIDEO_TYPES.SEASON and is_episodes):
+                if match_title and match_url:
+                    match_title = match_title[0]
+                    match_title = re.sub('</?h2>', '', match_title)
+                    match_title = re.sub('\s+\d{4}$', '', match_title)
+                    if video_type == VIDEO_TYPES.SEASON:
+                        if season and not re.search('Season\s+%s$' % (season), match_title): continue
+                        
+                    match_year = match_year.group(1) if match_year else ''
+                    match_url = match_url.group(1)
     
+                    if not year or not match_year or year == match_year:
+                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
+                        results.append(result)
+
         return results

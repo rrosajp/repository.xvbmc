@@ -11,6 +11,7 @@ from salts_lib.constants import VIDEO_TYPES
 __all__ = ['scraper', 
  'proxy', 
  'local_scraper', 
+ 'afdahorg_scraper', 
  'dayt_scraper', 
  'dizigold_scraper', 
 #'dizimag_scraper', 
@@ -51,7 +52,7 @@ __all__ = ['scraper',
  'filmovizjia_scraper',  
  'iwatch_scraper', 
  'movie25_scraper', 
-#'myvideolinks_scraper', 
+ 'myvideolinks_scraper', 
  'oneclicktvshows_scraper', 
 #'ororotv_scraper', 
  'pftv_scraper', 
@@ -67,8 +68,8 @@ __all__ = ['scraper',
 #'moviestorm_scraper', 
  'moviewatcher_scraper', 
  'tvrush_scraper', 
- 'viooz_scraper'] 
-#'yesmovies_scraper', 
+ 'viooz_scraper', 
+ 'yesmovies_scraper']
 #'yshows_scraper']
 
 from . import *
