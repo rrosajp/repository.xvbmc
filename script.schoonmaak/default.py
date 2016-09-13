@@ -4,7 +4,7 @@
 	IF you copy/paste 'script.schoonmaak' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
 """
 
-#   script.Schoonmaak (Kodi Schoonmaak XvBMC / Raw Maintenance No-Issue)
+#   script.Schoonmaak (EPiC Kodi Schoonmaak XvBMC Nederland)
 #
 #   Copyright (C) 2016
 #
@@ -34,17 +34,17 @@ import sqlite3
 # addon = xbmcaddon.Addon('script.schoonmaak')
 
 
-#                    ProgTitle="XvBMC Maintenance"                    #
+#                  ProgTitle ="XvBMC-NL-Maintenance"                  #
 thumbnailPath = xbmc.translatePath('special://thumbnails');
-cachePath = os.path.join(xbmc.translatePath('special://home'), 'cache')
-tempPath = xbmc.translatePath('special://temp')
-addonPath = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'addons'),'script.schoonmaak')
-mediaPath = os.path.join(addonPath, 'media')
-xvbmcfanart = os.path.join(addonPath, 'fanart.jpg')
-databasePath = xbmc.translatePath('special://database')
-dialog = xbmcgui.Dialog()
-base='aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
-#                    ProgTitle="XvBMC Maintenance"                    #
+cachePath     = os.path.join(xbmc.translatePath('special://home'), 'cache')
+tempPath      = xbmc.translatePath('special://temp')
+addonPath     = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'addons'),'script.schoonmaak')
+mediaPath     = os.path.join(addonPath, 'media')
+xvbmcfanart   = os.path.join(addonPath, 'fanart.jpg')
+databasePath  = xbmc.translatePath('special://database')
+dialog        = xbmcgui.Dialog()
+base          = 'aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
+#                  ProgTitle ="XvBMC-NL-Maintenance"                  #
 
 
 #######################################################################
@@ -239,8 +239,8 @@ def clearCache():
                 if file_count > 0:
 
                     #  dialog = xbmcgui.Dialog()
-                   #if dialog.yesno("Raw Manager",str(file_count) + "%s cache files found"%(entry.name), "Do you want to delete them?"):
-                    if dialog.yesno("XvBMC Raw Manager","%s cache files found"%(entry.name), "Do you want to delete them?"):
+                   #if dialog.yesno("XvBMC-NL-Maintenance",str(file_count) + "%s cache files found"%(entry.name), "Do you want to delete them?"):
+                    if dialog.yesno("XvBMC-NL-Maintenance","%s cache files found"%(entry.name), "Do you want to delete them?"):
                         for f in files:
                             os.unlink(os.path.join(root, f))
                         for d in dirs:
@@ -251,7 +251,7 @@ def clearCache():
                 
 
     
-    dialog.ok("XvBMC Maintenance", "Done Clearing Cache files")
+    dialog.ok("XvBMC-NL-Maintenance", "Done Clearing Cache files")
 
 #######################################################################
 #						THUMBS
@@ -275,7 +275,7 @@ def deleteThumbnails():
     text13 = os.path.join(databasePath,"Textures13.db")
     try:
         os.unlink(text13)
-    except:
+    except OSError: #DOES THIS WORK WITH KRYPTO?
         try:
             dbcon = sqlite3.connect(text13)
             dbcur = dbcon.cursor()
@@ -300,14 +300,14 @@ def deleteThumbnails():
         except:
             pass
 
-    dialog.ok("XvBMC Maintenance", "Please reboot your system to rebuild thumbnail folder...")
+    dialog.ok("XvBMC-NL-Maintenance", "Please reboot your system to rebuild thumbnail folder...")
 
 #######################################################################
 #						REFRESHLOACALADDONS&REPOS
 #######################################################################
 def forceRefresh():
 	xbmc.executebuiltin('UpdateLocalAddons')
-	dialog.ok("XvBMC Maintenance", "Force Refresh Repos and Update LocalAddons")
+	dialog.ok("XvBMC-NL-Maintenance", "Force Refresh Repos and Update LocalAddons")
 	xbmc.executebuiltin("UpdateAddonRepos")
 	xbmc.executebuiltin("ReloadSkin()")
 
@@ -330,16 +330,16 @@ def purgePackages():
                 for d in dirs:
                     shutil.rmtree(os.path.join(root, d))
                 
-                dialog.ok("XvBMC Maintenance", "Deleting Packages all done")
+                dialog.ok("XvBMC-NL-Maintenance", "Deleting Packages all done")
             else:
-                dialog.ok("XvBMC Maintenance", "No Packages to Purge")
+                dialog.ok("XvBMC-NL-Maintenance", "No Packages to Purge")
 
 
 #######################################################################
 #						WHOAMI/WHOIS
 #######################################################################
 
-def KODIVERSION(url): xbmc_version=xbmc.getInfoLabel("System.BuildVersion"); version=xbmc_version[:4]; print version; dialog.ok("XvBMC Maintenance", "Your Kodi Version : [COLOR lime][B]%s[/B][/COLOR]" % version)
+def KODIVERSION(url): xbmc_version=xbmc.getInfoLabel("System.BuildVersion"); version=xbmc_version[:4]; print version; dialog.ok("XvBMC-NL-Maintenance", "Your Kodi Version : [COLOR lime][B]%s[/B][/COLOR]" % version)
 
 #######################################################################
 #						ADDONS??.dB
@@ -348,22 +348,37 @@ def AddonsDatabaseRemoval():
     dbList = os.listdir(databasePath)
     dbAddons = []
     removed = True
-    for file in dbList:
-        if re.findall('Addons(\d+)\.db', file):
-            dbAddons.append(file)
-    for file in dbAddons:
-        dbFile = os.path.join(databasePath, file)
-        fo = open(dbFile, 'ab+')
-        try:
-           #os.unlink(dbFile)
-            fo.close()
-            os.remove(fo.name)
-        except:
-            removed = False
-    if removed:
-        dialog.ok("XvBMC Maintenance", "Please reboot your system to rebuild addons database...")
+
+    xbmc_version=xbmc.getInfoLabel("System.BuildVersion")
+    version=float(xbmc_version[:4])
+
+    if version >= 17.0 and version <= 17.9:
+        codename = 'Krypton'
     else:
-        dialog.ok("XvBMC Maintenance", "Removal failed!", "try manual remove, see http://kodi.wiki/view/Database_version")
+        codename = 'Pass'
+
+    if codename == "Pass":
+        try:
+            for file in dbList:
+                if re.findall('Addons(\d+)\.db', file):
+                    dbAddons.append(file)
+            for file in dbAddons:
+                dbFile = os.path.join(databasePath, file)
+                fo = open(dbFile, 'ab+')
+                try:
+                   #os.unlink(dbFile)
+                    fo.close()
+                    os.remove(fo.name)
+                except:
+                    removed = False
+            if removed:
+                dialog.ok("XvBMC-NL-Maintenance", "Please reboot your system to rebuild addons database...")
+            else:
+                dialog.ok("XvBMC-NL-Maintenance", "Removal failed!", "try manual remove, see: http://kodi.wiki/view/Database_version")
+        except:
+            pass
+    else:
+        dialog.ok('XvBMC-NL-Maintenance','This feature is not available in Kodi 17 Krypton','','[COLOR yellow]Thank you for using XvBMC Maintenance[/COLOR]')
 
 #######################################################################
 #						UPDATER
