@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="plugin.video.SportsDevilNL"
-  version="2016.09.11.NL"
+  version="2016.09.16.NL2"
   name="SportsDevilNL (XvBMC)"
   provider-name="Hubbab3, Jairox, Sattekop, EPiC XvBMC, MaxMustermann, Al101">
   <requires>
