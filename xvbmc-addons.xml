@@ -177,21 +177,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="plugin.video.f4mTester" version="2.2.5" name="f4mTester" provider-name="Shani">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-        <import addon="script.video.F4mProxy" version="2.2.3"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <summary>f4mTester</summary>
-        <description></description>
-        <platform>all</platform>
-    </extension>
-</addon>
-
 <addon id="plugin.video.jericho"
        name="Jericho"
        version="1.1.0"
@@ -1504,26 +1489,6 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 	  <disclaimer lang="en">Thumbnails Cleaner works only with Frodo and later</disclaimer>
 	  <disclaimer lang="it">Thumbnails Cleaner funziona solo con Frodo e successivi</disclaimer>
      </extension>
-</addon>
-
-<addon id="script.video.F4mProxy"
-	     name="F4mProxy"
-	     version="2.5.5"
-	     provider-name="Shani">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0" />
-    <import addon="script.module.requests" />
-  </requires>
-  <extension point="xbmc.python.module" library="lib" />
-    <extension point="xbmc.python.pluginsource" library="addon.py">
-		<provides>executable</provides>
-  </extension>
-
-  <extension point="xbmc.addon.metadata">
-    <platform>all</platform>
-    <summary lang="en">Proxy for f4m</summary>
-    <description lang="en">Use this addon to play F4m v1 and v2 streams</description>
-  </extension>
 </addon>
 
 <addon id="script.xvbmc.dev"
