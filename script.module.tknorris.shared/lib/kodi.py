@@ -27,6 +27,7 @@ import os
 import re
 import json
 import time
+import CustomProgressDialog
 
 addon = xbmcaddon.Addon()
 get_setting = addon.getSetting
@@ -127,6 +128,9 @@ def notify(header=None, msg='', duration=2000, sound=None, icon_path=None):
         builtin = "XBMC.Notification(%s,%s, %s, %s)" % (header, msg, duration, icon_path)
         xbmc.executebuiltin(builtin)
     
+def close_all():
+    xbmc.executebuiltin('Dialog.Close(all)')
+    
 def get_current_view():
     skinPath = translate_path('special://skin/')
     xml = os.path.join(skinPath, 'addon.xml')
@@ -221,7 +225,10 @@ class ProgressDialog(object):
             msg = line1 + line2 + line3
             pd.create(self.heading, msg)
         else:
-            pd = xbmcgui.DialogProgress()
+            if xbmc.getCondVisibility('Window.IsVisible(progressdialog)'):
+                pd = CustomProgressDialog.ProgressDialog()
+            else:
+                pd = xbmcgui.DialogProgress()
             pd.create(self.heading, line1, line2, line3)
         return pd
         
@@ -259,7 +266,10 @@ class CountdownDialog(object):
         self.interval = interval
         self.line3 = line3
         if active:
-            pd = xbmcgui.DialogProgress()
+            if xbmc.getCondVisibility('Window.IsVisible(progressdialog)'):
+                pd = CustomProgressDialog.ProgressDialog()
+            else:
+                pd = xbmcgui.DialogProgress()
             if not self.line3: line3 = 'Expires in: %s seconds' % (countdown)
             pd.create(self.heading, line1, line2, line3)
             pd.update(100)
@@ -283,7 +293,7 @@ class CountdownDialog(object):
             return result
         
         start = time.time()
-        expires = time_left = self.countdown
+        expires = time_left = int(self.countdown)
         interval = self.interval
         while time_left > 0:
             for _ in range(CountdownDialog.__INTERVALS):
