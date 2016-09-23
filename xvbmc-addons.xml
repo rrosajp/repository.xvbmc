@@ -719,18 +719,18 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="script.schoonmaak"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]S[/COLOR]choonmaak/[COLOR red]M[/COLOR]aintenance [I][COLOR green] (kodi schoonmaak)[/COLOR][/I]"
-       version="1.10.13"
+       version="1.10.14"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-    <import addon="repository.xvbmc" version="3.0.1"/>
+    <import addon="repository.xvbmc" version="4.0.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary lang="en">XvBMC Nederland - Kodi Schoonmaak v3</summary>
+    <summary lang="en">XvBMC Nederland - Kodi Schoonmaak</summary>
     <description lang="en">XvBMC Maintenance/Schoonmaak ; CrapCleaner + Purge.</description>
     <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!!</disclaimer>
     <platform>all</platform>
@@ -791,14 +791,14 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="script.xvbmc.update"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; Development [COLOR green] [I](v4)[/I][/COLOR]"
-       version="4.00"
+       version="4.0.1"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-    <import addon="script.schoonmaak" version="1.10.12"/>
+    <import addon="script.schoonmaak" version="1.10.13"/>
     <import addon="script.xvbmc.dev"  version="3.04" optional="true"/>
     <import addon="script.xvbmc.oc"   version="3.03" optional="true"/>
-    <import addon="repository.xvbmc"  version="3.0.1"/>
+    <import addon="repository.xvbmc"  version="4.0.0"/>
   </requires>
     <extension point="xbmc.python.pluginsource" library="xvbmc.py">
     <provides>executable</provides>
