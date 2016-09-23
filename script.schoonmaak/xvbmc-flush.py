@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 """
-	IF you copy/paste 'script.xvbmc.oc' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
+	IF you copy/paste 'script.xvbmc-flush' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
 """
 
 import xbmc, xbmcgui
@@ -13,12 +13,12 @@ import time
 
 # import xbmcaddon
 # Set the addon environment
-# addon = xbmcaddon.Addon('script.xvbmc.oc')
+# addon = xbmcaddon.Addon('script.xvbmc-flush')
 
 
-# ProgTitle="XvBMC OverClock" #
+# ProgTitle="XvBMC Flush Toilet" #
 dialog = xbmcgui.Dialog()
-# ProgTitle="XvBMC OverClock" #
+# ProgTitle="XvBMC Flush Toilet" #
 
 
 def showMenu():
@@ -32,6 +32,7 @@ def showMenu():
     userchoice.append("Salts [B]RD[/B] Lite - reset db")
     userchoice.append("Exodus - flush cache")
     userchoice.append("Exodus - flush sources")
+    userchoice.append("[COLOR red]Remove[/COLOR] [COLOR lime]ALL[/COLOR] [COLOR red]these DataBases (Pi optimized)[/COLOR] [COLOR dimgray][I][B]\'[/B]alpha phase[B]\'[/B][/I][/COLOR]")
     userchoice.append("[B][COLOR white]Exit[/COLOR][/B]")
     
     # Display the menu
@@ -56,6 +57,9 @@ def showMenu():
     
     elif userchoice[inputchoice] == "Exodus - flush sources":
         ExodusSources()
+	
+    elif userchoice[inputchoice] == "[COLOR red]Remove[/COLOR] [COLOR lime]ALL[/COLOR] [COLOR red]these DataBases (Pi optimized)[/COLOR] [COLOR dimgray][I][B]\'[/B]alpha phase[B]\'[/B][/I][/COLOR]":
+        RemoveAllDB()
 
 
 class HDflushClass(xbmcgui.Window):
@@ -100,6 +104,55 @@ class ExodusSourcesClass(xbmcgui.Window):
     else:
 		dialog.ok("XvBMC Nederland", 'Exodus bevindt zich niet op uw systeem','', '(...Exodus not found...)')
 
+class RemoveAllDbClass(xbmcgui.Window):
+  def __init__(self):
+    dialog.ok("XvBMC Nederland", '[COLOR white][B]*[/B]DataBase CrapCleaner extreme[B]*[/B][/COLOR]','', '(Raspberry Pi optimized, [B]can[/B] work cross-platform)')
+    import os,xbmc,shutil
+#   bruteforce removal  #
+    XvBMC    = os.listdir(xbmc.translatePath(os.path.join('special://home/userdata/Database/')))
+    DBfolder = xbmc.translatePath(os.path.join('special://home/userdata/Database/'))
+    exodus   = os.listdir(xbmc.translatePath(os.path.join('special://home/userdata/addon_data/plugin.video.exodus/')))
+    EXfolder = xbmc.translatePath(os.path.join('special://home/userdata/addon_data/plugin.video.exodus/'))
+    for item in XvBMC:
+        if ('saltsrd.lite') in item:
+            print str(XvBMC)+str(item)
+            #xbmc.log(str(DBfolder+item))
+            dbFile = os.path.join(DBfolder, item)
+            try:
+                xbmc.log(str(dbFile))
+                os.unlink(dbFile)
+            except: pass
+        elif ('saltshd.lite') in item:
+            print str(XvBMC)+str(item)
+            #xbmc.log(str(DBfolder+item))
+            dbFile = os.path.join(DBfolder, item)
+            try:
+                xbmc.log(str(dbFile))
+                os.remove(dbFile)
+            except: pass
+        else:
+            pass
+
+    for item in exodus:
+        if ('cache') in item:
+            print str(exodus)+str(item)
+            #xbmc.log(str(EXfolder+item))
+            dbFile = os.path.join(EXfolder, item)
+            try:
+                xbmc.log(str(dbFile))
+                os.remove(dbFile)
+            except: pass
+        elif ('providers.8') in item:
+            print str(exodus)+str(item)
+            #xbmc.log(str(EXfolder+item))
+            dbFile = os.path.join(EXfolder, item)
+            try:
+                xbmc.log(str(dbFile))
+                os.remove(dbFile)
+            except: pass
+        else:
+            pass
+
 
 def HDflush():
     mydisplay = HDflushClass()
@@ -123,6 +176,10 @@ def ExodusCache():
 
 def ExodusSources():
     mydisplay = ExodusSourcesClass()
+    del mydisplay
+
+def RemoveAllDB():
+    mydisplay = RemoveAllDbClass()
     del mydisplay
 
  
