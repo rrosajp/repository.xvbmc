@@ -224,9 +224,12 @@ def doDemystify(data):
                         _url = unpad(aes.decrypt(_in[0].decode('hex')))
                     except:
                         _url = None
-                    if _url:
-                        data = data.replace(g,json.dumps( _url ))
-                        break
+                    if _url and re.match(r'http://.*m3u8', _url):
+                        try:
+                            data = data.replace(g,json.dumps( _url ))
+                            break
+                        except:
+                            continue
                 
         r = re.compile(r""":("(?!http)[\w=\\/\+]+\.m3u8")""")
         gs = r.findall(data)
