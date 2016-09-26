@@ -190,13 +190,20 @@ def getInfo(item, params, src, xml=False, mobile=False):
 
 
 def decodeBase64(src):
-    from base64 import b64decode
-    try:
-        ds = b64decode(src)
-        ds.encode('ascii', errors='strict') #jairox: test if result is ascii
-        return ds
-    except:
-        return ''
+    import base64
+    import binascii
+    ds = src
+    while True and len(ds)>=4: #keep decoding in case of multiple encodings
+        #common.log("Jairox5:" + src)
+        try:
+            ds = base64.decodestring(ds)
+            ds.encode('ascii', errors='strict') #check if result is valid ascii
+        except UnicodeDecodeError: #decoded string not ascii
+            ds = ''
+            break
+        except binascii.Error: #nothing left to decode         
+            break
+    return ds
 
 def encodeBase64(src):
     from base64 import b64encode
