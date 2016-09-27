@@ -27,7 +27,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
 import scraper
 
-BASE_URL = 'http://moviewatcher.to'
+BASE_URL = 'http://moviewatcher.io'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -87,32 +87,30 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        if video_type == VIDEO_TYPES.MOVIE:
-            vid_type = 'movies'
-        else:
-            vid_type = 'series'
+        search_url = urlparse.urljoin(self.base_url, '/search?query=%s')
+        search_url = search_url % (urllib.quote_plus(title))
+        html = self._http_get(search_url, cache_limit=8)
+        for item in dom_parser.parse_dom(html, 'div', {'class': 'one_movie-item'}):
+            match_url = dom_parser.parse_dom(item, 'a', ret='href')
+            match_title = dom_parser.parse_dom(item, 'img', ret='alt')
+            media_type = dom_parser.parse_dom(item, 'div', {'class': 'movie-series'})
+            if not media_type:
+                media_type = VIDEO_TYPES.MOVIE
+            elif media_type[0] == 'TV SERIE':
+                media_type = VIDEO_TYPES.TVSHOW
+                
+            if match_url and match_title and video_type == media_type:
+                match_url = match_url[0]
+                match_title = match_title[0]
+                
+                match_year = re.search('-(\d{4})-', match_url)
+                if match_year:
+                    match_year = match_year.group(1)
+                else:
+                    match_year = ''
         
-        search_url = urlparse.urljoin(self.base_url, '/search?query=%s&type=%s')
-        search_url = search_url % (urllib.quote_plus(title), vid_type)
-        html = self._http_get(search_url, allow_redirect=False, cache_limit=8)
-        if html.startswith('http'):
-            results = [{'url': scraper_utils.pathify_url(html), 'title': scraper_utils.cleanse_title(title), 'year': ''}]
-        else:
-            for item in dom_parser.parse_dom(html, 'div', {'class': 'one_movie-item'}):
-                match_url = dom_parser.parse_dom(item, 'a', ret='href')
-                match_title = dom_parser.parse_dom(item, 'img', ret='alt')
-                match_year = ''
-                if match_url and match_title:
-                    match_url = match_url[0]
-                    match_title = match_title[0]
-                    
-                    if match_year:
-                        match_year = match_year[0]
-                    else:
-                        match_year = ''
-            
-                    if not year or not match_year or year == match_year:
-                        result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
-                        results.append(result)
+                if not year or not match_year or year == match_year:
+                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                    results.append(result)
 
         return results

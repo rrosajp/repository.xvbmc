@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.saltsrd.lite" version="1.0.145" name="Salts RD Lite" provider-name="TKnorris (EPiC XvBMC MOD)">
+<addon id="plugin.video.saltsrd.lite" version="1.0.145a" name="Salts RD Lite" provider-name="TKnorris (EPiC XvBMC MOD)">
     <requires>
         <import addon="xbmc.python" version="2.19.0"/>
         <import addon="script.module.urlresolver" version="3.0.0"/>
         <import addon="script.module.myconnpy" version="1.1.6" />
-		<import addon="repository.xvbmc" version="3.0.1"/>
-        <import addon="script.module.tknorris.shared" version="0.0.2"/>
+		<import addon="repository.xvbmc" version="4.0.0"/>
+        <import addon="script.module.tknorris.shared" version="0.0.8"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>video</provides>

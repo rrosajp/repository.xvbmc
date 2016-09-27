@@ -31,7 +31,7 @@ import scraper
 BASE_URL = 'http://moviesub.org'
 LINK_URL = '/ip.temp/swf/plugins/ipplugins.php'
 LINK_URL2 = '/Htplugins/Loader.php'
-LINK_URL3 = '/ip.temp/swf/ipplayer/ipplayer.php?u=%s&w=100%%&h=450'
+LINK_URL3 = '/ip.temp/swf/ipplayer/ipplayer.php?u=%s&w=100%%&h=450&s=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Scraper(scraper.Scraper):
@@ -107,7 +107,7 @@ class Scraper(scraper.Scraper):
                 js_data = scraper_utils.parse_json(html, url)
                 if 's' in js_data and isinstance(js_data['s'], basestring):
                     url = urlparse.urljoin(self.base_url, LINK_URL3)
-                    url = url % (js_data['s'])
+                    url = url % (js_data['s'], js_data['v'])
                     html = self._http_get(url, headers=headers, cache_limit=.25)
                     js_data = scraper_utils.parse_json(html, url)
                     if 'data' in js_data and js_data['data']:

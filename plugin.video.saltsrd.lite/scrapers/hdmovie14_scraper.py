@@ -40,7 +40,7 @@ class Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.SEASON, VIDEO_TYPES.EPISODE, VIDEO_TYPES.MOVIE])
+        return frozenset([VIDEO_TYPES.SEASON, VIDEO_TYPES.MOVIE])
 
     @classmethod
     def get_name(cls):
@@ -120,6 +120,7 @@ class Scraper(scraper.Scraper):
             search_key += ' Season %s' % (season)
         search_url += urllib.quote_plus(search_key)
         html = self._http_get(search_url, cache_limit=1)
+        norm_title = scraper_utils.normalize_title(title)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'caption'}):
             match = re.search('href="([^"]+)[^>]+>(.*?)<span[^>]*>', item)
             if match:
@@ -137,7 +138,7 @@ class Scraper(scraper.Scraper):
                     else:
                         match_year = ''
                     
-                    if not year or not match_year or year == match_year:
+                    if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
                         result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                         results.append(result)
 

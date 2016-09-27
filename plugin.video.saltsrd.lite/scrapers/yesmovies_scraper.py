@@ -219,7 +219,7 @@ class Scraper(scraper.Scraper):
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search/')
         title = re.sub('[^A-Za-z0-9 ]', '', title)
-        search_url += '%s.html' % (title)
+        search_url += '%s.html' % (urllib.quote_plus(title))
         html = self._http_get(search_url, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'ml-item'}):
             match_title = dom_parser.parse_dom(item, 'span', {'class': 'mli-info'})

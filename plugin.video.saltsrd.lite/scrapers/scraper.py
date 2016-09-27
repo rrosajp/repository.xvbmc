@@ -45,8 +45,7 @@ BASE_URL = ''
 CAPTCHA_BASE_URL = 'http://www.google.com/recaptcha/api'
 COOKIEPATH = kodi.translate_path(kodi.get_profile())
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-# Q_LIST = [item[0] for item in sorted(Q_ORDER.items(), key=lambda x:x[1])]
-MAX_RESPONSE = 1024 * 1024 * 2
+MAX_RESPONSE = 1024 * 1024 * 5
 CF_CAPCHA_ENABLED = kodi.get_setting('cf_captcha') == 'true'
 
 class NoRedirection(urllib2.HTTPErrorProcessor):
@@ -292,7 +291,7 @@ class Scraper(object):
         if timeout == 0: timeout = None
         if headers is None: headers = {}
         if url.startswith('//'): url = 'http:' + url
-        referer = headers['Referer'] if 'Referer' in headers else url
+        referer = headers['Referer'] if 'Referer' in headers else base_url
         log_utils.log('Getting Url: %s cookie=|%s| data=|%s| extra headers=|%s|' % (url, cookies, data, headers), log_utils.LOGDEBUG)
         if data is not None:
             if isinstance(data, basestring):
@@ -709,7 +708,6 @@ class Scraper(object):
         rows = []
         for match in re.finditer(self.row_pattern, html):
             row = match.groupdict()
-            row['link'] = urllib.unquote(row['link'])
             if row['title'].endswith('/'): row['title'] = row['title'][:-1]
             row['directory'] = True if row['link'].endswith('/') else False
             if row['size'] == '-': row['size'] = None

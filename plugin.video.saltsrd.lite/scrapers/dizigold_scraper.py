@@ -71,25 +71,17 @@ class Scraper(scraper.Scraper):
                     src = dom_parser.parse_dom(js_data['data'], 'iframe', ret='src')
                     if src:
                         html = self._http_get(src[0], cache_limit=.25)
-                        match = re.search('url=([^"]+)', html)
-                        if match:
-                            stream_url = match.group(1).replace('&gt;', '')
-                            sources.append({'label': '720p', 'file': stream_url})
-                            direct = False
-                        else:
-                            src = dom_parser.parse_dom(html, 'iframe', ret='src')
-                            if src:
-                                sources.append({'label': '720p', 'file': src[0]})
-                                direct = False
-                            else:
-                                for match in re.finditer('"file"\s*:\s*"([^"]+)"\s*,\s*"label"\s*:\s*"([^"]+)', html):
-                                    sources.append({'label': match.group(2), 'file': match.group(1)})
-                                direct = True
+                        for src in dom_parser.parse_dom(html, 'iframe', ret='src'):
+                            if not src.startswith('http'): continue
+                            sources.append({'label': '720p', 'file': src, 'direct': False})
+
+                        for match in re.finditer('"file"\s*:\s*"([^"]+)"\s*,\s*"label"\s*:\s*"([^"]+)', html):
+                            sources.append({'label': match.group(2), 'file': match.group(1), 'direct': True})
                 else:
                     sources = js_data
-                    direct = True
 
                 for source in sources:
+                    direct = source.get('direct', True)
                     stream_url = source['file'] + '|User-Agent=%s' % (scraper_utils.get_ua())
                     if direct:
                         host = self._get_direct_hostname(stream_url)
