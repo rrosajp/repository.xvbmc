@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import base64
 import scraper
 import urlparse
 import urllib
@@ -60,17 +61,24 @@ class Scraper(scraper.Scraper):
             html = self._http_get(url, cache_limit=2)
             fragment = dom_parser.parse_dom(html, 'div', {'id': 'player-container'})
             if fragment:
-                iframe_urls = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
                 labels = dom_parser.parse_dom(fragment[0], 'a', {'href': '#play-\d+'})
-                
-                for iframe_url, label in zip(iframe_urls, labels):
+                match = re.search("defaultFrame\s*=\s*'([^']+)", html)
+                events = [match.group(1)] if match else []
+                events += dom_parser.parse_dom(fragment[0], 'a', {'href': '#play-\d+'}, ret='onclick')
+                for event, label in zip(events, labels):
                     if re.search('\(Part?\s+\d+\)', label):
                         multipart = True
                         continue  # skip multipart
                     else:
                         multipart = False
                     
-                    direct, streams = self.__get_links(iframe_url, url)
+                    match = re.search("loadPlayer\('play-\d+'\s*,\s*'([^']+)", event)
+                    fragment = match.group(1) if match else event
+                    fragment = base64.b64decode(fragment)
+                    iframe_url = dom_parser.parse_dom(fragment, 'iframe', ret='src')
+                    if not iframe_url: continue
+                        
+                    direct, streams = self.__get_links(iframe_url[0], url)
                     for stream_url in streams:
                         if stream_url:
                             if direct:
