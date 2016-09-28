@@ -744,6 +744,24 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
+<addon id="script.speedtestnet"
+       name="ARNU Box Speed Tester"
+       version="1.0.0"
+       provider-name="ARNU Box / Josh.5">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.script"
+             library="default.py">
+        <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">ARNU Box Speed Tester</summary>
+    <description lang="en">ARNU Box Speed Tester powered by speedtest.net will give you accurate Internet speed/ping test results. \n Brought to you by http://www.arnubox.com</description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon id="script.xvbmc.dev"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [I][COLOR green] v3[/COLOR][/I]"
        version="3.04"
