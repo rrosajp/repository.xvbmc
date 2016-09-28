@@ -5,7 +5,7 @@
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-    <import addon="script.schoonmaak" version="1.10.13"/>
+    <import addon="script.schoonmaak" version="1.10.14"/>
     <import addon="script.xvbmc.dev"  version="3.04" optional="true"/>
     <import addon="script.xvbmc.oc"   version="3.03" optional="true"/>
     <import addon="repository.xvbmc"  version="4.0.0"/>

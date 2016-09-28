@@ -438,11 +438,11 @@ def xvbmcMaintenance(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
     else:
-        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.13.zip'
+        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.15.zip'
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.schoonmaak-1.10.13.zip')
+        lib=os.path.join(path, 'script.schoonmaak-1.10.15.zip')
         try:
             os.remove(lib)
         except:
