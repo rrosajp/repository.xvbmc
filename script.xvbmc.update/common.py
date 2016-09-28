@@ -23,13 +23,13 @@
 
 
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
-import os, sys
+import os, sys, time
 
 #addon_id = 'script.xvbmc.update'
 #ADDON    = xbmcaddon.Addon(id=addon_id)
 #AddonID  = 'script.xvbmc.update'
-HOME     = xbmc.translatePath('special://home/')
-dialog   = xbmcgui.Dialog()
+HOME      = xbmc.translatePath('special://home/')
+dialog    = xbmcgui.Dialog()
 
 waarschuwing   = '[COLOR=red][B]!!!  WARNING  !!![/B][/COLOR]'
 readme         = 'if you\'re seeing this message read this first[B]:[/B]'
@@ -180,6 +180,51 @@ def REMOVE_EMPTY_FOLDERS():
             print "successfully removed: "+curdir
         elif len(subdirs) > 0 and len(files) > 0: #check for used directories
             used_count += 1 #increment 
+
+
+##########################
+###TextBox Viewer(s)######
+##########################
+
+def TextBoxes(announce):
+	class TextBox():
+		WINDOW=10147
+		CONTROL_LABEL=1
+		CONTROL_TEXTBOX=5
+		def __init__(self,*args,**kwargs):
+			xbmc.executebuiltin("ActivateWindow(%d)" % (self.WINDOW, )) # activate the text viewer window
+			self.win=xbmcgui.Window(self.WINDOW) # get window
+			xbmc.sleep(500) # give window time to initialize
+			self.setControls()
+		def setControls(self):
+			self.win.getControl(self.CONTROL_LABEL).setLabel('XvBMC - View Log[B]:[/B]') # set heading
+			try: f=open(announce); text=f.read()
+			except: text=announce
+			self.win.getControl(self.CONTROL_TEXTBOX).setText(str(text))
+			return
+	TextBox()
+	while xbmc.getCondVisibility('Window.IsVisible(10147)'):
+		time.sleep(.5)
+
+def TextBoxesPlain(announce):
+	class TextBox():
+		WINDOW=10147
+		CONTROL_LABEL=1
+		CONTROL_TEXTBOX=5
+		def __init__(self,*args,**kwargs):
+			xbmc.executebuiltin("ActivateWindow(%d)" % (self.WINDOW, )) # activate the text viewer window
+			self.win=xbmcgui.Window(self.WINDOW) # get window
+			xbmc.sleep(500) # give window time to initialize
+			self.setControls()
+		def setControls(self):
+			self.win.getControl(self.CONTROL_LABEL).setLabel('[B]X[/B]v[B]BMC N[/B]ederland') # set heading
+			try: f=open(announce); text=f.read()
+			except: text=announce
+			self.win.getControl(self.CONTROL_TEXTBOX).setText(str(text))
+			return
+	TextBox()
+	while xbmc.getCondVisibility('Window.IsVisible(10147)'):
+		time.sleep(.5)
 
 """
 	IF you copy/paste 'common.py' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.

@@ -47,6 +47,7 @@ waarschuwing   = '[COLOR=red][B]!!!  WARNING  !!![/B][/COLOR]'
 readme         = 'if you\'re seeing this message read this first[B]:[/B]'
 noservicepack  = 'Sorry the [B]S[/B]ervice[B]P[/B]ack update is [COLOR=red]outdated[/COLOR] at this moment'
 notforked      = '[COLOR dimgray](a new XvBMC\'s [B]Pi[/B]-image *fork* is coming soon[B]...[/B])[/COLOR]'
+MainTitle      = "XvBMC Nederland"
 upgrade40      = 'XvBMC upgrade v4 beta'
 upgrade40dl    = 'Download XvBMC v4 beta upgrade -4-'
 upgrade31      = 'XvBMC v3.1 *[B]final[/B]* (Jarvis)'
@@ -69,16 +70,17 @@ def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
 	addItem('[COLOR red]XvBMC [B]U[/B]pgrade v[B]4[/B].0 beta[/COLOR] [COLOR dimgray]([/COLOR]R[COLOR dimgray]aspberry[/COLOR] Pi [COLOR white]+[/COLOR] S[COLOR dimgray]tandalone)[/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR lime]XvBMC v3.1 *final* Jarvis[/COLOR] [COLOR dimgray]([/COLOR]R[COLOR dimgray]aspberry[/COLOR] Pi [COLOR white]+[/COLOR] S[COLOR dimgray]tandalone)[/COLOR]', 'url', 2,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]R[/B]eset Kodi ' +'[COLOR dimgray]([/COLOR]' +resetinfo +'[COLOR dimgray])[/COLOR]', 'url', 3,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]R[/B]eset Kodi ' +' [COLOR dimgray]([/COLOR]' +resetinfo +'[COLOR dimgray])[/COLOR]', 'url', 3,os.path.join(mediaPath, "dev.png"))
 	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack (v3.1)[/COLOR]', 'url', 4,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack bulk pack (v3.1)[/COLOR]','url', 5,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 6,os.path.join(mediaPath, "dev.png"))
-	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [COLOR white]Pi[/COLOR] **[B]only[/B]**)', 'url', 7,os.path.join(mediaPath, "dev.png"))	
-	addItem('XvBMC [B]#DEV#[/B] Corner  (Firmware-OS-etc.)', 'url', 8,os.path.join(mediaPath, "dev.png"))
-	addItem('[COLOR white]X[/COLOR]vBMC About (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance [COLOR dimgray][I](kodi schoonmaak)[/I][/COLOR]', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[COLOR dimgray]XvBMC [B]T[/B]weaking[/COLOR]', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 12,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]R[/B]efresh Addons[COLOR white]+[/COLOR]Repos', 'url', 6,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [COLOR white]Pi[/COLOR] **only**)', 'url', 7,os.path.join(mediaPath, "dev.png"))	
+	addItem('XvBMC #[B]DEV[/B]# Corner (firmware[COLOR white]-[/COLOR]OS[COLOR white]-[/COLOR]etc[COLOR white].[/COLOR])', 'url', 8,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]A[/B]bout (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]L[/B]og viewer', 'url', 10,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance [COLOR darkgreen][I](kodi schoonmaak)[/I][/COLOR]', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR dimgray]XvBMC Tweaking[/COLOR]', 'url', 12,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 13,os.path.join(mediaPath, "dev.png"))
 
 
 #######################################################################
@@ -135,7 +137,7 @@ def XvbmcPiUpgrade(url):    #upgrade40
             pass
         downloader.download(url, lib)
         time.sleep(2)
-        dialog.ok('XvBMC Nederland [B]- Pi[/B]', upgrade40 +' done.', herstart,  forceersluiten)
+        dialog.ok(MainTitle +'[B]-  Pi[/B]', upgrade40 +' done.', herstart,  forceersluiten)
         Common.killKodi()
 
 def XvbmcUpgrade(url):      #upgrade40
@@ -178,7 +180,7 @@ def XvbmcUpgrade(url):      #upgrade40
                             os.unlink(os.path.join(root, f))
                         except:
                             pass
-            dialog.ok('XvBMC Nederland - Portable', upgrade40 +' done.', herstart,  forceersluiten)
+            dialog.ok(MainTitle +' - Portable', upgrade40 +' done.', herstart,  forceersluiten)
             Common.killKodi()
 
 
@@ -195,7 +197,7 @@ def XvbmcPi31(url):         #upgrade31
             pass
         downloader.download(url, lib)
         time.sleep(2)
-        dialog.ok('XvBMC Nederland [B]- Pi[/B]', upgrade31 +' done.', herstart,  forceersluiten)
+        dialog.ok(MainTitle +'[B]-  Pi[/B]', upgrade31 +' done.', herstart,  forceersluiten)
         Common.killKodi()
 
 def XvbmcStandalone31(url): #upgrade31
@@ -238,7 +240,7 @@ def XvbmcStandalone31(url): #upgrade31
                             os.unlink(os.path.join(root, f))
                         except:
                             pass
-            dialog.ok('XvBMC Nederland - Portable', upgrade31 +' done.', herstart,  forceersluiten)
+            dialog.ok(MainTitle +' - Portable', upgrade31 +' done.', herstart,  forceersluiten)
             Common.killKodi()
 
 
@@ -255,7 +257,7 @@ def XvbmcPiReset(url):
             pass
         downloader.download(url, lib)
         time.sleep(2)
-        dialog.ok('XvBMC Nederland [B]- Pi[/B]', resetos +' done.', herstart,  forceersluiten)
+        dialog.ok(MainTitle +'[B]-  Pi[/B]', resetos +' done.', herstart,  forceersluiten)
         Common.killKodi()
 
 def XvbmcPcReset(url):
@@ -298,7 +300,7 @@ def XvbmcPcReset(url):
                             os.unlink(os.path.join(root, f))
                         except:
                             pass
-            dialog.ok('XvBMC Nederland - Portable', resetos +' done.', herstart,  forceersluiten)
+            dialog.ok(MainTitle +' - Portable', resetos +' done.', herstart,  forceersluiten)
             Common.killKodi()
 
 
@@ -364,7 +366,7 @@ def UpdateRollup(url):
 def forceRefresh():
 #	http://kodi.wiki/view/List_of_built-in_functions
 	xbmc.executebuiltin('UpdateLocalAddons')
-	dialog.ok('XvBMC Nederland', 'Force Refresh Repos and Update LocalAddons')
+	dialog.ok(MainTitle, 'Force Refresh Repos and Update LocalAddons')
 	xbmc.executebuiltin("UpdateAddonRepos")
 	xbmc.executebuiltin("ReloadSkin()")
 
@@ -429,7 +431,7 @@ def subDEVmenu(url):
 
 def xvbmcTweak():
 #	EPiC XvBMC user preferences and tweaking
-	dialog.ok('XvBMC NL Tweaks', 'EPiC XvBMC Tweaking bitches...', 'Coming soon to a theater near you [B];-p[/B]')
+	dialog.ok(MainTitle +' Tweaks', 'EPiC XvBMC Tweaking bitches...', 'Coming soon to a theater near you [B];-p[/B]')
 
 
 def xvbmcMaintenance(url):
@@ -505,6 +507,63 @@ def infoTXT(heading, text):
 	    return
 	except:
 	    pass
+
+
+#######################################################################
+#						ViEWER
+#######################################################################
+
+def xvbmcLog():
+	kodilog = xbmc.translatePath('special://logpath/kodi.log')
+	spmclog = xbmc.translatePath('special://logpath/spmc.log')
+	dbmclog = xbmc.translatePath('special://logpath/spmc.log')
+	kodiold = xbmc.translatePath('special://logpath/kodi.old.log')
+	spmcold = xbmc.translatePath('special://logpath/spmc.old.log')
+	dbmcold = xbmc.translatePath('special://logpath/kodi.old.log')
+				
+	if os.path.exists(spmclog):
+		if os.path.exists(spmclog) and os.path.exists(spmcold):
+			choice = xbmcgui.Dialog().yesno(MainTitle,"Current & Old Log Detected on your system.","Which log would you like to view?","NL: wilt u de oude/vorige- OF actuele log file bekijken?",yeslabel='old/oud',nolabel='current/recent')
+			if choice == 0:
+				f = open(spmclog,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - spmc.log" % "[COLOR white]" + msg + "[/COLOR]")
+			else:
+				f = open(spmcold,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - spmc.old.log" % "[COLOR white]" + msg + "[/COLOR]")
+		else:
+			f = open(spmclog,mode='r'); msg = f.read(); f.close()
+			Common.TextBoxes("%s - spmc.log" % "[COLOR white]" + msg + "[/COLOR]")
+			
+	if os.path.exists(kodilog):
+		if os.path.exists(kodilog) and os.path.exists(kodiold):
+			choice = xbmcgui.Dialog().yesno(MainTitle,"Current & Old Log Detected on your system.","Which log would you like to view?","NL: wilt u de oude/vorige- OF actuele log file bekijken?",yeslabel='old/oud',nolabel='current/recent')
+			if choice == 0:
+				f = open(kodilog,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - kodi.log" % "[COLOR white]" + msg + "[/COLOR]")
+			else:
+				f = open(kodiold,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - kodi.old.log" % "[COLOR white]" + msg + "[/COLOR]")
+		else:
+			f = open(kodilog,mode='r'); msg = f.read(); f.close()
+			Common.TextBoxes("%s - kodi.log" % "[COLOR white]" + msg + "[/COLOR]")
+			
+	if os.path.exists(dbmclog):
+		if os.path.exists(dbmclog) and os.path.exists(dbmcold):
+			choice = xbmcgui.Dialog().yesno(MainTitle,"Current & Old Log Detected on your system.","Which log would you like to view?","NL: wilt u de oude/vorige- OF actuele log file bekijken?",yeslabel='old/oud',nolabel='current/recent')
+			if choice == 0:
+				f = open(dbmclog,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - dbmc.log" % "[COLOR white]" + msg + "[/COLOR]")
+			else:
+				f = open(dbmcold,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - dbmc.old.log" % "[COLOR white]" + msg + "[/COLOR]")
+		else:
+			f = open(dbmclog,mode='r'); msg = f.read(); f.close()
+			Common.TextBoxes("%s - dbmc.log" % "[COLOR white]" + msg + "[/COLOR]")
+			
+	if os.path.isfile(kodilog) or os.path.isfile(spmclog) or os.path.isfile(dbmclog):
+		return True
+	else:
+		dialog.ok(MainTitle,'Sorry, No log file was found.','','[COLOR yellow]Thank you for using DaHenchmen[/COLOR]')
 
 
 #######################################################################
@@ -590,7 +649,7 @@ elif mode==4:
     myplatform = Common.platform()
     print "Platform: " + str(myplatform)
     if myplatform == 'linux': # Open-/LibreELEC
-        dialog.ok('XvBMC NL most recent ServicePack', uitgeschakeld +' download laatste XvBMC [COLOR=white]ServicePack[/COLOR]','', upgrade31dl +' image') # DiSABLE indien SP *online* #
+        dialog.ok('XvBMC-NL most recent ServicePack', uitgeschakeld +' download laatste XvBMC [COLOR=white]ServicePack[/COLOR]','', upgrade31dl +' image') # DiSABLE indien SP *online* #
         #ServicePack(url) # BLOCKED-4-NOW (v4.0) # 
     else: #rest
         print "none linux os"
@@ -602,7 +661,7 @@ elif mode==5:
     myplatform = Common.platform()
     print "Platform: " + str(myplatform)
     if myplatform == 'linux': # Open-/LibreELEC
-        dialog.ok('XvBMC NL ServicePack Update Rollup', uitgeschakeld +' download alle XvBMC SP-updates [COLOR=white](all-in-1)[/COLOR]','', upgrade31dl +' image') # DiSABLE indien SP *online* #
+        dialog.ok('XvBMC-NL ServicePack Update Rollup', uitgeschakeld +' download alle XvBMC SP-updates [COLOR=white](all-in-1)[/COLOR]','', upgrade31dl +' image') # DiSABLE indien SP *online* #
         #ServicePack(url) # BLOCKED-4-NOW (v4.0) # 
     else: #rest
         print "none linux os"
@@ -621,13 +680,16 @@ elif mode==8:
 elif mode==9:	
 	AboutXvBMC()
 
-elif mode==10:
-	xvbmcMaintenance(url)
+elif mode==10:	
+	xvbmcLog()
 
 elif mode==11:
-    xvbmcTweak()
+	xvbmcMaintenance(url)
 
 elif mode==12:
+    xvbmcTweak()
+
+elif mode==13:
 	closeandexit()
 
 

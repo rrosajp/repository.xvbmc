@@ -44,6 +44,10 @@ xvbmcfanart   = os.path.join(addonPath, 'fanart.jpg')
 databasePath  = xbmc.translatePath('special://database')
 dialog        = xbmcgui.Dialog()
 base          = 'aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
+MainTitle     = "XvBMC-NL-Maintenance"
+Windows       = xbmc.translatePath('special://home')
+WindowsCache  = xbmc.translatePath('special://home')
+OtherCache    = xbmc.translatePath('special://home/temp')
 #               ProgTitle ="XvBMC-NL-Maintenance"                     #
 
 
@@ -63,19 +67,20 @@ class cacheEntry:
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('[B]C[/B]lear Cache','url', 1,os.path.join(mediaPath, "cache.png"))
-	addItem('[B]D[/B]elete Thumbnails', 'url', 2,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B]F[/B]lush Add-ons (Salts HD/RD lite, Exodus, etc.)', 'url', 3,os.path.join(mediaPath, "packages.png"))
-	addItem('[B]P[/B]urge Packages', 'url', 4,os.path.join(mediaPath, "packages.png"))
-	addItem('[B]R[/B]aspberry [COLOR white]Pi[/COLOR] Extreme [B]C[/B]rap[B]C[/B]leaner', 'url', 5,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 6,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]R[/B]emove addons.db', 'url', 7,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC About (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 8,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Build [COLOR red]Purge[/COLOR] (image crap cleaner)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC UPDATER(r) [B]&[/B] Development  (v[COLOR white][B]4[/B][/COLOR])', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]K[/B]ill kodi  (force close)', 'url', 11,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]K[/B]odi versie (WhoAm[B]i[/B])', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 13,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]A[/B]uto Clean (cache, crashlogs, packages & thumbnails)','url', 1,os.path.join(mediaPath, "cache.png"))
+	addItem('[B]C[/B]lear Cache','url', 2,os.path.join(mediaPath, "cache.png"))
+	addItem('[B]D[/B]elete Thumbnails', 'url', 3,os.path.join(mediaPath, "thumbs.png"))
+	addItem('[B]F[/B]lush Add-ons (Salts HD/RD lite, Exodus, etc.)', 'url', 4,os.path.join(mediaPath, "packages.png"))
+	addItem('[B]P[/B]urge Packages', 'url', 5,os.path.join(mediaPath, "packages.png"))
+	addItem('[B]R[/B]aspberry [COLOR white]Pi[/COLOR] Extreme [B]C[/B]rap[B]C[/B]leaner', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 7,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]R[/B]emove addons.db', 'url', 8,os.path.join(mediaPath, "thumbs.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC About (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Build [COLOR red]Purge[/COLOR] (image crap cleaner)', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC UPDATER(r) [B]&[/B] Development  (v[COLOR white][B]4[/B][/COLOR])', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B]K[/B]ill kodi  (force close)', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]K[/B]odi versie (WhoAm[B]i[/B])', 'url', 13,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 14,os.path.join(mediaPath, "kmbroom.png"))
 
 
 #######################################################################
@@ -236,8 +241,8 @@ def clearCache():
                 if file_count > 0:
 
                     #  dialog = xbmcgui.Dialog()
-                   #if dialog.yesno("XvBMC-NL-Maintenance",str(file_count) + "%s cache files found"%(entry.name), "Do you want to delete them?"):
-                    if dialog.yesno("XvBMC-NL-Maintenance","%s cache files found"%(entry.name), "Do you want to delete them?"):
+                   #if dialog.yesno(MainTitle,str(file_count) + "%s cache files found"%(entry.name), "Do you want to delete them?"):
+                    if dialog.yesno(MainTitle,"%s cache files found"%(entry.name), "Do you want to delete them?"):
                         for f in files:
                             os.unlink(os.path.join(root, f))
                         for d in dirs:
@@ -248,7 +253,7 @@ def clearCache():
                 
 
     
-    dialog.ok("XvBMC-NL-Maintenance", "Done Clearing Cache files")
+    dialog.ok(MainTitle, "Done Clearing Cache files")
 
 
 #######################################################################
@@ -299,7 +304,7 @@ def deleteThumbnails():
         except:
             pass
 
-    dialog.ok("XvBMC-NL-Maintenance", "Please reboot your system to rebuild thumbnail folder...")
+    dialog.ok(MainTitle, "Please reboot your system to rebuild thumbnail folder...")
 
 
 #######################################################################
@@ -308,7 +313,7 @@ def deleteThumbnails():
 
 def forceRefresh():
 	xbmc.executebuiltin('UpdateLocalAddons')
-	dialog.ok("XvBMC-NL-Maintenance", "Force Refresh Repos and Update LocalAddons")
+	dialog.ok(MainTitle, "Force Refresh Repos and Update LocalAddons")
 	xbmc.executebuiltin("UpdateAddonRepos")
 	xbmc.executebuiltin("ReloadSkin()")
 
@@ -328,7 +333,7 @@ def PiCCleaner():
         if dialog.yesno('XvBMC-Pi-Maintenance','about to do some extreme CrapCleaner voodoo...','[I]this will take a few seconds to complete, be patient![/I]', '[B]are you sure[COLOR white]?[/COLOR][/B]'):
             bashCommand = "/bin/bash /storage/.kodi/addons/script.schoonmaak/xvbmc-piecc.sh"
 	    os.system(bashCommand)
-	    dialog.ok("XvBMC-NL-Maintenance", '[B]Pi[/B] CrapCleaner finished!','', 'Press OK to reboot...')
+	    dialog.ok(MainTitle, '[B]Pi[/B] CrapCleaner finished!','', 'Press OK to reboot...')
 	    xbmc.executebuiltin("Reboot")
 
 	
@@ -352,15 +357,15 @@ def purgePackages():
                 for d in dirs:
                     shutil.rmtree(os.path.join(root, d))
                 
-                dialog.ok("XvBMC-NL-Maintenance", "Deleting Packages all done")
+                dialog.ok(MainTitle, "Deleting Packages all done")
             else:
-                dialog.ok("XvBMC-NL-Maintenance", "No Packages to Purge")
+                dialog.ok(MainTitle, "No Packages to Purge")
 
 #######################################################################
 #						WHOAMI/WHOIS
 #######################################################################
 
-def KODIVERSION(url): xbmc_version=xbmc.getInfoLabel("System.BuildVersion"); version=xbmc_version[:4]; print version; dialog.ok("XvBMC-NL-Maintenance", "Your Kodi Version : [COLOR lime][B]%s[/B][/COLOR]" % version)
+def KODIVERSION(url): xbmc_version=xbmc.getInfoLabel("System.BuildVersion"); version=xbmc_version[:4]; print version; dialog.ok(MainTitle, "Your Kodi Version : [COLOR lime][B]%s[/B][/COLOR]" % version)
 
 
 #######################################################################
@@ -395,13 +400,13 @@ def AddonsDatabaseRemoval():
                 except:
                     removed = False
             if removed:
-                dialog.ok("XvBMC-NL-Maintenance", "Please reboot your system to rebuild addons database...")
+                dialog.ok(MainTitle, "Please reboot your system to rebuild addons database...")
             else:
-                dialog.ok("XvBMC-NL-Maintenance", "Removal failed!", "try manual remove, see: http://kodi.wiki/view/Database_version")
+                dialog.ok(MainTitle, "Removal failed!", "try manual remove, see: http://kodi.wiki/view/Database_version")
         except:
             pass
     else:
-        dialog.ok('XvBMC-NL-Maintenance','This feature is not available in Kodi 17 Krypton','','[COLOR yellow]Thank you for using XvBMC Maintenance[/COLOR]')
+        dialog.ok(MainTitle,'This feature is not available in Kodi 17 Krypton','','[COLOR yellow]Thank you for using XvBMC Maintenance[/COLOR]')
 
 
 #######################################################################
@@ -478,6 +483,196 @@ def infoTXT(heading, text):
 	except:
 	    pass
 
+
+#######################################################################
+#						Auto.Clean(er)
+#######################################################################
+
+def autocleanask():
+    
+	choice = xbmcgui.Dialog().yesno(MainTitle, 'Select [COLOR green]YES[/COLOR] to delete your:','cache, crashlogs, packages & thumbnails all at once.','[I][COLOR white]Do you wish to continue?[/I][/COLOR]', yeslabel='[B][COLOR green]YES[/COLOR][/B]',nolabel='[B][COLOR red]NO[/COLOR][/B]')
+	if choice == 1:
+		autocleannow()
+	
+def autocleannow():
+    AutoClean = True
+
+    if os.path.exists(cachePath)==True:    
+        for root, dirs, files in os.walk(cachePath):
+            file_count = 0
+            file_count += len(files)
+            if file_count > 0:
+                    for f in files:
+                        try:
+							if (f.endswith(".log")): continue
+							os.unlink(os.path.join(root, f))
+                        except:
+                            pass
+                    for d in dirs:
+                        try:
+                            shutil.rmtree(os.path.join(root, d))
+                        except:
+                            pass
+                        
+            else:
+                pass
+				
+    if os.path.exists(tempPath)==True:    
+        for root, dirs, files in os.walk(tempPath):
+            file_count = 0
+            file_count += len(files)
+            if file_count > 0:
+                    for f in files:
+                        try:
+                            if (f.endswith(".log")): continue
+                            os.unlink(os.path.join(root, f))
+                        except:
+                            pass
+                    for d in dirs:
+                        try:
+                            shutil.rmtree(os.path.join(root, d))
+                        except:
+                            pass
+                        
+            else:
+                pass
+    if xbmc.getCondVisibility('system.platform.ATV2'):
+        atv2_cache_a = os.path.join('/private/var/mobile/Library/Caches/AppleTV/Video/', 'Other')
+        
+        for root, dirs, files in os.walk(atv2_cache_a):
+            file_count = 0
+            file_count += len(files)
+        
+            if file_count > 0:                
+                    for f in files:
+                        os.unlink(os.path.join(root, f))
+                    for d in dirs:
+                        shutil.rmtree(os.path.join(root, d))
+                        
+            else:
+                pass
+        atv2_cache_b = os.path.join('/private/var/mobile/Library/Caches/AppleTV/Video/', 'LocalAndRental')
+        
+        for root, dirs, files in os.walk(atv2_cache_b):
+            file_count = 0
+            file_count += len(files)
+        
+            if file_count > 0:
+                    for f in files:
+                        os.unlink(os.path.join(root, f))
+                    for d in dirs:
+                        shutil.rmtree(os.path.join(root, d))
+                        
+            else:
+                pass    
+                
+    cacheEntries = setupCacheEntries()
+                                         
+    for entry in cacheEntries:
+        clear_cache_path = xbmc.translatePath(entry.path)
+        if os.path.exists(clear_cache_path)==True:    
+            for root, dirs, files in os.walk(clear_cache_path):
+                file_count = 0
+                file_count += len(files)
+                if file_count > 0:
+                        for f in files:
+                            os.unlink(os.path.join(root, f))
+                        for d in dirs:
+                            shutil.rmtree(os.path.join(root, d))
+                            
+                else:
+                    pass
+        
+    if os.path.exists(thumbnailPath)==True:  
+                for root, dirs, files in os.walk(thumbnailPath):
+                    file_count = 0
+                    file_count += len(files)
+                    if file_count > 0:                
+                        for f in files:
+                            try:
+                                os.unlink(os.path.join(root, f))
+                            except:
+								pass
+    else:
+        pass
+    
+    text13 = os.path.join(databasePath,"Textures13.db")
+    try:
+		os.unlink(text13)
+    except OSError:
+        pass
+		
+    purgePath = xbmc.translatePath('special://home/addons/packages')
+    dialog = xbmcgui.Dialog()
+    for root, dirs, files in os.walk(purgePath):
+            file_count = 0
+            file_count += len(files)
+    for root, dirs, files in os.walk(purgePath):
+            file_count = 0
+            file_count += len(files)
+            if file_count > 0:            
+                for f in files:
+                    os.unlink(os.path.join(root, f))
+                for d in dirs:
+                    shutil.rmtree(os.path.join(root, d))
+
+    if AutoClean==True:
+        #dialog.ok(MainTitle, "Auto Remove Crash Log Files...")
+        AutoCrash()
+    else:
+        #dialog.ok(MainTitle, "Skip auto remove crash log files...")
+        xbmc.log(str(AutoCrash))
+
+    choice = xbmcgui.Dialog().yesno(MainTitle,"[COLOR white][B]A[/B]uto [B]C[/B]lean finished:[/COLOR]","[I]cache, crashlogs, packages & thumbnails are removed.[/I]","Reboot your device now to finish the process?", yeslabel='[B][COLOR green]YES[/COLOR][/B]',nolabel='[B][COLOR red]NO[/COLOR][/B]')
+    if choice == 1:
+         Common.killKodi()
+
+def AutoCrash():  
+
+	HomeDir = xbmc.translatePath('special://home')
+	WindowsCache = os.path.join(xbmc.translatePath('special://home'), 'cache')
+	OtherCache = xbmc.translatePath('special://temp')
+	
+	if os.path.exists(HomeDir)==True:   
+		path=Windows
+		import glob
+		for infile in glob.glob(os.path.join(path, '*.dmp')):
+			File=infile
+			print infile
+			os.remove(infile)
+				
+		for infile in glob.glob(os.path.join(path, '*.txt')):
+			File=infile
+			print infile
+			os.remove(infile)
+				
+	if os.path.exists(WindowsCache)==True:   
+		path=WindowsCache
+		import glob
+		for infile in glob.glob(os.path.join(path, '*.dmp')):
+			File=infile
+			print infile
+			os.remove(infile)
+				
+		for infile in glob.glob(os.path.join(path, '*.txt')):
+			File=infile
+			print infile
+			os.remove(infile)
+
+	if os.path.exists(OtherCache)==True:   
+		path=OtherCache
+		import glob
+		for infile in glob.glob(os.path.join(path, '*.dmp')):
+			File=infile
+			print infile
+			os.remove(infile)
+				
+		for infile in glob.glob(os.path.join(path, '*.txt')):
+			File=infile
+			print infile
+			os.remove(infile)
+
+
 #######################################################################
 #						GOBACK
 #######################################################################
@@ -529,42 +724,45 @@ if mode==None or url==None or len(url)<1:
 	mainMenu()
 
 elif mode==1:
-	clearCache()
+	autocleanask()
 
 elif mode==2:
-	deleteThumbnails()
+	clearCache()
 
 elif mode==3:
-    xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/xvbmc-flush.py)')
+	deleteThumbnails()
 
 elif mode==4:
-	purgePackages()
+    xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/xvbmc-flush.py)')
 
 elif mode==5:
-	PiCCleaner()
+	purgePackages()
 
 elif mode==6:
-    forceRefresh()
+	PiCCleaner()
 
 elif mode==7:
+    forceRefresh()
+
+elif mode==8:
     AddonsDatabaseRemoval()
 
-elif mode==8:	
+elif mode==9:	
 	AboutXvBMC()
 
-elif mode==9:
+elif mode==10:
 	xbmc.executebuiltin('XBMC.RunScript(special://home/addons/script.schoonmaak/purge.py)')
 
-elif mode==10:
+elif mode==11:
     xvbmcupdater(url)
 
-elif mode==11:
+elif mode==12:
 	Common.killKodi()
 
-elif mode==12:
+elif mode==13:
 	KODIVERSION(url)
 
-elif mode==13:
+elif mode==14:
 	closeandexit()
 
 

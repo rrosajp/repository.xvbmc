@@ -721,8 +721,8 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 </addon>
 
 <addon id="script.schoonmaak"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]S[/COLOR]choonmaak/[COLOR red]M[/COLOR]aintenance [I][COLOR green] (kodi schoonmaak)[/COLOR][/I]"
-       version="1.10.14"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]S[/COLOR]choonmaak/[COLOR red]M[/COLOR]aintenance [I][COLOR darkgreen] (kodi schoonmaak)[/COLOR][/I]"
+       version="1.10.15"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -793,8 +793,8 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 </addon>
 
 <addon id="script.xvbmc.update"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; Development [COLOR green] [I](v4)[/I][/COLOR]"
-       version="4.0.1"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; Development [COLOR darkgreen] [I](v4)[/I][/COLOR]"
+       version="4.0.2"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>

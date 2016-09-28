@@ -130,6 +130,14 @@ class RemoveAllDbClass(xbmcgui.Window):
                 xbmc.log(str(dbFile))
                 os.remove(dbFile)
             except: pass
+        elif ('mig_export_') in item:
+            print str(XvBMC)+str(item)
+            #xbmc.log(str(DBfolder+item))
+            dbFile = os.path.join(DBfolder, item)
+            try:
+                xbmc.log(str(dbFile))
+                os.remove(dbFile)
+            except: pass
         else:
             pass
 
