@@ -418,11 +418,11 @@ def xvbmcupdater(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.update')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
     else:
-        url=base64.b64decode(base)+'script.xvbmc.update/script.xvbmc.update-4.00.zip'
+        url=base64.b64decode(base)+'script.xvbmc.update/script.xvbmc.update-4.0.2.zip'
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.xvbmc.update-4.00.zip')
+        lib=os.path.join(path, 'script.xvbmc.update-4.0.2.zip')
         try:
             os.remove(lib)
         except:
