@@ -36,18 +36,18 @@ MODES = __enum(
     PLAYED='played', WATCHED='watched', COLLECTED='collected', SHOW_BOOKMARKS='show_bookmarks', DELETE_BOOKMARK='delete_bookmark', SHOW_HISTORY='show_history',
     RESET_FAILS='reset_failures', MANAGE_PROGRESS='toggle_progress', AUTOPLAY='autoplay', INSTALL_THEMES='install_themes', RESET_REL_URLS='reset_rel_urls',
     ANTICIPATED='anticipated', SHOW_REWATCH='show_rewatch', PICK_REWATCH_LIST='pick_rewatch_list', SET_REWATCH_LIST='set_rewatch_list', MANAGE_REWATCH='manage_rewatch',
-    BUILD_SOURCE_DIR='build_source_dir', GENRES='genres', SHOW_GENRE='show_genre', PRUNE_CACHE='prune_cache')
+    BUILD_SOURCE_DIR='build_source_dir', GENRES='genres', SHOW_GENRE='show_genre', PRUNE_CACHE='prune_cache', AUTH_TORBA='auth_torba')
 SECTIONS = __enum(TV='TV', MOVIES='Movies')
 VIDEO_TYPES = __enum(TVSHOW='TV Show', MOVIE='Movie', EPISODE='Episode', SEASON='Season')
 CONTENT_TYPES = __enum(TVSHOWS='tvshows', MOVIES='movies', SEASONS='seasons', EPISODES='episodes', FILES='files')
 TRAKT_SECTIONS = {SECTIONS.TV: 'shows', SECTIONS.MOVIES: 'movies'}
-TRAKT_SORT = __enum(TITLE='title', ACTIVITY='activity', MOST_COMPLETED='most-completed', LEAST_COMPLETED='least-completed', RECENTLY_AIRED='recently-aired',
-                    PREVIOUSLY_AIRED='previously-aired')
+TRAKT_SORT = __enum(TITLE='title', RECENT_ACTIVITY='recent-activity', MOST_COMPLETED='most-completed', LEAST_COMPLETED='least-completed', RECENTLY_AIRED='recently-aired',
+                    PREVIOUSLY_AIRED='previously-aired', PAST_ACTIVITY='past-activity')
 TRAKT_LIST_SORT = __enum(RANK='rank', RECENTLY_ADDED='added', TITLE='title', RELEASE_DATE='released', RUNTIME='runtime', POPULARITY='popularity',
                          PERCENTAGE='percentage', VOTES='votes')
 TRAKT_SORT_DIR = __enum(ASCENDING='asc', DESCENDING='desc')
-SORT_MAP = [TRAKT_SORT.ACTIVITY, TRAKT_SORT.TITLE, TRAKT_SORT.MOST_COMPLETED, TRAKT_SORT.LEAST_COMPLETED, TRAKT_SORT.RECENTLY_AIRED,
-            TRAKT_SORT.PREVIOUSLY_AIRED]
+SORT_MAP = [TRAKT_SORT.RECENT_ACTIVITY, TRAKT_SORT.TITLE, TRAKT_SORT.MOST_COMPLETED, TRAKT_SORT.LEAST_COMPLETED, TRAKT_SORT.RECENTLY_AIRED,
+            TRAKT_SORT.PREVIOUSLY_AIRED, TRAKT_SORT.PAST_ACTIVITY]
 QUALITIES = __enum(LOW='High', MEDIUM='High', HIGH='High', HD720='HD720', HD1080='HD1080')
 DIRS = __enum(UP='up', DOWN='down')
 REWATCH_METHODS = __enum(LAST_WATCHED='last_watched', LEAST_WATCHED='min_watched', MOST_WATCHED='max_watched')

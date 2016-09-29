@@ -170,8 +170,20 @@ class Scraper(scraper.Scraper):
     
     def __get_search_url(self):
         search_url = SEARCH_URL
+        html = super(self.__class__, self)._http_get(self.base_url, cache_limit=24)
+        for match in re.finditer('<script[^>]+src="([^"]+)', html):
+            script = match.group(1)
+            if 'flixanity' in script:
+                html = super(self.__class__, self)._http_get(script, cache_limit=24)
+                match = re.search('=\s*"([^"]*/cautare/[^"]*)', html)
+                if match:
+                    search_url = match.group(1)
+                    match = re.search('u\s*=\s*"([^"]+)', html)
+                    if match:
+                        search_url = search_url[:search_url.rfind('/') + 1] + match.group(1)
+                    break
         return search_url
-    
+        
     def __get_token(self, html=''):
         if self.username and self.password and self.__token is None:
             if not html:

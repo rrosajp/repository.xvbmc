@@ -147,7 +147,7 @@ class Trakt_API():
     def get_trending(self, section, page=None, filters=None):
         if filters is None: filters = {}
         url = '/%s/trending' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': 79}
+        params = {'extended': 'full,images', 'limit': 69}
         params.update(filters)
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
@@ -156,7 +156,7 @@ class Trakt_API():
     def get_anticipated(self, section, page=None, filters=None):
         if filters is None: filters = {}
         url = '/%s/anticipated' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': 79}
+        params = {'extended': 'full,images', 'limit': 69}
         params.update(filters)
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
@@ -165,14 +165,14 @@ class Trakt_API():
     def get_popular(self, section, page=None, filters=None):
         if filters is None: filters = {}
         url = '/%s/popular' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': 79}
+        params = {'extended': 'full,images', 'limit': 69}
         params.update(filters)
         if page: params['page'] = page
         return self.__call_trakt(url, params=params)
 
     def get_recent(self, section, date, page=None):
         url = '/%s/updates/%s' % (TRAKT_SECTIONS[section], date)
-        params = {'extended': 'full,images', 'limit': 79}
+        params = {'extended': 'full,images', 'limit': 69}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
@@ -189,7 +189,7 @@ class Trakt_API():
     def __get_most(self, category, section, period, page, filters):
         if filters is None: filters = {}
         url = '/%s/%s/%s' % (TRAKT_SECTIONS[section], category, period)
-        params = {'extended': 'full,images', 'limit': 79}
+        params = {'extended': 'full,images', 'limit': self.list_size}
         params.update(filters)
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
@@ -201,7 +201,7 @@ class Trakt_API():
 
     def get_recommendations(self, section):
         url = '/recommendations/%s' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full,images', 'limit': 79}
+        params = {'extended': 'full,images', 'limit': self.list_size}
         return self.__call_trakt(url, params=params)
 
     def get_premieres(self, start_date=None, days=None, cached=True):
