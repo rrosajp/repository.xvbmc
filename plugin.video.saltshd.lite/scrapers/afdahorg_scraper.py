@@ -53,7 +53,7 @@ class Scraper(scraper.Scraper):
                 data = {'v': video_id}
                 headers = {'Referer': page_url}
                 headers.update(XHR)
-                html = self._http_get(self.info_url, data=data, headers=headers, cache_limit=.5)
+                html = self._http_get(self.info_url, data=data, headers=headers, cache_limit=0)
                 sources = scraper_utils.parse_json(html, self.info_url)
                 for source in sources:
                     match = re.search('url=(.*)', sources[source])
@@ -91,7 +91,7 @@ class Scraper(scraper.Scraper):
 # if no default url has been set, then pick one and set it. If one has been set, use it
 default_url = kodi.get_setting('%s-default_url' % (Scraper.get_name()))
 if not default_url:
-    BASE_URL = random.choice(['https://afdah.org', 'http://watch32hd.co'])
+    BASE_URL = random.choice(['https://afdah.org', 'https://watch32hd.co'])
     Scraper.base_url = BASE_URL
     kodi.set_setting('%s-default_url' % (Scraper.get_name()), BASE_URL)
 else:

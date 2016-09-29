@@ -80,7 +80,7 @@ class Scraper(scraper.Scraper):
                     iframe_url = dom_parser.parse_dom(html, 'iframe', ret='src')
                     if iframe_url:
                         iframe_url = iframe_url[0]
-                        if self.base_url in iframe_url:
+                        if urlparse.urlparse(self.base_url).hostname in iframe_url:
                             sources += self.__get_direct_links(iframe_url, page_url)
                         else:
                             sources += [{'stream_url': iframe_url, 'subs': 'Turkish subtitles', 'height': 480, 'direct': False}]

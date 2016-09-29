@@ -28,7 +28,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.utils2 import i18n
 import scraper
 
-BASE_URL = 'http://hdflix.tv'
+BASE_URL = 'http://hdflix.me'
 SEARCH_URL = '/newmov.php?menu=%s&query=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
@@ -38,6 +38,7 @@ class Scraper(scraper.Scraper):
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
+        self.base_url = self.base_url.replace('hdflix.tv', 'hdflix.me')  # temp fix to avoid old gvideo redirects
         self.username = kodi.get_setting('%s-username' % (self.get_name()))
         self.password = kodi.get_setting('%s-password' % (self.get_name()))
 

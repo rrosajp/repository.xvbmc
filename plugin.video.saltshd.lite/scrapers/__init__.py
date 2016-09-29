@@ -13,8 +13,8 @@ __all__ = ['scraper',
 'local_scraper', 
 'pw_scraper', 
 'nitertv_scraper',
-           'movieshd_scraper', 
-		   
+           'apollo_scraper', 
+		   'moviezone_scraper',
            'fmovie_scraper', 
 		   
 		   

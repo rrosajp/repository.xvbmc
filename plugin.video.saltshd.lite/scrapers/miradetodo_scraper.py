@@ -131,7 +131,12 @@ class Scraper(scraper.Scraper):
             headers = {'Referer': iframe_url}
             html = self._http_get(self.gk_url, data=data, headers=headers, cache_limit=.5)
             js_data = scraper_utils.parse_json(html, self.gk_url)
-            for link in js_data.get('link', []):
+            log_utils.log(js_data)
+            links = js_data.get('link', [])
+            if isinstance(links, basestring):
+                links = [{'link': links}]
+                
+            for link in links:
                 stream_url = link['link']
                 if self._get_direct_hostname(stream_url) == 'gvideo':
                     quality = scraper_utils.gv_get_quality(stream_url)

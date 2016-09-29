@@ -28,7 +28,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
 BASE_URL = 'https://hevcbluray.com'
-QUALITY_MAP = {'HD 720P': QUALITIES.HD720, 'HD 1080P': QUALITIES.HD1080}
+QUALITY_MAP = {'HD 720P': QUALITIES.HD720, 'HD 1080P': QUALITIES.HD1080, '1080P BLURAY': QUALITIES.HD1080}
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -62,29 +62,20 @@ class Scraper(scraper.Scraper):
                 
                 is_3d = True if re.search('\s+3D\s+', title) else False
             
-            fragment = dom_parser.parse_dom(html, 'div', {'class': 'txt-block'})
-            if fragment:
-                for match in re.finditer('href="([^"]+)', fragment[0]):
+            fragments = dom_parser.parse_dom(html, 'div', {'class': 'txt-block'}) + dom_parser.parse_dom(html, 'li', {'class': 'elemento'})
+            for fragment in fragments:
+                for match in re.finditer('href="([^"]+)', fragment):
                     stream_url = match.group(1)
                     host = urlparse.urlparse(stream_url).hostname
-                    quality = scraper_utils.get_quality(video, host, page_quality)
+                    q_str = dom_parser.parse_dom(fragment, 'span', {'class': 'd'})
+                    q_str = q_str[0].upper() if q_str else ''
+                    base_quality = QUALITY_MAP.get(q_str, page_quality)
+                    quality = scraper_utils.get_quality(video, host, base_quality)
                     source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': False}
                     source['format'] = 'x265'
                     source['3D'] = is_3d
                     sources.append(source)
-            
-            for item in dom_parser.parse_dom(html, 'li', {'class': 'elemento'}):
-                match = re.search('href="([^"]+)', item)
-                if match:
-                    stream_url = match.group(1)
-                    q_str = dom_parser.parse_dom(item, 'span', {'class': 'd'})
-                    q_str = q_str[0].upper() if q_str else ''
-                    base_quality = QUALITY_MAP.get(q_str, page_quality)
-                    host = urlparse.urlparse(stream_url).hostname
-                    quality = scraper_utils.get_quality(video, host, base_quality)
-                    source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': False}
-                    sources.append(source)
-
+                    
         return sources
 
     def search(self, video_type, title, year, season=''):
@@ -112,6 +103,10 @@ class Scraper(scraper.Scraper):
                 match = re.search('(.*?)\s+\d{3,}p', match_title)
                 if match:
                     match_title = match.group(1)
+                
+                extra = dom_parser.parse_dom(item, 'span', {'class': 'calidad2'})
+                if extra:
+                    match_title += ' [%s]' % (extra[0])
                     
                 if not year or not match_year or year == match_year:
                     result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(url)}

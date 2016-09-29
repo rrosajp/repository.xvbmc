@@ -29,9 +29,9 @@ from salts_lib.constants import SHORT_MONS
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://2ddl.online'
+BASE_URL = 'http://twoddl.link'
 CATEGORIES = {VIDEO_TYPES.MOVIE: '/category/movies/', VIDEO_TYPES.TVSHOW: '/category/tv-shows/'}
-EXCLUDE_LINKS = ['adf.ly', '2ddl.link']
+EXCLUDE_LINKS = ['adf.ly', urlparse.urlparse(BASE_URL).hostname]
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

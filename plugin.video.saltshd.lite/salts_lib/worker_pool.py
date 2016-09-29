@@ -57,7 +57,7 @@ class WorkerPool(object):
         self.manager = threading.Thread(target=self.__manage_consumers)
         self.manager.daemon = True
         self.manager.start()
-        log_utils.log('Pool Manager: started for: %s' % (self), log_utils.LOGDEBUG, COMPONENT)
+        log_utils.log('Pool Manager(%s): started.' % (self), log_utils.LOGDEBUG, COMPONENT)
         
     def __manage_consumers(self):
         while not self.closing:
@@ -79,13 +79,17 @@ class WorkerPool(object):
                         new_workers = max_new
                         
                     for _ in xrange(new_workers):
-                        worker = threading.Thread(target=self.consumer)
-                        worker.daemon = True
-                        self.workers.append(worker)
-                        log_utils.log('Pool Manager: %s thrown in Pool: %s - (%s/%s)' % (worker.name, self, len(self.workers), self.max_workers), log_utils.LOGDEBUG, COMPONENT)
-                        worker.start()
+                        try:
+                            worker = threading.Thread(target=self.consumer)
+                            worker.daemon = True
+                            worker.start()
+                            self.workers.append(worker)
+                            log_utils.log('Pool Manager: %s thrown in Pool: (%s/%s)' % (worker.name, len(self.workers), self.max_workers), log_utils.LOGDEBUG, COMPONENT)
+                        except RuntimeError as e:
+                            try: log_utils.log('Pool Manager: %s missed Pool: %s - (%s/%s)' % (worker.name, e, len(self.workers), self.max_workers), log_utils.LOGWARNING)
+                            except UnboundLocalError: pass  # worker may not have gotten assigned
                         
-        log_utils.log('Pool Manager: for %s quitting.' % (self), log_utils.LOGDEBUG, COMPONENT)
+        log_utils.log('Pool Manager(%s): quitting.' % (self), log_utils.LOGDEBUG, COMPONENT)
             
     def consumer(self):
         me = threading.current_thread()
