@@ -177,36 +177,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="plugin.video.jericho"
-       name="Jericho"
-       version="1.1.0"
-       provider-name="Team Jericho">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="script.module.t0mm0.common" version="2.1.1"/>
-    <import addon="script.module.beautifulsoup" version="3.2.1"/>
-    <import addon="script.module.requests" />
-    <import addon="script.module.youtube.dl" />
-    <import addon="plugin.video.youtube" />
-    <import addon="script.module.urlresolver" />
-    <import addon="script.module.simplejson" />
-    <import addon="script.common.plugin.cache" />
-    <import addon="script.module.liveresolver" />
-    <import addon="plugin.video.veetle" />
-    <import addon="plugin.video.SportsDevil" />
-
-
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">Streams voor XBMC / KODI!</summary>
-    <description lang="en"></description>
-    <platform>all</platform>
-  </extension>
-</addon>
-
 
 <addon id="plugin.video.kmediatorrent" name="KMediaTorrent" version="4.3.7" provider-name="jmarth +OpenELEQ +EPiC (XvBMC NL)">
     <requires>
