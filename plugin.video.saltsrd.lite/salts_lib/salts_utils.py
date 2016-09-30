@@ -146,6 +146,10 @@ def get_source_sort_key(item):
     sort_key = make_source_sort_key()
     return -sort_key[item.get_name()]
 
+def parallel_search(scraper, video_type, title, year, season):
+    results = scraper.search(video_type, title, year, season)
+    return {'name': scraper.get_name(), 'results': results}
+
 def parallel_get_progress(trakt_id, cached, cache_limit):
     progress = trakt_api.get_show_progress(trakt_id, full=True, cached=cached, cache_limit=cache_limit)
     progress['trakt'] = trakt_id  # add in a hacked show_id to be used to match progress up to the show its for
@@ -326,3 +330,13 @@ def do_disable_check():
                     kodi.set_setting(setting, '0')
                 else:
                     kodi.set_setting(setting, '-1')
+
+def record_sru_failures(fails, total_scrapers, related_list):
+    utils2.record_failures(fails)
+    timeouts = len(fails)
+    timeout_msg = utils2.i18n('scraper_timeout') % (timeouts, total_scrapers) if timeouts else ''
+    if timeout_msg:
+        kodi.notify(msg=timeout_msg, duration=5000)
+        for related in related_list:
+            if related['name'] in fails:
+                related['label'] = '[COLOR darkred]%s[/COLOR]' % (related['label'])
