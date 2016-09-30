@@ -1126,6 +1126,34 @@ msgctxt "#30288"
 msgid "Working..."
 msgstr ""
 
+msgctxt "#30289"
+msgid "Re-Scrape All"
+msgstr ""
+
+msgctxt "#30290"
+msgid "Manual Search (All Unmatched Only)"
+msgstr ""
+
+msgctxt "#30291"
+msgid "Torba Account Authorization"
+msgstr ""
+
+msgctxt "#30292"
+msgid "Torba Authorization Complete"
+msgstr ""
+
+msgctxt "#30293"
+msgid "Torba Authorization Failed"
+msgstr ""
+
+msgctxt "#30294"
+msgid "Authorize SALTS to access my torba account"
+msgstr ""
+
+msgctxt "#30295"
+msgid "and login when prompted"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""
@@ -1201,7 +1229,7 @@ msgid "Year"
 msgstr ""
 
 msgctxt "#30518"
-msgid "Activity"
+msgid "Recent Activity"
 msgstr ""
 
 msgctxt "#30519"
@@ -1965,5 +1993,13 @@ msgstr ""
 
 msgctxt "#30707"
 msgid "Date Format"
+msgstr ""
+
+msgctxt "#30708"
+msgid "Past Activity"
+msgstr ""
+
+msgctxt "#30709"
+msgid "Always Show Custom Progress Dialogs"
 msgstr ""
 

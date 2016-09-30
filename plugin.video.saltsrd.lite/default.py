@@ -93,7 +93,7 @@ def browse_menu(section):
     if utils2.menu_on('anticipated'): kodi.create_item({'mode': MODES.ANTICIPATED, 'section': section}, i18n('anticipated') % (section_label), thumb=utils2.art('anticipated.png'), fanart=utils2.art('fanart.jpg'))
     if utils2.menu_on('recent'): kodi.create_item({'mode': MODES.RECENT, 'section': section}, i18n('recently_updated') % (section_label), thumb=utils2.art('recent.png'), fanart=utils2.art('fanart.jpg'))
     if utils2.menu_on('mosts'): kodi.create_item({'mode': MODES.MOSTS, 'section': section}, i18n('mosts') % (section_label2), thumb=utils2.art('mosts.png'), fanart=utils2.art('fanart.jpg'))
-    if utils2.menu_on('genres'): kodi.create_item({'mode': MODES.GENRES, 'section': section}, i18n('genres'), thumb=utils2.art('anticipated.png'), fanart=utils2.art('fanart.jpg'))
+    if utils2.menu_on('genres'): kodi.create_item({'mode': MODES.GENRES, 'section': section}, i18n('genres'), thumb=utils2.art('popular.png'), fanart=utils2.art('fanart.jpg'))
     add_section_lists(section)
     if TOKEN:
         if utils2.menu_on('on_deck'): kodi.create_item({'mode': MODES.SHOW_BOOKMARKS, 'section': section}, i18n('trakt_on_deck'), thumb=utils2.art('on_deck.png'), fanart=utils2.art('fanart.jpg'))
@@ -1182,10 +1182,9 @@ def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', 
     fails = set()
     counts = {}
     video = ScraperVideo(video_type, title, year, trakt_id, season, episode, ep_title, ep_airdate)
-    active = plugin_name and not utils2.from_playlist()
-    if kodi.get_setting('pd_force_disable') == 'true': active = False
+    active = False if kodi.get_setting('pd_force_disable') == 'true' else True
     cancelled = False
-    with kodi.ProgressDialog(i18n('getting_sources'), utils2.make_progress_msg(video), '', '', active=active) as pd:
+    with kodi.ProgressDialog(i18n('getting_sources'), utils2.make_progress_msg(video), active=active) as pd:
         try:
             wp = worker_pool.WorkerPool()
             scrapers = salts_utils.relevant_scrapers(video_type)
@@ -1489,10 +1488,9 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, season='', episo
     return True
 
 def auto_play_sources(hosters, video_type, trakt_id, season, episode):
-    active = xbmc.getInfoLabel('Container.PluginName') != ''
-    if kodi.get_setting('pd_force_disable') == 'true': active = False
     total_hosters = len(hosters)
-    with kodi.ProgressDialog(i18n('trying_autoplay'), line1=' ', line2=' ', active=active) as pd:
+    active = False if kodi.get_setting('pd_force_disable') == 'true' else True
+    with kodi.ProgressDialog(i18n('trying_autoplay'), active=active) as pd:
         prev = ''
         for i, item in enumerate(hosters):
             if item['multi-part']:
@@ -1579,8 +1577,25 @@ def set_related_url(mode, video_type, title, year, trakt_id, season='', episode=
         workers, related_list = get_related_urls(video)
         while True:
             dialog = xbmcgui.Dialog()
-            index = dialog.select(i18n('url_to_change') % (video_type), [related['label'] for related in related_list])
-            if index > -1:
+            if mode == MODES.SET_URL_SEARCH:
+                select_list = [('***%s' % (i18n('manual_search_all')))]
+                adjustment = 2
+            else:
+                adjustment = 1
+                select_list = []
+            select_list += ['***%s' % (i18n('rescrape_all'))]
+            select_list += [related['label'] for related in related_list]
+            
+            index = dialog.select(i18n('url_to_change') % (video_type), select_list)
+            if index == 0:
+                if mode == MODES.SET_URL_SEARCH:
+                    related_list = sru_search_all(video, related_list)
+                else:
+                    related_list = reset_all_urls(video, related_list)
+            elif index == 1 and mode == MODES.SET_URL_SEARCH:
+                related_list = reset_all_urls(video, related_list)
+            elif index > adjustment - 1:
+                index = index - adjustment
                 if mode == MODES.SET_URL_MANUAL:
                     related = related_list[index]
                     heading = i18n('rel_url_at') % (video_type, related['name'])
@@ -1597,6 +1612,74 @@ def set_related_url(mode, video_type, title, year, trakt_id, season='', episode=
         try: worker_pool.reap_workers(workers, None)
         except UnboundLocalError: pass
     
+def sru_search_all(video, related_list):
+    blank_list = [related for related in related_list if not related['url']]
+    if not blank_list: return related_list
+    
+    temp_title, temp_year, temp_season = get_search_fields(video.video_type, video.title, video.year, video.season)
+    timeout = max_timeout = int(kodi.get_setting('source_timeout'))
+    if max_timeout == 0: timeout = None
+    begin = time.time()
+    with kodi.ProgressDialog(i18n('set_related_url'), utils2.make_progress_msg(video)) as pd:
+        try:
+            wp = worker_pool.WorkerPool()
+            total_scrapers = len(blank_list)
+            for i, related in enumerate(blank_list):
+                log_utils.log('Searching for: |%s|%s|%s|%s|' % (related['name'], temp_title, temp_year, temp_season), log_utils.LOGDEBUG, 'sru')
+                wp.request(salts_utils.parallel_search, [related['class'], video.video_type, temp_title, temp_year, temp_season])
+                progress = i * 50 / total_scrapers
+                pd.update(progress, line2=i18n('req_result') % (related['name']))
+    
+            fails = set([item['name'] for item in blank_list])
+            result_count = 0
+            while result_count < total_scrapers:
+                try:
+                    log_utils.log('Waiting for Urls - Timeout: %s' % (timeout), log_utils.LOGDEBUG, 'sru')
+                    results = wp.receive(timeout)
+                    fails.remove(results['name'])
+                    result_count += 1
+                    log_utils.log('Got result: %s' % (results), log_utils.LOGDEBUG, 'sru')
+                    if results['results']:
+                        for i, item in enumerate(related_list):
+                            if item['name'] == results['name']:
+                                first = results['results'][0]
+                                salts_utils.update_url(video, item['name'], item['url'], first['url'])
+                                item['url'] = first['url']
+                                item['label'] = '[%s] %s' % (item['name'], first['url'])
+                                
+                    progress = (result_count * 50 / total_scrapers) + 50
+                    if len(fails) > 5:
+                        line3 = i18n('remaining_over') % (len(fails), total_scrapers)
+                    else:
+                        line3 = i18n('remaining_under') % (', '.join(fails))
+                    pd.update(progress, line2=i18n('recv_result') % (results['name']), line3=line3)
+                    
+                    if max_timeout > 0:
+                        timeout = max_timeout - (time.time() - begin)
+                        if timeout < 0: timeout = 0
+                except worker_pool.Empty:
+                    log_utils.log('Get Url Timeout', log_utils.LOGWARNING, 'sru')
+                    break
+            else:
+                log_utils.log('All source results received', log_utils.LOGDEBUG, 'sru')
+        finally:
+            workers = wp.close()
+    
+    salts_utils.record_sru_failures(fails, total_scrapers, related_list)
+    worker_pool.reap_workers(workers, None)
+    return related_list
+
+def reset_all_urls(video, related_list):
+    for related in related_list:
+        salts_utils.update_url(video, related['name'], related['url'], '')
+    
+    try:
+        workers, related_list = get_related_urls(video)
+        return related_list
+    finally:
+        try: worker_pool.reap_workers(workers, None)
+        except UnboundLocalError: pass
+
 def get_related_urls(video):
     timeout = max_timeout = int(kodi.get_setting('source_timeout'))
     if max_timeout == 0: timeout = None
@@ -1642,17 +1725,10 @@ def get_related_urls(video):
             else:
                 log_utils.log('All source results received', log_utils.LOGDEBUG, 'sru')
                             
-            utils2.record_failures(fails)
-            timeouts = len(fails)
-            timeout_msg = i18n('scraper_timeout') % (timeouts, total_scrapers) if timeouts else ''
-            if timeout_msg:
-                kodi.notify(msg=timeout_msg, duration=5000)
-                for related in related_list:
-                    if related['name'] in fails:
-                        related['label'] = '[COLOR darkred]%s[/COLOR]' % (related['label'])
         finally:
             workers = wp.close()
             
+    salts_utils.record_sru_failures(fails, total_scrapers, related_list)
     return workers, related_list
     
 def sru_search(video, related):
@@ -1949,6 +2025,18 @@ def prune_cache():
             log_utils.log('SALTS Active... Busy... Postponing [%s]' % (MODES.PRUNE_CACHE), log_utils.LOGDEBUG, 'prune')
             kodi.sleep(30000)
 
+@url_dispatcher.register(MODES.AUTH_TORBA)
+def auth_torba():
+    kodi.close_all()
+    kodi.sleep(500)  # sleep or authorize won't work for some reason
+    result = torba_scraper.Scraper().auth_torba()
+    if result:
+        kodi.notify(i18n('torba_acct_auth'), i18n('torba_auth_complete'))
+    elif result is None:
+        pass
+    else:
+        kodi.notify(i18n('torba_acct_auth'), i18n('torba_auth_failed'))
+
 @url_dispatcher.register(MODES.RESET_DB)
 def reset_db():
     if db_connection.reset_db():
@@ -2042,7 +2130,7 @@ def add_to_library(video_type, title, year, trakt_id):
                         else:
                             continue
 
-                    filename = utils2.filename_from_title(show['title'], video_type)
+                    filename = utils2.filename_from_title(show['title'], video_type) + '.strm'
                     filename = filename % ('%02d' % int(season_num), '%02d' % int(ep_num))
                     final_path = os.path.join(make_path(save_path, video_type, show['title'], show['year'], season=season_num), filename)
                     strm_string = kodi.get_plugin_url({'mode': MODES.GET_SOURCES, 'video_type': VIDEO_TYPES.EPISODE, 'title': show['title'], 'year': year, 'season': season_num,
@@ -2063,7 +2151,7 @@ def add_to_library(video_type, title, year, trakt_id):
                 movie = trakt_api.get_movie_details(trakt_id)
                 write_nfo(movie_path, video_type, movie['ids'])
         strm_string = kodi.get_plugin_url({'mode': MODES.GET_SOURCES, 'video_type': video_type, 'title': title, 'year': year, 'trakt_id': trakt_id})
-        filename = utils2.filename_from_title(title, VIDEO_TYPES.MOVIE, year)
+        filename = utils2.filename_from_title(title, VIDEO_TYPES.MOVIE, year) + '.strm'
         final_path = os.path.join(make_path(save_path, video_type, title, year), filename)
         write_strm(strm_string, final_path, VIDEO_TYPES.MOVIE, title, year, trakt_id, require_source=kodi.get_setting('require_source') == 'true')
 

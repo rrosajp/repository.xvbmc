@@ -232,11 +232,11 @@ def get_section_params(section):
 
 def filename_from_title(title, video_type, year=None):
     if video_type == VIDEO_TYPES.TVSHOW:
-        filename = '%s S%sE%s.strm'
+        filename = '%s S%sE%s'
         filename = filename % (title, '%s', '%s')
     else:
-        if year: title = '%s (%s)' % (title, year)
-        filename = '%s.strm' % title
+        if year: title = '%s.%s' % (title, year)
+        filename = title
 
     filename = re.sub(r'(?!%s)[^\w\-_\.]', '.', filename)
     filename = re.sub('\.+', '.', filename)
@@ -474,7 +474,7 @@ def menu_on(menu):
 def sort_progress(episodes, sort_order):
     if sort_order == TRAKT_SORT.TITLE:
         return sorted(episodes, key=lambda x: title_key(x['show']['title']))
-    elif sort_order == TRAKT_SORT.ACTIVITY:
+    elif sort_order == TRAKT_SORT.RECENT_ACTIVITY:
         return sorted(episodes, key=lambda x: utils.iso_2_utc(x['last_watched_at']), reverse=True)
     elif sort_order == TRAKT_SORT.LEAST_COMPLETED:
         return sorted(episodes, key=lambda x: (x['percent_completed'], x['completed']))
@@ -484,6 +484,8 @@ def sort_progress(episodes, sort_order):
         return sorted(episodes, key=lambda x: utils.iso_2_utc(x['episode']['first_aired']))
     elif sort_order == TRAKT_SORT.RECENTLY_AIRED:
         return sorted(episodes, key=lambda x: utils.iso_2_utc(x['episode']['first_aired']), reverse=True)
+    elif sort_order == TRAKT_SORT.PAST_ACTIVITY:
+        return sorted(episodes, key=lambda x: utils.iso_2_utc(x['last_watched_at']))
     else:  # default sort set to activity
         return sorted(episodes, key=lambda x: x['last_watched_at'], reverse=True)
 
