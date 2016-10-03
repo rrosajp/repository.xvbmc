@@ -134,14 +134,20 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/?s=%s')
-        search_url = search_url % (urllib.quote(title))
-        html = self._http_get(search_url, cache_limit=1)
-        for item in dom_parser.parse_dom(html, 'h3', {'class': 'post-box-title'}):
-            match = re.search('href="([^"]+)[^>]*>([^<]+)', item)
-            if match:
-                match_url, match_title_year = match.groups()
-                is_season = re.search('Season\s+(\d+)$', match_title_year, re.I)
+        search_url = urlparse.urljoin(self.base_url, '/wp-admin/admin-ajax.php')
+        data = {'action': 'ajaxsearchpro_search', 'aspp': title, 'asid': '1', 'asp_inst_id': '1_1',
+                'options': 'qtranslate_lang=0&set_intitle=None&customset%5B%5D=post'}
+        headers = {'Referer': self.base_url}
+        headers.update(XHR)
+        html = self._http_get(search_url, data=data, headers=headers, cache_limit=1)
+        for item in dom_parser.parse_dom(html, 'div', {'class': 'asp_content'}):
+            match_title_year = dom_parser.parse_dom(item, 'a', {'class': 'asp_res_url'})
+            match_url = dom_parser.parse_dom(item, 'a', {'class': 'asp_res_url'}, ret='href')
+            if match_title_year and match_url:
+                match_title_year = match_title_year[0]
+                match_url = match_url[0]
+                match_title_year = re.sub('</?span[^>]*>', '', match_title_year)
+                is_season = re.search('Season\s+(\d+)\s+', match_title_year, re.I)
                 if (not is_season and video_type == VIDEO_TYPES.MOVIE) or (is_season and video_type == VIDEO_TYPES.SEASON):
                     match_year = ''
                     if video_type == VIDEO_TYPES.SEASON:
@@ -149,7 +155,7 @@ class Scraper(scraper.Scraper):
                         if season and int(is_season.group(1)) != int(season):
                             continue
                     else:
-                        match = re.search('(.*?)\s+(\d{4})$', match_title_year)
+                        match = re.search('(.*?)\s+(\d{4})\s*', match_title_year)
                         if match:
                             match_title, match_year = match.groups()
                         else:
