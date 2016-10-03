@@ -55,15 +55,15 @@ def perform_auto_conf(responses):
             tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
                      ['IFlix', 'torba.se', 'MoviesPlanet', '123Movies', '9Movies', 'Apollo', 'DayT.se', 'niter.tv', 'YesMovies', 'HDFlix', 'HDMovie14', 'ororo.tv'],
                      ['StreamLord', 'MovieFlix', 'CyberReel', 'm4ufree', 'tunemovie', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD', 'HDMovieFree'],
-                     ['MovieGo', 'MovieXK', 'Stage66', 'PelisPedia', 'FardaDownload', 'vu45', 'PutMV', 'PirateJunkies', 'FireMoviesHD', 'SeriesWatch', 'VidNow4K'],
-                     ['HeyDL', 'HEVCBluRay', 'MovieZone', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OneClickTVShows', 'OnlineDizi'],
-                     ['DownloadTube', 'scene-rls', 'DDLValley', '2DDL', 'DDLSeries', 'Crazy4TV', 'SceneDown', 'CinemaMKV'],
+                     ['MovieGo', 'MovieXK', 'Stage66', 'PelisPedia', 'FardaDownload', 'vu45', 'PutMV', 'PirateJunkies', 'SeriesWatch', 'VidNow4K'],
+                     ['HeyDL', 'HEVCBluRay', 'MovieZone', 'SezonLukDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OnlineDizi'],
+                     ['DownloadTube', 'scene-rls', 'DDLValley', '2DDL', 'DDLSeries', 'Crazy4TV', 'SceneDown', 'CinemaMKV', 'TVShow.me'],
                      ['rls-movies', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net'],
                      ['vivo.to', 'IceFilms', 'Flixanity', 'Watch5s', 'Rainierland', 'WatchEpisodes', 'WatchItVideos', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries'],
                      ['TVWTVS', 'MWM', 'MoviePool', 'WatchSeries', 'RLSeries', 'Putlocker', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K'],
                      ['MovieZone', 'MovieHubs', 'tvrush', 'afdah', 'MiraDeTodo', 'Filmovizija', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now', 'SnagFilms'],
                      ['MoviePool', 'Ventures', 'yshows', 'iWatchOnline', 'vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac'],
-                     ['SpaceMov', 'LosMovies', 'wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'moviestorm.eu', 'clickplay.to'],
+                     ['SpaceMov', 'LosMovies', 'wmo.ch', 'stream-tv.co', 'MintMovies', 'MovieNight', 'cmz', 'ch131', 'filmikz.ch', 'clickplay.to'],
                      ['MovieTube', 'FilmStreaming.in']]
         
             sso = []

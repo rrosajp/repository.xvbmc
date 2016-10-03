@@ -132,8 +132,9 @@ class Scraper(scraper.Scraper):
         for post in js_data.get('results', []):
             if self.__too_old(post): continue
             result = self._blog_proc_results(post.get('post_title', ''), '(?P<post_title>.+)(?P<url>.*?)', '', video_type, title, year)
-            result[0]['url'] = scraper_utils.pathify_url(post['post_name'])
-            results.append(result[0])
+            if result:
+                result[0]['url'] = scraper_utils.pathify_url(post['post_name'])
+                results.append(result[0])
         return results
 
     def __too_old(self, post):

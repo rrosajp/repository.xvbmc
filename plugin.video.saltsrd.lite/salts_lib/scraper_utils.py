@@ -44,7 +44,8 @@ def get_ua():
     except: last_gen = 0
     if not kodi.get_setting('current_ua') or last_gen < (time.time() - (7 * 24 * 60 * 60)):
         index = random.randrange(len(RAND_UAS))
-        user_agent = RAND_UAS[index].format(win_ver=random.choice(WIN_VERS), feature=random.choice(FEATURES), br_ver=random.choice(BR_VERS[index]))
+        versions = {'win_ver': random.choice(WIN_VERS), 'feature': random.choice(FEATURES), 'br_ver': random.choice(BR_VERS[index])}
+        user_agent = RAND_UAS[index].format(**versions)
         log_utils.log('Creating New User Agent: %s' % (user_agent), log_utils.LOGDEBUG)
         kodi.set_setting('current_ua', user_agent)
         kodi.set_setting('last_ua_create', str(int(time.time())))

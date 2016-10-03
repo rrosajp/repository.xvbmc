@@ -25,7 +25,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://dl.fardadownload.net/Serial'
+BASE_URL = 'http://dl.uplodin.ir/Serial'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

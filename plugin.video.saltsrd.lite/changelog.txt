@@ -1,3 +1,8 @@
+Version 1.0.[B]147[/B] EPiC Real-Debrid
++ All Kudos -2- TKnorris (Y)
++ some scraper fixes (2.0.93)
+- openload.co
+
 Version 1.0.[B]146[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
 + .Lite engine update (#MR-release v2.0.91)
@@ -86,6 +91,19 @@ Version 1.0.132[B]a[/B] EPiC Real-Debrid
 + Salts HD Lite .130 "engine" (kudos-2-TKnorris though)
 
 ---------------------
+
+[B]Version 2.0.93[/B]
+- Add tvshow.me
+- Fix SeriesWatch
+- Fix PubFilm
+- Fix rlsbb
+- Fix PFTV
+- Fix Farda
+- Fix WSO
+- Fix WMO
+- Add some TVA branding
+- Improve buttons for Jarvis vs Krypton
+- Remove defunct scrapers
 
 [B]Version 2.0.91[/B]
 - Fix Xmovies8.V2
