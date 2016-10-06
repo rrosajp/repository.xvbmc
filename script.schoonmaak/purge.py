@@ -48,16 +48,17 @@ class cacheEntry:
 #######################################################################
 
 def setupXvbmcEntries():
-    entries = 10 #make sure this reflects the amount of entries you have
-    dialogName = ["kidsplace", "NLVIEW", "nl-viewer", "nl-viewer2", "nlv3", "SportCenterHD", "SportsDevil", "Troma-copypaste", "NLviewRepo", "TVaddons.nl"]
-    pathName = ["special://home/addons/plugin.video.kidsplace",
+    entries = 11 #make sure this reflects the amount of entries you have
+    dialogName = ["jehrico", "kidsplace", "NLVIEW", "nl-viewer", "nl-viewer2", "nlv3", "SportCenterHD", "Troma-copypaste", "JehricoRepo", "NLviewRepo", "TVaddons.nl"]
+    pathName = ["special://home/addons/plugin.video.jericho",
+				"special://home/addons/plugin.video.kidsplace",
 				"special://home/addons/plugin.video.NLVIEW",
 				"special://home/addons/plugin.video.nl-viewer",
 				"special://home/addons/plugin.video.nl-viewer2",
 				"special://home/addons/plugin.video.nlv3",
 				"special://home/addons/plugin.video.sportcenterhd",
-				"special://home/addons/plugin.video.SportsDevil",
 				"special://home/addons/plugin.video.troma",
+				"special://home/addons/repository.jericho",
 				"special://home/addons/repository.NLVIEW",
 				"special://home/addons/repository.tvaddons.nl"]
                     
