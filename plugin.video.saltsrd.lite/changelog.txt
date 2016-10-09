@@ -1,3 +1,8 @@
+Version 1.0.[B]147[/B](+a) EPiC Real-Debrid
++ All Kudos -2- TKnorris (Y)
++ some scraper fixes (2.0.95)
+- openload.co
+
 Version 1.0.[B]147[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
 + some scraper fixes (2.0.93)
@@ -91,6 +96,13 @@ Version 1.0.132[B]a[/B] EPiC Real-Debrid
 + Salts HD Lite .130 "engine" (kudos-2-TKnorris though)
 
 ---------------------
+
+[B]Version 2.0.95[/B]
+- Add SeriesCoco
+- Fix scene-rls
+- Fix flixanity
+- Fix PFTV
+- Remove vu45
 
 [B]Version 2.0.93[/B]
 - Add tvshow.me
