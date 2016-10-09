@@ -477,6 +477,7 @@ class Scraper(object):
         for match in re.finditer(post_pattern, html, re.DOTALL):
             post_data = match.groupdict()
             post_title = post_data['post_title']
+            post_title = re.sub('<[^>]*>', '', post_title)
             if 'quality' in post_data:
                 post_title += '- [%s]' % (post_data['quality'])
 

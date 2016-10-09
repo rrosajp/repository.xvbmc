@@ -655,13 +655,18 @@ def cleanse_title(text):
             # named entity
             try:
                 text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+                
             except KeyError:
                 pass
+
+        # replace nbsp with a space
+        text = text.replace(u'\xa0', u' ')
         return text
     
     if isinstance(text, str):
         try: text = text.decode('utf-8')
         except: pass
+    
     return re.sub("&#?\w+;", fixup, text.strip())
 
 

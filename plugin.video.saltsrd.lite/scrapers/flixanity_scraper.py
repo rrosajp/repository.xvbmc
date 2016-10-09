@@ -35,7 +35,7 @@ from salts_lib.utils2 import i18n
 import scraper
 
 
-BASE_URL = 'http://www.flixanity.me'
+BASE_URL = 'http://www.flixanity.me/'
 EMBED_URL = '/ajax/embeds.php'
 SEARCH_URL = '/api/v1/cautare/upd'
 KEY = 'MEE2cnUzNXl5aTV5bjRUSFlwSnF5MFg4MnRFOTVidFY='
@@ -64,8 +64,8 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         sources = []
         if source_url and source_url != FORCE_NO_MATCH:
-            url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
+            page_url = urlparse.urljoin(self.base_url, source_url)
+            html = self._http_get(page_url, cache_limit=.5)
             if video.video_type == VIDEO_TYPES.MOVIE:
                 action = 'getMovieEmb'
             else:
@@ -78,7 +78,7 @@ class Scraper(scraper.Scraper):
                 elid = urllib.quote(base64.encodestring(str(int(time.time()))).strip())
                 data = {'action': action, 'idEl': match.group(1), 'token': self.__token, 'elid': elid}
                 ajax_url = urlparse.urljoin(self.base_url, EMBED_URL)
-                headers = {'Authorization': 'Bearer %s' % (self.__get_bearer())}
+                headers = {'Authorization': 'Bearer %s' % (self.__get_bearer()), 'Referer': page_url}
                 headers.update(XHR)
                 html = self._http_get(ajax_url, data=data, headers=headers, cache_limit=.5)
                 html = html.replace('\\"', '"').replace('\\/', '/')
@@ -122,7 +122,8 @@ class Scraper(scraper.Scraper):
                 if item['meta'].upper().startswith(media_type):
                     match_year = str(item['year']) if 'year' in item and item['year'] else ''
                     if not year or not match_year or year == match_year:
-                        result = {'title': scraper_utils.cleanse_title(item['title']), 'url': scraper_utils.pathify_url(item['permalink']), 'year': match_year}
+                        
+                        result = {'title': scraper_utils.cleanse_title(item['title']), 'url': scraper_utils.pathify_url(item['permalink'].replace('/show/', '/tv-show/')), 'year': match_year}
                         results.append(result)
 
         return results
@@ -131,7 +132,8 @@ class Scraper(scraper.Scraper):
         season_url = show_url + '/season/%s' % (video.season)
         episode_pattern = 'href="([^"]+/season/%s/episode/%s/?)"' % (video.season, video.episode)
         title_pattern = 'href="(?P<url>[^"]+/season/%s/episode/%s/?)"\s+title="(?P<title>[^"]+)'
-        return self._default_get_episode_url(season_url, video, episode_pattern, title_pattern)
+        headers = {'Referer': urlparse.urljoin(self.base_url, show_url)}
+        return self._default_get_episode_url(season_url, video, episode_pattern, title_pattern, headers=headers)
 
     @classmethod
     def get_settings(cls):
