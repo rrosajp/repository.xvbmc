@@ -85,7 +85,6 @@
         <setting id="list_size" type="slider" label="30550" default="20" range="1,100" option="int" enable="eq(-5,false)"/>
         <setting id="trakt_bookmark" type="bool" label="30552" default="false" enable="eq(-6,false)"/>
         <setting id="include_people" type="bool" label="30555" default="false" enable="eq(-7,false)"/>
-        <setting id="image_size" type="enum" label="30556" values="Full (HD)|Medium (SD)|Thumb (Mobile)" default="1" enable="eq(-8,false)"/>
         <setting id="TV_sub_slug" type="text" visible="false"/>
         <setting id="Movies_sub_slug" type="text" visible="false"/>
         <setting id="TV_fav_slug" type="text" visible="false"/>
@@ -94,6 +93,10 @@
         <setting id="trakt_oauth_token" type="text" default="" visible="false"/>
         <setting id="trakt_refresh_token" type="text" default="" visible="false"/>
         <setting id="last_reminder" type="number" default="0" visible="false"/>
+        <setting type="lsep" label="30710"/>
+        <setting id="fanart_key" type="text" label="30711" default="94e4e7e472e72b0d05335dde0065bbbe"/>
+        <setting id="tmdb_key" type="text" label="30712" default="deeda51afc1b151f949171e8be1031b7"/>
+        <setting id="tvdb_key" type="text" label="30713" default="B0409428B1B31C10"/>
     </category>
 
     <category label="30557">
@@ -197,13 +200,10 @@
          <setting id="alluc.com-username" type="text" label="     Username" default="" visible="eq(-4,true)"/>
          <setting id="alluc.com-password" type="text" label="     Password" option="hidden" default="" visible="eq(-5,true)"/>
          <setting id="Apollo-enable" type="bool" label="Apollo Enabled" default="true" visible="true"/>
-         <setting id="Apollo-base_url" type="text" label="    Base Url" default="http://pro.apollogroup.tv" visible="eq(-1,true)"/>
+         <setting id="Apollo-base_url" type="text" label="    Base Url" default="http://free.apollogroup.tv" visible="eq(-1,true)"/>
          <setting id="Apollo-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="Apollo_last_results" type="number" default="0" visible="false"/>
-         <setting id="ch131-enable" type="bool" label="ch131 Enabled" default="true" visible="true"/>
-         <setting id="ch131-base_url" type="text" label="    Base Url" default="http://www.ch131.me" visible="eq(-1,true)"/>
-         <setting id="ch131-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
-         <setting id="ch131_last_results" type="number" default="0" visible="false"/>
+         <setting id="Apollo-uuid" type="text" visible="false"/>
          <setting id="CinemaMKV-enable" type="bool" label="CinemaMKV Enabled" default="true" visible="true"/>
          <setting id="CinemaMKV-base_url" type="text" label="    Base Url" default="http://cinemamkv.com" visible="eq(-1,true)"/>
          <setting id="CinemaMKV-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
@@ -274,7 +274,7 @@
          <setting id="DownloadTube-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="DownloadTube_last_results" type="number" default="0" visible="false"/>
          <setting id="EasyNews-enable" type="bool" label="EasyNews Enabled" default="true" visible="true"/>
-         <setting id="EasyNews-base_url" type="text" label="    Base Url" default="http://members.easynews.com" visible="eq(-1,true)"/>
+         <setting id="EasyNews-base_url" type="text" label="    Base Url" default="https://members.easynews.com" visible="eq(-1,true)"/>
          <setting id="EasyNews-sub_check" type="bool" label="    Include in Page Existence checks?" default="false" visible="eq(-2,true)"/>
          <setting id="EasyNews_last_results" type="number" default="0" visible="false"/>
          <setting id="EasyNews-username" type="text" label="     Username" default="" visible="eq(-4,true)"/>
@@ -425,7 +425,7 @@
          <setting id="MovieWatcher-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="MovieWatcher_last_results" type="number" default="0" visible="false"/>
          <setting id="MovieXK-enable" type="bool" label="MovieXK Enabled" default="true" visible="true"/>
-         <setting id="MovieXK-base_url" type="text" label="    Base Url" default="http://moviexk.org" visible="eq(-1,true)"/>
+         <setting id="MovieXK-base_url" type="text" label="    Base Url" default="http://moviexk.com" visible="eq(-1,true)"/>
          <setting id="MovieXK-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="MovieXK_last_results" type="number" default="0" visible="false"/>
          <setting id="MovieZone-enable" type="bool" label="MovieZone Enabled" default="true" visible="true"/>
@@ -483,7 +483,7 @@
          <setting id="PelisPedia-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="PelisPedia_last_results" type="number" default="0" visible="false"/>
          <setting id="pftv-enable" type="bool" label="pftv Enabled" default="true" visible="true"/>
-         <setting id="pftv-base_url" type="text" label="    Base Url" default="http://projectfreetv.at" visible="eq(-1,true)"/>
+         <setting id="pftv-base_url" type="text" label="    Base Url" default="http://project-freetv.eu/" visible="eq(-1,true)"/>
          <setting id="pftv-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="pftv_last_results" type="number" default="0" visible="false"/>
          <setting id="PirateJunkies-enable" type="bool" label="PirateJunkies Enabled" default="true" visible="true"/>
@@ -508,9 +508,10 @@
          <setting id="PrimeWire-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="PrimeWire_last_results" type="number" default="0" visible="false"/>
          <setting id="pubfilm-enable" type="bool" label="pubfilm Enabled" default="true" visible="true"/>
-         <setting id="pubfilm-base_url" type="text" label="    Base Url" default="http://pidtv.com" visible="eq(-1,true)"/>
+         <setting id="pubfilm-base_url" type="text" label="    Base Url" default="http://pubfilm.com" visible="eq(-1,true)"/>
          <setting id="pubfilm-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="pubfilm_last_results" type="number" default="0" visible="false"/>
+         <setting id="pubfilm-default_url" type="text" visible="false"/>
          <setting id="Putlocker-enable" type="bool" label="Putlocker Enabled" default="true" visible="true"/>
          <setting id="Putlocker-base_url" type="text" label="    Base Url" default="http://putlocker.is" visible="eq(-1,true)"/>
          <setting id="Putlocker-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
@@ -603,7 +604,7 @@
          <setting id="torba.se-base_url" type="text" label="    Base Url" default="http://torba.se" visible="eq(-1,true)"/>
          <setting id="torba.se-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="torba.se_last_results" type="number" default="0" visible="false"/>
-         <setting id="torba.se-get_token" label="    Authorize SALTS to access my torba account" type="action" action="RunPlugin(plugin://plugin.video.saltsrd/?mode=auth_torba)" visible="eq(-4,true)"/>
+         <setting id="torba.se-get_token" label="    Authorize SALTS to access my torba account" type="action" action="RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=auth_torba)" visible="eq(-4,true)"/>
          <setting id="torba.se-token" type="text" default="" visible="false"/>
          <setting id="torba.se-refresh" type="text" default="" visible="false"/>
          <setting id="torba.se-client_id" type="text" default="" visible="false"/>
@@ -679,8 +680,8 @@
          <setting id="WatchItVideos-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="WatchItVideos_last_results" type="number" default="0" visible="false"/>
          <setting id="WatchSeries-enable" type="bool" label="WatchSeries Enabled" default="true" visible="true"/>
-         <setting id="WatchSeries-base_url" type="text" label="    Base Url" default="http://watchseries.ag" visible="eq(-1,true)"/>
-         <setting id="WatchSeries-sub_check" type="bool" label="    Include in Page Existence checks?" default="false" visible="eq(-2,true)"/>
+         <setting id="WatchSeries-base_url" type="text" label="    Base Url" default="https://watchseriesfree.to" visible="eq(-1,true)"/>
+         <setting id="WatchSeries-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="WatchSeries_last_results" type="number" default="0" visible="false"/>
          <setting id="wmo.ch-enable" type="bool" label="wmo.ch Enabled" default="true" visible="true"/>
          <setting id="wmo.ch-base_url" type="text" label="    Base Url" default="http://watchmovies.sk/" visible="eq(-1,true)"/>
@@ -691,7 +692,7 @@
          <setting id="wso.ch-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="wso.ch_last_results" type="number" default="0" visible="false"/>
          <setting id="xmovies8-enable" type="bool" label="xmovies8 Enabled" default="true" visible="true"/>
-         <setting id="xmovies8-base_url" type="text" label="    Base Url" default="https://genvideos.org" visible="eq(-1,true)"/>
+         <setting id="xmovies8-base_url" type="text" label="    Base Url" default="https://xmovies8.org" visible="eq(-1,true)"/>
          <setting id="xmovies8-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="xmovies8_last_results" type="number" default="0" visible="false"/>
          <setting id="xmovies8-default_url" type="text" visible="false"/>

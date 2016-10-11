@@ -1,3 +1,9 @@
+Version 1.0.[B]148[/B] EPiC Real-Debrid
++ All Kudos -2- TKnorris (Y)
++ some scraper fixes (2.0.96)
++ trakt.tv artwork changes
+- openload.co
+
 Version 1.0.[B]147[/B](+a) EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
 + some scraper fixes (2.0.95)

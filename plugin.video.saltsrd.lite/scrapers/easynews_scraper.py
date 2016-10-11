@@ -18,6 +18,7 @@
 import re
 import urllib
 import urlparse
+import base64
 import kodi
 import log_utils
 from salts_lib import scraper_utils
@@ -27,7 +28,7 @@ from salts_lib.utils2 import i18n
 import scraper
 
 
-BASE_URL = 'http://members.easynews.com'
+BASE_URL = 'https://members.easynews.com'
 SORT = 's1=relevance&s1d=-&s2=dsize&s2d=-&s3=dtime&s3d=-'
 VID_FILTER = 'fex=mkv%%2C+mp4%%2C+avi'
 # RANGE_FILTERS = 'd1=&d1t=&d2=&d2t=&b1=&b1t=&b2=&b2t=&px1=&px1t=&px2=&px2t=&fps1=&fps1t=&fps2=&fps2t=&bps1=&bps1t=&bps2=&bps2t=&hz1=&hz1t=&hz2=&hz2t=&rn1=&rn1t=1&rn2=&rn2t='
@@ -45,7 +46,7 @@ class Scraper(scraper.Scraper):
         self.max_results = int(kodi.get_setting('%s-result_limit' % (self.get_name())))
         self.max_gb = kodi.get_setting('%s-size_limit' % (self.get_name()))
         self.max_bytes = int(self.max_gb) * 1024 * 1024 * 1024
-        self.cookie = {'chickenlicker': '%s%%3A%s' % (self.username, self.password)}
+        self.auth = 'Basic ' + base64.b64encode('%s:%s' % (self.username, self.password))
 
     @classmethod
     def provides(cls):
@@ -86,6 +87,9 @@ class Scraper(scraper.Scraper):
         search_url = self.__translate_search(url)
         html = self._http_get(search_url, cache_limit=.5)
         js_result = scraper_utils.parse_json(html, search_url)
+        down_url = js_result.get('downURL')
+        dl_farm = js_result.get('dlFarm')
+        dl_port = js_result.get('dlPort')
         for item in js_result.get('data', []):
             post_hash, size, post_title, ext, duration = item['0'], item['4'], item['10'], item['11'], item['14']
             checks = [False] * 6
@@ -99,9 +103,8 @@ class Scraper(scraper.Scraper):
                 log_utils.log('EasyNews Post excluded: %s - |%s|' % (checks, item), log_utils.LOGDEBUG)
                 continue
             
-            stream_url = urllib.quote('%s%s/%s%s' % (post_hash, ext, post_title, ext))
-            stream_url = 'http://members.easynews.com/dl/%s' % (stream_url)
-            stream_url = stream_url + '|Cookie=%s' % (self._get_stream_cookies())
+            stream_url = down_url + urllib.quote('/%s/%s/%s%s/%s%s' % (dl_farm, dl_port, post_hash, ext, post_title, ext))
+            stream_url = stream_url + '|Authorization=%s' % (urllib.quote(self.auth))
             host = self._get_direct_hostname(stream_url)
             quality = None
             if 'width' in item:
@@ -166,7 +169,8 @@ class Scraper(scraper.Scraper):
         if not self.username or not self.password:
             return ''
         
-        return super(self.__class__, self)._http_get(url, cookies=self.cookie, cache_limit=cache_limit)
+        headers = {'Authorization': self.auth}
+        return super(self.__class__, self)._http_get(url, headers=headers, cache_limit=cache_limit)
 
     def __translate_search(self, url):
         query = urllib.quote_plus(urlparse.parse_qs(urlparse.urlparse(url).query)['query'][0])

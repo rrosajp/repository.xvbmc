@@ -1,7 +1,8 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.saltshd.lite
+# Addon id: plugin.video.saltsrd.lite
 # Addon Provider: TV Addons
 # Translators:
+# EPiC, 2016
 # Mike Bike, 2015-2016
 # Rodrigo, 2015
 # tknorris, 2015
@@ -1941,4 +1942,32 @@ msgstr "Meest Toegevoegd (Maand)"
 msgctxt "#30706"
 msgid "Most Collected (All)"
 msgstr "Meest Toegevoegd (Totaal)"
+
+msgctxt "#30707"
+msgid "Date Format"
+msgstr "Datum opmaak"
+
+msgctxt "#30708"
+msgid "Past Activity"
+msgstr "Vorige activiteiten"
+
+msgctxt "#30709"
+msgid "Always Show Custom Progress Dialogs"
+msgstr "Laat altijd aangepaste voortgangsshermen zien"
+
+msgctxt "#30710"
+msgid "Image Metadata API Keys"
+msgstr "afbeelding metadata API sleutels"
+
+msgctxt "#30711"
+msgid "Fanart.tv API Key"
+msgstr "Fanart.tv API sleutel"
+
+msgctxt "#30712"
+msgid "TMDB API Key"
+msgstr "TMDB API sleutel"
+
+msgctxt "#30713"
+msgid "TVDB API Key"
+msgstr "TVDB API sleutel"
 

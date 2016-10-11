@@ -38,6 +38,7 @@ from salts_lib import utils2
 from salts_lib import gui_utils
 from salts_lib import strings
 from salts_lib import worker_pool
+from salts_lib import image_scraper
 from salts_lib.constants import *
 from salts_lib.utils2 import i18n
 from scrapers import *  # import all scrapers into this namespace
@@ -81,6 +82,7 @@ def settings_menu():
     kodi.create_item({'mode': MODES.AUTH_TRAKT}, i18n('auth_salts'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'), is_folder=False, is_playable=False)
     kodi.create_item({'mode': MODES.SHOW_VIEWS}, i18n('set_default_views'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.BROWSE_URLS}, i18n('remove_cached_urls'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
+    kodi.create_item({'mode': MODES.SETTINGS}, 'This addon developed and supported at www.tvaddons.ag', thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.BROWSE, ['section'])
@@ -519,10 +521,9 @@ def show_history(section, page=1):
             liz, liz_url = make_item(section_params, item['movie'])
         else:
             show = item['show']
-            fanart = show['images']['fanart']['full']
             item['episode']['watched'] = True
             menu_items = []
-            queries = {'mode': MODES.SEASONS, 'trakt_id': show['ids']['trakt'], 'fanart': fanart, 'title': show['title'], 'year': show['year']}
+            queries = {'mode': MODES.SEASONS, 'trakt_id': show['ids']['trakt'], 'title': show['title'], 'year': show['year'], 'tvdb_id': show['ids']['tvdb']}
             menu_items.append((i18n('browse_seasons'), 'Container.Update(%s)' % (kodi.get_plugin_url(queries))),)
             liz, liz_url = make_episode_item(show, item['episode'], show_subs=False, menu_items=menu_items)
             label = liz.getLabel()
@@ -789,10 +790,9 @@ def show_rewatch():
                 next_episode = rewatch['episode']
                 episode = trakt_api.get_episode_details(trakt_id, next_episode['season'], next_episode['episode'])
                 episode['watched'] = plays.get(next_episode['season'], {}).get(next_episode['episode'], 0) > 0
-                fanart = show['images']['fanart']['full']
                 
                 menu_items = []
-                queries = {'mode': MODES.SEASONS, 'trakt_id': trakt_id, 'fanart': fanart, 'title': show['title'], 'year': show['year']}
+                queries = {'mode': MODES.SEASONS, 'trakt_id': trakt_id, 'title': show['title'], 'year': show['year'], 'tvdb_id': show['ids']['tvdb']}
                 menu_items.append((i18n('browse_seasons'), 'Container.Update(%s)' % (kodi.get_plugin_url(queries))),)
                 label, new_method = utils2.get_next_rewatch_method(trakt_id)
                 queries = {'mode': MODES.MANAGE_REWATCH, 'trakt_id': trakt_id, 'new_method': new_method}
@@ -963,7 +963,6 @@ def show_progress():
             first_aired_utc = utils.iso_2_utc(episode['episode']['first_aired'])
             if kodi.get_setting('show_unaired_next') == 'true' or first_aired_utc <= time.time():
                 show = episode['show']
-                fanart = show['images']['fanart']['full']
                 date = utils2.make_day(utils2.make_air_date(episode['episode']['first_aired']))
                 if kodi.get_setting('mne_time') != '0':
                     date_time = '%s@%s' % (date, utils2.make_time(first_aired_utc, 'mne_time'))
@@ -971,7 +970,7 @@ def show_progress():
                     date_time = date
     
                 menu_items = []
-                queries = {'mode': MODES.SEASONS, 'trakt_id': show['ids']['trakt'], 'fanart': fanart, 'title': show['title'], 'year': show['year']}
+                queries = {'mode': MODES.SEASONS, 'trakt_id': show['ids']['trakt'], 'title': show['title'], 'year': show['year'], 'tvdb_id': show['ids']['tvdb']}
                 menu_items.append((i18n('browse_seasons'), 'Container.Update(%s)' % (kodi.get_plugin_url(queries))),)
     
                 liz, liz_url = make_episode_item(show, episode['episode'], show_subs=False, menu_items=menu_items)
@@ -1129,8 +1128,8 @@ def search_results(section, query, page=1):
     results = trakt_api.search(section, query, page)
     make_dir_from_list(section, results, query={'mode': MODES.SEARCH_RESULTS, 'section': section, 'query': query}, page=page)
 
-@url_dispatcher.register(MODES.SEASONS, ['trakt_id', 'fanart', 'title', 'year'])
-def browse_seasons(trakt_id, fanart, title, year):
+@url_dispatcher.register(MODES.SEASONS, ['trakt_id', 'title', 'year'], ['tvdb_id'])
+def browse_seasons(trakt_id, title, year, tvdb_id=None):
     seasons = sorted(trakt_api.get_seasons(trakt_id), key=lambda x: x['number'])
     info = {}
     if TOKEN:
@@ -1140,7 +1139,8 @@ def browse_seasons(trakt_id, fanart, title, year):
     total_items = len(seasons)
     for season in seasons:
         if kodi.get_setting('show_season0') == 'true' or season['number'] != 0:
-            liz = make_season_item(season, info.get(str(season['number']), {'season': season['number']}), trakt_id, fanart, title, year)
+            season_info = info.get(str(season['number']), {'season': season['number']})
+            liz = make_season_item(season, season_info, trakt_id, title, year, tvdb_id)
             queries = {'mode': MODES.EPISODES, 'trakt_id': trakt_id, 'season': season['number'], 'random': time.time()}
             kodi.add_item(queries, liz, is_folder=True, total_items=total_items)
     kodi.set_view(CONTENT_TYPES.SEASONS, True)
@@ -1171,7 +1171,7 @@ def browse_episodes(trakt_id, season):
 @url_dispatcher.register(MODES.AUTOPLAY, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate'])
 def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', ep_title='', ep_airdate=''):
     plugin_name = xbmc.getInfoLabel('Container.PluginName')
-    #if plugin_name not in ['', 'plugin.video.saltsrd']:
+    #if plugin_name not in ['', 'plugin.video.saltsrd.lite']:
         #kodi.notify(msg=i18n('playback_limited'))
         #return False
     
@@ -1441,10 +1441,7 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, season='', episo
                 win.setProperty('script.trakt.ids', json.dumps(show_meta['ids']))
                 people = trakt_api.get_people(SECTIONS.TV, trakt_id) if kodi.get_setting('include_people') == 'true' else None
                 info = salts_utils.make_info(ep_meta, show_meta, people)
-                images = {}
-                images['images'] = show_meta['images']
-                images['images'].update(ep_meta['images'])
-                art = utils2.make_art(images)
+                art = image_scraper.get_images(VIDEO_TYPES.EPISODE, show_meta['ids'], season, episode)
     
                 path = make_path(path, VIDEO_TYPES.TVSHOW, show_meta['title'], season=season)
                 file_name = utils2.filename_from_title(show_meta['title'], VIDEO_TYPES.TVSHOW)
@@ -1457,7 +1454,7 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, season='', episo
                 win.setProperty('script.trakt.ids', json.dumps(movie_meta['ids']))
                 people = trakt_api.get_people(SECTIONS.MOVIES, trakt_id) if kodi.get_setting('include_people') == 'true' else None
                 info = salts_utils.make_info(movie_meta, people=people)
-                art = utils2.make_art(movie_meta)
+                art = image_scraper.get_images(VIDEO_TYPES.MOVIE, movie_meta['ids'])
     
                 path = make_path(path, video_type, movie_meta['title'], movie_meta['year'])
                 file_name = utils2.filename_from_title(movie_meta['title'], video_type, movie_meta['year'])
@@ -2335,7 +2332,6 @@ def make_dir_from_cal(mode, start_date, days):
     for item in days:
         episode = item['episode']
         show = item['show']
-        fanart = show['images']['fanart']['full']
         utc_secs = utils.iso_2_utc(episode['first_aired'])
         show_date = datetime.date.fromtimestamp(utc_secs)
 
@@ -2356,7 +2352,7 @@ def make_dir_from_cal(mode, start_date, days):
             date_time = date
 
         menu_items = []
-        queries = {'mode': MODES.SEASONS, 'trakt_id': show['ids']['trakt'], 'fanart': fanart, 'title': show['title'], 'year': show['year']}
+        queries = {'mode': MODES.SEASONS, 'trakt_id': show['ids']['trakt'], 'title': show['title'], 'year': show['year'], 'tvdb_id': show['ids']['tvdb']}
         menu_items.append((i18n('browse_seasons'), 'Container.Update(%s)' % (kodi.get_plugin_url(queries))),)
 
         liz, liz_url = make_episode_item(show, episode, show_subs=False, menu_items=menu_items)
@@ -2372,11 +2368,10 @@ def make_dir_from_cal(mode, start_date, days):
     kodi.set_content(CONTENT_TYPES.EPISODES)
     kodi.end_of_directory()
 
-def make_season_item(season, info, trakt_id, fanart, title, year):
+def make_season_item(season, info, trakt_id, title, year, tvdb_id):
     label = '%s %s' % (i18n('season'), season['number'])
-    season['images']['fanart'] = {}
-    season['images']['fanart']['full'] = fanart
-    liz = utils.make_list_item(label, season, utils2.make_art)
+    art = image_scraper.get_images(VIDEO_TYPES.SEASON, {'trakt': trakt_id, 'tvdb': tvdb_id}, season['number'])
+    liz = utils.make_list_item(label, season, art)
     log_utils.log('Season Info: %s' % (info), log_utils.LOGDEBUG, 'season')
     info['mediatype'] = 'season'
     liz.setInfo('video', info)
@@ -2436,10 +2431,8 @@ def make_episode_item(show, episode, show_subs=True, menu_items=None):
         label = utils2.format_episode_label(label, episode['season'], episode['number'], srts)
 
     meta = salts_utils.make_info(episode, show)
-    meta['images'] = show['images']
-    if episode['images']['screenshot']: meta['images']['thumb'] = episode['images']['screenshot']
-    liz = utils.make_list_item(label, meta, utils2.make_art)
-    del meta['images']
+    art = image_scraper.get_images(VIDEO_TYPES.EPISODE, show['ids'], episode['season'], episode['number'])
+    liz = utils.make_list_item(label, meta, art)
     liz.setInfo('video', meta)
     air_date = ''
     if episode['first_aired']:
@@ -2514,7 +2507,8 @@ def make_item(section_params, show, menu_items=None):
     if not isinstance(show['title'], basestring): show['title'] = ''
     show['title'] = re.sub(' \(\d{4}\)$', '', show['title'])
     label = '%s (%s)' % (show['title'], show['year'])
-    liz = utils.make_list_item(label, show, utils2.make_art)
+    art = image_scraper.get_images(section_params['video_type'], show['ids'])
+    liz = utils.make_list_item(label, show, art)
     trakt_id = show['ids']['trakt']
     liz.setProperty('trakt_id', str(trakt_id))
     people = trakt_api.get_people(section_params['section'], trakt_id) if kodi.get_setting('include_people') == 'true' else None
@@ -2526,7 +2520,7 @@ def make_item(section_params, show, menu_items=None):
         liz.setProperty('UnWatchedEpisodes', str(info['UnWatchedEpisodes']))
 
     if section_params['section'] == SECTIONS.TV:
-        queries = {'mode': section_params['next_mode'], 'trakt_id': trakt_id, 'fanart': liz.getProperty('fanart_image'), 'title': show['title'], 'year': show['year']}
+        queries = {'mode': section_params['next_mode'], 'trakt_id': trakt_id, 'title': show['title'], 'year': show['year'], 'tvdb_id': show['ids']['tvdb']}
         info['TVShowTitle'] = info['title']
     else:
         queries = {'mode': section_params['next_mode'], 'video_type': section_params['video_type'], 'title': show['title'], 'year': show['year'], 'trakt_id': trakt_id}

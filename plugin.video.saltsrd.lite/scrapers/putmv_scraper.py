@@ -67,10 +67,8 @@ class Scraper(scraper.Scraper):
                 for match in re.finditer('href="([^"]+).*?/>(.*?)(?:-\d+)?</a>', fragment[0]):
                     url, host = match.groups()
                     host = host.lower()
-                    host = HOSTS.get(host, host)
-                    if host in GVIDEO_NAMES:
-                        sources = self.__get_links(urlparse.urljoin(self.base_url, url))
-                    else:
+                    sources = self.__get_links(urlparse.urljoin(self.base_url, url))
+                    if not sources:
                         sources = {url: {'quality': scraper_utils.get_quality(video, host, QUALITIES.HIGH), 'direct': False, 'host': host}}
                     
                     for source in sources:

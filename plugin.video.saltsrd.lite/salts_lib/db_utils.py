@@ -237,6 +237,26 @@ class DB_Connection():
             sql = 'INSERT INTO source_cache (source) VALUES (?)'
             self.__execute(sql, (pickled_row,))
     
+    def cache_images(self, trakt_id, art_dict, season='', episode=''):
+        now = time.time()
+        for key in art_dict:
+            if not art_dict[key]:
+                art_dict[key] = None
+                
+        sql = 'REPLACE INTO image_cache (trakt_id, season, episode, timestamp, banner, fanart, thumb, poster, clearart, clearlogo) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        self.__execute(sql, (trakt_id, season, episode, now, art_dict.get('banner'), art_dict.get('fanart'), art_dict.get('thumb'),
+                             art_dict.get('poster'), art_dict.get('clearart'), art_dict.get('clearlogo')))
+    
+    def get_cached_images(self, trakt_id, season='', episode='', cache_limit=30 * 24):
+        art_dict = {}
+        sql = 'SELECT timestamp, banner, fanart, thumb, poster, clearart, clearlogo FROM image_cache WHERE trakt_id = ? and season=? and episode=?'
+        rows = self.__execute(sql, (trakt_id, season, episode))
+        if rows:
+            created, banner, fanart, thumb, poster, clearart, clearlogo = rows[0]
+            if time.time() - float(created) < cache_limit * 60 * 60:
+                art_dict = {'banner': banner, 'fanart': fanart, 'thumb': thumb, 'poster': poster, 'clearart': clearart, 'clearlogo': clearlogo}
+        return art_dict
+    
     def get_cached_sources(self):
         sql = 'SELECT source from source_cache'
         rows = self.__execute(sql)
@@ -452,33 +472,43 @@ class DB_Connection():
     
             log_utils.log('Building SALTS Database', log_utils.LOGDEBUG, COMPONENT)
             if self.db_type == DB_TYPES.MYSQL:
-                self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARBINARY(%s) NOT NULL, data VARBINARY(%s) NOT NULL, response MEDIUMBLOB, res_header TEXT, timestamp TEXT, PRIMARY KEY(url, data))' % (MYSQL_URL_SIZE, MYSQL_DATA_SIZE))
-                self.__execute('CREATE TABLE IF NOT EXISTS function_cache (name VARCHAR(255) NOT NULL, args VARCHAR(64), result MEDIUMBLOB, timestamp TEXT, PRIMARY KEY(name, args))')
+                self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARBINARY(%s) NOT NULL, data VARBINARY(%s) NOT NULL, response MEDIUMBLOB, res_header TEXT, timestamp TEXT, \
+                PRIMARY KEY(url, data))' % (MYSQL_URL_SIZE, MYSQL_DATA_SIZE))
+                self.__execute('CREATE TABLE IF NOT EXISTS function_cache (name VARCHAR(255) NOT NULL, args VARCHAR(64), result MEDIUMBLOB, timestamp TEXT, \
+                PRIMARY KEY(name, args))')
                 self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255) NOT NULL, value TEXT, PRIMARY KEY(setting))')
                 self.__execute('CREATE TABLE IF NOT EXISTS rel_url \
-                (video_type VARCHAR(15) NOT NULL, title VARCHAR(255) NOT NULL, year VARCHAR(4) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, source VARCHAR(49) NOT NULL, rel_url VARCHAR(255), \
-                PRIMARY KEY(video_type, title, year, season, episode, source))')
-                self.__execute('CREATE TABLE IF NOT EXISTS other_lists (section VARCHAR(10) NOT NULL, username VARCHAR(68) NOT NULL, slug VARCHAR(255) NOT NULL, name VARCHAR(255), \
-                PRIMARY KEY(section, username, slug))')
+                (video_type VARCHAR(15) NOT NULL, title VARCHAR(255) NOT NULL, year VARCHAR(4) NOT NULL, season VARCHAR(5) NOT NULL, \
+                episode VARCHAR(5) NOT NULL, source VARCHAR(49) NOT NULL, rel_url VARCHAR(255), PRIMARY KEY(video_type, title, year, season, episode, source))')
+                self.__execute('CREATE TABLE IF NOT EXISTS other_lists (section VARCHAR(10) NOT NULL, username VARCHAR(68) NOT NULL, \
+                slug VARCHAR(255) NOT NULL, name VARCHAR(255), PRIMARY KEY(section, username, slug))')
                 self.__execute('CREATE TABLE IF NOT EXISTS saved_searches (id INTEGER NOT NULL AUTO_INCREMENT, section VARCHAR(10) NOT NULL, added DOUBLE NOT NULL,query VARCHAR(255) NOT NULL, \
                 PRIMARY KEY(id))')
                 self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug VARCHAR(255) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, resumepoint DOUBLE NOT NULL, \
                 PRIMARY KEY(slug, season, episode))')
                 self.__execute('CREATE TABLE IF NOT EXISTS source_cache (source TEXT NOT NULL)')
+                self.__execute('CREATE TABLE IF NOT EXISTS image_cache (trakt_id INTEGER NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL,\
+                timestamp TEXT, banner VARCHAR(255), fanart VARCHAR(255), thumb VARCHAR(255), poster VARCHAR(255), clearart VARCHAR(255), clearlogo VARCHAR(255), \
+                PRIMARY KEY(trakt_id, season, episode))')
             else:
                 self.__create_sqlite_db()
                 self.__execute('PRAGMA journal_mode=WAL')
-                self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARCHAR(255) NOT NULL, data VARCHAR(255), response, res_header, timestamp, PRIMARY KEY(url, data))')
-                self.__execute('CREATE TABLE IF NOT EXISTS function_cache (name VARCHAR(255) NOT NULL, args VARCHAR(64), result, timestamp, PRIMARY KEY(name, args))')
+                self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARCHAR(255) NOT NULL, data VARCHAR(255), response, res_header, timestamp, \
+                PRIMARY KEY(url, data))')
+                self.__execute('CREATE TABLE IF NOT EXISTS function_cache (name VARCHAR(255) NOT NULL, args VARCHAR(64), result, timestamp, \
+                PRIMARY KEY(name, args))')
                 self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255), value TEXT, PRIMARY KEY(setting))')
                 self.__execute('CREATE TABLE IF NOT EXISTS rel_url \
                 (video_type TEXT NOT NULL, title TEXT NOT NULL, year TEXT NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL, source TEXT NOT NULL, rel_url TEXT, \
                 PRIMARY KEY(video_type, title, year, season, episode, source))')
-                self.__execute('CREATE TABLE IF NOT EXISTS other_lists (section TEXT NOT NULL, username TEXT NOT NULL, slug TEXT NOT NULL, name TEXT, PRIMARY KEY(section, username, slug))')
+                self.__execute('CREATE TABLE IF NOT EXISTS other_lists (section TEXT NOT NULL, username TEXT NOT NULL, slug TEXT NOT NULL, name TEXT, \
+                PRIMARY KEY(section, username, slug))')
                 self.__execute('CREATE TABLE IF NOT EXISTS saved_searches (id INTEGER PRIMARY KEY, section TEXT NOT NULL, added DOUBLE NOT NULL,query TEXT NOT NULL)')
                 self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug TEXT NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL, resumepoint DOUBLE NOT NULL, \
                 PRIMARY KEY(slug, season, episode))')
                 self.__execute('CREATE TABLE IF NOT EXISTS source_cache (source TEXT NOT NULL)')
+                self.__execute('CREATE TABLE IF NOT EXISTS image_cache (trakt_id INTEGER NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL,\
+                timestamp, banner TEXT, fanart TEXT, thumb TEXT, poster TEXT, clearart TEXT, clearlogo TEST, PRIMARY KEY(trakt_id, season, episode))')
     
             # reload the previously saved backup export
             if db_version is not None and cur_version != db_version:
