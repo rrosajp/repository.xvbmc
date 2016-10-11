@@ -393,3 +393,12 @@ def parse_params(params):
         value = re.sub('''['"]''', '', value.strip())
         result[key] = value
     return result
+
+# if no default url has been set, then pick one and set it. If one has been set, use it
+def set_default_url(Scraper):
+    default_url = kodi.get_setting('%s-default_url' % (Scraper.get_name()))
+    if not default_url:
+        default_url = random.choice(Scraper.OPTIONS)
+        kodi.set_setting('%s-default_url' % (Scraper.get_name()), default_url)
+    Scraper.base_url = default_url
+    return default_url
