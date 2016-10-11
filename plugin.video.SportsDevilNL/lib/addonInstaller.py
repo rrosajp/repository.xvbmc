@@ -54,7 +54,7 @@ class AddonInstaller:
     def download(self, url, destination=PACKAGE_DIR):
         try:
             dlg = DialogProgress()
-            dlg.create('SportsDevil - Installing external addon')
+            dlg.create('SportsDevilNL - Installing external addon')
             destination = xbmc.translatePath(destination) + os.path.basename(url)
             def _report_hook(count, blocksize, totalsize):
                 percent = int(float(count * blocksize * 100) / totalsize)

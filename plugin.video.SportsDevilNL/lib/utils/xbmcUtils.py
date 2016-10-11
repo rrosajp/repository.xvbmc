@@ -31,7 +31,7 @@ def getImage(title):
 
 
 def showMessage(msg):
-    xbmc.executebuiltin('Notification(SportsDevil,' + str(msg.encode('utf-8', 'ignore')) + ')')
+    xbmc.executebuiltin('Notification(SportsDevilNL,' + str(msg.encode('utf-8', 'ignore')) + ')')
     
     
 def showBusyAnimation():
