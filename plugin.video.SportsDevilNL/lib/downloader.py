@@ -46,7 +46,7 @@ class Downloader(object):
         try:
             # Setup progress dialog and download
             self.pDialog = xbmcgui.DialogProgress()
-            self.pDialog.create('SportsDevil', common.translate(30050), common.translate(30051))
+            self.pDialog.create('SportsDevilNL', common.translate(30050), common.translate(30051))
             urllib.urlretrieve(url, file_path, self.video_report_hook)
             self.pDialog.close()
             return True
