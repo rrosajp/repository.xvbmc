@@ -260,7 +260,7 @@ def get_resume_choice(trakt_id, season, episode):
     question = utils2.i18n('resume_from') % (resume_point)
     dialog = xbmcgui.Dialog()
     try:
-        return dialog.contextmenu([question, utils2.i18n('start_from_beginning'), ]) == 0
+        return dialog.contextmenu([question, utils2.i18n('start_from_beginning')]) == 0
     except:
         return dialog.yesno(header, question, '', '', utils2.i18n('start_from_beginning'), utils2.i18n('resume')) == 1
 

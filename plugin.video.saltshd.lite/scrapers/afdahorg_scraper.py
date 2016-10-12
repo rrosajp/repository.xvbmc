@@ -28,6 +28,8 @@ from salts_lib.constants import XHR
 import scraper
 
 class Scraper(scraper.Scraper):
+    OPTIONS = ['https://afdah.org', 'https://watch32hd.co']
+    
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
@@ -88,11 +90,4 @@ class Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-default_url" type="text" visible="false"/>' % (cls.get_name()))
         return settings
 
-# if no default url has been set, then pick one and set it. If one has been set, use it
-default_url = kodi.get_setting('%s-default_url' % (Scraper.get_name()))
-if not default_url:
-    BASE_URL = random.choice(['https://afdah.org', 'https://watch32hd.co'])
-    Scraper.base_url = BASE_URL
-    kodi.set_setting('%s-default_url' % (Scraper.get_name()), BASE_URL)
-else:
-    Scraper.base_url = default_url
+scraper_utils.set_default_url(Scraper)

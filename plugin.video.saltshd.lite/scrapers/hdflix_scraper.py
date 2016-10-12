@@ -68,7 +68,9 @@ class Scraper(scraper.Scraper):
                 html = self._http_get(ajax_url, headers=headers, auth=False, cache_limit=.5)
                 sources += dom_parser.parse_dom(html, 'source', {'type': '''video[^'"]*'''}, ret='src')
                 sources += dom_parser.parse_dom(html, 'iframe', ret='src')
-            hosters += self.__add_sources(sources, video, QUALITIES.HD720)
+
+            base_quality = QUALITIES.HD720 if video.video_type == VIDEO_TYPES.MOVIE else QUALITIES.HIGH
+            hosters += self.__add_sources(sources, video, base_quality)
         return hosters
 
     def __add_sources(self, sources, video, quality=QUALITIES.HIGH):
