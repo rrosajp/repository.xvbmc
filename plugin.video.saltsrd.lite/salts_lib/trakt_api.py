@@ -189,7 +189,7 @@ class Trakt_API():
     def __get_most(self, category, section, period, page, filters):
         if filters is None: filters = {}
         url = '/%s/%s/%s' % (TRAKT_SECTIONS[section], category, period)
-        params = {'extended': 'full,images', 'limit': self.list_size}
+        params = {'extended': 'full,images', 'limit': 69}
         params.update(filters)
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)

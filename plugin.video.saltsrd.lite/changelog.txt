@@ -1,3 +1,8 @@
+Version 1.0.[B]148[/B](a) EPiC Real-Debrid
++ All Kudos -2- TKnorris (Y)
++ openload.co
+- remove some defunct scrapers
+
 Version 1.0.[B]148[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
 + some scraper fixes (2.0.96)
