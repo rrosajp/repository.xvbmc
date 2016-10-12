@@ -43,7 +43,6 @@ if xbmc.getCondVisibility('System.HasAddon(script.salts.themepak)'):
 else:
     themepak_path = kodi.get_path()
 THEME_PATH = os.path.join(themepak_path, 'art', 'themes', THEME)
-PLACE_POSTER = os.path.join(kodi.get_path(), 'resources', 'place_poster.png')
 translations = kodi.Translations(strings.STRINGS)
 
 SORT_FIELDS = [
@@ -149,28 +148,6 @@ def make_episodes_watched(episodes, progress):
             episode['watched'] = False
 
     return episodes
-
-def make_art(show):
-    min_size = int(kodi.get_setting('image_size')) + 1
-    art_dict = {'banner': '', 'fanart': art('fanart.jpg'), 'thumb': '', 'poster': PLACE_POSTER}
-    images = show.get('images', {})
-    for i in range(min_size):
-        img_size = IMG_SIZES[i]
-        if 'banner' in images and img_size in images['banner'] and images['banner'][img_size]:
-            art_dict['banner'] = images['banner'][img_size]
-        if 'fanart' in images and img_size in images['fanart'] and images['fanart'][img_size]:
-            art_dict['thumb'] = art_dict['fanart'] = images['fanart'][img_size]
-        if 'poster' in images and img_size in images['poster'] and images['poster'][img_size]:
-            art_dict['thumb'] = art_dict['poster'] = images['poster'][img_size]
-        if 'thumb' in images and img_size in images['thumb'] and images['thumb'][img_size]:
-            art_dict['thumb'] = images['thumb'][img_size]
-        if 'screenshot' in images and img_size in images['screenshot'] and images['screenshot'][img_size]:
-            art_dict['thumb'] = images['screenshot'][img_size]
-        if 'logo' in images and img_size in images['logo'] and images['logo'][img_size]:
-            art_dict['clearlogo'] = images['logo'][img_size]
-        if 'clearart' in images and img_size in images['clearart'] and images['clearart'][img_size]:
-            art_dict['clearart'] = images['clearart'][img_size]
-    return art_dict
 
 def make_trailer(trailer_url):
     match = re.search('\?v=(.*)', trailer_url)
@@ -655,13 +632,18 @@ def cleanse_title(text):
             # named entity
             try:
                 text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+                
             except KeyError:
                 pass
+
+        # replace nbsp with a space
+        text = text.replace(u'\xa0', u' ')
         return text
     
     if isinstance(text, str):
         try: text = text.decode('utf-8')
         except: pass
+    
     return re.sub("&#?\w+;", fixup, text.strip())
 
 

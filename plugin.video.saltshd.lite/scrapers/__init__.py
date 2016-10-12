@@ -36,7 +36,7 @@ __all__ = ['scraper',
 		   'emoviespro_scraper', 
 		   'ventures_scraper', 
 		   'sezonlukdizi_scraper',
-           'movieflix_scraper',
+           
 		   'moviego_scraper',
 		   'hevcbluray_scraper',
            'miradetodo_scraper', 
