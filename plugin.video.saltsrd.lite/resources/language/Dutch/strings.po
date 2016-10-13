@@ -1,8 +1,9 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.salts
+# Addon id: plugin.video.saltsrd.lite
 # Addon Provider: TV Addons
 # Translators:
 # Jan Schouten <jschouten@schoutenwebdesign.nl>, 2016
+# EPiC, 2016
 # Mike Bike, 2015-2016
 # Rodrigo, 2015
 # tknorris, 2015
@@ -1131,6 +1132,50 @@ msgctxt "#30288"
 msgid "Working..."
 msgstr "Bezig..."
 
+msgctxt "#30289"
+msgid "Re-Scrape All"
+msgstr "Re-scrape alles"
+
+msgctxt "#30290"
+msgid "Manual Search (All Unmatched Only)"
+msgstr "Handmatig Zoeken (Alleen All Unmatched"
+
+msgctxt "#30291"
+msgid "Torba Account Authorization"
+msgstr "Torba account authorisatie"
+
+msgctxt "#30292"
+msgid "Torba Authorization Complete"
+msgstr "Torba authorisatie voltooid"
+
+msgctxt "#30293"
+msgid "Torba Authorization Failed"
+msgstr "Torba authorisatie gefaald"
+
+msgctxt "#30294"
+msgid "Authorize SALTS to access my torba account"
+msgstr "Authoriseer Salts voor toegang tot mijn Torba account"
+
+msgctxt "#30295"
+msgid "and login when prompted"
+msgstr "en login wanneer gevraagd"
+
+msgctxt "#30296"
+msgid "Flush Image Cache"
+msgstr "Verwijder afbeeldings cache"
+
+msgctxt "#30297"
+msgid "Are you sure you want to clear the image metadata cache?"
+msgstr "Weet u zeker dat u alle afbeeldings metadat wilt verwijderen?"
+
+msgctxt "#30298"
+msgid "The addon will be significantly slower until is is re-cached."
+msgstr "Salts zal aanzienlijk trager zijn tot er opnieuw is gechached."
+
+msgctxt "#30299"
+msgid "Flush Complete"
+msgstr "Flush Voltooid"
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr "Addon Thema"
@@ -1950,4 +1995,36 @@ msgstr "Datum Formaat"
 msgctxt "#30708"
 msgid "Past Activity"
 msgstr "Laatste Activiteit"
+
+msgctxt "#30709"
+msgid "Always Show Custom Progress Dialogs"
+msgstr "Laat altijd aangepaste voortgangsshermen zien"
+
+msgctxt "#30710"
+msgid "Image Metadata API Keys"
+msgstr "afbeelding metadata API sleutels"
+
+msgctxt "#30711"
+msgid "Fanart.tv API Key (Blank = Disable)"
+msgstr "Fanart.tv API sleutel (Geen = Disable)"
+
+msgctxt "#30712"
+msgid "TMDB API Key (Blank = Disable)"
+msgstr "TMDB API sleutel (Geen = Disable)"
+
+msgctxt "#30713"
+msgid "TVDB API Key (Blank = Disable)"
+msgstr "TVDB API sleutel (Geen = Disable)"
+
+msgctxt "#30714"
+msgid "Enable OMDB Images"
+msgstr "Activeer OMDB Images"
+
+msgctxt "#30715"
+msgid "Enable TVMaze Images"
+msgstr "Activeer TVMaze Images"
+
+msgctxt "#30716"
+msgid "Flush Image Cache..."
+msgstr "Verwijder Image Cache... (doe maar NIET!"
 
