@@ -667,7 +667,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.video.F4mProxy"
 	     name="F4mProxy"
-	     version="2.5.8"
+	     version="2.6.2"
 	     provider-name="Shani">
   <requires>
     <import addon="xbmc.python" version="2.1.0" />
