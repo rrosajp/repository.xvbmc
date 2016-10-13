@@ -742,7 +742,7 @@
         <setting id="flush_cache" type="action" label="30630" enable="true"
             action="RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=flush_cache)"/>
         <setting id="flush_images" type="action" label="30716" enable="true"
-            action="RunPlugin(plugin://plugin.video.salts/?mode=flush_images)"/>
+            action="RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=flush_images)"/>
         <setting id="reset_db" type="action" label="30631" enable="true"
             action="RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=reset_db)"/>
          <setting id="db_export" type="action" label="30632" enable="true" 

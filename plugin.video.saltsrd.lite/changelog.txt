@@ -5,6 +5,11 @@ Version 1.0.[B]149[/B] EPiC Real-Debrid
 - Add episode screenshots support from MNE, WIA and Season views (ONLY)
 - Add flush image cache function
 
+Version 1.0.[B]148[/B](+a) EPiC Real-Debrid
++ All Kudos -2- TKnorris (Y)
++ openload.co (back-once-again -4- RD usage)
+- remove some defunct scrapers
+
 Version 1.0.[B]148[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
 + some scraper fixes (2.0.96)
