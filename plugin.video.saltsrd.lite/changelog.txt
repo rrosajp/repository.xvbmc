@@ -1,7 +1,9 @@
-Version 1.0.[B]148[/B](a) EPiC Real-Debrid
+Version 1.0.[B]149[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
-+ openload.co
-- remove some defunct scrapers
+- Allow no-language and en images for fanart
+- Allow image scrapers to be disabled
+- Add episode screenshots support from MNE, WIA and Season views (ONLY)
+- Add flush image cache function
 
 Version 1.0.[B]148[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
@@ -107,6 +109,13 @@ Version 1.0.132[B]a[/B] EPiC Real-Debrid
 + Salts HD Lite .130 "engine" (kudos-2-TKnorris though)
 
 ---------------------
+
+[B]Version 2.0.97[/B]
+- Allow no-language and en images for fanart
+- Allow image scrapers to be disabled
+- Add episode screenshots support from MNE, WIA and Season views (ONLY)
+- Add flush image cache function
+- Fix VKFlix
 
 [B]Version 2.0.95[/B]
 - Add SeriesCoco

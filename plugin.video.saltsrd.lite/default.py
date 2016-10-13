@@ -802,7 +802,7 @@ def show_rewatch():
                     queries.update(utils2.show_id(show))
                     menu_items.append((i18n('mark_as_watched'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
                 
-                liz, liz_url = make_episode_item(show, episode, show_subs=False, menu_items=menu_items)
+                liz, liz_url = make_episode_item(show, episode, show_subs=False, menu_items=menu_items, screenshots=True)
                 label = liz.getLabel()
                 label = '%s - %s' % (show['title'], label)
                 liz.setLabel(label)
@@ -972,8 +972,7 @@ def show_progress():
                 menu_items = []
                 queries = {'mode': MODES.SEASONS, 'trakt_id': show['ids']['trakt'], 'title': show['title'], 'year': show['year'], 'tvdb_id': show['ids']['tvdb']}
                 menu_items.append((i18n('browse_seasons'), 'Container.Update(%s)' % (kodi.get_plugin_url(queries))),)
-    
-                liz, liz_url = make_episode_item(show, episode['episode'], show_subs=False, menu_items=menu_items)
+                liz, liz_url = make_episode_item(show, episode['episode'], show_subs=False, menu_items=menu_items, screenshots=True)
                 label = liz.getLabel()
                 label = '[[COLOR deeppink]%s[/COLOR]] %s - %s' % (date_time, show['title'], label)
                 liz.setLabel(label)
@@ -1160,7 +1159,7 @@ def browse_episodes(trakt_id, season):
         utc_air_time = utils.iso_2_utc(episode['first_aired'])
         if kodi.get_setting('show_unaired') == 'true' or utc_air_time <= now:
             if kodi.get_setting('show_unknown') == 'true' or utc_air_time:
-                liz, liz_url = make_episode_item(show, episode)
+                liz, liz_url = make_episode_item(show, episode, screenshots=True)
                 xbmcplugin.addDirectoryItem(int(sys.argv[1]), liz_url, liz, isFolder=False, totalItems=totalItems)
     kodi.set_view(CONTENT_TYPES.EPISODES, True)
     kodi.end_of_directory()
@@ -2009,6 +2008,19 @@ def flush_cache():
             db_connection.flush_cache()
             kodi.refresh_container()
 
+@url_dispatcher.register(MODES.FLUSH_IMAGES)
+def flush_image_cache():
+    dlg = xbmcgui.Dialog()
+    ln1 = i18n('flush_image_line1')
+    ln2 = i18n('flush_image_line2')
+    ln3 = ''
+    yes = i18n('keep')
+    no = i18n('delete')
+    if dlg.yesno(i18n('flush_image_cache'), ln1, ln2, ln3, yes, no):
+        with kodi.WorkingDialog():
+            db_connection.flush_image_cache()
+            kodi.notify(msg=i18n('flush_complete'))
+
 @url_dispatcher.register(MODES.PRUNE_CACHE)
 def prune_cache():
     while not xbmc.abortRequested:
@@ -2400,7 +2412,7 @@ def make_season_item(season, info, trakt_id, title, year, tvdb_id):
     liz.addContextMenuItems(menu_items, replaceItems=True)
     return liz
 
-def make_episode_item(show, episode, show_subs=True, menu_items=None):
+def make_episode_item(show, episode, show_subs=True, menu_items=None, screenshots=False):
     # log_utils.log('Make Episode: Show: %s, Episode: %s, Show Subs: %s' % (show, episode, show_subs), log_utils.LOGDEBUG)
     # log_utils.log('Make Episode: Episode: %s' % (episode), log_utils.LOGDEBUG)
     if menu_items is None: menu_items = []
@@ -2431,7 +2443,7 @@ def make_episode_item(show, episode, show_subs=True, menu_items=None):
         label = utils2.format_episode_label(label, episode['season'], episode['number'], srts)
 
     meta = salts_utils.make_info(episode, show)
-    art = image_scraper.get_images(VIDEO_TYPES.EPISODE, show['ids'], episode['season'], episode['number'])
+    art = image_scraper.get_images(VIDEO_TYPES.EPISODE, show['ids'], episode['season'], episode['number'], screenshots=screenshots)
     liz = utils.make_list_item(label, meta, art)
     liz.setInfo('video', meta)
     air_date = ''
