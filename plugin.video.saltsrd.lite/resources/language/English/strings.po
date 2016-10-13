@@ -1,9 +1,6 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.saltsrd.lite
+# Addon id: plugin.video.salts
 # Addon Provider: TV Addons
-# Translators:
-# EPiC, 2016
-# tknorris, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: TV Addons Addons\n"
@@ -1157,6 +1154,22 @@ msgctxt "#30295"
 msgid "and login when prompted"
 msgstr ""
 
+msgctxt "#30296"
+msgid "Flush Image Cache"
+msgstr ""
+
+msgctxt "#30297"
+msgid "Are you sure you want to clear the image metadata cache?"
+msgstr ""
+
+msgctxt "#30298"
+msgid "The addon will be significantly slower until is is re-cached."
+msgstr ""
+
+msgctxt "#30299"
+msgid "Flush Complete"
+msgstr ""
+
 msgctxt "#30500"
 msgid "Addon Theme"
 msgstr ""
@@ -2011,14 +2024,26 @@ msgid "Image Metadata API Keys"
 msgstr ""
 
 msgctxt "#30711"
-msgid "Fanart.tv API Key"
+msgid "Fanart.tv API Key (Blank = Disable)"
 msgstr ""
 
 msgctxt "#30712"
-msgid "TMDB API Key"
+msgid "TMDB API Key (Blank = Disable)"
 msgstr ""
 
 msgctxt "#30713"
-msgid "TVDB API Key"
+msgid "TVDB API Key (Blank = Disable)"
+msgstr ""
+
+msgctxt "#30714"
+msgid "Enable OMDB Images"
+msgstr ""
+
+msgctxt "#30715"
+msgid "Enable TVMaze Images"
+msgstr ""
+
+msgctxt "#30716"
+msgid "Flush Image Cache..."
 msgstr ""
 

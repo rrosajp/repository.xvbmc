@@ -97,6 +97,8 @@
         <setting id="fanart_key" type="text" label="30711" default="94e4e7e472e72b0d05335dde0065bbbe"/>
         <setting id="tmdb_key" type="text" label="30712" default="deeda51afc1b151f949171e8be1031b7"/>
         <setting id="tvdb_key" type="text" label="30713" default="B0409428B1B31C10"/>
+        <setting id="omdb_enable" label="30714" type="bool" default="true"/>
+        <setting id="tvmaze_enable" label="30715" type="bool" default="true"/>
     </category>
 
     <category label="30557">
@@ -656,7 +658,7 @@
          <setting id="vivo.to-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="vivo.to_last_results" type="number" default="0" visible="false"/>
          <setting id="VKFlix-enable" type="bool" label="VKFlix Enabled" default="true" visible="true"/>
-         <setting id="VKFlix-base_url" type="text" label="    Base Url" default="http://vkflix.com" visible="eq(-1,true)"/>
+         <setting id="VKFlix-base_url" type="text" label="    Base Url" default="http://videomega.ch" visible="eq(-1,true)"/>
          <setting id="VKFlix-sub_check" type="bool" label="    Include in Page Existence checks?" default="true" visible="eq(-2,true)"/>
          <setting id="VKFlix_last_results" type="number" default="0" visible="false"/>
          <setting id="Watch5s-enable" type="bool" label="Watch5s Enabled" default="true" visible="true"/>
@@ -739,6 +741,8 @@
         enable="eq(-7,false)" visible="eq(-7,false)"/>
         <setting id="flush_cache" type="action" label="30630" enable="true"
             action="RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=flush_cache)"/>
+        <setting id="flush_images" type="action" label="30716" enable="true"
+            action="RunPlugin(plugin://plugin.video.salts/?mode=flush_images)"/>
         <setting id="reset_db" type="action" label="30631" enable="true"
             action="RunPlugin(plugin://plugin.video.saltsrd.lite/?mode=reset_db)"/>
          <setting id="db_export" type="action" label="30632" enable="true" 

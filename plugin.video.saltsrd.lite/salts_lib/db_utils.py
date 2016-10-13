@@ -257,6 +257,12 @@ class DB_Connection():
                 art_dict = {'banner': banner, 'fanart': fanart, 'thumb': thumb, 'poster': poster, 'clearart': clearart, 'clearlogo': clearlogo}
         return art_dict
     
+    def flush_image_cache(self):
+        sql = 'DELETE FROM image_cache'
+        self.__execute(sql)
+        if self.db_type == DB_TYPES.SQLITE:
+            self.__execute('VACUUM')
+        
     def get_cached_sources(self):
         sql = 'SELECT source from source_cache'
         rows = self.__execute(sql)
