@@ -2026,5 +2026,5 @@ msgstr "Activeer TVMaze Images"
 
 msgctxt "#30716"
 msgid "Flush Image Cache..."
-msgstr "Verwijder Image Cache... (doe maar NIET!"
+msgstr "Verwijder Image Cache... (doe maar NIET!)"
 
