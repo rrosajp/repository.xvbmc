@@ -1,3 +1,7 @@
+Version 1.0.[B]149[/B](+a) EPiC Real-Debrid
++ All Kudos -2- TKnorris (Y)
++ code cosmetics ;-p
+
 Version 1.0.[B]149[/B] EPiC Real-Debrid
 + All Kudos -2- TKnorris (Y)
 - Allow no-language and en images for fanart

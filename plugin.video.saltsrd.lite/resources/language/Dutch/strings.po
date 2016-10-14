@@ -1138,7 +1138,7 @@ msgstr "Re-scrape alles"
 
 msgctxt "#30290"
 msgid "Manual Search (All Unmatched Only)"
-msgstr "Handmatig Zoeken (Alleen All Unmatched"
+msgstr "Handmatig Zoeken (Alleen All Unmatched)"
 
 msgctxt "#30291"
 msgid "Torba Account Authorization"
