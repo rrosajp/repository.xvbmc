@@ -51,7 +51,7 @@ MainTitle      = "XvBMC Nederland"
 upgrade40      = 'XvBMC upgrade v4 beta'
 upgrade40dl    = 'Download XvBMC v4 beta upgrade -4-'
 upgrade31      = 'XvBMC v3.1 *[B]final[/B]* (Jarvis)'
-upgrade31dl    = 'Download XvBMC\'s [COLOR=lime]v3.1 *final* 26-08-\'16 (Pi)[/COLOR]'
+upgrade31dl    = 'Download XvBMC\'s [COLOR=lime]v3.1 *final* 13-10-\'16 (Pi)[/COLOR]'
 resetos        = 'XvBMC Reset Kodi'
 resetosdl      = 'import XvBMC\'s [COLOR=lime]Kodi defaults[/COLOR]'
 resetinfo      = '[COLOR dimgray]S[COLOR dimgray]tandalone \'default\' [COLOR white]+[/COLOR] [/COLOR]R[COLOR dimgray]aspberry[/COLOR] Pi \'Jarvis\' 16.1[/COLOR]'
@@ -438,11 +438,11 @@ def xvbmcMaintenance(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
     else:
-        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.15.zip'
+        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.17.zip'
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.schoonmaak-1.10.15.zip')
+        lib=os.path.join(path, 'script.schoonmaak-1.10.17.zip')
         try:
             os.remove(lib)
         except:

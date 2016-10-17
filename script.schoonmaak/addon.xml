@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.schoonmaak"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red][B]S[/B][/COLOR]choonmaak/[COLOR red][B]M[/B][/COLOR]aintenance [I][COLOR darkgreen] (kodi schoonmaak)[/COLOR][/I]"
-       version="1.10.16"
+       version="1.10.17"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-    <import addon="repository.xvbmc" version="4.0.0"/>
+    <import addon="repository.xvbmc" version="4.0.1"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>executable</provides>
