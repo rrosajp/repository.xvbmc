@@ -78,7 +78,17 @@ def killKodi():
         try: os.system('adb shell am force-stop org.xbmc.xbmc')
         except: pass
         try: os.system('adb shell am force-stop org.xbmc')
-        except: pass        
+        except: pass
+        try : os . system ( 'Process.killProcess(android.os.Process.org.fire.guru());' )
+        except : pass
+        try : os . system ( 'Process.killProcess(android.os.Process.org.fire.guruv());' )
+        except : pass
+        try : os . system ( 'Process.killProcess(android.os.Process.com.semperpax.spmc16());' )
+        except : pass
+        try : os . system ( 'Process.killProcess(android.os.Process.org.fire());' )
+        except : pass
+        try : os . system ( 'Process.killProcess(android.os.Process.org.fire,guru());' )
+        except : pass
         dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'Your system has been detected as Android, you ', '[COLOR=yellow][B]MUST[/COLOR][/B] force close XBMC/Kodi. [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.','Either close using Task Manager (If unsure pull the plug).')
     elif myplatform == 'windows': # Windows
         print "############   try windows force close  #################"
