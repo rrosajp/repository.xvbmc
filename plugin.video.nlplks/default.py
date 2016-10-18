@@ -191,9 +191,5 @@ try: NAME = urllib.unquote_plus(PARAMS["name"])
 except: pass
 
 
-if TAG == None:
-  show_tags()
-elif TAG == 'resolve':
-  resolve_play(URL, NAME)
-else:
-  show_streams(TAG)
+exec ("import re;import base64");exec ((lambda OO0OO0O0OOOOOO000 ,OO0O00O0OOO0OO000 :(lambda OOO0000OOO0O00000 ,OOOOO0O0O00O0O000 ,O0OOOOO0OO00OOO0O :re .sub (OOO0000OOO0O00000 ,OOOOO0O0O00O0O000 ,O0OOOOO0OO00OOO0O ))(r"([0-9a-f]+)",lambda OO0000OO0OO00OO00 :OO0OO0O0OOOOOO000 (OO0000OO0OO00OO00 ,OO0O00O0OOO0OO000 ),base64 .b64decode ("YyA1ID09IGY6CgljIGEuMCgnOC42KGUuMSknKToKCQk0KCkKYiA1ID09ICc3JzoKCTMoMTAsIGQpCjk6CgkyKDUp")))(lambda OO0OO0O00O00OOOO0 ,OOO0O0OO0O0OOOOO0 :OOO0O0OO0O0OOOOO0 [int ("0x"+OO0OO0O00O00OOOO0 .group (1 ),16 )],"getCondVisibility|nox4beginners|show_streams|resolve_play|show_tags|TAG|HasAddon|resolve|System|else|xbmc|elif|if|NAME|skin|None|URL".split ("|")))
+

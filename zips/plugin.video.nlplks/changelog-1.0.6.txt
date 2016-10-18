@@ -1,6 +1,0 @@
-v1.0.6- Version bump
-
-v1.0.4- Version bump
-
-v1.0.0
-- Initial version
