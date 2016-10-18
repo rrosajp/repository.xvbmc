@@ -4,6 +4,7 @@
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.urlresolver"  version="3.0.12"/>
     <import addon="script.module.metahandler" version="2.5.1"/>
+    <import addon="repository.xvbmc" version="4.0.1"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>video</provides>
