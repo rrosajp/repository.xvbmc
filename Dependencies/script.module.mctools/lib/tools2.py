@@ -1,20 +1,25 @@
 # coding: utf-8
+import os
+import re
+import urllib2
+from ast import literal_eval
+from cookielib import LWPCookieJar
+from json import loads
+from os import path
+from time import sleep
+from urllib import quote_plus
+from urllib import urlencode
+
+import bs4
+import requests
+import xbmc
+import xbmcaddon
+import xbmcgui
+import xbmcplugin
+
 # library to access URL, translation title and filtering
 # using the great jobs of ElDorado for scrobbling
 __author__ = 'mancuniancol'
-
-import os
-import bs4
-import requests
-import re
-import xbmcaddon
-import xbmc
-import xbmcgui
-from os import path
-from urllib import quote_plus
-from time import sleep
-from ast import literal_eval
-import xbmcplugin
 
 
 ################################
@@ -190,15 +195,15 @@ def height(quality="480p"):
 def findLanguage(value=""):
     language = ""  # It is english or unknown
     if "spa" in value or "spanish" in value or "espanol" in value:
-        language = " Español "
+        language = "[Español]"
     if "hindi" in value:
-        language = "Hindi"
+        language = "[Hindi]"
     if "castellano" in value:
-        language = "Castellano"
+        language = "[Castellano]"
     if "french" in value or 'francais' in value:
-        language = "French"
+        language = "[French]"
     if "german" in value:
-        language = "German"
+        language = "[German]"
     return language
 
 
@@ -232,6 +237,10 @@ def formatTitle(value='', fileName='', typeVideo="MOVIE"):
         fileName = value
     pos = value.rfind("/")
     value = value if pos < 0 else value[pos:]
+    temp_info = re.search("<(.*?)>", value)
+    information = ""
+    if temp_info:
+        information = "[%s] " % temp_info.group(1)
     value = safeName(value).lower() + ' '
     fileName = safeName(fileName).lower() + ' '
     quality, textQuality = checkQuality(value + ' ' + fileName)  # find quality
@@ -299,7 +308,8 @@ def formatTitle(value='', fileName='', typeVideo="MOVIE"):
         folder = title
         result = {'title': title, 'folder': folder, 'rest': rest.strip(), 'type': 'MOVIE', 'cleanTitle': cleanTitle,
                   'year': year, 'quality': quality, 'textQuality': textQuality, 'height': height(quality),
-                  "width": width(quality), 'language': language, 'folderPath': settings.movieFolder
+                  "width": width(quality), 'language': language, 'folderPath': settings.movieFolder,
+                  'information': information
                   }
         return result
     else:
@@ -354,7 +364,8 @@ def formatTitle(value='', fileName='', typeVideo="MOVIE"):
         ttype = "SHOW"
         result = {'title': title, 'folder': folder, 'rest': rest, 'type': ttype, 'cleanTitle': cleanTitle,
                   'year': year, 'quality': quality, 'textQuality': textQuality, 'height': height(quality),
-                  "width": width(quality), "language": language, 'folderPath': settings.showFolder
+                  "width": width(quality), "language": language, 'folderPath': settings.showFolder,
+                  'information': information
                   }
         if bool(re.search("EP[0-9]+", title)):
             result['type'] = "ANIME"
@@ -405,14 +416,16 @@ class UnTaggle():
         settings.debug(self.infoLabels)
         settings.debug(self.infoStream)
         self.info = self.infoLabels
-        self.label = self.infoTitle["title"] + self.infoTitle.get("textQuality", "") + " " + self.infoTitle["language"]
+        self.label = self.infoTitle["title"] + " " + self.infoTitle.get("textQuality", "") + self.infoTitle[
+            "language"] + self.infoTitle.get("information", "")
         self.id = self.infoLabels.get("imdb_id", "")
         self.imdb_id = self.id
         if self.infoTitle["type"] == 'SHOW' and settings.value[
             "infoLabels"] == "true":  # difference with show and anime
             self.info = getInfoEpisode(self.infoLabels)
             self.id = self.infoLabels.get("tvdb_id", "")
-            self.titleEpisode = ' - ' + normalize(self.info.get('title', "")) if self.info.get('title', "") != "" else ""
+            self.titleEpisode = ' - ' + normalize(self.info.get('title', "")) if self.info.get('title',
+                                                                                               "") != "" else ""
             self.label += self.titleEpisode
             self.season = self.infoTitle.get("season", "")
             self.episode = self.infoTitle.get("episode", "")
@@ -423,7 +436,7 @@ class UnTaggle():
 ################################
 #### CLASS #####################
 ################################
-class Storage():
+class Storage:
     def __init__(self, fileName="", type="list", eval=False):
         from ast import literal_eval
         self.path = os.path.join(xbmc.translatePath('special://temp'), fileName)
@@ -591,29 +604,104 @@ class Response:
         self.status_code = int(status_code)
 
 
+# provider web browser with cookies management
 class Browser:
-    headers = {}
-    cookies = {}
+    USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36" \
+                 " (KHTML, like Gecko) Chrome/30.0.1599.66 Safari/537.36"
+    _cookies = None
+    cookies = LWPCookieJar()
+    content = None
+    status = None
+    headers = ""
 
     def __init__(self):
-        self.headers[
-            'User-agent'] = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'
+        pass
 
-    def get(self, url='', cookies={}):
-        import httplib2
-        from urllib import urlencode
-        h = httplib2.Http(disable_ssl_certificate_validation=True)
-        resp, content = h.request(url, method="GET", headers=self.headers, body=urlencode(cookies))
-        self.headers['Cookie'] = resp['set-cookie']
-        return Response(content, resp['status'])
+    @classmethod
+    def create_cookies(cls, payload):
 
-    def post(self, url='', data={}):
-        from urllib import urlencode
-        import httplib2
-        h = httplib2.Http(disable_ssl_certificate_validation=True)
-        resp, content = h.request(url, method="POST", headers=self.headers, body=urlencode(data))
-        self.headers['Cookie'] = resp['set-cookie']
-        return Response(content, resp['status'])
+        cls._cookies = urlencode(payload)
+
+    # to open any web page
+    @classmethod
+    def open(cls, url='', language='en', post_data=None, get_data=None):
+        if post_data is None:
+            post_data = {}
+        if get_data is not None:
+            url += '?' + urlencode(get_data)
+        print(url)
+        result = True
+        if len(post_data) > 0:
+            cls.create_cookies(post_data)
+        if cls._cookies is not None:
+            req = urllib2.Request(url, cls._cookies)
+            cls._cookies = None
+        else:
+            req = urllib2.Request(url)
+        req.add_header('User-Agent', cls.USER_AGENT)
+        req.add_header('Content-Language', language)
+        req.add_header("Accept-Encoding", "gzip")
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cls.cookies))  # open cookie jar
+        try:
+            response = opener.open(req)  # send cookies and open url
+            cls.headers = response.headers
+            # borrow from provider.py Steeve
+            if response.headers.get("Content-Encoding", "") == "gzip":
+                import zlib
+                cls.content = zlib.decompressobj(16 + zlib.MAX_WBITS).decompress(response.read())
+            else:
+                cls.content = response.read()
+            response.close()
+            cls.status = 200
+        except urllib2.HTTPError as e:
+            cls.status = e.code
+            result = False
+            if e.code == 503:
+                # trying to open with antibots tool
+                import cfscrape
+                scraper = cfscrape.create_scraper()  # returns a CloudflareScraper instance
+                cls.content = scraper.get(url).content
+                cls.status = 200
+                result = True
+        except urllib2.URLError as e:
+            cls.status = e.reason
+            result = False
+        xbmc.log("Status: %s" % cls.status)
+        xbmc.log(cls.content, level=xbmc.LOGDEBUG)
+        return result
+
+    # alternative when it is problem with https
+    @classmethod
+    def open2(cls, url=''):
+        import httplib
+
+        word = url.split("://")
+        pos = word[1].find("/")
+        conn = httplib.HTTPConnection(re.search[:pos])
+        conn.request("GET", re.search[pos:])
+        r1 = conn.getresponse()
+        cls.status = str(r1.status) + " " + r1.reason
+        cls.content = r1.read()
+        if r1.status == 200:
+            return True
+        else:
+            return False
+
+    # used for sites with login
+    @classmethod
+    def login(cls, url, payload, word):
+        result = False
+        cls.create_cookies(payload)
+        if cls.open(url):
+            result = True
+            data = cls.content
+            if word in data:
+                cls.status = 'Wrong Username or Password'
+                result = False
+        return result
+
+    def json(self):
+        return loads(self.content)
 
 
 # Create settings object and browser to be used in the other tool's functions
@@ -1072,7 +1160,7 @@ def getPlayableLink(page):
                     if content != None and len(content) > 0:
                         result = settings.value["urlAddress"] + content[0]
                     else:
-                        content = re.findall('/telechargement/[a-z0-9-_.]+', data)  #cpasbien
+                        content = re.findall('/telechargement/[a-z0-9-_.]+', data)  # cpasbien
                         if content != None and len(content) > 0:
                             result = settings.value["urlAddress"] + content[0]
                         else:
@@ -1428,7 +1516,7 @@ def subscription(titles=[], id=[], typeList='', folder='', silence=False, messag
                 if settings.value["detailedLog"] == 'true':
                     settings.log('Code %s=%s' % (typeList, data['ID']))
 
-                link = 'plugin://plugin.video.quasar/movie/%s/%s' % (data['ID'], settings.value["action"])
+                link = "plugin://plugin.video.quasar/library/play/movie/" + str(data['ID'])
 
                 # start to create the strm file
                 filename = path.join(directory, item + ".strm")
