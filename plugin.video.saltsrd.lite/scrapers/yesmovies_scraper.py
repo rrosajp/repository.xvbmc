@@ -18,7 +18,6 @@
 import re
 import urlparse
 import urllib
-import hashlib
 import random
 import string
 import base64
@@ -36,9 +35,7 @@ BASE_URL = 'http://yesmovies.to'
 QP_URL = '/ajax/v2_movie_quick_play/%s/%s/%s.html'
 SL_URL = '/ajax/v3_movie_get_episodes/%s/%s/%s/%s.html'
 PLAYLIST_URL1 = '/ajax/movie_load_embed/%s.html'
-PLAYLIST_URL2 = '/ajax/v4_episode_get_sources/%s/%s.html'
-PLAYLIST_URL3 = '/ajax/get_sources/%s/%s.html'
-SEARCH_KEY = ''
+PLAYLIST_URL2 = '/ajax/v2_get_sources/%s.html?hash=%s'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 COOKIE1 = base64.b64decode('eHdoMzhpZjM5dWN4')
 COOKIE2 = base64.b64decode('OHFoZm05b3lxMXV4')
@@ -93,12 +90,9 @@ class Scraper(scraper.Scraper):
                 elif kodi.get_setting('scraper_url'):
                     token = self.__get_token()
                     cookie = {'%s%s%s' % (COOKIE1, link_id, COOKIE2): token}
-                    url_hash = hashlib.md5(link_id + token + KEY).hexdigest()
-                    url = urlparse.urljoin(self.base_url, PLAYLIST_URL3 % (link_id, url_hash))
+                    url_hash = urllib.quote(self.__uncensored(link_id + KEY, token))
+                    url = urlparse.urljoin(self.base_url, PLAYLIST_URL2 % (link_id, url_hash))
                     sources = self.__get_links_from_json2(url, page_url, cookie)
-                    if not sources:
-                        url = urlparse.urljoin(self.base_url, PLAYLIST_URL2 % (link_id, url_hash))
-                        sources = self.__get_links_from_xml(url, video, page_url, cookie)
             
                 for source in sources:
                     if not source.lower().startswith('http'): continue
@@ -119,6 +113,30 @@ class Scraper(scraper.Scraper):
     def __get_token(self):
         return ''.join(random.sample(string.digits + string.ascii_lowercase, 6))
     
+    def __uncensored(self, a, b):
+        c = ''
+        i = 0
+        for i, d in enumerate(a):
+            e = b[i % len(b) - 1]
+            d = int(self.__jav(d) + self.__jav(e))
+            c += chr(d)
+    
+        return base64.b64encode(c)
+    
+    def __jav(self, a):
+        b = str(a)
+        code = ord(b[0])
+        if 0xD800 <= code and code <= 0xDBFF:
+            c = code
+            if len(b) == 1:
+                return code
+            d = ord(b[1])
+            return ((c - 0xD800) * 0x400) + (d - 0xDC00) + 0x10000
+    
+        if 0xDC00 <= code and code <= 0xDFFF:
+            return code
+        return code
+
     def __get_link_from_json(self, url):
         sources = {}
         html = self._http_get(url, cache_limit=.5)
@@ -130,7 +148,8 @@ class Scraper(scraper.Scraper):
     def __get_links_from_json2(self, url, page_url, cookies):
         sources = {}
         headers = {'Referer': page_url}
-        html = self._http_get(url, cookies=cookies, headers=headers, cache_limit=.5)
+        headers.update(XHR)
+        html = self._http_get(url, cookies=cookies, headers=headers, cache_limit=0)
         js_data = scraper_utils.parse_json(html, url)
         playlist = js_data.get('playlist', [])
         if playlist:

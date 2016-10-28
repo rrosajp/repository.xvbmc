@@ -17,6 +17,7 @@
 """
 import re
 import urlparse
+import urllib
 import kodi
 import log_utils
 import dom_parser
@@ -132,19 +133,15 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search/%s' % (title))
+        search_url = urlparse.urljoin(self.base_url, '/search/%s' % (urllib.quote(title)))
         headers = {'Referer': self.base_url}
         html = self._http_get(search_url, headers=headers, cache_limit=8)
-        log_utils.log(html)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'recent-item'}):
-            log_utils.log(item)
             fragment = dom_parser.parse_dom(item, 'h\d+')
             if not fragment: continue
             
             match_title_year = dom_parser.parse_dom(fragment[0], 'a', {'rel': 'bookmark'})
             match_url = dom_parser.parse_dom(fragment[0], 'a', {'rel': 'bookmark'}, ret='href')
-            log_utils.log(match_title_year)
-            log_utils.log(match_url)
             if match_title_year and match_url:
                 match_title_year = match_title_year[0]
                 match_url = match_url[0]

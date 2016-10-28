@@ -15,7 +15,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import random
 import re
 import urllib
 import urlparse
@@ -31,7 +30,7 @@ XHR = {'X-Requested-With': 'XMLHttpRequest'}
 VIDEO_URL = '/video_info/iframe'
 
 class Scraper(scraper.Scraper):
-    OPTIONS = ['https://xmovies8.org', 'http://genvideos.org']
+    OPTIONS = ['https://xmovies8.org', 'http://genvideos.org', 'https://putlockerhd.co']
     
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout

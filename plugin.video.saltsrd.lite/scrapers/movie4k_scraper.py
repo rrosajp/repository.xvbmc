@@ -59,7 +59,6 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-            log_utils.log(html)
 
             pattern = r'id=\\?"tablemoviesindex2\\?"[^>]*href\s*=\s*\'([^\']+).*?&nbsp;([^<]+)(.*)'
             for match in re.finditer(pattern, html):

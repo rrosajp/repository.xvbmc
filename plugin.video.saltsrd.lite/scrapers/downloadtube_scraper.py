@@ -55,7 +55,6 @@ class Scraper(scraper.Scraper):
             labels = dom_parser.parse_dom(html, 'a', {'class': 'download_item'})
             for stream_url, label in zip(streams, labels):
                 label = re.sub('\s+', ' ', label)
-                log_utils.log(label)
                 if 'bit.ly' in stream_url:
                     redir_url = self._http_get(stream_url, allow_redirect=False, method='HEAD', require_debrid=True, cache_limit=8)
                     if redir_url.startswith('http'):
