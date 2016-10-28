@@ -66,7 +66,7 @@ class Scraper(scraper.Scraper):
                 url = match.group(1)
                 html = self._http_get(url, cache_limit=.5)
             
-            sources = self.__get_sources(html)
+            sources = self.__get_embedded(html)
             for link in dom_parser.parse_dom(html, 'span', {'class': '[^"]*btn-eps[^"]*'}, ret='link'):
                 ajax_url = AJAX_URL % (link)
                 ajax_url = urlparse.urljoin(self.base_url, ajax_url)
@@ -88,17 +88,12 @@ class Scraper(scraper.Scraper):
 
         return hosters
     
+    def __get_embedded(self, html):
+        return self.__proc_sources(self._parse_sources_list(html))
+    
     def __get_sources(self, html):
-        sources = {}
+        sources = self._parse_sources_list(html)
         for source in dom_parser.parse_dom(html, 'source', {'type': 'video/mp4'}, ret='src') + dom_parser.parse_dom(html, 'iframe', ret='src'):
-            if not source.startswith('http'):
-                source = urlparse.urljoin(self.base_url, source)
-                
-            if self.base_url in source:
-                redir_url = self._http_get(source, allow_redirect=False, method='HEAD', cache_limit=.25)
-                if redir_url.startswith('http'):
-                    source = redir_url
-            
             if self._get_direct_hostname(source) == 'gvideo':
                 quality = scraper_utils.gv_get_quality(source)
                 direct = True
@@ -107,9 +102,25 @@ class Scraper(scraper.Scraper):
                 direct = False
             
             sources[source] = {'quality': quality, 'direct': direct}
-        
-        return sources
+        return self.__proc_sources(sources)
     
+    def __proc_sources(self, sources):
+        sources2 = {}
+        for source in sources:
+            if not source.startswith('http'):
+                stream_url = urlparse.urljoin(self.base_url, source)
+            else:
+                stream_url = source
+                
+            if self.base_url in stream_url:
+                redir_url = self._http_get(stream_url, allow_redirect=False, method='HEAD')
+                if redir_url.startswith('http'):
+                    sources2[redir_url] = sources[source]
+            else:
+                sources2[stream_url] = sources[source]
+                    
+        return sources2
+        
     def search(self, video_type, title, year, season=''):
         results = []
         title = re.sub('[^A-Za-z0-9 ]', '', title)

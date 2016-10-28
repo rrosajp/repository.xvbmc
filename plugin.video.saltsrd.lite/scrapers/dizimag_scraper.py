@@ -68,7 +68,6 @@ class Scraper(scraper.Scraper):
             for match in re.finditer('''['"]?file['"]?\s*:\s*['"]([^'"]+)['"][^}]*['"]?label['"]?\s*:\s*['"]([^'"]*)''', match.group(1), re.DOTALL):
                 stream_url, label = match.groups()
                 stream_url = stream_url.replace('\\x', '').decode('hex')
-                log_utils.log(stream_url)
                 hoster = self.__create_source(stream_url, label, page_url)
                 hosters.append(hoster)
                     

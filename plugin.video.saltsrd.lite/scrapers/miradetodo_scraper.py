@@ -131,7 +131,6 @@ class Scraper(scraper.Scraper):
             headers = {'Referer': iframe_url}
             html = self._http_get(self.gk_url, data=data, headers=headers, cache_limit=.5)
             js_data = scraper_utils.parse_json(html, self.gk_url)
-            log_utils.log(js_data)
             links = js_data.get('link', [])
             if isinstance(links, basestring):
                 links = [{'link': links}]

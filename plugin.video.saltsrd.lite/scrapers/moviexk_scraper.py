@@ -70,7 +70,9 @@ class Scraper(scraper.Scraper):
                 stream_url, extra = match.groups()
                 if 'video.php' in stream_url:
                     redir_url = self._http_get(stream_url, allow_redirect=False, method='HEAD', cache_limit=0)
-                    if redir_url.startswith('http'): stream_url = redir_url
+                    if redir_url.startswith('http'):
+                        redir_url = redir_url.replace(' ', '').split(';codec')[0]
+                        stream_url = redir_url
                 
                 host = self._get_direct_hostname(stream_url)
                 if host == 'gvideo':

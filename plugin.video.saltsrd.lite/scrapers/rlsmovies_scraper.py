@@ -67,9 +67,7 @@ class Scraper(scraper.Scraper):
         release = dom_parser.parse_dom(html, 'span', {'itemprop': 'name'})
         match = re.search('>Download<(.*?)<script', html, re.I | re.DOTALL)
         if match:
-            log_utils.log(match.group(1))
             for match in re.finditer('href="([^"]+)[^>]*>([^<]+)', match.group(1)):
-                log_utils.log(match.groups())
                 stream_url, link_release = match.groups()
                 if '.srt' in link_release: continue
                 if re.search('\.part\.?\d+', link_release) or '.rar' in link_release or 'sample' in link_release or link_release.endswith('.nfo'): continue

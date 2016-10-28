@@ -69,7 +69,7 @@ DEFAULT_TIMEOUT = 30
 class Scraper(object):
     __metaclass__ = abc.ABCMeta
     base_url = BASE_URL
-    db_connection = None
+    __db_connection = None
     worker_id = None
     debrid_resolvers = None
     row_pattern = '\s*<a\s+href="(?P<link>[^"]+)">(?P<title>[^<]+)</a>\s+(?P<date>\d+-[a-zA-Z]+-\d+ \d+:\d+)\s+(?P<size>-|\d+)'
@@ -226,7 +226,6 @@ class Scraper(object):
     
     def _default_get_url(self, video):
         url = None
-        self.create_db_connection()
         temp_video_type = video.video_type
         if video.video_type == VIDEO_TYPES.EPISODE:
             if VIDEO_TYPES.TVSHOW in self.provides():
@@ -236,7 +235,7 @@ class Scraper(object):
 
         season = video.season if temp_video_type == VIDEO_TYPES.SEASON else ''
         if temp_video_type != VIDEO_TYPES.EPISODE:
-            result = self.db_connection.get_related_url(temp_video_type, video.title, video.year, self.get_name(), season)
+            result = self.db_connection().get_related_url(temp_video_type, video.title, video.year, self.get_name(), season)
             if result:
                 url = result[0][0]
                 log_utils.log('Got local related url: |%s|%s|%s|%s|%s|%s|' % (temp_video_type, video.title, video.year, season, self.get_name(), url), log_utils.LOGDEBUG)
@@ -244,21 +243,21 @@ class Scraper(object):
                 results = self.search(temp_video_type, video.title, video.year, season)
                 if results:
                     url = results[0]['url']
-                    self.db_connection.set_related_url(temp_video_type, video.title, video.year, self.get_name(), url, season)
+                    self.db_connection().set_related_url(temp_video_type, video.title, video.year, self.get_name(), url, season)
 
         if isinstance(url, unicode): url = url.encode('utf-8')
         if video.video_type == VIDEO_TYPES.EPISODE:
             if url == FORCE_NO_MATCH:
                 url = None
             elif url or temp_video_type == VIDEO_TYPES.EPISODE:
-                result = self.db_connection.get_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, self.get_name(), video.season, video.episode)
+                result = self.db_connection().get_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, self.get_name(), video.season, video.episode)
                 if result:
                     url = result[0][0]
                     log_utils.log('Got local related url: |%s|%s|%s|' % (video, self.get_name(), url), log_utils.LOGDEBUG)
                 else:
                     url = self._get_episode_url(url, video)
                     if url:
-                        self.db_connection.set_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, self.get_name(), url, video.season, video.episode)
+                        self.db_connection().set_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, self.get_name(), url, video.season, video.episode)
 
         return url
 
@@ -303,14 +302,14 @@ class Scraper(object):
             headers['Content-Type'] = 'multipart/form-data; boundary=X-X-X'
             data = multipart_data
 
-        self.create_db_connection()
-        _created, _res_header, html = self.db_connection.get_cached_url(url, data, cache_limit)
+        _created, _res_header, html = self.db_connection().get_cached_url(url, data, cache_limit)
         if html:
             log_utils.log('Returning cached result for: %s' % (url), log_utils.LOGDEBUG)
             return html
 
         try:
             self.cj = self._set_cookies(base_url, cookies)
+            if isinstance(url, unicode): url = url.encode('utf-8')
             request = urllib2.Request(url, data=data)
             request.add_header('User-Agent', scraper_utils.get_ua())
             request.add_header('Accept', '*/*')
@@ -375,7 +374,7 @@ class Scraper(object):
             log_utils.log('Error (%s) during scraper http get: %s' % (str(e), url), log_utils.LOGWARNING)
             return ''
 
-        self.db_connection.cache_url(url, html, data)
+        self.db_connection().cache_url(url, html, data)
         return html
 
     def _set_cookies(self, base_url, cookies):
@@ -525,8 +524,7 @@ class Scraper(object):
     
     def _blog_get_url(self, video, delim='.'):
         url = None
-        self.create_db_connection()
-        result = self.db_connection.get_related_url(video.video_type, video.title, video.year, self.get_name(), video.season, video.episode)
+        result = self.db_connection().get_related_url(video.video_type, video.title, video.year, self.get_name(), video.season, video.episode)
         if result:
             url = result[0][0]
             log_utils.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url), log_utils.LOGDEBUG)
@@ -570,7 +568,7 @@ class Scraper(object):
                                 best_qorder = Q_ORDER[quality]
 
                 url = best_result['url']
-                self.db_connection.set_related_url(video.video_type, video.title, video.year, self.get_name(), url, video.season, video.episode)
+                self.db_connection().set_related_url(video.video_type, video.title, video.year, self.get_name(), url, video.season, video.episode)
         return url
 
     def _get_direct_hostname(self, link):
@@ -672,12 +670,10 @@ class Scraper(object):
             cookies.append('%s=%s' % (cookie.name, cookie.value))
         return urllib.quote(';'.join(cookies))
 
-    def create_db_connection(self):
-        worker_id = threading.current_thread().ident
-        # create a connection if we don't have one or it was created in a different worker
-        if self.db_connection is None or self.worker_id != worker_id:
-            self.db_connection = DB_Connection()
-            self.worker_id = worker_id
+    def db_connection(self):
+        if self.__db_connection is None:
+            self.__db_connection = DB_Connection()
+        return self.__db_connection
 
     def _parse_sources_list(self, html):
         sources = {}
