@@ -1279,7 +1279,7 @@ def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', 
         if pseudo_tv == 'true' or (mode == MODES.GET_SOURCES and kodi.get_setting('auto-play') == 'true') or mode == MODES.AUTOPLAY:
             auto_play_sources(hosters, video_type, trakt_id, season, episode)
         else:
-            if kodi.get_setting('source-win') == 'Dialog' or plugin_name == '':
+            if kodi.get_setting('source-win') == 'Dialog':
                 stream_url, direct = pick_source_dialog(hosters)
                 return play_source(mode, stream_url, direct, video_type, trakt_id, season, episode)
             else:
