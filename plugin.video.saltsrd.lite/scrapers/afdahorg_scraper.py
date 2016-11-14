@@ -18,7 +18,6 @@
 import re
 import urllib
 import urlparse
-import random
 import kodi
 import log_utils
 from salts_lib import scraper_utils
@@ -72,9 +71,9 @@ class Scraper(scraper.Scraper):
         return hosters
 
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/results?q=')
-        search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=.25)
+        search_url = urlparse.urljoin(self.base_url, '/results')
+        params = {'q': title}
+        html = self._http_get(search_url, params=params, cache_limit=1)
         results = []
         pattern = 'class="video_title".*?href="([^"]+)">([^<]+).*?Year</b>:\s*(\d*)'
         for match in re.finditer(pattern, html, re.DOTALL):

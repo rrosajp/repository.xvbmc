@@ -17,7 +17,6 @@
 """
 import re
 import urlparse
-import urllib
 import kodi
 import log_utils
 import dom_parser
@@ -107,9 +106,8 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search/ajax_search?q=')
-        search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, headers=XHR, cache_limit=1)
+        search_url = urlparse.urljoin(self.base_url, '/search/ajax_search')
+        html = self._http_get(search_url, params={'q': title}, headers=XHR, cache_limit=1)
         js_result = scraper_utils.parse_json(html, search_url)
         match_year = ''
         if 'series' in js_result:

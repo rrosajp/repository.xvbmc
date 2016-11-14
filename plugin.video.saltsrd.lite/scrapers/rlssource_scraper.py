@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
 import kodi
 from salts_lib import scraper_utils
@@ -79,8 +78,7 @@ class Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/?s=%s&go=Search' % (urllib.quote_plus(title)))
-        html = self._http_get(search_url, require_debrid=True, cache_limit=1)
+        html = self._http_get(self.base_url, params={'s': title, 'go': 'Search'}, require_debrid=True, cache_limit=1)
         pattern = 'href="(?P<url>[^"]+)[^>]+rel="bookmark">(?P<post_title>[^<]+).*?class="entry-date">(?P<date>\d+/\d+/\d+)'
         date_format = '%m/%d/%Y'
         return self._blog_proc_results(html, pattern, date_format, video_type, title, year)

@@ -17,7 +17,6 @@
 """
 import re
 import urlparse
-import urllib
 import kodi
 import log_utils
 import dom_parser
@@ -87,9 +86,8 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search?query=%s')
-        search_url = search_url % (urllib.quote_plus(title))
-        html = self._http_get(search_url, cache_limit=8)
+        search_url = urlparse.urljoin(self.base_url, '/search')
+        html = self._http_get(search_url, params={'query': title}, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'one_movie-item'}):
             match_url = dom_parser.parse_dom(item, 'a', ret='href')
             match_title = dom_parser.parse_dom(item, 'img', ret='alt')

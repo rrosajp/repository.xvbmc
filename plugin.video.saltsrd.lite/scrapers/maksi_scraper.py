@@ -86,10 +86,10 @@ class Scraper(scraper.Scraper):
     def __get_sources(self, page_url, subs):
         sources = {}
         php_url = urlparse.urljoin(self.base_url, PHP_URL)
-        php_url = php_url % (page_url + '?p=1')
+        params = {'Islem': 'get_v', 'url': page_url + '?p=1'}
         headers = {'Referer': page_url}
         headers.update(XHR)
-        html = self._http_get(php_url, headers=headers, cache_limit=.5)
+        html = self._http_get(php_url, params=params, headers=headers, cache_limit=.5)
         stream_url = dom_parser.parse_dom(html, 'source', ret='src')
         direct = True
         if not stream_url:

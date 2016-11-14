@@ -92,13 +92,7 @@ class Scraper(scraper.Scraper):
             match = re.search('href="([^"]+)[^>]*>(.*?)</a>', item)
             if match:
                 url, match_title_year = match.groups('')
-                match = re.search('(.*?)\s+\(?(\d{4})\)?', match_title_year)
-                if match:
-                    match_title, match_year = match.groups()
-                else:
-                    match_title = match_title_year
-                    match_year = ''
-                
+                match_title, match_year = scraper_utils.extra_year(match_title_year)
                 if (not year or not match_year or year == match_year):
                     result = {'url': scraper_utils.pathify_url(url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
                     results.append(result)

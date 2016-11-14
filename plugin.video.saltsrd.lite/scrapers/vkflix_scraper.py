@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
 import kodi
 import log_utils
@@ -86,11 +85,10 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search?q=')
-        search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=1)
+        search_url = urlparse.urljoin(self.base_url, '/search')
+        html = self._http_get(search_url, params={'q': title}, cache_limit=1)
         match_year = ''
-        for item in dom_parser.parse_dom(html, 'div', {'id': 'movie-\d+'}):
+        for item in dom_parser.parse_dom(html, 'div', {'id': 'movie-+\d+'}):
             is_tvshow = dom_parser.parse_dom(item, 'div', {'class': 'movieTV'})
             if (is_tvshow and video_type == VIDEO_TYPES.TVSHOW) or (not is_tvshow and video_type == VIDEO_TYPES.MOVIE):
                 fragment = dom_parser.parse_dom(item, 'h4', {'class': '[^"]*showRowName[^"]*'})

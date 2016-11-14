@@ -88,8 +88,8 @@ class Scraper(scraper.Scraper):
             data = {'ID': match.group(1)}
             headers = {'Referer': iframe_url}
             headers.update(XHR)
-            xhr_url = iframe_url.split('?')[0] + '?p=GetVideoSources'
-            html = self._http_get(xhr_url, data=data, headers=headers, cache_limit=.5)
+            xhr_url = iframe_url.split('?')[0]
+            html = self._http_get(xhr_url, params={'p': 'GetVideoSources'}, data=data, headers=headers, cache_limit=.5)
             js_data = scraper_utils.parse_json(html, xhr_url)
             try:
                 for source in js_data['VideoSources']:

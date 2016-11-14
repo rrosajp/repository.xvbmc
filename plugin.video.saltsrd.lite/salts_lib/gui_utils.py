@@ -53,13 +53,13 @@ def perform_auto_conf(responses):
     
         if responses[10]:
             tiers = ['Local', 'Premiumize.V2', 'Premiumize.me', 'Furk.net', 'EasyNews', 'DD.tv', 'NoobRoom',
-                     ['yify.tv', 'torba.se', 'MoviesPlanet', '123Movies', '9Movies', 'Apollo', 'DayT.se', 'niter.tv', 'YesMovies', 'HDFlix', 'HDMovie14', 'ororo.tv'],
+                     ['yify.tv', 'torba.se', 'MoviesPlanet', '123Movies', '9Movies', 'DayT.se', 'niter.tv', 'YesMovies', 'HDFlix', 'HDMovie14', 'ororo.tv'],
                      ['StreamLord', 'MovieFlix', 'CyberReel', 'm4ufree', 'tunemovie', 'fmovie.co', 'afdah.org', 'xmovies8', 'xmovies8.v2', 'KiwiHD', 'HDMovieFree'],
-                     ['MovieGo', 'MovieXK', 'Stage66', 'PelisPedia', 'FardaDownload', 'PutMV', 'PirateJunkies', 'SeriesWatch', 'VidNow4K', 'VeoCube'],
+                     ['MovieGo', 'MovieXK', 'PelisPedia', 'FardaDownload', 'PutMV', 'PirateJunkies', 'SeriesWatch', 'VidNow4K', 'VeoCube', 'Quikr'],
                      ['HeyDL', 'HEVCBluRay', 'MovieZone', 'SezonLukDizi', 'YabanciDizi', 'Dizimag', 'Dizilab', 'Dizigold', 'Dizibox', 'Diziay', 'Dizipas', 'OnlineDizi'],
                      ['Dizist', 'MaksiDizi', 'DownloadTube', 'scene-rls', 'DDLValley', '2DDL', 'DDLSeries', 'Crazy4TV', 'SceneDown', 'CinemaMKV', 'TVShow.me'],
                      ['rls-movies', 'ReleaseBB', 'MyVideoLinks.eu', 'OCW', 'RLSSource.net', 'WatchInHD'],
-                     ['vivo.to', 'IceFilms', 'Flixanity', 'Watch5s', 'WatchEpisodes', 'WatchItVideos', 'PrimeWire', 'alluc.com', 'tvonline', 'SantaSeries'],
+                     ['vivo.to', 'IceFilms', 'Flixanity', 'Watch5s', 'WatchEpisodes', 'WatchItVideos', 'PrimeWire', 'alluc.com', 'tvonline', 'SolarMovie', 'SantaSeries'],
                      ['TVWTVS', 'MWM', 'MoviePool', 'WatchSeries', 'RLSeries', 'Putlocker', 'MovieWatcher', 'VKFlix', 'WatchFree.to', 'pftv', 'streamallthis.is', 'Movie4K'],
                      ['MovieZone', 'MovieHubs', 'tvrush', 'afdah', 'MiraDeTodo', 'Filmovizija', 'wso.ch', 'MovieSub', 'MovieHut', 'CouchTunerV1', 'Watch8Now', 'SnagFilms'],
                      ['MoviePool', 'Ventures', 'yshows', 'iWatchOnline', 'vidics.ch', 'pubfilm', 'eMovies.Pro', 'OnlineMoviesPro', 'movie25', 'viooz.ac'],

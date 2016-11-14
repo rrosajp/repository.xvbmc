@@ -121,14 +121,7 @@ class Scraper(scraper.Scraper):
             match_title_year = dom_parser.parse_dom(item, 'a')
             if match_url and match_title_year:
                 match_url = match_url[0]
-                match_title_year = match_title_year[0]
-                match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
-                if match:
-                    match_title, match_year = match.groups()
-                else:
-                    match_title = match_title_year
-                    match_year = ''
-                
+                match_title, match_year = scraper_utils.extra_year(match_title_year[0])
                 if not year or not match_year or year == match_year:
                     result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
                     results.append(result)

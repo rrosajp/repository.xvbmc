@@ -18,7 +18,6 @@
 import scraper
 import urlparse
 import re
-import urllib
 import kodi
 import log_utils
 import dom_parser
@@ -61,22 +60,14 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/?s=%s')
-        search_url = search_url % (urllib.quote_plus(title))
-        html = self._http_get(search_url, cache_limit=8)
+        html = self._http_get(self.base_url, params={'s': title}, cache_limit=8)
         fragment = dom_parser.parse_dom(html, 'ul', {'class': '[^"]*listing-videos[^"]*'})
         if fragment:
             urls = dom_parser.parse_dom(fragment[0], 'a', ret='href')
             labels = dom_parser.parse_dom(fragment[0], 'a')
             for match_url, match_title_year in zip(urls, labels):
                 match_title_year = re.sub('</?[^>]*>', '', match_title_year)
-                match = re.search('(.*?)\s+\((\d{4})\)\s*', match_title_year)
-                if match:
-                    match_title, match_year = match.groups()
-                else:
-                    match_title = match_title_year
-                    match_year = ''
-                
+                match_title, match_year = scraper_utils.extra_year(match_title_year)
                 if not year or not match_year or year == match_year:
                     result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                     results.append(result)

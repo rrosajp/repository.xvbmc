@@ -74,8 +74,7 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/?s=%s' % (urllib.quote_plus(title)))
-        html = self._http_get(search_url, cache_limit=4)
+        html = self._http_get(self.base_url, params={'s': title}, cache_limit=4)
         for movie in dom_parser.parse_dom(html, 'div', {'class': 'movie'}):
             match = re.search('href="([^"]+)', movie)
             if match:
@@ -83,12 +82,8 @@ class Scraper(scraper.Scraper):
                 if re.search('season-\d+-episode\d+', match_url): continue
                 match_title_year = dom_parser.parse_dom(movie, 'img', ret='alt')
                 if match_title_year:
-                    match_title_year = match_title_year[0]
-                    match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
-                    if match:
-                        match_title, match_year = match.groups()
-                    else:
-                        match_title = match_title_year
+                    match_title, match_year = scraper_utils.extra_year(match_title_year[0])
+                    if not match_year:
                         match_year = dom_parser.parse_dom(movie, 'div', {'class': 'year'})
                         try: match_year = match_year[0]
                         except: match_year = ''

@@ -31,7 +31,7 @@ import scraper
 Q_LIST = [item[0] for item in sorted(Q_ORDER.items(), key=lambda x:x[1])]
 
 BASE_URL = 'http://www.alluc.ee'
-SEARCH_URL = '/api/search/%s/?query=%s+lang%%3Aen&count=100&from=0&getmeta=0'
+SEARCH_URL = '/api/search/%s/'
 SEARCH_TYPES = ['stream', 'download']
 QUALITY_MAP = {
     QUALITIES.LOW: ['DVDSCR', 'CAMRIP', 'HDCAM'],
@@ -79,9 +79,9 @@ class Scraper(scraper.Scraper):
         hosters = []
         seen_urls = set()
         for search_type in SEARCH_TYPES:
-            search_url = self.__translate_search(url, search_type)
+            search_url, params = self.__translate_search(url, search_type)
             if search_url:
-                html = self._http_get(search_url, cache_limit=.5)
+                html = self._http_get(search_url, params=params, cache_limit=.5)
                 js_result = scraper_utils.parse_json(html, search_url)
                 if js_result.get('status') == 'success':
                     for result in js_result['result']:
@@ -98,7 +98,7 @@ class Scraper(scraper.Scraper):
                                 hosters.append(hoster)
                                 seen_urls.add(stream_url)
                 else:
-                    log_utils.log('Alluc API Error: %s: %s' % (search_url, js_result.get('message', 'Unknown Error')), log_utils.LOGWARNING)
+                    log_utils.log('Alluc API Error: |%s|%s|: %s' % (search_url, params, js_result.get('message', 'Unknown Error')), log_utils.LOGWARNING)
 
         return hosters
         
@@ -140,9 +140,11 @@ class Scraper(scraper.Scraper):
 
     def __translate_search(self, url, search_type):
         query = urlparse.parse_qs(urlparse.urlparse(url).query)
-        url = urlparse.urljoin(self.base_url, SEARCH_URL % (search_type, urllib.quote_plus(query['query'][0])))
+        query = query['query'][0] + ' lang:en'
+        url = urlparse.urljoin(self.base_url, SEARCH_URL % (search_type))
+        params = {'query': query, 'count': 100, 'from': 0, 'getmeta': 0}
         if self.username and self.password:
-            url += '&user=%s&password=%s' % (self.username, self.password)
+            params.update({'user': self.username, 'password': self.password})
         else:
             url = ''
-        return url
+        return url, params
