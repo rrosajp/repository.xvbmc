@@ -51,9 +51,8 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=8)
-            fragment = dom_parser.parse_dom(html, 'div', {'class': 'video'})
-            if fragment:
-                for source in dom_parser.parse_dom(fragment[0], 'iframe', ret='src') + dom_parser.parse_dom(fragment[0], 'script', ret='src'):
+            for fragment in dom_parser.parse_dom(html, 'div', {'class': 'video'}):
+                for source in dom_parser.parse_dom(fragment, 'iframe', ret='src') + dom_parser.parse_dom(fragment, 'script', ret='src'):
                     if 'validateemb' in source: continue
                     host = urlparse.urlparse(source).hostname
                     source = {'multi-part': False, 'url': source, 'host': host, 'class': self, 'quality': QUALITIES.HD720, 'views': None, 'rating': None, 'direct': False}
@@ -63,25 +62,18 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/wp-admin/admin-ajax.php?s=%s&action=dwls_search')
-        search_url = search_url % (urllib.quote_plus(title))
-        referer = urlparse.urljoin(self.base_url, '/?s=%s&submit=Search')
-        referer = referer % (urllib.quote_plus(title))
+        search_url = urlparse.urljoin(self.base_url, '/wp-admin/admin-ajax.php')
+        referer = self.base_url + '/?' + urllib.urlencode({'s': title, 'submit': 'Search'})
         headers = {'Referer': referer}
         headers.update(XHR)
-        html = self._http_get(search_url, headers=headers, cache_limit=8)
+        params = {'s': title, 'action': 'dwls_search'}
+        html = self._http_get(search_url, params=params, headers=headers, cache_limit=8)
         js_data = scraper_utils.parse_json(html, search_url)
         for match in js_data.get('results', []):
             match_title_year = match.get('post_title')
             match_url = match.get('permalink')
             if match_url and match_title_year:
-                match = re.search('(.*?)\s+\((\d{4})\)\s*', match_title_year)
-                if match:
-                    match_title, match_year = match.groups()
-                else:
-                    match_title = match_title_year
-                    match_year = ''
-                
+                match_title, match_year = scraper_utils.extra_year(match_title_year)
                 if not year or not match_year or year == match_year:
                     result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                     results.append(result)

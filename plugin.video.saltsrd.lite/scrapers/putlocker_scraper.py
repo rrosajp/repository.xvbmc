@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
 import kodi
 import log_utils
@@ -86,28 +85,18 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/?s=%s&submit=Search+Now!' % (urllib.quote_plus(title)))
-        headers = {'Referer': search_url}
-        html = self._http_get(search_url, headers=headers, cache_limit=8)
-        index = 0 if video_type == VIDEO_TYPES.TVSHOW else 1
-        fragments = re.findall('<h2.*?(?=<h2|$)', html, re.DOTALL)
-        if len(fragments) > index:
-            for item in dom_parser.parse_dom(fragments[index], 'div', {'class': 'aaa_item'}):
-                match_title_year = dom_parser.parse_dom(item, 'a', ret='title')
-                match_url = dom_parser.parse_dom(item, 'a', ret='href')
-                if match_title_year and match_url:
-                    match_url = match_url[0]
-                    match_title_year = match_title_year[0]
-                    match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
-                    if match:
-                        match_title, match_year = match.groups()
-                    else:
-                        match_title = match_title_year
-                        match_year = ''
-
-                    if not year or not match_year or year == match_year:
-                        result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
-                        results.append(result)
+        headers = {'Referer': self.base_url}
+        params = {'s': title, 'submit': 'Search Now!'}
+        html = self._http_get(self.base_url, params=params, headers=headers, cache_limit=8)
+        for item in dom_parser.parse_dom(html, 'div', {'class': 'aaa_item'}):
+            match_title_year = dom_parser.parse_dom(item, 'a', ret='title')
+            match_url = dom_parser.parse_dom(item, 'a', ret='href')
+            if match_title_year and match_url:
+                match_url = match_url[0]
+                match_title, match_year = scraper_utils.extra_year(match_title_year[0])
+                if not year or not match_year or year == match_year:
+                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                    results.append(result)
         return results
 
     def _get_episode_url(self, show_url, video):

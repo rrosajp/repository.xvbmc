@@ -72,19 +72,14 @@ class Scraper(scraper.Scraper):
         return hosters
 
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/?s=')
-        search_url += urllib.quote_plus('%s %s' % (title, year))
-        html = self._http_get(search_url, cache_limit=.25)
         results = []
+        html = self._http_get(self.base_url, params={'s': title}, cache_limit=1)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item'}):
             match = re.search('href="([^"]+).*?alt="([^"]+)', item, re.DOTALL)
             if match:
                 url, match_title_year = match.groups()
-                match = re.search('(.*?)(?:\s+\(?(\d{4})\)?)', match_title_year)
-                if match:
-                    match_title, match_year = match.groups()
-                else:
-                    match_title = match_title_year
+                match_title, match_year = scraper_utils.extra_year(match_title_year)
+                if not match_year:
                     year_fragment = dom_parser.parse_dom(item, 'span', {'class': 'year'})
                     if year_fragment:
                         match_year = year_fragment[0]

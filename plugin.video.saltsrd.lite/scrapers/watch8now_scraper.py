@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
 import kodi
 import dom_parser
@@ -77,9 +76,8 @@ class Scraper(scraper.Scraper):
         return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/search?q=')
-        search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=8)
+        search_url = urlparse.urljoin(self.base_url, '/search')
+        html = self._http_get(search_url, params={'q': title}, cache_limit=8)
         results = []
         for item in dom_parser.parse_dom(html, 'h4', {'class': 'media-heading'}):
             match = re.search('href="([^"]+)">([^<]+)', item)

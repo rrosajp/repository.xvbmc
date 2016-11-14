@@ -24,12 +24,11 @@ from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
+from salts_lib.constants import XHR
 import scraper
 
-
-BASE_URL = 'http://m4ufree.info/'
-AJAX_URL = '/demo.php?v=%s'
-XHR = {'X-Requested-With': 'XMLHttpRequest'}
+BASE_URL = 'http://m4ufree.info'
+AJAX_URL = '/demo.php'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -68,11 +67,10 @@ class Scraper(scraper.Scraper):
             
             sources = self.__get_embedded(html)
             for link in dom_parser.parse_dom(html, 'span', {'class': '[^"]*btn-eps[^"]*'}, ret='link'):
-                ajax_url = AJAX_URL % (link)
-                ajax_url = urlparse.urljoin(self.base_url, ajax_url)
-                headers = XHR
-                headers['Referer'] = url
-                html = self._http_get(ajax_url, headers=headers, cache_limit=.5)
+                ajax_url = urlparse.urljoin(self.base_url, AJAX_URL)
+                headers = {'Referer': url}
+                headers.update(XHR)
+                html = self._http_get(ajax_url, params={'v': link}, headers=headers, cache_limit=.5)
                 sources.update(self.__get_sources(html))
             
             for source in sources:
@@ -132,13 +130,7 @@ class Scraper(scraper.Scraper):
         for match_url, match_title_year in zip(links, titles):
             match_title_year = re.sub('</?cite>', '', match_title_year)
             match_title_year = re.sub('^Watch\s*', '', match_title_year)
-            match = re.search('(.*?)\s+\(?(\d{4})\)?', match_title_year)
-            if match:
-                match_title, match_year = match.groups()
-            else:
-                match_title = match_title_year
-                match_year = ''
-            
+            match_title, match_year = scraper_utils.extra_year(match_title_year)
             if not year or not match_year or year == match_year:
                 result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                 results.append(result)

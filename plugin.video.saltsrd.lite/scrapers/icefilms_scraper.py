@@ -56,14 +56,12 @@ class Scraper(scraper.Scraper):
         url, query = link.split('?', 1)
         data = urlparse.parse_qs(query, True)
         url = urlparse.urljoin(self.base_url, url)
-        url += '?s=%s&t=%s&app_id=SALTS' % (data['id'][0], data['t'][0])
-        list_url = LIST_URL % (data['t'][0])
-        headers = {'Referer': list_url}
-        html = self._http_get(url, data=data, headers=headers, cache_limit=.25)
+        params = {'s': data['id'][0], 't': data['t'][0], 'app_id': 'SALTS'}
+        headers = {'Referer': LIST_URL % (data['t'][0])}
+        html = self._http_get(url, params=params, data=data, headers=headers, cache_limit=.25)
         match = re.search('url=(http.*)', html)
         if match:
-            url = urllib.unquote_plus(match.group(1))
-            return url
+            return urllib.unquote_plus(match.group(1))
 
     def get_sources(self, video):
         source_url = self.get_url(video)
@@ -137,13 +135,7 @@ class Scraper(scraper.Scraper):
         pattern = 'class=star.*?href=([^>]+)>(.*?)</a>'
         for match in re.finditer(pattern, html, re.DOTALL):
             match_url, match_title_year = match.groups()
-            match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
-            if match:
-                match_title, match_year = match.groups()
-            else:
-                match_title = match_title_year
-                match_year = ''
-            
+            match_title, match_year = scraper_utils.extra_year(match_title_year)
             if norm_title in scraper_utils.normalize_title(match_title) and (not year or not match_year or year == match_year):
                 result = {'url': match_url, 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
                 results.append(result)

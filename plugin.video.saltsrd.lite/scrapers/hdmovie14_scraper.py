@@ -77,9 +77,9 @@ class Scraper(scraper.Scraper):
         return results
             
     def __search(self, video_type, title, year, season=''):
+        results = []
         search_url = base64.decodestring(SEARCH_URL) % (urllib.quote_plus(title))
         html = self._http_get(search_url, cache_limit=1)
-        results = []
         js_data = scraper_utils.parse_json(html)
         norm_title = scraper_utils.normalize_title(title)
         for item in js_data.get('results', []):
@@ -113,13 +113,13 @@ class Scraper(scraper.Scraper):
 
     def __alt_search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search?key=')
-        search_key = title.lower()
-        if year: search_key += ' %s' % (year)
+        params = title.lower()
+        if year: params += ' %s' % (year)
         if video_type == VIDEO_TYPES.SEASON and season:
-            search_key += ' Season %s' % (season)
-        search_url += urllib.quote_plus(search_key)
-        html = self._http_get(search_url, cache_limit=1)
+            params += ' Season %s' % (season)
+        params = {'key': params}
+        search_url = urlparse.urljoin(self.base_url, '/search')
+        html = self._http_get(search_url, params=params, cache_limit=1)
         norm_title = scraper_utils.normalize_title(title)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'caption'}):
             match = re.search('href="([^"]+)[^>]+>(.*?)<span[^>]*>', item)

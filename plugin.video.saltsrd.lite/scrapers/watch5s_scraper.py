@@ -60,17 +60,18 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(page_url, cache_limit=2)
-            sources.update(self.__scrape_sources(html, page_url))
             if video.video_type == VIDEO_TYPES.MOVIE:
+                sources.update(self.__scrape_sources(html, page_url))
                 pages = set(dom_parser.parse_dom(html, 'a', {'class': '[^"]*btn-eps[^"]*'}, ret='href'))
                 active = set(dom_parser.parse_dom(html, 'a', {'class': '[^"]*active[^"]*'}, ret='href'))
-                for page_url in list(pages - active):
+                for page in list(pages - active):
+                    page_url = urlparse.urljoin(self.base_url, page)
                     html = self._http_get(page_url, cache_limit=2)
                     sources.update(self.__scrape_sources(html, page_url))
             else:
                 for page in self.__match_episode(video, html):
-                    html = self._http_get(page_url, cache_limit=2)
                     page_url = urlparse.urljoin(self.base_url, page)
+                    html = self._http_get(page_url, cache_limit=2)
                     sources.update(self.__scrape_sources(html, page_url))
         
         for source in sources:
@@ -167,6 +168,7 @@ class Scraper(scraper.Scraper):
                 
                 log_utils.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
                 sources[stream_url] = {'quality': quality, 'direct': True}
+                if not kodi.get_setting('scraper_url'): break
         return sources
         
     def __get_links_from_xml(self, xml_url, headers, button_label):
@@ -201,21 +203,20 @@ class Scraper(scraper.Scraper):
         matches = []
         links = dom_parser.parse_dom(html, 'a', {'class': '[^"]*btn-eps[^"]*'}, ret="href")
         labels = dom_parser.parse_dom(html, 'a', {'class': '[^"]*btn-eps[^"]*'})
-        for episode in zip(labels, links):
-            match = re.search('Ep(?:isode)?\s+(\d+)', episode[0], re.I)
+        for ep_label, ep_url in zip(labels, links):
+            match = re.search('Ep(?:isode)?\s+(\d+)', ep_label, re.I)
             if match:
                 ep_num = match.group(1)
                 try: ep_num = int(ep_num)
                 except: ep_num = 0
                 if int(video.episode) == ep_num:
-                    matches.append(episode[1])
+                    matches.append(ep_url)
         return matches
         
     def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/search/?q=')
-        search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=8)
         results = []
+        search_url = urlparse.urljoin(self.base_url, '/search')
+        html = self._http_get(search_url, params={'q': title}, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'ml-item'}):
             match_title = dom_parser.parse_dom(item, 'span', {'class': 'mli-info'})
             match_url = re.search('href="([^"]+)', item, re.DOTALL)

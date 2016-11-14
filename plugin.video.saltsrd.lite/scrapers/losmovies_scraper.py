@@ -70,9 +70,9 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search?type=movies&q=')
-        search_url += urllib.quote_plus(title)
-        html = self._http_get(search_url, cache_limit=8)
+        search_url = urlparse.urljoin(self.base_url, '/search')
+        params = {'type': 'movies', 'q': title}
+        html = self._http_get(search_url, params=params, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'id': 'movie-\d+'}):
             is_tvshow = dom_parser.parse_dom(item, 'div', {'class': 'movieTV'})
             if video_type == VIDEO_TYPES.MOVIE and is_tvshow: continue

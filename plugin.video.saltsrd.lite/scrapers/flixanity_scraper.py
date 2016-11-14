@@ -35,11 +35,10 @@ from salts_lib.utils2 import i18n
 import scraper
 
 
-BASE_URL = 'http://flixanity.watch/'
+BASE_URL = 'http://flixanity.in'
 EMBED_URL = '/ajax/embeds.php'
 SEARCH_URL = '/api/v1/cautare/upd'
 KEY = 'MEE2cnUzNXl5aTV5bjRUSFlwSnF5MFg4MnRFOTVidFY='
-
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

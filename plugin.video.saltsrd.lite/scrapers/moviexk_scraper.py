@@ -124,13 +124,7 @@ class Scraper(scraper.Scraper):
                     match_title_year = re.sub('</?[^>]*>', '', match_title_year)
                     match_title_year = re.sub('[Ww]atch\s+[Mm]ovie\s*', '', match_title_year)
                     match_title_year = match_title_year.replace('&#8217;', "'")
-                    match = re.search('(.*?)\s+\((\d{4})[^)]*\)$', match_title_year)
-                    if match:
-                        match_title, match_year = match.groups()
-                    else:
-                        match_title = match_title_year
-                        match_year = ''
-    
+                    match_title, match_year = scraper_utils.extra_year(match_title_year)
                     if not match_year:
                         year_span = dom_parser.parse_dom(fragment, 'span', {'class': 'year'})
                         if year_span:

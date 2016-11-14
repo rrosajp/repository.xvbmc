@@ -17,7 +17,6 @@
 """
 import re
 import urlparse
-import urllib
 import kodi
 import log_utils
 import dom_parser

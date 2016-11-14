@@ -59,11 +59,10 @@ class Scraper(scraper.Scraper):
             players = list(set(re.findall("load_player\(\s*'([^']+)'\s*,\s*'?(\d+)\s*'?", html)))
             player_url = urlparse.urljoin(self.base_url, PLAYER_URL)
             for link_id, height in players:
-                params = {'id': link_id, 'quality': height, '_': int(time.time() * 1000)}
-                player_url2 = player_url + '?' + urllib.urlencode(params)
                 headers = {'Referer': page_url, 'Accept-Encoding': 'gzip, deflate', 'Server': 'cloudflare-nginx', 'Accept-Formating': 'application/json, text/javascript'}
                 headers.update(XHR)
-                html = self._http_get(player_url2, headers=headers, cache_limit=0)
+                params = {'id': link_id, 'quality': height, '_': int(time.time() * 1000)}
+                html = self._http_get(player_url, params=params, headers=headers, cache_limit=0)
                 js_data = scraper_utils.parse_json(html, player_url)
                 if js_data.get('playlist', ''):
                     link_url = js_data['playlist']
@@ -71,15 +70,14 @@ class Scraper(scraper.Scraper):
                     link_url = js_data.get('link', '')
                     
                 if link_url:
-                    headers = {'Referer': page_url}
+                    headers = {'Referer': page_url, 'Origin': self.base_url}
                     html = self._http_get(link_url, headers=headers, allow_redirect=False, method='HEAD', cache_limit=0)
                     if html.startswith('http'):
                         streams = [html]
                     else:
-                        headers = {'Referer': page_url}
                         html = self._http_get(link_url, headers=headers, cache_limit=0)
                         js_data = scraper_utils.parse_json(html, link_url)
-                        try: streams = [source['file'] for source in js_data[0]['sources']]
+                        try: streams = [source['file'] for source in js_data['playlist'][0]['sources']]
                         except: streams = []
                         
                     for stream in streams:
@@ -129,8 +127,8 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/movies/search?s=%s' % urllib.quote_plus(title))
-        html = self._http_get(search_url, cache_limit=8)
+        search_url = urlparse.urljoin(self.base_url, '/movies/search')
+        html = self._http_get(search_url, params={'s': title}, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item_movie'}):
             match_title_year = dom_parser.parse_dom(item, 'a', ret='title')
             match_url = dom_parser.parse_dom(item, 'a', ret='href')
@@ -145,12 +143,7 @@ class Scraper(scraper.Scraper):
                         if season and not re.search('Season\s+(%s)\s+' % (season), match_title_year, re.I):
                             continue
                     else:
-                        match = re.search('(.*?)\s+\((\d{4})\)', match_title_year)
-                        if match:
-                            match_title, match_year = match.groups()
-                        else:
-                            match_title = match_title_year
-                            match_year = ''
+                        match_title, match_year = scraper_utils.extra_year(match_title_year)
         
                     match_url = urlparse.urljoin(match_url, 'watching.html')
                     if not year or not match_year or year == match_year:

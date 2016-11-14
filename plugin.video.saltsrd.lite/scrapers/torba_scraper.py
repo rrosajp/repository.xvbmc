@@ -37,7 +37,7 @@ XHR = {'X-Requested-With': 'XMLHttpRequest'}
 SEARCH_TYPES = {VIDEO_TYPES.MOVIE: 'movies', VIDEO_TYPES.TVSHOW: 'series'}
 
 BASE_URL = 'http://torba.se'
-SEARCH_URL = '/%s/autocomplete?order=relevance&title=%s'
+SEARCH_URL = '/%s/autocomplete'
 
 BASE_URL2 = 'https://streamtorrent.tv'
 TOR_URL = BASE_URL2 + '/api/torrent/%s.json'
@@ -80,7 +80,11 @@ class Scraper(scraper.Scraper):
                 auth_url = PL_URL % (query['vid_id'], query['stream_id'])
                 result = self.__get_playlist_with_token(auth_url)
                 if not result:
-                    result = self.__authorize_ip(auth_url)
+                    if int(query['height']) > 720:
+                        if self.auth_torba():
+                            result = self.__get_playlist_with_token(auth_url)
+                    else:
+                        result = self.__authorize_ip(auth_url)
                 
                 if result:
                     key = '%sp' % (query['height'])
@@ -114,16 +118,16 @@ class Scraper(scraper.Scraper):
                     if token:
                         authorized, result = self.__use_token(pl_url, token)
                     else:
-                        self.__reset_auth()
+                        self.reset_auth()
                     
         return result
     
-    def __reset_auth(self):
-            name = self.get_name()
-            kodi.set_setting('%s-client_id' % (name), '')
-            kodi.set_setting('%s-client_secret' % (name), '')
-            kodi.set_setting('%s-token' % (name), '')
-            kodi.set_setting('%s-refresh' % (name), '')
+    def reset_auth(self):
+        name = self.get_name()
+        kodi.set_setting('%s-client_id' % (name), '')
+        kodi.set_setting('%s-client_secret' % (name), '')
+        kodi.set_setting('%s-token' % (name), '')
+        kodi.set_setting('%s-refresh' % (name), '')
         
     # try to use the oauth token to get a playlist
     def __use_token(self, pl_url, token):
@@ -160,7 +164,6 @@ class Scraper(scraper.Scraper):
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
-        token = kodi.get_setting('%s-token' % (self.get_name()))
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
@@ -171,8 +174,6 @@ class Scraper(scraper.Scraper):
                     vid_id = vid_link[0][i + 1:]
                     sources = self.__get_streams(vid_id)
                     for height in sources:
-                        # filter out premium links if no token
-                        if int(height) > 720 and not token: continue
                         stream_url = urllib.urlencode({'height': height, 'stream_id': sources[height], 'vid_id': vid_id})
                         quality = scraper_utils.height_get_quality(height)
                         hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
@@ -207,8 +208,9 @@ class Scraper(scraper.Scraper):
     def search(self, video_type, title, year, season=''):
         results = []
         search_url = urlparse.urljoin(self.base_url, SEARCH_URL)
-        search_url = search_url % (SEARCH_TYPES[video_type], urllib.quote_plus(title))
-        html = self._http_get(search_url, headers=XHR, cache_limit=1)
+        search_url = search_url % (SEARCH_TYPES[video_type])
+        params = {'order': 'relevance', 'title': title}
+        html = self._http_get(search_url, params=params, headers=XHR, cache_limit=1)
         js_data = scraper_utils.parse_json(html, search_url)
         for item in js_data:
             if 'title' in item and 'link' in item:
@@ -227,6 +229,8 @@ class Scraper(scraper.Scraper):
         name = cls.get_name()
         settings.append('         <setting id="%s-get_token" label="    %s" type="action" action="RunPlugin(plugin://plugin.video.salts/?mode=auth_torba)" visible="eq(-4,true)"/>'
                         % (name, i18n('torba_auth')))
+        settings.append('         <setting id="%s-reset_token" label="    %s" type="action" action="RunPlugin(plugin://plugin.video.salts/?mode=reset_torba)" visible="eq(-5,true)"/>'
+                        % (name, i18n('reset_torba')))
         settings.append('         <setting id="%s-token" type="text" default="" visible="false"/>' % (name))
         settings.append('         <setting id="%s-refresh" type="text" default="" visible="false"/>' % (name))
         settings.append('         <setting id="%s-client_id" type="text" default="" visible="false"/>' % (name))
@@ -254,6 +258,7 @@ class Scraper(scraper.Scraper):
             kodi.set_setting('%s-client_secret' % (name), client_secret)
             data = {'client_id': client_id, 'client_secret': client_secret, 'code': code}
             html = self._http_get(OAUTH_TOKEN_URL, data=data, cache_limit=0)
+            log_utils.log(html)
             if not html:
                 return False
             

@@ -29,11 +29,10 @@ import scraper
 
 
 BASE_URL = 'https://members.easynews.com'
-SORT = 's1=relevance&s1d=-&s2=dsize&s2d=-&s3=dtime&s3d=-'
-VID_FILTER = 'fex=mkv%%2C+mp4%%2C+avi'
-# RANGE_FILTERS = 'd1=&d1t=&d2=&d2t=&b1=&b1t=&b2=&b2t=&px1=&px1t=&px2=&px2t=&fps1=&fps1t=&fps2=&fps2t=&bps1=&bps1t=&bps2=&bps2t=&hz1=&hz1t=&hz2=&hz2t=&rn1=&rn1t=1&rn2=&rn2t='
-SEARCH_URL = '/2.0/search/solr-search/advanced?st=adv&safeO=0&sb=1&%s&%s&fty[]=VIDEO&spamf=1&u=1&gx=1&pby=%s&pno=1&sS=3'
-SEARCH_URL += '&gps=%s&sbj=%s'
+SEARCH_URL = '/2.0/search/solr-search/advanced'
+SORT = {'s1': 'relevance', 's1d': '-', 's2': 'dsize', 's2d': '-', 's3': 'dtime', 's3d': '-'}
+SEARCH_PARAMS = {'st': 'adv', 'safeO': 0, 'sb': 1, 'fex': 'mkv, mp4, avi', 'fty[]': 'VIDEO', 'spamf': 1, 'u': '1', 'gx': 1, 'pno': 1, 'sS': 3}
+SEARCH_PARAMS.update(SORT)
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -84,8 +83,8 @@ class Scraper(scraper.Scraper):
     
     def __get_links(self, url, video):
         hosters = []
-        search_url = self.__translate_search(url)
-        html = self._http_get(search_url, cache_limit=.5)
+        search_url, params = self.__translate_search(url)
+        html = self._http_get(search_url, params=params, cache_limit=.5)
         js_result = scraper_utils.parse_json(html, search_url)
         down_url = js_result.get('downURL')
         dl_farm = js_result.get('dlFarm')
@@ -164,14 +163,16 @@ class Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-size_limit" label="     %s" type="slider" default="0" range="0,50" option="int" visible="eq(-7,true)"/>' % (name, i18n('size_limit')))
         return settings
 
-    def _http_get(self, url, cache_limit=8):
+    def _http_get(self, url, params=None, cache_limit=8):
         if not self.username or not self.password:
             return ''
         
         headers = {'Authorization': self.auth}
-        return super(self.__class__, self)._http_get(url, headers=headers, cache_limit=cache_limit)
+        return super(self.__class__, self)._http_get(url, params=params, headers=headers, cache_limit=cache_limit)
 
     def __translate_search(self, url):
-        query = urllib.quote_plus(urlparse.parse_qs(urlparse.urlparse(url).query)['query'][0])
-        url = urlparse.urljoin(self.base_url, SEARCH_URL % (VID_FILTER, SORT, self.max_results, query, query))
-        return url
+        params = SEARCH_PARAMS
+        params['pby'] = self.max_results
+        params['gps'] = params['sbj'] = urlparse.parse_qs(urlparse.urlparse(url).query)['query'][0]
+        url = urlparse.urljoin(self.base_url, SEARCH_URL)
+        return url, params

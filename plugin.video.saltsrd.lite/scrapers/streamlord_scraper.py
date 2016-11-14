@@ -29,7 +29,6 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.utils2 import i18n
 import scraper
 
-
 BASE_URL = 'http://www.streamlord.com'
 LOGIN_URL = '/login.html'
 

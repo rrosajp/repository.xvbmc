@@ -30,7 +30,7 @@ import scraper
 
 
 BASE_URL = 'http://putmv.com'
-GK_URL = '/ip.temp/swf/ipplayer/ipplayer.php?u=%s&w=100%%&h=500'
+GK_URL = '/ip.temp/swf/ipplayer/ipplayer.php'
 GVIDEO_NAMES = ['english sub', 'picasa', 'putlocker']
 HOSTS = {'vidag': 'vid.ag', 'videott': 'video.tt'}
 
@@ -86,11 +86,11 @@ class Scraper(scraper.Scraper):
         html = self._http_get(url, cache_limit=.5)
         match = re.search("files\s*:\s*'([^']+)", html)
         if match:
-            gk_url = GK_URL % (match.group(1))
-            gk_url = urlparse.urljoin(self.base_url, gk_url)
             headers = {'Referer': url}
             headers.update(XHR)
-            html = self._http_get(gk_url, headers=headers, cache_limit=.5)
+            params = {'u': match.group(1), 'w': '100%', 'h': 500}
+            gk_url = urlparse.urljoin(self.base_url, GK_URL)
+            html = self._http_get(gk_url, params=params, headers=headers, cache_limit=.5)
             try: html = html.decode('utf-8-sig')
             except: pass
             js_data = scraper_utils.parse_json(html, gk_url)
@@ -116,7 +116,7 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         search_url = urlparse.urljoin(self.base_url, '/search/%s.html' % urllib.quote_plus(title))
-        html = self._http_get(search_url, cache_limit=.25)
+        html = self._http_get(search_url, cache_limit=1)
         results = []
         fragment = dom_parser.parse_dom(html, 'div', {'class': 'list-movie'})
         if fragment:

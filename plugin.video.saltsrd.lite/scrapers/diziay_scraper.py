@@ -28,7 +28,7 @@ import scraper
 
 BASE_URL = 'http://diziay.com'
 SEASON_URL = '/posts/filmgonder.php?action=sezongets'
-AJAX_URL = 'http://dizipas.org/player/ajax.php?dizi=%s'
+AJAX_URL = 'http://dizipas.org/player/ajax.php'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Scraper(scraper.Scraper):
@@ -84,9 +84,8 @@ class Scraper(scraper.Scraper):
         subs = 'Turkish subtitles'
         match = re.search('fvid\s*=\s*"([^"]+)', html)
         if match:
-            ajax_url = AJAX_URL % (match.group(1))
-            html = self._http_get(ajax_url, headers=XHR, cache_limit=.5)
-            js_result = scraper_utils.parse_json(html, ajax_url)
+            html = self._http_get(AJAX_URL, params={'dizi': match.group(1)}, headers=XHR, cache_limit=.5)
+            js_result = scraper_utils.parse_json(html, AJAX_URL)
             # subs are hardcoded if none exist
             subs = '' if 'altyazi' in js_result and js_result['altyazi'] else 'Turkish subtitles'
             for source in js_result.get('success', []):

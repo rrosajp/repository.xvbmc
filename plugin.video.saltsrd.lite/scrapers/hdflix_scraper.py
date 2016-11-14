@@ -29,7 +29,7 @@ from salts_lib.utils2 import i18n
 import scraper
 
 BASE_URL = 'http://hdflix.me'
-SEARCH_URL = '/newmov.php?menu=%s&query=%s'
+SEARCH_URL = ''
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Scraper(scraper.Scraper):
@@ -61,11 +61,11 @@ class Scraper(scraper.Scraper):
             sources = []
             for match in re.finditer('''\$\.get\('([^']+)'\s*,\s*(\{.*?\})''', html):
                 ajax_url, params = match.groups()
-                ajax_url = ajax_url + '?' + urllib.urlencode(scraper_utils.parse_params(params))
                 ajax_url = urlparse.urljoin(self.base_url, ajax_url)
                 headers = {'Referer': page_url}
                 headers.update(XHR)
-                html = self._http_get(ajax_url, headers=headers, auth=False, cache_limit=.5)
+                params = scraper_utils.parse_params(params)
+                html = self._http_get(ajax_url, params=params, headers=headers, auth=False, cache_limit=.5)
                 sources += dom_parser.parse_dom(html, 'source', {'type': '''video[^'"]*'''}, ret='src')
                 sources += dom_parser.parse_dom(html, 'iframe', ret='src')
 
@@ -98,13 +98,10 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, SEARCH_URL)
-        if video_type == VIDEO_TYPES.MOVIE:
-            search = 'search'
-        else:
-            search = 'searchshow'
-        search_url = search_url % (search, urllib.quote(title))
-        html = self._http_get(search_url, cache_limit=8)
+        search_url = urlparse.urljoin(self.base_url, '/newmov.php')
+        search = 'search' if video_type == VIDEO_TYPES.MOVIE else 'searchshow'
+        params = {'menu': search, 'query': title}
+        html = self._http_get(search_url, params=params, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'movie'}):
             match_url = dom_parser.parse_dom(item, 'a', {'class': 'poster'}, ret='href')
             match_title = dom_parser.parse_dom(item, 'div', {'class': 'title'})
@@ -126,16 +123,16 @@ class Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-5,true)"/>' % (name, i18n('password')))
         return settings
 
-    def _http_get(self, url, data=None, headers=None, auth=True, method=None, cache_limit=8):
+    def _http_get(self, url, params=None, data=None, headers=None, auth=True, method=None, cache_limit=8):
         # return all uncached blank pages if no user or pass
         if not self.username or not self.password:
             return ''
 
-        html = super(self.__class__, self)._http_get(url, data=data, headers=headers, method=method, cache_limit=cache_limit)
+        html = super(self.__class__, self)._http_get(url, params=params, data=data, headers=headers, method=method, cache_limit=cache_limit)
         if auth and not dom_parser.parse_dom(html, 'a', {'title': 'My Account'}, ret='href'):
             log_utils.log('Logging in for url (%s)' % (url), log_utils.LOGDEBUG)
             self.__login()
-            html = super(self.__class__, self)._http_get(url, data=data, headers=headers, method=method, cache_limit=0)
+            html = super(self.__class__, self)._http_get(url, params=params, data=data, headers=headers, method=method, cache_limit=0)
 
         return html
 
