@@ -18,18 +18,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-
-from lib import helpers
+import re
+from urlresolver import common
 from urlresolver.resolver import UrlResolver, ResolverError
 
+class MailRuResolver(UrlResolver):
+    name = "cloud.mail.ru"
+    domains = ['cloud.mail.ru']
+    pattern = '(?://|\.)(cloud\.mail\.ru)/public/([0-9A-Za-z]+/[^/]+)'
 
-class VidloxResolver(UrlResolver):
-    name = "vidlox"
-    domains = ['vidlox.tv']
-    pattern = '(?://|\.)(vidlox\.tv)/(?:embed-|)([0-9a-zA-Z]+)'
+    def __init__(self):
+        self.net = common.Net()
 
     def get_media_url(self, host, media_id):
-        return helpers.get_media_url(self.get_url(host, media_id), result_blacklist=['dl'])
+        web_url = self.get_url(host, media_id)
+        html = self.net.http_GET(web_url).content
+        html = re.sub(r'[^\x00-\x7F]+', ' ', html)
+        url_match = re.search('"weblink_get"\s*:\s*\[.+?"url"\s*:\s*"([^"]+)', html)
+        tok_match = re.search('"tokens"\s*:\s*{\s*"download"\s*:\s*"([^"]+)', html)
+        if url_match and tok_match:
+            return '%s/%s?key=%s' % (url_match.group(1), media_id, tok_match.group(1))
+        raise ResolverError('No playable video found.')
 
     def get_url(self, host, media_id):
-        return self._default_get_url(host, media_id, 'http://{host}/{media_id}')
+        return self._default_get_url(host, media_id, template='https://{host}/public/{media_id}')

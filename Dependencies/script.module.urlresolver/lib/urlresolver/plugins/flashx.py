@@ -48,6 +48,7 @@ class FlashxResolver(UrlResolver):
                 if new_py:
                     with open(FX_PATH, 'w') as f:
                         f.write(new_py)
+                    common.kodi.notify('Flashx Resolver Auto-Updated')
             else:
                 common.log_utils.log('Reusing existing fx_gmu.py: |%s|%s|%s|%s|' % (old_etag, new_etag, old_len, new_len))
         except Exception as e:
@@ -78,3 +79,10 @@ class FlashxResolver(UrlResolver):
         
     def get_url(self, host, media_id):
         return self._default_get_url(host, media_id, 'http://{host}/embed.php?c={media_id}')
+
+    @classmethod
+    def get_settings_xml(cls):
+        xml = super(cls, cls).get_settings_xml()
+        xml.append('<setting id="%s_auto_update" type="bool" label="Automatically update resolver" default="true"/>' % (cls.__name__))
+        xml.append('<setting id="%s_etag" type="text" default="" visible="false"/>' % (cls.__name__))
+        return xml
