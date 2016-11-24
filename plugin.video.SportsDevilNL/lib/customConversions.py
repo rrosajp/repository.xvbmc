@@ -127,7 +127,9 @@ def getSource(params, src):
         paramPage = params.strip('\',\'')
 
     paramPage = paramPage.replace('%s', src)
-    return common.getHTML(paramPage, None, paramReferer)
+    data = common.getHTML(paramPage, None, paramReferer)
+    #common.log('JairoX0:' + data)
+    return data
 
 
 def parseText(item, params, src):
@@ -144,6 +146,7 @@ def parseText(item, params, src):
     variables = []
     if len(paramArr) > 2:
         variables = paramArr[2].split('|')
+    #common.log('JairoX2:' + text)
     return reg.parseText(text, regex, variables)
 
 
@@ -182,13 +185,27 @@ def getInfo(item, params, src, xml=False, mobile=False):
         pass
 
     common.log('Get Info from: "'+ paramPage + '" from "' + referer + '"')
+    #common.log('JairoX1:' + paramRegex)
     data = common.getHTML(paramPage, form_data, referer, xml, mobile, ignoreCache=False,demystify=True)
+    #common.log('JairoX2:' + data)
     return reg.parseText(data, paramRegex, variables)
 
 
 def decodeBase64(src):
-    from base64 import b64decode
-    return b64decode(src)
+    import base64
+    import binascii
+    ds = src
+    while len(ds)>=4 and re.match(r"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",ds): #keep decoding in case of multiple encodings
+        #common.log("Jairox5:" + src)
+        try:
+            ds = base64.decodestring(ds)
+            ds.encode('ascii', 'strict') #check if result is valid ascii
+        except UnicodeDecodeError: #decoded string not ascii
+            ds = ''
+            break
+        except binascii.Error: #nothing left to decode         
+            break
+    return ds
 
 def encodeBase64(src):
     from base64 import b64encode
@@ -200,21 +217,35 @@ def decodeRawUnicode(src):
     except:
         return src
     
+def simpleToken(url):
+    import requests,zlib
+    time = common.getSetting(url+'_time')
+    s = requests.Session()
+    if time:
+        s.headers.update({'If-Modified-Since' : time})
+    s.headers.update({'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'})
+    s.headers.update({'Referer' : url})
+    r = s.get(url)
+    if r.status_code == 304:
+        return common.getSetting(url+'_token')
+    elif r.status_code == 200:
+        content = zlib.decompress(r.content[8:])
+        if 'tv-msn' in url:
+            token = re.findall(r"lengths.param1.(\w+)", content)[0][:16]
+        else:
+            token = re.findall("TokenResponse (\w+)", content)[0][:16]
+        common.setSetting(url+'_token',token)
+        common.setSetting(url+'_time',r.headers['Last-Modified'])
+        return token
+    
 def resolve(src):
     try:
         parsed_link = urlparse.urlsplit(src)
         tmp_host = parsed_link.netloc.split(':')
         if 'streamlive.to' in tmp_host[0]:
-            servers = ['80.82.78.4',
-                       '93.174.93.230',
-                       #'212.117.188.22',
-                       #'95.211.210.69',
-                       #'95.211.196.5',
-                       #'184.173.85.91',
-                       #'85.17.31.102',
-                       #'169.54.85.69',
-                       '62.210.139.136'
-                       ]
+            servers = ['89.248.169.48',
+                       '94.102.63.54',
+                       '89.248.169.55']
             import random
             tmp_host[0] = random.choice(servers)
         elif tmp_host[0] == 'xlive.sportstream365.com':
@@ -357,6 +388,31 @@ def decodeXppod(src):
 
 def decodeXppod_hls(src):
     return xp.decode_hls(src)
+
+def bcast64(src):
+    _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='    
+    t = ""
+    f = 0
+    e = re.sub(r'[^A-Za-z0-9\+\/\=]','',src)
+    while f < len(e):
+        s = _keyStr.index(e[f])
+        f += 1
+        o = _keyStr.index(e[f])
+        f += 1
+        u = _keyStr.index(e[f])
+        f += 1
+        a = _keyStr.index(e[f])
+        f += 1
+        n = s << 2 | o >> 4
+        r = (o & 15) << 4 | u >> 2
+        i = (u & 3) << 6 | a
+        t = t + chr(n);
+        if (u != 64):
+            t = t + chr(r)
+        if (a != 64):
+            t = t + chr(i)
+    return t
+
 
 def getCookies(cookieName, url):
     domain = urlparse.urlsplit(url).netloc
