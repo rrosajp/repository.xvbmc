@@ -68,6 +68,9 @@ def get_id():
 def get_name():
     return addon.getAddonInfo('name')
 
+def has_addon(addon_id):
+    return xbmc.getCondVisibility('System.HasAddon(%s)' % (addon_id)) == 1
+    
 def get_plugin_url(queries):
     try:
         query = urllib.urlencode(queries)
@@ -86,6 +89,7 @@ def set_content(content):
     xbmcplugin.setContent(int(sys.argv[1]), content)
     
 def create_item(queries, label, thumb='', fanart='', is_folder=None, is_playable=None, total_items=0, menu_items=None, replace_menu=False):
+    if not thumb: thumb = os.path.join(get_path(), 'icon.png')
     list_item = xbmcgui.ListItem(label, iconImage=thumb, thumbnailImage=thumb)
     add_item(queries, list_item, fanart, is_folder, is_playable, total_items, menu_items, replace_menu)
 
@@ -100,7 +104,7 @@ def add_item(queries, list_item, fanart='', is_folder=None, is_playable=None, to
     else:
         playable = 'true' if is_playable else 'false'
 
-    liz_url = get_plugin_url(queries)
+    liz_url = queries if isinstance(queries, basestring) else get_plugin_url(queries)
     if not list_item.getProperty('fanart_image'): list_item.setProperty('fanart_image', fanart)
     list_item.setInfo('video', {'title': list_item.getLabel()})
     list_item.setProperty('isPlayable', playable)
