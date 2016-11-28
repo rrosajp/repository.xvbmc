@@ -1,4 +1,4 @@
-v0.9.36
+v0.9.36 [ORIGINAL]
 
     Fixed slow startup on Windows #12
     Fixed crash on macOS Sierra #529

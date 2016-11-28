@@ -365,7 +365,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<addon id="plugin.video.quasar" name="Quasar" version="0.9.36" provider-name="scakemyer">
+<addon id="plugin.video.quasar" name="Quasar" version="0.9.36.1" provider-name="scakemyer, xvbmc">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -383,8 +383,8 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
         <source><![CDATA[https://github.com/scakemyer/plugin.video.quasar]]></source>
         <language>en</language>
         <license><![CDATA[Non commercial. See https://github.com/scakemyer/plugin.video.quasar/blob/master/LICENSE]]></license>
-        <summary><![CDATA[Quasar: Torrent streaming]]></summary>
-        <description><![CDATA[Stream torrent files]]></description>
+        <summary><![CDATA[Quasar: Torrent streaming - v0.9.35 XvBMC version-control]]></summary>
+        <description><![CDATA[Stream torrent files - v0.9.35 XvBMC version-control]]></description>
     </extension>
 </addon>
 
