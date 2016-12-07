@@ -778,7 +778,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="service.subtitles.opensubtitlesBeta"
        name="OpenSubtitles.org (Unofficial)"
-       version="5.0.10"
+       version="5.0.11"
        provider-name="amet,Mafarricos">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
