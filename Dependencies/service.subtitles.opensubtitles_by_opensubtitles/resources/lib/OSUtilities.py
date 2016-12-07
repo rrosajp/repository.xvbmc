@@ -26,8 +26,16 @@ class OSDBServer:
     if ( self.osdb_token ) :
       searchlist  = []
       if item['mansearch']:
-        OS_search_string = urllib.unquote(item['mansearchstr'])
-      elif len(item['tvshow']) > 0:
+        searchlist = [{'sublanguageid':",".join(item['3let_language']),
+                       'query'        :urllib.unquote(item['mansearchstr'])
+                      }]
+        search = self.server.SearchSubtitles( self.osdb_token, searchlist )
+        if search["data"]:
+          return search["data"]
+        else:
+          return None
+
+      if len(item['tvshow']) > 0:
         OS_search_string = ("%s S%.2dE%.2d" % (item['tvshow'],
                                                 int(item['season']),
                                                 int(item['episode']),)
@@ -38,22 +46,35 @@ class OSDBServer:
     
         OS_search_string = item['title'].replace(" ","+")
     
-      log( __name__ , "Search String [ %s ]" % (OS_search_string,)) 
+      log( __name__ , "Search String [ %s ]" % (OS_search_string,))
+
       if not item['temp']:
         try:
           size, hash = hashFile(item['file_original_path'], item['rar'])
           log( __name__ ,"OpenSubtitles module hash [%s] and size [%s]" % (hash, size,))
-          if item['1let_language']:
-            searchlist.append({'sublanguageid' :",".join(item['1let_language']), 'moviehash'    :hash, 'moviebytesize':str(size)})		  
-          else:
-            searchlist.append({'sublanguageid' :",".join(item['3let_language']), 'moviehash'    :hash, 'moviebytesize':str(size) })
+          searchlist.append({'sublanguageid' :",".join(item['3let_language']),
+                              'moviehash'    :hash,
+                              'moviebytesize':str(size)
+                            })
         except:
-          pass 
-		  
-      if item['1let_language']:
-        searchlist.append({'sublanguageid':",".join(item['1let_language']), 'query'       :OS_search_string })
+          pass
+            
+        imdb = str(xbmc.Player().getVideoInfoTag().getIMDBNumber().replace('tt',''))
+        
+        if ((not item['tvshow']) and imdb != ""):
+          searchlist.append({'sublanguageid' :",".join(item['3let_language']),
+                             'imdbid'        :imdb
+                            })
+
+        searchlist.append({'sublanguageid':",".join(item['3let_language']),
+                          'query'        :OS_search_string
+                         }) 
+      
       else:
-        searchlist.append({'sublanguageid':",".join(item['3let_language']), 'query'       :OS_search_string })
+        searchlist = [{'sublanguageid':",".join(item['3let_language']),
+                       'query'        :OS_search_string
+                      }]
+
       search = self.server.SearchSubtitles( self.osdb_token, searchlist )
       if search["data"]:
         return search["data"] 
