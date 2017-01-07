@@ -1,6 +1,6 @@
 '''
     Ultimate IPTV
-    Copyright (C) 2016 mortael
+    Copyright (C) 2016 Whitecream
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 
 
 __scriptname__ = "Ultimate IPTV"
-__author__ = "mortael"
+__author__ = "Whitecream"
 __scriptid__ = "plugin.video.uiptv"
-__version__ = "1.0.3"
+__version__ = "1.0.5"
 
 import urllib,urllib2,re, gzip, socket
-import xbmc,xbmcplugin,xbmcgui,xbmcaddon,sys,time, os
+import xbmc,xbmcplugin,xbmcgui,xbmcaddon,sys, os
 
 
 dialog = xbmcgui.Dialog()
@@ -34,7 +34,7 @@ USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/
 headers = {'User-Agent': USER_AGENT,
            'Accept': '*/*',
            'Connection': 'keep-alive'}
-socket.setdefaulttimeout(60)
+socket.setdefaulttimeout(10)
 
 rootDir = addon.getAddonInfo('path')
 if rootDir[-1] == ';':
@@ -68,7 +68,7 @@ def getHtml(url, referer=None, hdr=None, data=None):
         req.add_header('Referer', referer)
     if data:
         req.add_header('Content-Length', len(data))
-    response = urlopen(req, timeout=60)
+    response = urlopen(req, timeout=20)
     if response.info().get('Content-Encoding') == 'gzip':
         buf = StringIO( response.read())
         f = gzip.GzipFile(fileobj=buf)
@@ -114,11 +114,26 @@ def addDir(name, url, mode, iconimage, Folder=True):
     return ok
 
 
+def GETFILTER():
+    filterset = int(addon.getSetting('filterset')) + 1
+    txtfilter = addon.getSetting('txtfilter' + str(filterset))
+    return txtfilter
+
+
+def OPENSETTINGS():
+    addon.openSettings()
+    xbmc.executebuiltin('Container.Refresh')
+
+
 def INDEX():
     MAIN('http://iptvsatlinks.blogspot.com/search?max-results=40')
 
 
 def MAIN(url):
+    txtfilter = GETFILTER()
+    if not txtfilter:
+        txtfilter = "none"
+    addDir('[B]Current filter:[/B] '+txtfilter, '', 5, uiptvicon, Folder=False)
     html = getHtml(url)
     blogpage = re.compile("content='([^']+)' itemprop='image_url'.*?href='([^']+)'>([^<]+)<", re.DOTALL | re.IGNORECASE).findall(html)
     for img, url, name in blogpage:
@@ -138,6 +153,9 @@ def PAGE(url):
         blogpage = blogpage.replace('<br />', '\n').replace('&nbsp;','').replace('&amp;','&')
         parsem3u(blogpage)
     else:
+        txtfilter = GETFILTER()
+        if txtfilter:
+            addDir('Search all links for: '+txtfilter, url, 4, uiptvicon)
         iptvlinks = re.compile("(h[^<]+)", re.DOTALL | re.IGNORECASE).findall(blogpage)
         i = 1
         for link in iptvlinks:
@@ -145,6 +163,33 @@ def PAGE(url):
             name = 'Link ' + str(i) + ': ' + link
             addDir(name, link, 2, uiptvicon)
             i = i + 1
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+
+def SEARCHLINKS(url):
+    txtfilter = GETFILTER()
+    count = 0
+    dp = xbmcgui.DialogProgress()
+    dp.create("Searching IPTV lists","Searching for:",txtfilter)
+    html = getHtml(url)
+    blogpage = re.compile('<div class="code">(.*?)</div>', re.DOTALL | re.IGNORECASE).findall(html)[0]
+    iptvlinks = re.compile("(h[^<]+)", re.DOTALL | re.IGNORECASE).findall(blogpage)
+    addcount = 100 / len(iptvlinks)
+    for link in iptvlinks:
+        dp.update(int(count))
+        link = link.replace('&amp;','&')
+        try:
+            listup = urllib.urlopen(link).getcode()
+            if listup == 200:
+                    m3u = getHtml(link)
+                    links = parsem3u(m3u)
+                    count = count + addcount
+                    if links > 0:
+                        addDir('---------------------', '', 1, uiptvicon, Folder=False)
+        except:
+            count = count + addcount
+            pass
+    dp.close()
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
@@ -157,38 +202,50 @@ def IPTV(url):
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 
-def parsem3u(html):
-    txtfilter = addon.getSetting('txtfilter').lower()
+def parsem3u(html, sitechk=True):
     match = re.compile('#.+,(.+?)\n(.+?)\n').findall(html)
+    txtfilter = txtfilter = GETFILTER()
+    txtfilter = txtfilter.split(',') if txtfilter else []
+    txtfilter = [f.lower().strip() for f in txtfilter]
+    i = 0
+    count = 0
     for name, url in match:
+        status = ""
         url = url.replace('\r','')
-        if len(txtfilter) > 0:
-            if txtfilter not in name.lower():
-                continue
-        addPlayLink(name, url, 3, uiptvicon)
+        if not txtfilter or any(f in name.lower() for f in txtfilter):
+            if sitechk:
+                if i < 5:
+                    try:
+                        siteup = urllib.urlopen(url).getcode()
+                        status = " [COLOR red]offline[/COLOR]" if siteup != 200 else " [COLOR green]online[/COLOR]"
+                    except: status = " [COLOR red]offline[/COLOR]"
+                    i += 1
+            addPlayLink(name+status, url, 3, uiptvicon)
+            count += 1
+    return count
 
 
 def PLAY(url, title):
     playmode = int(addon.getSetting('playmode'))
     iconimage = xbmc.getInfoImage("ListItem.Thumb")
-    
+
     if playmode == 0:
+        stype = ''
         if '.ts' in url:
             stype = 'TSDOWNLOADER'
         elif '.m3u' in url:
             stype = 'HLS'
-        else:
+        if stype:
+            from F4mProxy import f4mProxyHelper
+            f4mp=f4mProxyHelper()
+            xbmcplugin.endOfDirectory(int(sys.argv[1]), cacheToDisc=False)
+            f4mp.playF4mLink(url,name,proxy=None,use_proxy_for_chunks=False, maxbitrate=0, simpleDownloader=False, auth=None, streamtype=stype,setResolved=False,swf=None , callbackpath="",callbackparam="", iconImage=iconimage)
             return
-        from F4mProxy import f4mProxyHelper
-        f4mp=f4mProxyHelper()
-        f4mp.playF4mLink(url,name,proxy=None,use_proxy_for_chunks=False, maxbitrate=0, simpleDownloader=False, auth=None, streamtype=stype,setResolved=False,swf=None , callbackpath="",callbackparam="", iconImage=iconimage)
-        return
     
-    elif playmode == 1:
-        listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-        listitem.setInfo('video', {'Title': name})
-        listitem.setProperty("IsPlayable","true")
-        xbmc.Player().play(url, listitem)    
+    listitem = xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
+    listitem.setInfo('video', {'Title': name})
+    listitem.setProperty("IsPlayable","true")
+    xbmc.Player().play(url, listitem)
 
 
 def getParams():
@@ -231,5 +288,6 @@ elif mode == 0: MAIN(url)
 elif mode == 1: PAGE(url)
 elif mode == 2: IPTV(url)
 elif mode == 3: PLAY(url, name)
+elif mode == 4: SEARCHLINKS(url)
+elif mode == 5: OPENSETTINGS()
 
-xbmcplugin.endOfDirectory(int(sys.argv[1]))

@@ -2,7 +2,7 @@
 <addon id="plugin.video.uiptv"
        name="Ultimate IPTV"
        version="0.0.0.1"
-       provider-name="mortael">
+       provider-name="Whitecream">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.video.F4mProxy" version="2.5.7" />
