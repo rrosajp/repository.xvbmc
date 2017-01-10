@@ -287,6 +287,27 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
     </extension>
 </addon>
 
+<addon id="plugin.video.livemusic!"
+	name="live music!"
+	version="1.0.1"
+	provider-name="Xvbmc">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.0.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Live concerten </summary>
+    <description lang="en">Verzameling van youtube streams met concerten.Mis je een concert, meld het ons even op onze facebook pagina. Films/series/muziek chat by XvBMC Nederland© </description>
+    <platform>all</platform>
+    <forum>n/a</forum>
+    <website>n/a</website>
+  </extension>
+</addon>
+
 <addon id="plugin.video.livestreamer" name="livestreamer" version="1.12.2-blxd2" provider-name="blxd">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -370,6 +391,27 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
     <platform>all</platform>
     <website></website>
     <email></email>
+  </extension>
+</addon>
+
+<addon id="plugin.video.nlserie"
+	name="nl series"
+	version="1.0.1"
+	provider-name="Xvbmc">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.0.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Live concerten </summary>
+    <description lang="en">Verzameling van nederlandse serie's </description>
+    <platform>all</platform>
+    <forum>n/a</forum>
+    <website>n/a</website>
   </extension>
 </addon>
 
