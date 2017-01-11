@@ -396,7 +396,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 
 <addon id="plugin.video.nlserie"
 	name="nl series"
-	version="1.0.1"
+	version="1.0.2"
 	provider-name="Xvbmc">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
