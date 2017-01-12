@@ -20,7 +20,7 @@ import re
 import urllib
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -119,15 +119,14 @@ class Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-include_comments" type="bool" label="     %s" default="false" visible="eq(-6,true)"/>' % (name, i18n('include_comments')))
         return settings
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         referer = urlparse.urljoin(SEARCH_BASE_URL, '/search/')
-        referer += urllib.quote_plus(title)
-        headers = {'Referer': referer}
+        headers = {'Referer': referer + urllib.quote_plus(title)}
         headers.update(XHR)
-        search_url = urlparse.urljoin(SEARCH_BASE_URL, '/lib/search.php?phrase=%s&pindex=1')
-        search_url = search_url % (urllib.quote_plus(title))
-        html = self._http_get(search_url, headers=headers, require_debrid=True, cache_limit=1)
+        search_url = urlparse.urljoin(SEARCH_BASE_URL, '/lib/search.php')
+        params = {'phrase': title, 'pindex': 1}
+        html = self._http_get(search_url, params=params, headers=headers, require_debrid=True, cache_limit=1)
         js_data = scraper_utils.parse_json(html, search_url)
         for post in js_data.get('results', []):
             if self.__too_old(post): continue

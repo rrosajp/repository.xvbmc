@@ -16,16 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
 import kodi
-import datetime
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
-from salts_lib.constants import XHR
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
 from salts_lib.utils2 import i18n
@@ -62,7 +59,7 @@ class Scraper(scraper.Scraper):
                 page_quality = scraper_utils.height_get_quality(meta['height'])
             else:
                 page_quality = QUALITIES.HIGH
-                
+            
             fragment = dom_parser.parse_dom(html, 'section', {'class': '[^"]*entry-content[^"]*'})
             if fragment:
                 for section in dom_parser.parse_dom(fragment[0], 'p'):
@@ -94,46 +91,10 @@ class Scraper(scraper.Scraper):
         name = cls.get_name()
         settings.append('         <setting id="%s-filter" type="slider" range="0,180" option="int" label="     %s" default="60" visible="eq(-4,true)"/>' % (name, i18n('filter_results_days')))
         settings.append('         <setting id="%s-select" type="enum" label="     %s" lvalues="30636|30637" default="0" visible="eq(-5,true)"/>' % (name, i18n('auto_select')))
-        settings.append('         <setting id="%s-include_comments" type="bool" label="     %s" default="false" visible="eq(-6,true)"/>' % (name, i18n('include_comments')))
         return settings
 
-    def search(self, video_type, title, year, season=''):
-        results = []
-        search_url = urlparse.urljoin(self.base_url, '/wp-admin/admin-ajax.php')
-        data = {'action': 'ajaxy_sf', 'search': 'false', 'show_category': 0, 'show_post_category': 0, 'post_types': '', 'sf_value': title}
-        referer = urlparse.urljoin(self.base_url, '/?s=%s' % (urllib.quote_plus(title)))
-        headers = {'Referer': referer}
-        headers.update(XHR)
-        html = self._http_get(search_url, data=data, headers=headers, require_debrid=True, cache_limit=1)
-        js_data = scraper_utils.parse_json(html, search_url)
-        try: posts = js_data['post'][0]['all']
-        except: posts = []
-        for post in posts:
-            if self.__too_old(post): continue
-            post_title = re.sub('^\[ST\]\s*&#8211;\s*', '', post.get('post_title', ''))
-            result = self._blog_proc_results(post_title, '(?P<post_title>.+)(?P<url>.*?)', '', video_type, title, year)
-            if result:
-                result[0]['url'] = scraper_utils.pathify_url(post['post_link'])
-                results.append(result[0])
-        return results
-    
-    def __too_old(self, post):
-        log_utils.log(post)
-        filter_days = datetime.timedelta(days=int(kodi.get_setting('%s-filter' % (self.get_name()))))
-        match = re.search('(/\d{4}/\d{2}/\d{2}/)', post['post_link'])
-        if match:
-            post_date = match.group(1)
-            date_format = '/%Y/%m/%d/'
-        else:
-            post_date = post['post_date_formatted']
-            date_format = '%B %d, %Y'
-            
-        if filter_days and post_date:
-            try:
-                today = datetime.date.today()
-                post_date = scraper_utils.to_datetime(post_date, date_format).date()
-                if today - post_date > filter_days:
-                    return True
-            except ValueError:
-                return False
-        return False
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
+        html = self._http_get(self.base_url, params={'s': title}, require_debrid=True, cache_limit=1)
+        post_pattern = '<h\d+[^>]+class="entry-title[^>]*>\s*<[^>]+href="(?P<url>[^"]*/(?P<date>\d{4}/\d{1,2}/\d{1,2})[^"]*)[^>]+>(?:\[ST\]\s+&#8211;\s*)?(?P<post_title>[^<]+)'
+        date_format = '%Y/%m/%d'
+        return self._blog_proc_results(html, post_pattern, date_format, video_type, title, year)

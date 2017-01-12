@@ -17,9 +17,8 @@
 """
 import re
 import urlparse
-import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -45,19 +44,29 @@ class Scraper(scraper.Scraper):
     def get_name(cls):
         return 'WatchSeries'
 
+    def resolve_link(self, link):
+        if not link.startswith('http'):
+            url = urlparse.urljoin(self.base_url, link)
+            html = self._http_get(url, cache_limit=0)
+            stream_url = dom_parser.parse_dom(html, 'a', {'class': 'myButton p2'}, ret='href')
+            if stream_url: return stream_url[0]
+        else:
+            return link
+    
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
         if source_url and source_url != FORCE_NO_MATCH:
             page_url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(page_url, cache_limit=.5)
+            headers = {'Refer': self.base_url}
+            html = self._http_get(page_url, headers=headers, cache_limit=.5)
             table = dom_parser.parse_dom(html, 'div', {'class': 'linktable'})
             if table:
                 for row in dom_parser.parse_dom(table[0], 'tr'):
                     spans = dom_parser.parse_dom(row, 'span')
                     stream_url = dom_parser.parse_dom(row, 'a', ret='href')
                     is_sponsored = any([i for i in spans if 'sponsored' in i.lower()])
-                    if is_sponsored and len(spans) > 1 and stream_url:
+                    if not is_sponsored and len(spans) > 1 and stream_url:
                         host, rating = spans[0], spans[1]
                         stream_url = stream_url[0]
                         quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
@@ -71,13 +80,13 @@ class Scraper(scraper.Scraper):
         episode_pattern = 'href="([^"]*s%s_e%s(?!\d)[^"]*)' % (video.season, video.episode)
         return self._default_get_episode_url(show_url, video, episode_pattern)
     
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = '/suggest.php?ajax=1&s=%s&type=TVShows' % (urllib.quote(title))
-        search_url = urlparse.urljoin(self.base_url, search_url)
+        search_url = urlparse.urljoin(self.base_url, '/suggest.php')
         headers = {'Referer': self.base_url}
         headers.update(XHR)
-        html = self._http_get(search_url, cache_limit=8)
+        params = {'ajax': 1, 's': title, 'type': 'TVShows'}
+        html = self._http_get(search_url, params=params, cache_limit=8)
         for match in re.finditer('href="([^"]+)[^>]*>(.*?)</a>', html):
             match_url, match_title = match.groups()
             match_title = re.sub('</?span[^>]*>', '', match_title)

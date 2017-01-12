@@ -19,10 +19,9 @@ import re
 import urllib
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
-from salts_lib.utils2 import i18n
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
@@ -31,7 +30,7 @@ import scraper
 BASE_URL = 'http://moviesub.org'
 LINK_URL = '/ip.temp/swf/plugins/ipplugins.php'
 LINK_URL2 = '/Htplugins/Loader.php'
-LINK_URL3 = '/ip.temp/swf/ipplayer/ipplayer.php?u=%s&w=100%%&h=450&s=%s'
+LINK_URL3 = '/ip.temp/swf/ipplayer/ipplayer.php'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Scraper(scraper.Scraper):
@@ -56,8 +55,8 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-            sources = self.__get_gk_links(html, url, video.video_type, video.episode)
-            sources.update(self.__get_ht_links(html, url, video.video_type))
+            sources = self.__get_gk_links(html, url)
+            sources.update(self.__get_ht_links(html, url))
             
             for source in sources:
                 host = self._get_direct_hostname(source)
@@ -68,13 +67,13 @@ class Scraper(scraper.Scraper):
                     direct = False
                 
                 if host is not None:
-                    stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+                    stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': sources[source], 'views': None, 'rating': None, 'url': stream_url, 'direct': direct}
                     hosters.append(hoster)
 
         return hosters
 
-    def __get_ht_links(self, html, page_url, video_type):
+    def __get_ht_links(self, html, page_url):
         sources = {}
         match = re.search('Htplugins_Make_Player\("([^"]+)', html)
         if match:
@@ -92,7 +91,7 @@ class Scraper(scraper.Scraper):
                     sources[link] = quality
         return sources
         
-    def __get_gk_links(self, html, page_url, video_type, episode):
+    def __get_gk_links(self, html, page_url):
         sources = {}
         for link in dom_parser.parse_dom(html, 'div', {'class': '[^"]*server_line[^"]*'}):
             film_id = dom_parser.parse_dom(link, 'a', ret='data-film')
@@ -107,8 +106,8 @@ class Scraper(scraper.Scraper):
                 js_data = scraper_utils.parse_json(html, url)
                 if 's' in js_data and isinstance(js_data['s'], basestring):
                     url = urlparse.urljoin(self.base_url, LINK_URL3)
-                    url = url % (js_data['s'], js_data['v'])
-                    html = self._http_get(url, headers=headers, cache_limit=.25)
+                    params = {'u': js_data['s'], 'w': '100%', 'h': 450, 's': js_data['v']}
+                    html = self._http_get(url, params=params, headers=headers, cache_limit=.25)
                     js_data = scraper_utils.parse_json(html, url)
                     if 'data' in js_data and js_data['data']:
                         if isinstance(js_data['data'], basestring):

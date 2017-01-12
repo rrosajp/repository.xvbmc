@@ -17,10 +17,9 @@
 """
 import scraper
 import urlparse
-import urllib
 import re
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import VIDEO_TYPES
@@ -78,10 +77,9 @@ class Scraper(scraper.Scraper):
                     
         return sources
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/?s=%s' % (urllib.quote_plus(title)))
-        html = self._http_get(search_url, cache_limit=8)
+        html = self._http_get(self.base_url, params={'s': title}, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item'}):
             match = re.search('href="([^"]+)', item)
             match_title = dom_parser.parse_dom(item, 'span', {'class': 'tt'})
@@ -90,14 +88,8 @@ class Scraper(scraper.Scraper):
                 url = match.group(1)
                 match_title = match_title[0]
                 if re.search('\d+\s*x\s*\d+', match_title): continue  # exclude episodes
-                match = re.search('(.*?)\s+\((\d{4})\)', match_title)
-                if match:
-                    match_title, match_year = match.groups()
-                else:
-                    match_title = match_title
-                    match_year = ''
-                
-                if year_frag:
+                match_title, match_year = scraper_utils.extra_year(match_title)
+                if not match_year and year_frag:
                     match_year = year_frag[0]
 
                 match = re.search('(.*?)\s+\d{3,}p', match_title)

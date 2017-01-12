@@ -17,9 +17,8 @@
 """
 import re
 import urlparse
-import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -80,7 +79,7 @@ class Scraper(scraper.Scraper):
             if match:
                 return scraper_utils.pathify_url(match.group(1))
     
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         html = self._http_get(self.base_url, cache_limit=48)
         results = []
         norm_title = scraper_utils.normalize_title(title)

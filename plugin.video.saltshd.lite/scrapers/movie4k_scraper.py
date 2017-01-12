@@ -16,11 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
 import kodi
 import dom_parser
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -59,9 +58,8 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-            log_utils.log(html)
 
-            pattern = r'id=\\?"tablemoviesindex2\\?"[^>]*href\s*=\s*\'([^\']+).*?&nbsp;([^<]+)(.*)'
+            pattern = r'id=\\?"tablemoviesindex2\\?".*?href\s*=\s*\\?[\'"]([^\'"]+).*?&nbsp;([^<]+)(.*)'
             for match in re.finditer(pattern, html):
                 url, host, extra = match.groups()
                 if not url.startswith('/'): url = '/' + url
@@ -72,11 +70,11 @@ class Scraper(scraper.Scraper):
                 hosters.append(hoster)
         return hosters
 
-    def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/movies.php?list=search&search=')
-        search_url += urllib.quote_plus(title)
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
+        search_url = urlparse.urljoin(self.base_url, '/movies.php')
         cookies = {'onlylanguage': 'en', 'lang': 'en'}
-        html = self._http_get(search_url, cookies=cookies, cache_limit=.25)
+        params = {'list': 'search', 'search': title}
+        html = self._http_get(search_url, params=params, cookies=cookies, cache_limit=1)
         results = []
         pattern = 'id="tdmovies">\s*<a\s+href="([^"]+)">([^<]+).*?id="f7">(.*?)</TD>'
         for match in re.finditer(pattern, html, re.DOTALL):

@@ -18,9 +18,8 @@
 import scraper
 import urlparse
 import re
-import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import VIDEO_TYPES
@@ -55,7 +54,6 @@ class Scraper(scraper.Scraper):
             labels = dom_parser.parse_dom(html, 'a', {'class': 'download_item'})
             for stream_url, label in zip(streams, labels):
                 label = re.sub('\s+', ' ', label)
-                log_utils.log(label)
                 if 'bit.ly' in stream_url:
                     redir_url = self._http_get(stream_url, allow_redirect=False, method='HEAD', require_debrid=True, cache_limit=8)
                     if redir_url.startswith('http'):
@@ -75,26 +73,18 @@ class Scraper(scraper.Scraper):
 
         return sources
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search/search_val?language=English%%20-%%20UK&term=%s')
-        search_url = search_url % (urllib.quote_plus(title))
-        referer = urlparse.urljoin(self.base_url, '/search')
-        headers = {'Referer': referer}
+        search_url = urlparse.urljoin(self.base_url, '/search/search_val')
+        headers = {'Referer': urlparse.urljoin(self.base_url, '/search')}
         headers.update(XHR)
-        html = self._http_get(search_url, headers=headers, require_debrid=True, cache_limit=8)
+        params = {'language': 'English - UK', 'term': title}
+        html = self._http_get(search_url, params=params, headers=headers, require_debrid=True, cache_limit=8)
         js_data = scraper_utils.parse_json(html, search_url)
         for item in js_data:
             if item.get('category', '').lower() != 'movies': continue
-            match_title_year = item['label']
             match_url = item['url']
-            match = re.search('(.*?)\s+\((\d{4})\)\s*', match_title_year)
-            if match:
-                match_title, match_year = match.groups()
-            else:
-                match_title = match_title_year
-                match_year = ''
-            
+            match_title, match_year = scraper_utils.extra_year(item['label'])
             if not year or not match_year or year == match_year:
                 result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                 results.append(result)
