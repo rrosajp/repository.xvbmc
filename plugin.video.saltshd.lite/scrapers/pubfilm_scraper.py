@@ -17,8 +17,9 @@
 """
 import re
 import urlparse
+import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -76,7 +77,7 @@ class Scraper(scraper.Scraper):
                     sources = self._parse_sources_list(html)
                     
                 for source in sources:
-                    stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+                    stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
                     direct = sources[source]['direct']
                     quality = sources[source]['quality']
                     if sources[source]['direct']:
@@ -132,19 +133,16 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search/%s' % (title))
+        search_url = urlparse.urljoin(self.base_url, '/search/%s' % (urllib.quote(title)))
         headers = {'Referer': self.base_url}
         html = self._http_get(search_url, headers=headers, cache_limit=8)
-        log_utils.log(html)
+        norm_title = scraper_utils.normalize_title(title)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'recent-item'}):
-            log_utils.log(item)
             fragment = dom_parser.parse_dom(item, 'h\d+')
             if not fragment: continue
             
             match_title_year = dom_parser.parse_dom(fragment[0], 'a', {'rel': 'bookmark'})
             match_url = dom_parser.parse_dom(fragment[0], 'a', {'rel': 'bookmark'}, ret='href')
-            log_utils.log(match_title_year)
-            log_utils.log(match_url)
             if match_title_year and match_url:
                 match_title_year = match_title_year[0]
                 match_url = match_url[0]
@@ -157,12 +155,9 @@ class Scraper(scraper.Scraper):
                         if season and int(is_season.group(1)) != int(season):
                             continue
                     else:
-                        match = re.search('(.*?)\s+(\d{4})\s*', match_title_year)
-                        if match:
-                            match_title, match_year = match.groups()
-                        else:
-                            match_title = match_title_year
-                            match_year = ''
+                        match_title, match_year = scraper_utils.extra_year(match_title_year)
+                        match_norm_title = scraper_utils.normalize_title(match_title)
+                        if (norm_title not in match_norm_title) and (match_norm_title not in norm_title): continue
         
                     if not year or not match_year or year == match_year:
                         result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}

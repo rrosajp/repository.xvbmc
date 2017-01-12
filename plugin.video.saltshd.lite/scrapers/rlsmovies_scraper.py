@@ -16,10 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -65,16 +64,11 @@ class Scraper(scraper.Scraper):
     def __get_post_links(self, html):
         sources = {}
         release = dom_parser.parse_dom(html, 'span', {'itemprop': 'name'})
-        match = re.search('>Download<(.*?)<script', html, re.I | re.DOTALL)
-        if match:
-            log_utils.log(match.group(1))
-            for match in re.finditer('href="([^"]+)[^>]*>([^<]+)', match.group(1)):
-                log_utils.log(match.groups())
-                stream_url, link_release = match.groups()
-                if '.srt' in link_release: continue
-                if re.search('\.part\.?\d+', link_release) or '.rar' in link_release or 'sample' in link_release or link_release.endswith('.nfo'): continue
-                temp_release = link_release if not release else release[0]
-                sources[stream_url] = {'release': temp_release}
+        release = release[0] if release else ''
+        fragment = dom_parser.parse_dom(html, 'div', {'class': 'entry'})
+        if fragment:
+            for match in re.finditer('<p>\s*(http.*?)</p>', fragment[0]):
+                sources[match.group(1)] = {'release': release}
         return sources
         
     def get_url(self, video):
@@ -89,10 +83,8 @@ class Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-select" type="enum" label="     %s" lvalues="30636|30637" default="0" visible="eq(-5,true)"/>' % (name, i18n('auto_select')))
         return settings
 
-    def search(self, video_type, title, year, season=''):
-        search_url = urlparse.urljoin(self.base_url, '/?s=%s')
-        search_url = search_url % (urllib.quote_plus(title))
-        html = self._http_get(search_url, require_debrid=True, cache_limit=1)
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
+        html = self._http_get(self.base_url, params={'s': title}, require_debrid=True, cache_limit=1)
         post_pattern = 'class="post-box-title">.*?href="(?P<url>[^"]+)[^>]*>(?P<post_title>[^<]+).*?<span>(?P<date>[^ ]+ 0*\d+, \d{4})'
         date_format = '%B %d, %Y'
         return self._blog_proc_results(html, post_pattern, date_format, video_type, title, year)
