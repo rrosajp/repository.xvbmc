@@ -289,7 +289,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 
 <addon id="plugin.video.livemusic!"
 	name="live music!"
-	version="1.0.1"
+	version="1.0.2"
 	provider-name="Xvbmc">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -396,7 +396,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 
 <addon id="plugin.video.nlserie"
 	name="nl series"
-	version="1.0.2"
+	version="1.0.3"
 	provider-name="Xvbmc">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -407,7 +407,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Live concerten </summary>
+    <summary lang="en">NL serie's  </summary>
     <description lang="en">Verzameling van nederlandse serie's </description>
     <platform>all</platform>
     <forum>n/a</forum>
