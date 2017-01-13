@@ -39,8 +39,14 @@ mediaPath      = os.path.join(addonPath, 'media')
 xvbmcfanart    = os.path.join(addonPath, 'fanart.jpg')
 dialog         = xbmcgui.Dialog()
 base           = 'aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
-locate         = 'aHR0cHM6Ly9lcGljYXBvYy5zdGFja3N0b3JhZ2UuY29tL2luZGV4LnBocC8='
-bestand        = '20160828232103'
+locate         = 'aHR0cDovL3d3dy5tZWRpYWZpcmUuY29tL2ZpbGUv'
+bestand        = '20160906222118'                     # universal recent Pi-build file format voodoo and shit....
+pcreset        = 'URL nog te verhuizen'               # zero-fill standalone 
+pcrestorefinal = 'URL nog te verhuizen'               # standalone-final 
+pcrestoreupgrd = 'ToDo'                               # betas-4-standalone 
+pireset        = 'URL nog te verhuizen'               # zero-fill raspberrys 
+pirestorefinal = 'ua67cbfa5nf1pvf/20161224210044.tar' # raspberry-final 
+pirestoreupgrd = 'ToDO'                               # betas-4-raspberrys 
 raspberryPi    = '[COLOR=white]\'Raspberry Pi\'[/COLOR]'
 Standalonefork = '[COLOR=white]\'Standalone\'[/COLOR]'
 waarschuwing   = '[COLOR=red][B]!!!  WARNING  !!![/B][/COLOR]'
@@ -54,9 +60,11 @@ upgrade31      = 'XvBMC v3.1 *[B]final[/B]* (Jarvis)'
 upgrade31dl    = 'Download XvBMC\'s [COLOR=lime]v3.1 *final* 13-10-\'16 (Pi)[/COLOR]'
 resetos        = 'XvBMC Reset Kodi'
 resetosdl      = 'import XvBMC\'s [COLOR=lime]Kodi defaults[/COLOR]'
-resetinfo      = '[COLOR dimgray]S[COLOR dimgray]tandalone \'default\' [COLOR white]+[/COLOR] [/COLOR]R[COLOR dimgray]aspberry[/COLOR] Pi \'Jarvis\' 16.1[/COLOR]'
+resetinfo      = '[COLOR dimgray] (default[/COLOR] RPi[COLOR white]+[/COLOR]P[COLOR dimgray]ortable) [I]\'Jarvis 16.1\'[/I][/COLOR]'
 comingsoon     = '[B]Coming soon:[/B] onze nieuwste [COLOR=lime]v4 *beta*[/COLOR]'
+ingeschakeld   = '[COLOR red]INSTALL: [/COLOR]'
 uitgeschakeld  = '[COLOR=red]Disabled: [/COLOR]'
+waarschuwing   = '[COLOR red]WARNING: [/COLOR]'
 herstart       = 'PRESS OK TO FORCECLOSE AND REBOOT!'
 forceersluiten = '[COLOR dimgray]indien forceclose niet werkt, herstart uw systeem handmatig, [/COLOR]if forceclose does not work shutdown manually'
 #                ProgTitle="XvBMC Update+Development"                 #
@@ -68,11 +76,11 @@ forceersluiten = '[COLOR dimgray]indien forceclose niet werkt, herstart uw syste
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('[COLOR red]XvBMC [B]U[/B]pgrade v[B]4[/B].0 beta[/COLOR] [COLOR dimgray]([/COLOR]R[COLOR dimgray]aspberry[/COLOR] Pi [COLOR white]+[/COLOR] S[COLOR dimgray]tandalone)[/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[COLOR lime]XvBMC v3.1 *final* Jarvis[/COLOR] [COLOR dimgray]([/COLOR]R[COLOR dimgray]aspberry[/COLOR] Pi [COLOR white]+[/COLOR] S[COLOR dimgray]tandalone)[/COLOR]', 'url', 2,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]R[/B]eset Kodi ' +' [COLOR dimgray]([/COLOR]' +resetinfo +'[COLOR dimgray])[/COLOR]', 'url', 3,os.path.join(mediaPath, "dev.png"))
-	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack (v3.1)[/COLOR]', 'url', 4,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack bulk pack (v3.1)[/COLOR]','url', 5,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR red]XvBMC [B]U[/B]pgrade v[B]4[/B].0 beta[/COLOR] [COLOR dimgray] ([/COLOR]RPi[COLOR dimgray][COLOR white]+[/COLOR][/COLOR]P[COLOR dimgray]ortable)[/COLOR] [COLOR red][I]coming soon[/I][/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR lime]XvBMC v[B]3[/B].1 *final* Jarvis[/COLOR] [COLOR dimgray] ([/COLOR]RPi[COLOR dimgray][COLOR white]+[/COLOR][/COLOR]P[COLOR dimgray]ortable)[/COLOR] [COLOR dimgray][I]2017[B]-[/B]01[B]-[/B]xx[/I][/COLOR]', 'url', 2,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]R[/B]eset Kodi ' +resetinfo, 'url', 3,os.path.join(mediaPath, "dev.png"))
+	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack (v3.1[B]+[/B])[/COLOR]', 'url', 4,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack bulk pack (v3.1[B]+[/B])[/COLOR]','url', 5,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]efresh Addons[COLOR white]+[/COLOR]Repos', 'url', 6,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [COLOR white]Pi[/COLOR] **only**)', 'url', 7,os.path.join(mediaPath, "dev.png"))	
 	addItem('XvBMC #[B]DEV[/B]# Corner (firmware[COLOR white]-[/COLOR]OS[COLOR white]-[/COLOR]etc[COLOR white].[/COLOR])', 'url', 8,os.path.join(mediaPath, "dev.png"))
@@ -124,9 +132,9 @@ def get_params():
 #						Work Functions
 #######################################################################
 
-def XvbmcPiUpgrade(url):    #upgrade40
+def XvbmcPiUpgrade(url):
     if dialog.yesno(upgrade40 +' [B]- Pi[/B] image', upgrade40dl +' [B]Raspberry [COLOR=white]Pi?[/COLOR][/B]',nolabel='Nee, No',yeslabel='Ja, Yes'):
-        url=base64.b64decode(locate)+'s/***************/download' # MdZoWzbgwXQfwIB=XvBMC31final // GRc7wabLgVRdMDF =LibreELEC702
+        url=base64.b64decode(locate)+pirestoreupgrd #upgrade40
         path = xbmc.translatePath(os.path.join('/storage/.restore/',''))
         if not os.path.exists(path):
             os.makedirs(path)
@@ -136,13 +144,13 @@ def XvbmcPiUpgrade(url):    #upgrade40
         except:
             pass
         downloader.download(url, lib)
-        time.sleep(2)
+        time.sleep(3)
         dialog.ok(MainTitle +'[B]-  Pi[/B]', upgrade40 +' done.', herstart,  forceersluiten)
         Common.killKodi()
 
-def XvbmcUpgrade(url):      #upgrade40
+def XvbmcUpgradePortable(url):
     if dialog.yesno(upgrade40 +' - Portable build', upgrade40dl +' [COLOR=white]Portable?[/COLOR]','','(...enig [B]geduld[/B] is vereist, please be patient...)',nolabel='Nee, No',yeslabel='Ja, Yes'):
-        url=base64.b64decode(locate)+'s/***************/download' # KhEZaBn8fLbDo5Q =xvbmcresettest // Af5FhwrfMjRfpWN =XvBMC31final (portable fork)
+        url=base64.b64decode(locate)+pcrestoreupgrd #upgrade40
         path = xbmc.translatePath(os.path.join('special://home/','temp'))
         addonpath = xbmc.translatePath(os.path.join('special://home/','addons'))
         userpath = xbmc.translatePath(os.path.join('special://home/','userdata'))
@@ -163,7 +171,7 @@ def XvbmcUpgrade(url):      #upgrade40
             Common.removefolder(mediapath, 'script.xvbmc.update')
             dp.update(0,"", "now really going medieval on your ass")
             addonfolder = xbmc.translatePath(os.path.join('special://','home'))
-            time.sleep(2)
+            time.sleep(3)
             dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - UGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
@@ -184,9 +192,9 @@ def XvbmcUpgrade(url):      #upgrade40
             Common.killKodi()
 
 
-def XvbmcPi31(url):         #upgrade31
+def XvbmcPiFinal(url):
     if dialog.yesno(upgrade31 +' [B]- Pi[/B] image', upgrade31dl +' [COLOR=white]image?[/COLOR]',nolabel='Nee, No',yeslabel='Ja, Yes'):
-        url=base64.b64decode(locate)+'s/MdZoWzbgwXQfwIB/download' # MdZoWzbgwXQfwIB=XvBMC31final // GRc7wabLgVRdMDF =LibreELEC702
+        url=base64.b64decode(locate)+pirestorefinal #upgrade31
         path = xbmc.translatePath(os.path.join('/storage/.restore/',''))
         if not os.path.exists(path):
             os.makedirs(path)
@@ -196,13 +204,13 @@ def XvbmcPi31(url):         #upgrade31
         except:
             pass
         downloader.download(url, lib)
-        time.sleep(2)
+        time.sleep(3)
         dialog.ok(MainTitle +'[B]-  Pi[/B]', upgrade31 +' done.', herstart,  forceersluiten)
         Common.killKodi()
 
-def XvbmcStandalone31(url): #upgrade31
+def XvbmcPortableFinal(url):
     if dialog.yesno(upgrade31 +' - Portable', upgrade31dl +' [COLOR=white]fork?[/COLOR]','','(...enig [B]geduld[/B] is vereist, please be patient...)',nolabel='Nee, No',yeslabel='Ja, Yes'):
-        url=base64.b64decode(locate)+'s/Af5FhwrfMjRfpWN/download' # KhEZaBn8fLbDo5Q =xvbmcresettest // Af5FhwrfMjRfpWN =XvBMC31final (portable fork)
+        url=base64.b64decode(locate)+pcrestorefinal #upgrade31
         path = xbmc.translatePath(os.path.join('special://home/','temp'))
         addonpath = xbmc.translatePath(os.path.join('special://home/','addons'))
         userpath = xbmc.translatePath(os.path.join('special://home/','userdata'))
@@ -223,7 +231,7 @@ def XvbmcStandalone31(url): #upgrade31
             Common.removefolder(mediapath, 'script.xvbmc.update')
             dp.update(0,"", "now really going medieval on your ass")
             addonfolder = xbmc.translatePath(os.path.join('special://','home'))
-            time.sleep(2)
+            time.sleep(3)
             dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - UGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
@@ -246,7 +254,7 @@ def XvbmcStandalone31(url): #upgrade31
 
 def XvbmcPiReset(url):
     if dialog.yesno(resetos +' [B]- Pi[/B] image', resetosdl +'; reset to Jarvis v[B]16.1[/B]?','','(...enig [B]geduld[/B] is vereist, please be patient...)',nolabel='Nee, No',yeslabel='Ja, Yes'):
-        url=base64.b64decode(locate)+'s/GRc7wabLgVRdMDF/download' #MdZoWzbgwXQfwIB=XvBMC31final // #GRc7wabLgVRdMDF =LibreELEC702
+        url=base64.b64decode(locate)+pireset #factorypresets
         path = xbmc.translatePath(os.path.join('/storage/.restore/',''))
         if not os.path.exists(path):
             os.makedirs(path)
@@ -256,13 +264,13 @@ def XvbmcPiReset(url):
         except:
             pass
         downloader.download(url, lib)
-        time.sleep(2)
+        time.sleep(3)
         dialog.ok(MainTitle +'[B]-  Pi[/B]', resetos +' done.', herstart,  forceersluiten)
         Common.killKodi()
 
-def XvbmcPcReset(url):
+def XvbmcResetPortable(url):
     if dialog.yesno(resetos +' - Portable', resetosdl +'; reset to default[B]?[/B]','','(...enig [B]geduld[/B] is vereist, please be patient...)',nolabel='Nee, No',yeslabel='Ja, Yes'):
-        url=base64.b64decode(locate)+'s/KhEZaBn8fLbDo5Q/download' #KhEZaBn8fLbDo5Q =xvbmcresettest
+        url=base64.b64decode(locate)+pcreset #factorypresets
         path = xbmc.translatePath(os.path.join('special://home/','temp'))
         addonpath = xbmc.translatePath(os.path.join('special://home/','addons'))
         userpath = xbmc.translatePath(os.path.join('special://home/','userdata'))
@@ -283,7 +291,7 @@ def XvbmcPcReset(url):
             Common.removefolder(mediapath, 'script.xvbmc.update')
             dp.update(0,"", "now really going medieval on your ass")
             addonfolder = xbmc.translatePath(os.path.join('special://','home'))
-            time.sleep(2)
+            time.sleep(3)
             dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - UGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
@@ -306,9 +314,8 @@ def XvbmcPcReset(url):
 
 def ServicePack(url):
     Common.verifyplatform()
-#	\update\sp\03-servicepack.zip
     if dialog.yesno('XvBMC NL most recent ServicePack','Download de laatste XvBMC [COLOR=white][B]S[/B]ervice[B]P[/B]ack?[/COLOR]',nolabel='Nee, No',yeslabel='Ja, Yes'):
-        url=base64.b64decode(base)+'update/sp/03-servicepack.zip'
+        url=base64.b64decode(base)+'update/sp/03-servicepack.zip' # servicepacks
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
@@ -320,7 +327,7 @@ def ServicePack(url):
         downloader.download(url, lib)
         if os.path.exists(lib):
             addonfolder = xbmc.translatePath(os.path.join('special://','home'))
-            time.sleep(2)
+            time.sleep(3)
             dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - Updater","XvBMC-NL: doing some updating VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
@@ -335,9 +342,8 @@ def ServicePack(url):
 
 def UpdateRollup(url):
     Common.verifyplatform()
-#	\update\sp\03-sp-rollup.zip
     if dialog.yesno('XvBMC NL ServicePack Update Rollup','Download ALLE XvBMC [COLOR=white][B]SP[/B][/COLOR]-updates [COLOR=white]([B]all-in-1[/B])?[/COLOR]',nolabel='Nee, No',yeslabel='Ja, Yes'):
-        url=base64.b64decode(base)+'update/sp/03-sp-rollup.zip'
+        url=base64.b64decode(base)+'update/sp/03-sp-rollup.zip' # roll-ups
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
@@ -349,7 +355,7 @@ def UpdateRollup(url):
         downloader.download(url, lib)
         if os.path.exists(lib):
             addonfolder = xbmc.translatePath(os.path.join('special://','home'))
-            time.sleep(2)
+            time.sleep(3)
             dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - Updater","XvBMC-NL: doing some updating VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
@@ -366,7 +372,7 @@ def UpdateRollup(url):
 def forceRefresh():
 #	http://kodi.wiki/view/List_of_built-in_functions
 	xbmc.executebuiltin('UpdateLocalAddons')
-	dialog.ok(MainTitle, 'Force Refresh Repos and Update LocalAddons')
+	dialog.ok(MainTitle,'Force Refresh Repos and Update LocalAddons')
 	xbmc.executebuiltin("UpdateAddonRepos")
 	xbmc.executebuiltin("ReloadSkin()")
 
@@ -387,7 +393,7 @@ def xvbmcOverclock(url):
         downloader.download(url, lib)
         if os.path.exists(lib):
             addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
-            time.sleep(2)
+            time.sleep(3)
             dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - Updater","XvBMC-#OC: doing some VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
@@ -416,7 +422,7 @@ def subDEVmenu(url):
         downloader.download(url, lib)
         if os.path.exists(lib):
             addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
-            time.sleep(2)
+            time.sleep(3)
             dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - Updater","XvBMC-#DEV: doing some VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
@@ -450,7 +456,7 @@ def xvbmcMaintenance(url):
         downloader.download(url, lib)
         if os.path.exists(lib):
             addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
-            time.sleep(2)
+            time.sleep(3)
             dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - Updater","XvBMC-#Maintenance: doing some of our VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
@@ -618,31 +624,34 @@ elif mode==1:
     else: #rest
         print "none linux os"
         dialog.ok(upgrade40 +' - Portable', uitgeschakeld +upgrade40 +' '+Standalonefork,'', comingsoon +' build [COLOR dimgray] [B]([/B]Pi fork[B])[/B][/COLOR]') # DiSABLE indien v4.0 *online* #
-        #XvbmcUpgrade(url) # BLOCKED-4-NOW (v4.0) # 
+        #XvbmcUpgradePortable(url) # BLOCKED-4-NOW (v4.0) # 
 
 elif mode==2:
 #	Upgrade(v31)
     myplatform = Common.platform()
     print "Platform: " + str(myplatform)
     if myplatform == 'linux': # Open-/LibreELEC
-        dialog.ok(upgrade31 +' [B]- Pi[/B]', '[COLOR red]INSTALL: [/COLOR]' +upgrade31 +' '+raspberryPi +' !!!','', comingsoon +' image [COLOR dimgray] [B]([/B]Pi 2+3[B])[/B][/COLOR]') # AANPASSEN in Tip! indien v4.0 *online* #
-        XvbmcPi31(url)
+        dialog.ok(upgrade31 +' [B]- Pi[/B]', ingeschakeld +upgrade31 +' '+raspberryPi +' !!!','', comingsoon +' image [COLOR dimgray] [B]([/B]Pi 2+3[B])[/B][/COLOR]') # AANPASSEN in Tip! indien v4.0 *online* #
+        XvbmcPiFinal(url)
     else: #rest
         print "none linux os"
-        dialog.ok(upgrade31 +' - Portable', '[COLOR red]INSTALL: [/COLOR]' +upgrade31 +' '+Standalonefork +' !!!','', comingsoon +' build [COLOR dimgray] [B]([/B]Pi fork[B])[/B][/COLOR]') # AANPASSEN in Tip! indien v4.0 *online* #
-        XvbmcStandalone31(url)
+       #dialog.ok(upgrade31 +' - Portable', ingeschakeld +upgrade31 +' '+Standalonefork +' !!!','', comingsoon +' build [COLOR dimgray] [B]([/B]Pi fork[B])[/B][/COLOR]') # AANPASSEN in Tip! indien v4.0 *online* #
+        dialog.ok(upgrade31 +' - Portable', uitgeschakeld +upgrade31 +' '+Standalonefork +' !!!','', comingsoon +' build [COLOR dimgray] [B]([/B]Pi fork[B])[/B][/COLOR]') # AANPASSEN in Tip! indien v4.0 *online* #
+        #XvbmcPortableFinal(url)
 
 elif mode==3:
 #	Reset(null-"upgrade")
     myplatform = Common.platform()
     print "Platform: " + str(myplatform)
     if myplatform == 'linux': # Open-/LibreELEC
-        dialog.ok(resetos +' [B]- Pi[/B]', '[COLOR red]WARNING: [/COLOR]' +resetos +' '+raspberryPi +' -2- [B]Jarvis[/B]','', '[COLOR dimgray][B]NOTE: [/B][/COLOR]' +resetinfo +'!')
-        XvbmcPiReset(url)
+       #dialog.ok(resetos +' [B]- Pi[/B]', waarschuwing +resetos +' '+raspberryPi +' -2- [B]Jarvis[/B]','', '[COLOR dimgray][B]NOTE: [/B][/COLOR]' +resetinfo +'   [B]!!![/B]')
+        dialog.ok(resetos +' [B]- Pi[/B]', uitgeschakeld +resetos +' '+raspberryPi +' -2- [B]Jarvis[/B]','', '[COLOR dimgray][B]NOTE: [/B][/COLOR]' +resetinfo +'   [B]!!![/B]')
+        #XvbmcPiReset(url)
     else: #rest
         print "none linux os"
-        dialog.ok(resetos +' - Portable', '[COLOR red]WARNING: [/COLOR]' +resetos +' '+Standalonefork +' -2- default','', '[COLOR dimgray][B]NOTE: [/B][/COLOR]' +resetinfo +'!')
-        XvbmcPcReset(url)
+       #dialog.ok(resetos +' - Portable', waarschuwing +resetos +' '+Standalonefork +' -2- default','', '[COLOR dimgray][B]NOTE: [/B][/COLOR]' +resetinfo +'   [B]!!![/B]')
+        dialog.ok(resetos +' - Portable', uitgeschakeld +resetos +' '+Standalonefork +' -2- default','', '[COLOR dimgray][B]NOTE: [/B][/COLOR]' +resetinfo +'   [B]!!![/B]')
+        #XvbmcResetPortable(url)
 
 elif mode==4:
 #	ServicePack(url)
