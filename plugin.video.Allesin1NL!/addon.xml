@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.livemusic!"
-	name="live music!"
-	version="0.0.0.1"
+<addon id="plugin.video.Allesin1NL!"
+	name="Alles in 1 NL"
+	version="1.0.0"
 	provider-name="Xvbmc">
   <requires>
+    <import addon="repository.xvbmc" version="4.0.1"/>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.addon.common" version="2.0.0"/>
     <import addon="plugin.video.youtube" version="5.0.0"/>
@@ -12,8 +13,8 @@
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Live concerten </summary>
-    <description lang="en">Verzameling van youtube streams met concerten.Mis je een concert, meld het ons even op onze facebook pagina. Films/series/muziek chat by XvBMC Nederland© </description>
+    <summary lang="en">diverse streams </summary>
+    <description lang="en">Diverse youtube Streams  muziek,NL serie , Nl kids , NL Cabaret , Xvbmc handleidingen .Heb je zelf een Youtube stream gespot die hier wel in zou passen,meld het ons dan even op onze FB pagina Films/series/muziek chat by XvBMC Nederland© (xbmc nl Dutch)</description>
     <platform>all</platform>
     <forum>n/a</forum>
     <website>n/a</website>
