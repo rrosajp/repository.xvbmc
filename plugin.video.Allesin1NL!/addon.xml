@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.Allesin1NL!"
 	name="Alles in 1 NL"
-	version="1.0.0"
+	version="1.0.1"
 	provider-name="Xvbmc">
   <requires>
     <import addon="repository.xvbmc" version="4.0.1"/>
@@ -14,7 +14,7 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">diverse streams </summary>
-    <description lang="en">Diverse youtube Streams  muziek,NL serie , Nl kids , NL Cabaret , Xvbmc handleidingen .Heb je zelf een Youtube stream gespot die hier wel in zou passen,meld het ons dan even op onze FB pagina Films/series/muziek chat by XvBMC Nederland© (xbmc nl Dutch)</description>
+    <description lang="en">Diverse youtube Streams  muziek,NL serie , Nl kids , NL Cabaret , Xvbmc handleidingen .Door en Voor de Xvbmc community ,Heb je zelf een Youtube stream gespot die hier wel in zou passen,meld het ons dan even op onze FB pagina Films/series/muziek chat by XvBMC Nederland© (xbmc nl Dutch)</description>
     <platform>all</platform>
     <forum>n/a</forum>
     <website>n/a</website>
