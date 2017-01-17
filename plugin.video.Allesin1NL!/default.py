@@ -18,14 +18,18 @@ addonID = 'plugin.video.Allesin1NL!'
 addon = Addon(addonID, sys.argv)
 local = xbmcaddon.Addon(id=addonID)
 icon = local.getAddonInfo('icon')
+fanart="http://webneel.com/sites/default/files/images/blog/t-natuwal.jpg"
 
 YOUTUBE_CHANNEL_ID_1 = "UCLFLMHOWrWo0j6BXa2sbzBA/playlists"
 YOUTUBE_CHANNEL_ID_2 = "UC1IP4Z_Vk08aRXuund9JABQ/playlists"
 YOUTUBE_CHANNEL_ID_3 = "UCRuMH46tSZKjkCgeOtBVJzA/playlists"
-YOUTUBE_CHANNEL_ID_4 = "UCgolxyJTkhCUYXDTR758XxA/playlists"
-YOUTUBE_CHANNEL_ID_5 = "UCvL4gb8hiw74-Os1hJyCLIg/playlists"
-YOUTUBE_CHANNEL_ID_6 = "onlinefilmskijken"
-
+YOUTUBE_CHANNEL_ID_4 = "UCFI_PLLqAQeVbV5nKArUjFA/playlists"
+YOUTUBE_CHANNEL_ID_5 = "UCgolxyJTkhCUYXDTR758XxA/playlists"
+YOUTUBE_CHANNEL_ID_6 = "UCvL4gb8hiw74-Os1hJyCLIg/playlists"
+YOUTUBE_CHANNEL_ID_7 = "onlinefilmskijken"
+YOUTUBE_CHANNEL_ID_8 = "UCr-JBC1XPqJm_O9iR2M0Wjg/playlists"
+YOUTUBE_CHANNEL_ID_9 = "UC_xw6YBnlyLqYnopabbzfiQ/playlists"
+YOUTUBE_CHANNEL_ID_10 = "UChVwNC24jIlu98G0rGFtQZQ/playlists"
 
 
 
@@ -51,46 +55,75 @@ def main_list(params):
 
     plugintools.add_item( 
         #action="", 
-        title="Live Music",
-        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_1+"/",
-        thumbnail="http://www.country-muzika.cz/ikona_3.jpg",
-        folder=True )
-
+		title="Live Music",
+		url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_1+"/",
+		thumbnail="https://archive.org/download/fanart_20170116/Live%20Music%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+		folder=True )
+    plugintools.add_item( 
+        #action="",
+		title="NL Serie ",
+		url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_2+"/",
+		thumbnail="https://archive.org/download/fanart_20170116/NL%20SERIE%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+		folder=True )
     plugintools.add_item( 
         #action="", 
-        title="NL serie ",
-        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_2+"/",
-        thumbnail="http://cdn.marketplaceimages.windowsphone.com/v8/images/72385295-b52e-40a5-b095-70d254592b7d?imageType=ws_icon_large",
+		title="NL Kids",
+		url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_3+"/",
+		thumbnail="https://archive.org/download/fanart_20170116/NL%20KIDS%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
         folder=True )
-
     plugintools.add_item( 
         #action="", 
-        title="NL kids",
-        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_3+"/",
-        thumbnail="http://cms-tc.pbskids.org/global/show-icons/circle/400x400_oddSquad_show_circle.png?mtime=20160621150946",
-        folder=True )
-
+		title="NL Film",
+		url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_4+"/",
+		thumbnail="https://archive.org/download/fanart_20170116/NL%20FILM%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )		
     plugintools.add_item( 
         #action="", 
-        title="NL docu",
-        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_4+"/",
-        thumbnail="http://icons.iconarchive.com/icons/lajonard/movie-folder/256/Documentary-icon.png",
-        folder=True )
+        title="NL Docu",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_5+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/NL%20Docu%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+		folder=True )
     plugintools.add_item( 
         #action="", 
         title="NL Cabaret",
-        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_5+"/",
-        thumbnail="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQaTcZhBZcPQV1ZOWPjIpEgfqzwyaTgCXtB40Jsxbwqf9jtfgKh",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_6+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/NL%20CABARET%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
         folder=True )
     plugintools.add_item( 
         #action="", 
-        title="Xvbmc handleidingen",
-        url="plugin://plugin.video.youtube/user/"+YOUTUBE_CHANNEL_ID_6+"/",
-        thumbnail="https://yt3.ggpht.com/-Kyyiux7fXFo/AAAAAAAAAAI/AAAAAAAAAAA/YdLc90hVGO8/s100-c-k-no-mo-rj-c0xffffff/photo.jpg",
+        title="Xvbmc Handleidingen",
+        url="plugin://plugin.video.youtube/user/"+YOUTUBE_CHANNEL_ID_7+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/Xvbmc%20handleidingen%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
         folder=True )
-   
-		
+    plugintools.add_item( 
+        #action="", 
+        title="Vlaamse Content",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_8+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/Vlaams%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )
+    plugintools.add_item( 
+        #action="", 
+        title="NL Sport",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_9+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/NL%20Sport%20icon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )
+    plugintools.add_item( 
+        #action="", 
+        title=".:C.T.R.L:. Gaming Room",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_10+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/CtrlGamingIcon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )		
 		
 
-    
+
 run()
