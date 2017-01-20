@@ -896,8 +896,8 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 </addon>
 
 <addon id="script.xvbmc.dev"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [I][COLOR green] v3[/COLOR][/I]"
-       version="3.05"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [I][COLOR darkgreen] v3[/COLOR][/I]"
+       version="3.06"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
