@@ -20,6 +20,8 @@ import downloader
 # Refresh addon environment
 # xbmc.executebuiltin("UpdateLocalAddons")
 
+testedfirmware = '-29dec_2016 -LE703'     # knownworkingfirmware
+xvbmcbuildfirm = '-20jan_2017 -v31_image' # currentxvbmcfirmware 
 
 # ProgTitle="XvBMC DEV" #
 dialog = xbmcgui.Dialog()
@@ -31,12 +33,12 @@ def showMenu():
     
     # Create list of menu items
     userchoice = []
-    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Cutting Edge)")
-    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -29dec_2016 -LE703)")
-    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -20jan_2017 -v31_image)")
-    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3)")
-    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1)")
-    userchoice.append("[B][COLOR white]Exit[/COLOR][/B]")
+    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Cutting Edge)')
+    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware '+testedfirmware +')')
+    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware '+xvbmcbuildfirm +')')
+    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3)')
+    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1)')
+    userchoice.append('[B][COLOR white]Exit[/COLOR][/B]')
     
     # Display the menu
     inputchoice = xbmcgui.Dialog().select("XvBMC Nederland #DEV# Menu", 
@@ -44,30 +46,30 @@ def showMenu():
     # Process menu actions
     
     #  /storage/.kodi/addons/script.xvbmc.dev/resources/firmwarerecent.sh
-    if userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Cutting Edge)":
+    if userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Cutting Edge)':
         FirmwareRecent()
     
     #    /storage/.kodi/addons/script.xvbmc.dev/resources/firmwaretested.sh
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -29dec_2016 -LE703)":
+    elif userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware '+testedfirmware +')':
         FirmwareTested()
     
     #    /storage/.kodi/addons/script.xvbmc.dev/resources/firmwareimage.sh
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -20jan_2017 -v31_image)":
+    elif userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware '+xvbmcbuildfirm +')':
         FirmwareImage()
     
-	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.3.tar
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3)":
+	#    /releases.libreelec.tv/LibreELEC-RPi2.arm-etceteraetceteraetcetera
+    elif userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3)':
         SystemOS()
     
-    #    http://openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-7.0.1.tar
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1)":
+    #    /openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-etceteraetceteraetcetera
+    elif userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1)':
         OpenElecTV()
 
 
 class FirmwareRecentClass(xbmcgui.Window):
   def __init__(self):
     #  dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry current firmware','Update -2- Most Recent PI firmware?'):
+    if dialog.yesno('XvBMC-NL Raspberry current firmware','Update most recent PI2+3 firmware?'):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.dev/resources/firmwarerecent.sh"
 	os.system(bashCommand)
 	dialog.ok("XvBMC Nederland", 'XvBMC most recent Firmware flashed','', 'Press OK to reboot...')
@@ -76,7 +78,7 @@ class FirmwareRecentClass(xbmcgui.Window):
 class FirmwareTestedClass(xbmcgui.Window):
   def __init__(self):
     #  dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry advised Firmware','Flash 20 may 2016 PI firmware?'):
+    if dialog.yesno('XvBMC-NL Raspberry advised firmware','Flash recent/verified firmware: '+testedfirmware +' ?'):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.dev/resources/firmwaretested.sh"
 	os.system(bashCommand)
 	dialog.ok("XvBMC Nederland", 'XvBMC advised Firmware flashed','', 'Press OK to reboot...')
@@ -85,7 +87,7 @@ class FirmwareTestedClass(xbmcgui.Window):
 class FirmwareImageClass(xbmcgui.Window):
   def __init__(self):
     #  dialog = xbmcgui.Dialog()
-    if dialog.yesno('XvBMC NL Raspberry Firmware Reset','RE-Flash XvBMC most recent v3 PI firmware?'):
+    if dialog.yesno('XvBMC-NL Raspberry firmware reset','RE-Flash current XvBMC-image firmware: '+xvbmcbuildfirm +' ?'):
         bashCommand = "/bin/bash /storage/.kodi/addons/script.xvbmc.dev/resources/firmwareimage.sh"
 	os.system(bashCommand)
 	dialog.ok("XvBMC Nederland", 'XvBMC default Firmware re-flashed','', 'Press OK to reboot...')
