@@ -32,8 +32,8 @@ def showMenu():
     # Create list of menu items
     userchoice = []
     userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Cutting Edge)")
-    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -20 may 2016) =OLD")
-    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Current v3 image) =OLD")
+    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -29dec_2016 -LE703)")
+    userchoice.append("XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -20jan_2017 -v31_image)")
     userchoice.append("XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3)")
     userchoice.append("XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1)")
     userchoice.append("[B][COLOR white]Exit[/COLOR][/B]")
@@ -48,11 +48,11 @@ def showMenu():
         FirmwareRecent()
     
     #    /storage/.kodi/addons/script.xvbmc.dev/resources/firmwaretested.sh
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -20 may 2016) =OLD":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -29dec_2016 -LE703)":
         FirmwareTested()
     
     #    /storage/.kodi/addons/script.xvbmc.dev/resources/firmwareimage.sh
-    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Current v3 image) =OLD":
+    elif userchoice[inputchoice] == "XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -20jan_2017 -v31_image)":
         FirmwareImage()
     
 	#    http://releases.libreelec.tv/LibreELEC-RPi2.arm-7.0.3.tar
