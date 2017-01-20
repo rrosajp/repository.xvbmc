@@ -897,7 +897,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 
 <addon id="script.xvbmc.dev"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [I][COLOR darkgreen] v3[/COLOR][/I]"
-       version="3.06"
+       version="3.07"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -908,8 +908,8 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC Nederland - #DEV# Corner (v3) RPi2+3</summary>
-    <description lang="en">XvBMC #DEV# ; Firmware &amp; LibreELEC + OpenElec OS-updates (XvBMC-NL v3) Raspberry Pi 2+3</description>
+    <summary lang="en">XvBMC Nederland - #DEV# Corner (v3.1) RPi2+3</summary>
+    <description lang="en">XvBMC #DEV# ; Firmware &amp; LibreELEC + OpenElec OS-updates Raspberry Pi 2+3 (XvBMC-NL v3.1)</description>
 	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!! more info @ http://bit.ly/XvBMC-NL !!!</disclaimer>
 	<platform>all</platform>
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
