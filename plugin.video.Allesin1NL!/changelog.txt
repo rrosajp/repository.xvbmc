@@ -1,8 +1,11 @@
 [B]Version 1.0.0[/B]
 intitial release [XvBMC Nederland]
 [B]Version 1.0.1[/B]
-added nlFilm,vlaamse,ctrl gaming,NLsport
+added nlFilm,Vlaams,ctrl gaming,NLsport
 [B]Version 1.0.2[/B]
-added Cirque du solei
+added Cirque du soleil
+[B]Version 1.0.3[/B]
+added Nl racing
+
 
 

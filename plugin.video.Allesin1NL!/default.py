@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# Documentaries on YouTube by coldkeys
+# Credits to coldkeys
 #------------------------------------------------------------
 # License: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
 # Based on code from youtube addon
@@ -31,6 +31,7 @@ YOUTUBE_CHANNEL_ID_8 = "UCr-JBC1XPqJm_O9iR2M0Wjg/playlists"
 YOUTUBE_CHANNEL_ID_9 = "UC_xw6YBnlyLqYnopabbzfiQ/playlists"
 YOUTUBE_CHANNEL_ID_10 = "UChVwNC24jIlu98G0rGFtQZQ/playlists"
 YOUTUBE_CHANNEL_ID_11 = "UC2n5AM7vAcMeW8SLmkjCeng/playlists"
+YOUTUBE_CHANNEL_ID_12 = "UC3cxvPF1mfu1avdHO6Y9Nnw/playlists"
 
 
 
@@ -126,11 +127,17 @@ def main_list(params):
         folder=True )		
     plugintools.add_item( 
         #action="", 
-        title="Cirque du solei",
+        title="Cirque du soleil",
         url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_11+"/",
         thumbnail="https://archive.org/download/fanart_20170116/CircusIcon.png",
 		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
         folder=True )	
-
+    plugintools.add_item( 
+        #action="", 
+        title="NL Racing",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_12+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/NlRacing.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )
 
 run()
