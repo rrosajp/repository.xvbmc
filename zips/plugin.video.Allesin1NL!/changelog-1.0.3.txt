@@ -6,8 +6,6 @@ added nlFilm,Vlaams,ctrl gaming,NLsport
 added Cirque du soleil
 [B]Version 1.0.3[/B]
 added Nl racing
-[B]Version 1.0.4[/B]
-added DanceTrippin TV,Van Alles Wat NL,Muziek uit Limburg
 
 
 

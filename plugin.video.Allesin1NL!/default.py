@@ -32,13 +32,16 @@ YOUTUBE_CHANNEL_ID_9 = "UC_xw6YBnlyLqYnopabbzfiQ/playlists"
 YOUTUBE_CHANNEL_ID_10 = "UChVwNC24jIlu98G0rGFtQZQ/playlists"
 YOUTUBE_CHANNEL_ID_11 = "UC2n5AM7vAcMeW8SLmkjCeng/playlists"
 YOUTUBE_CHANNEL_ID_12 = "UC3cxvPF1mfu1avdHO6Y9Nnw/playlists"
+YOUTUBE_CHANNEL_ID_13 = "UC1kNe57F-85trrYC7tbOSXA/playlists"
+YOUTUBE_CHANNEL_ID_14 = "UCUfsrSL6DyWSkkpddlY21-Q/playlists"
+YOUTUBE_CHANNEL_ID_15 = "DanceTrippinOfficial"
 
 
 
 
 # Entry point
 def run():
-    plugintools.log("docu.run")
+    plugintools.log("XvBMC.run")
     
     # Get params
     params = plugintools.get_params()
@@ -53,7 +56,7 @@ def run():
 
 # Main menu
 def main_list(params):
-    plugintools.log("docu.main_list "+repr(params))
+    plugintools.log("XvBMC.main_list "+repr(params))
 
     plugintools.add_item( 
         #action="", 
@@ -137,6 +140,27 @@ def main_list(params):
         title="NL Racing",
         url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_12+"/",
         thumbnail="https://archive.org/download/fanart_20170116/NlRacing.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )
+    plugintools.add_item( 
+        #action="", 
+        title="Van alles en nog wat NL",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_13+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/vanalles.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )	
+    plugintools.add_item( 
+        #action="", 
+        title="Muziek Uit Limburg",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_14+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/NlLimburgIcon.png",
+		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )
+    plugintools.add_item( 
+        #action="", 
+        title="DanceTrippin TV",
+        url="plugin://plugin.video.youtube/user/"+YOUTUBE_CHANNEL_ID_15+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/DanceIcon.png",
 		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
         folder=True )
 
