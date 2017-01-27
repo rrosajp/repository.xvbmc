@@ -24,8 +24,7 @@ import string
 import random
 import hashlib
 import kodi
-import log_utils
-import dom_parser
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -35,7 +34,7 @@ from salts_lib.utils2 import i18n
 import scraper
 
 
-BASE_URL = 'http://flixanity.in'
+BASE_URL = 'http://flixanity.watch'
 EMBED_URL = '/ajax/embeds.php'
 SEARCH_URL = '/api/v1/cautare/upd'
 KEY = 'MEE2cnUzNXl5aTV5bjRUSFlwSnF5MFg4MnRFOTVidFY='
@@ -100,7 +99,7 @@ class Scraper(scraper.Scraper):
 
         return sources
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         self.__get_token()
         if self.__token is not None:

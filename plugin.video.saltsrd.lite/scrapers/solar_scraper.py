@@ -63,23 +63,26 @@ class Scraper(scraper.Scraper):
 
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         if video_type == VIDEO_TYPES.TVSHOW:
             return self.__tv_search(title, year)
         else:
             results = []
-            html = self. _http_get(self.base_url, params={'s': title}, cache_limit=1)
+            html = self. _http_get(self.base_url, params={'s': title}, cache_limit=8)
             titles = dom_parser.parse_dom(html, 'a', {'class': 'coverImage'}, ret='title')
             links = dom_parser.parse_dom(html, 'a', {'class': 'coverImage'}, ret='href')
+            norm_title = scraper_utils.normalize_title(title)
             for match_title_year, match_url in zip(titles, links):
                 if 'Season' in match_title_year and 'Episode' in match_title_year: continue
                 match_title, match_year = scraper_utils.extra_year(match_title_year)
+                match_norm_title = scraper_utils.normalize_title(match_title)
+                if (norm_title not in match_norm_title) and (match_norm_title not in norm_title): continue
                 if not year or not match_year or year == match_year:
                     result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
                     results.append(result)
         return results
 
-    def __tv_search(self, title, year):
+    def __tv_search(self, title, year):  # @UnusedVariable
         results = []
         url = urlparse.urljoin(self.base_url, '/watch-series')
         html = self._http_get(url, cache_limit=48)

@@ -17,7 +17,7 @@
 """
 import re
 import urlparse
-import log_utils
+import log_utils  # @UnusedImport
 import kodi
 import dom_parser
 from salts_lib import scraper_utils
@@ -81,9 +81,9 @@ class Scraper(scraper.Scraper):
             
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/bestmatch-search-%s.html')
+        search_url = urlparse.urljoin(self.base_url, '/bestmatch-search-movies-%s.html')
         search_title = title.replace(' ', '-')
         search_title = re.sub('[^A-Za-z0-9-]', '', search_title).lower()
         search_url = search_url % (search_title)

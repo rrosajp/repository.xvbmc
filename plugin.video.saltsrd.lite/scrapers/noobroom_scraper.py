@@ -16,11 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urllib2
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -100,7 +99,7 @@ class Scraper(scraper.Scraper):
         airdate_pattern = "href='([^']+)(?:[^>]+>){3}\s*-\s*\(Original Air Date:\s+{day}-{month}-{year}"
         return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern, airdate_pattern)
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         if not self.include_paid and video_type != VIDEO_TYPES.MOVIE: return []
         search_url = urlparse.urljoin(self.base_url, '/search.php')
         html = self._http_get(search_url, params={'q': title}, cache_limit=.25)

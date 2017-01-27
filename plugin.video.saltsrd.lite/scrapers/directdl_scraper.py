@@ -20,7 +20,7 @@ import urllib
 import urlparse
 
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
@@ -113,7 +113,7 @@ class Scraper(scraper.Scraper):
         settings = scraper_utils.disable_sub_check(settings)
         return settings
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search?query=')
         search_url += title.replace("'", "")

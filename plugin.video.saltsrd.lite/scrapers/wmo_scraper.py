@@ -25,7 +25,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://watchmovies.nz/'
+BASE_URL = 'http://watchmovies-online.is'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -65,7 +65,7 @@ class Scraper(scraper.Scraper):
                 hosters.append(hoster)
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         html = self._http_get(self.base_url, params={'s': title, 'search': ''}, cache_limit=8)
         for item in dom_parser.parse_dom(html, 'div', {'class': '[^"]*movie_poster[^"]*'}):

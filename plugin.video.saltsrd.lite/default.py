@@ -39,9 +39,9 @@ from salts_lib import gui_utils
 from salts_lib import strings
 from salts_lib import worker_pool
 from salts_lib import image_scraper
-from salts_lib.constants import *
+from salts_lib.constants import *  # @UnusedWildImport
 from salts_lib.utils2 import i18n
-from scrapers import *  # import all scrapers into this namespace
+from scrapers import *  # import all scrapers into this namespace @UnusedWildImport
 from scrapers import ScraperVideo
 
 TOKEN = kodi.get_setting('trakt_oauth_token')
@@ -70,6 +70,7 @@ def main_menu():
         profile = trakt_api.get_user_profile()
         kodi.set_setting('trakt_user', '%s (%s)' % (profile['username'], profile['name']))
             
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.SETTINGS)
@@ -83,6 +84,7 @@ def settings_menu():
     kodi.create_item({'mode': MODES.SHOW_VIEWS}, i18n('set_default_views'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.BROWSE_URLS}, i18n('remove_cached_urls'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.SETTINGS}, 'This addon developed and supported at www.tvaddons.ag', thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.BROWSE, ['section'])
@@ -95,7 +97,7 @@ def browse_menu(section):
     if utils2.menu_on('anticipated'): kodi.create_item({'mode': MODES.ANTICIPATED, 'section': section}, i18n('anticipated') % (section_label), thumb=utils2.art('anticipated.png'), fanart=utils2.art('fanart.jpg'))
     if utils2.menu_on('recent'): kodi.create_item({'mode': MODES.RECENT, 'section': section}, i18n('recently_updated') % (section_label), thumb=utils2.art('recent.png'), fanart=utils2.art('fanart.jpg'))
     if utils2.menu_on('mosts'): kodi.create_item({'mode': MODES.MOSTS, 'section': section}, i18n('mosts') % (section_label2), thumb=utils2.art('mosts.png'), fanart=utils2.art('fanart.jpg'))
-    if utils2.menu_on('genres'): kodi.create_item({'mode': MODES.GENRES, 'section': section}, i18n('genres'), thumb=utils2.art('popular.png'), fanart=utils2.art('fanart.jpg'))
+    if utils2.menu_on('genres'): kodi.create_item({'mode': MODES.GENRES, 'section': section}, i18n('genres'), thumb=utils2.art('anticipated.png'), fanart=utils2.art('fanart.jpg'))
     add_section_lists(section)
     if TOKEN:
         if utils2.menu_on('on_deck'): kodi.create_item({'mode': MODES.SHOW_BOOKMARKS, 'section': section}, i18n('trakt_on_deck'), thumb=utils2.art('on_deck.png'), fanart=utils2.art('fanart.jpg'))
@@ -120,7 +122,7 @@ def browse_menu(section):
     if utils2.menu_on('search'): add_search_item({'mode': MODES.SAVED_SEARCHES, 'section': section}, i18n('saved_searches'), utils2.art(section_params['search_img']), MODES.CLEAR_SAVED)
     if OFFLINE:
         kodi.notify(msg='[COLOR blue]***[/COLOR][COLOR red] %s [/COLOR][COLOR blue]***[/COLOR]' % (i18n('trakt_api_offline')))
-    kodi.set_content(CONTENT_TYPES.FILES)
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 
@@ -129,7 +131,7 @@ def browse_genres(section):
     for genre in trakt_api.get_genres(section):
         if genre['slug'] == 'none': continue
         kodi.create_item({'mode': MODES.SHOW_GENRE, 'genre': genre['slug'], 'section': section}, genre['name'], utils2.art('%s.png' % (genre['slug'])), fanart=utils2.art('fanart.jpg'))
-    kodi.set_content(CONTENT_TYPES.FILES)
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.SHOW_GENRE, ['genre', 'section'], ['page'])
@@ -257,6 +259,10 @@ def auth_trakt():
 def install_themepak():
     xbmc.executebuiltin('RunPlugin(plugin://script.salts.themepak)')
 
+@url_dispatcher.register(MODES.INSTALL_CACHE)
+def install_cache():
+    xbmc.executebuiltin('RunPlugin(plugin://script.module.image_cache)')
+
 @url_dispatcher.register(MODES.RESET_BASE_URL)
 def reset_base_url():
     with kodi.WorkingDialog():
@@ -344,6 +350,7 @@ def mosts_menu(section):
     for mode in modes:
         for period in ['weekly', 'monthly', 'all']:
             kodi.create_item({'mode': mode[0], 'section': section, 'period': period}, i18n(mode[1] % (period)), thumb=utils2.art('%s.png' % (mode[1] % (period))), fanart=utils2.art('fanart.jpg'))
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.PLAYED, ['mode', 'section', 'period'], ['page'])
@@ -569,6 +576,7 @@ def browse_lists(section):
     total_items = len(lists)
     for user_list in lists:
         add_list_item(section, user_list, total_items)
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 def add_list_item(section, user_list, total_items=0):
@@ -609,6 +617,7 @@ def browse_liked_lists(section, page=1):
         query['page'] = int(page) + 1
         label = '%s >>' % (i18n('next_page'))
         kodi.create_item(query, label, thumb=utils2.art('nextpage.png'), fanart=utils2.art('fanart.jpg'), is_folder=True)
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.OTHER_LISTS, ['section'])
@@ -620,6 +629,7 @@ def browse_other_lists(section):
     total_items = len(lists)
     for other_list in lists:
         add_other_list_item(MODES.OTHER_LISTS, section, other_list, total_items)
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 def add_other_list_item(mode, section, other_list, total_items=0):
@@ -778,6 +788,7 @@ def show_rewatch():
     slug = kodi.get_setting('rewatch_slug')
     if not slug:
         kodi.create_item({'mode': MODES.PICK_REWATCH_LIST, 'section': SECTIONS.TV}, i18n('pick_rewatch_list'), is_folder=False, is_playable=False)
+        kodi.set_content(CONTENT_TYPES.ADDONS)
         kodi.end_of_directory()
     else:
         try:
@@ -1037,7 +1048,7 @@ def set_list(mode, slug, section):
     kodi.set_setting(setting, slug)
 
 @url_dispatcher.register(MODES.SEARCH, ['section'])
-def search(section, search_text=None):
+def search(section, search_text=None):  # @UnusedVariable
     section_params = utils2.get_section_params(section)
     heading = '%s %s' % (i18n('search'), section_params['label_plural'])
     search_text = kodi.get_keyboard(heading)
@@ -1068,6 +1079,7 @@ def recent_searches(section):
         queries = {'mode': MODES.SEARCH_RESULTS, 'section': section, 'query': search_text}
         label = '[%s %s] %s' % (section_params['label_single'], i18n('search'), search_text)
         kodi.create_item(queries, label, thumb=utils2.art(section_params['search_img']), fanart=utils2.art('fanart.png'), is_folder=True, menu_items=menu_items)
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.SAVED_SEARCHES, ['section'])
@@ -1080,6 +1092,7 @@ def saved_searches(section):
         queries = {'mode': MODES.SEARCH_RESULTS, 'section': section, 'query': search[1]}
         label = '[%s %s] %s' % (section_params['label_single'], i18n('search'), search[1])
         kodi.create_item(queries, label, thumb=utils2.art(section_params['search_img']), fanart=utils2.art('fanart.png'), is_folder=True, menu_items=menu_items)
+    kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
 @url_dispatcher.register(MODES.CLEAR_RECENT, ['section'])
@@ -1125,7 +1138,7 @@ def clear_saved(section):
 @url_dispatcher.register(MODES.SEARCH_RESULTS, ['section', 'query'], ['page'])
 def search_results(section, query, page=1):
     results = trakt_api.search(section, query, page)
-    make_dir_from_list(section, results, query={'mode': MODES.SEARCH_RESULTS, 'section': section, 'query': query}, page=page)
+    make_dir_from_list(section, results, query={'mode': MODES.SEARCH_RESULTS, 'section': section, 'query': query}, page=page, images=False)
 
 @url_dispatcher.register(MODES.SEASONS, ['trakt_id', 'title', 'year'], ['tvdb_id'])
 def browse_seasons(trakt_id, title, year, tvdb_id=None):
@@ -1169,8 +1182,8 @@ def browse_episodes(trakt_id, season):
 @url_dispatcher.register(MODES.DOWNLOAD_SOURCE, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate'])
 @url_dispatcher.register(MODES.AUTOPLAY, ['mode', 'video_type', 'title', 'year', 'trakt_id'], ['season', 'episode', 'ep_title', 'ep_airdate'])
 def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', ep_title='', ep_airdate=''):
-    plugin_name = xbmc.getInfoLabel('Container.PluginName')
-    #if plugin_name not in ['', 'plugin.video.saltsrd.lite']:
+    cool_down_active = kodi.get_setting('cool_down') == 'true'
+    #if not salts_utils.is_salts() or cool_down_active:
         #kodi.notify(msg=i18n('playback_limited'))
         #return False
     
@@ -1279,6 +1292,7 @@ def get_sources(mode, video_type, title, year, trakt_id, season='', episode='', 
         if pseudo_tv == 'true' or (mode == MODES.GET_SOURCES and kodi.get_setting('auto-play') == 'true') or mode == MODES.AUTOPLAY:
             auto_play_sources(hosters, video_type, trakt_id, season, episode)
         else:
+            plugin_name = xbmc.getInfoLabel('Container.PluginName')
             if kodi.get_setting('source-win') == 'Dialog' or plugin_name == '':
                 stream_url, direct = pick_source_dialog(hosters)
                 return play_source(mode, stream_url, direct, video_type, trakt_id, season, episode)
@@ -1382,11 +1396,12 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, season='', episo
             kodi.notify(msg=i18n('resolve_failed') % (i18n('no_stream_found')), duration=7500)
         return False
 
-    with kodi.WorkingDialog():
+    with kodi.WorkingDialog() as wd:
         if direct:
             log_utils.log('Treating hoster_url as direct: %s' % (hoster_url), log_utils.LOGDEBUG, 'play_source')
             stream_url = hoster_url
         else:
+            wd.update(25)
             hmf = urlresolver.HostedMediaFile(url=hoster_url)
             if not hmf:
                 log_utils.log('Indirect hoster_url not supported by urlresolver: %s' % (hoster_url), log_utils.LOGDEBUG, 'play_source')
@@ -1403,6 +1418,7 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, season='', episo
                     except: msg = hoster_url
                     kodi.notify(msg=i18n('resolve_failed') % (msg), duration=7500)
                     return False
+        wd.update(50)
     
     resume_point = 0
     pseudo_tv = xbmcgui.Window(10000).getProperty('PseudoTVRunning').lower()
@@ -1412,8 +1428,9 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, season='', episo
                 resume_point = salts_utils.get_bookmark(trakt_id, season, episode)
                 log_utils.log('Resume Point: %s' % (resume_point), log_utils.LOGDEBUG, 'play_source')
     
-    from_library = xbmc.getInfoLabel('Container.PluginName') == ''
-    with kodi.WorkingDialog():
+    with kodi.WorkingDialog() as wd:
+        from_library = xbmc.getInfoLabel('Container.PluginName') == ''
+        wd.update(50)
         win = xbmcgui.Window(10000)
         win.setProperty('salts.playing', 'True')
         win.setProperty('salts.playing.trakt_id', str(trakt_id))
@@ -1459,11 +1476,14 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, season='', episo
                 file_name = utils2.filename_from_title(movie_meta['title'], video_type, movie_meta['year'])
         except TransientTraktError as e:
             log_utils.log('During Playback: %s' % (str(e)), log_utils.LOGWARNING, 'play_source')  # just log warning if trakt calls fail and leave meta and art blank
-    
-        if mode in [MODES.DOWNLOAD_SOURCE, MODES.DIRECT_DOWNLOAD]:
-            utils.download_media(stream_url, path, file_name, kodi.Translations(strings.STRINGS))
-            return True
-    
+        wd.update(75)
+
+    if mode in [MODES.DOWNLOAD_SOURCE, MODES.DIRECT_DOWNLOAD]:
+        utils.download_media(stream_url, path, file_name, kodi.Translations(strings.STRINGS))
+        return True
+
+    with kodi.WorkingDialog() as wd:
+        wd.update(75)
         if video_type == VIDEO_TYPES.EPISODE and utils2.srt_download_enabled() and show_meta:
             srt_path = download_subtitles(kodi.get_setting('subtitle-lang'), show_meta['title'], show_meta['year'], season, episode)
             if utils2.srt_show_enabled() and srt_path:
@@ -1476,6 +1496,7 @@ def play_source(mode, hoster_url, direct, video_type, trakt_id, season='', episo
         except: pass
         listitem.setPath(stream_url)
         listitem.setInfo('video', info)
+        wd.update(100)
 
     if mode == MODES.RESOLVE_SOURCE or from_library or utils2.from_playlist():
         xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
@@ -1559,6 +1580,11 @@ def build_source_dir(prev_mode, video_type, trakt_id, season='', episode=''):
         item['label'] = utils2.format_source_label(item)
         queries = {'mode': MODES.SET_VIEW, 'content_type': CONTENT_TYPES.FILES}
         menu_items.append((i18n('set_as_sources_view'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
+        if next_mode == MODES.RESOLVE_SOURCE:
+            queries = {'mode': MODES.DIRECT_DOWNLOAD, 'class_url': item['url'], 'direct': item['direct'], 'video_type': video_type, 'trakt_id': trakt_id,
+                       'season': season, 'episode': episode, 'class_name': item['class'].get_name()}
+            menu_items.append((i18n('download_source'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
+        
         queries = {'mode': next_mode, 'class_url': item['url'], 'direct': item['direct'], 'video_type': video_type, 'trakt_id': trakt_id,
                    'season': season, 'episode': episode, 'class_name': item['class'].get_name()}
         kodi.create_item(queries, utils2.cleanse_title(item['label']), is_folder=False, is_playable=playable, total_items=hosters_len, menu_items=menu_items)
@@ -1844,7 +1870,11 @@ def add_to_list(section, id_type, show_id, slug=None):
         kodi.notify(msg=i18n('item_to_list'))
 
 def add_many_to_list(section, items, slug=None):
-    if not slug: slug, _name = utils.choose_list(Trakt_API, kodi.Translations(strings.STRINGS))
+    if not slug:
+        result = utils.choose_list(Trakt_API, kodi.Translations(strings.STRINGS))
+        if result:
+            slug, _name = result
+            
     if slug == utils.WATCHLIST_SLUG:
         response = trakt_api.add_to_watchlist(section, items)
     elif slug:
@@ -1995,6 +2025,12 @@ def clean_subs():
         else:
             trakt_api.remove_from_list(SECTIONS.TV, slug, del_items)
 
+@url_dispatcher.register(MODES.REFRESH_IMAGES, ['video_type', 'ids'], ['season', 'episode', 'screenshots'])
+def refresh_images(video_type, ids, season='', episode='', screenshots=False):
+    ids = json.loads(ids)
+    image_scraper.get_images(video_type, ids, season, episode, screenshots, cached=False)
+    kodi.refresh_container()
+
 @url_dispatcher.register(MODES.FLUSH_CACHE)
 def flush_cache():
     dlg = xbmcgui.Dialog()
@@ -2004,9 +2040,20 @@ def flush_cache():
     yes = i18n('keep')
     no = i18n('delete')
     if dlg.yesno(i18n('flush_web_cache'), ln1, ln2, ln3, yes, no):
-        with kodi.WorkingDialog():
-            db_connection.flush_cache()
-            kodi.refresh_container()
+        with kodi.WorkingDialog() as wd:
+            start = None
+            while not xbmc.abortRequested:
+                days_left = db_connection.prune_cache(prune_age=0)
+                if start is None: start = days_left
+                if days_left:
+                    wd.update(100 * (start - days_left) / start)
+                else:
+                    # call flush_cache at the end to trigger vacuum for SQLITE
+                    wd.update(100)
+                    db_connection.flush_cache()
+                    break
+            
+        kodi.refresh_container()
 
 @url_dispatcher.register(MODES.FLUSH_IMAGES)
 def flush_image_cache():
@@ -2045,6 +2092,13 @@ def auth_torba():
         pass
     else:
         kodi.notify(i18n('torba_acct_auth'), i18n('torba_auth_failed'))
+
+@url_dispatcher.register(MODES.RESET_TORBA)
+def reset_torba():
+    kodi.close_all()
+    kodi.sleep(500)  # sleep or reset won't work for some reason
+    torba_scraper.Scraper().reset_auth()
+    kodi.notify(i18n('torba_acct_auth'), i18n('torba_auth_reset'))
 
 @url_dispatcher.register(MODES.RESET_DB)
 def reset_db():
@@ -2252,11 +2306,12 @@ def write_strm(stream, path, video_type, title, year, trakt_id, season='', episo
 def show_pickable_list(slug, pick_label, pick_mode, section):
     if not slug:
         kodi.create_item({'mode': pick_mode, 'section': section}, pick_label, is_folder=False, is_playable=False)
+        kodi.set_content(CONTENT_TYPES.ADDONS)
         kodi.end_of_directory()
     else:
         show_list(section, slug)
 
-def make_dir_from_list(section, list_data, slug=None, query=None, page=None):
+def make_dir_from_list(section, list_data, slug=None, query=None, page=None, images=True):
     section_params = utils2.get_section_params(section)
     watched = {}
     in_collection = {}
@@ -2308,7 +2363,7 @@ def make_dir_from_list(section, list_data, slug=None, query=None, page=None):
 
         show['in_collection'] = in_collection.get(trakt_id, False)
 
-        liz, liz_url = make_item(section_params, show, menu_items)
+        liz, liz_url = make_item(section_params, show, menu_items, images)
         xbmcplugin.addDirectoryItem(int(sys.argv[1]), liz_url, liz, isFolder=section_params['folder'], totalItems=total_items)
 
     if query and page and total_items >= int(kodi.get_setting('list_size')):
@@ -2382,7 +2437,8 @@ def make_dir_from_cal(mode, start_date, days):
 
 def make_season_item(season, info, trakt_id, title, year, tvdb_id):
     label = '%s %s' % (i18n('season'), season['number'])
-    art = image_scraper.get_images(VIDEO_TYPES.SEASON, {'trakt': trakt_id, 'tvdb': tvdb_id}, season['number'])
+    ids = {'trakt': trakt_id, 'tvdb': tvdb_id}
+    art = image_scraper.get_images(VIDEO_TYPES.SEASON, ids, season['number'])
     liz = utils.make_list_item(label, season, art)
     log_utils.log('Season Info: %s' % (info), log_utils.LOGDEBUG, 'season')
     info['mediatype'] = 'season'
@@ -2404,6 +2460,8 @@ def make_season_item(season, info, trakt_id, title, year, tvdb_id):
 
     queries = {'mode': MODES.SET_VIEW, 'content_type': CONTENT_TYPES.SEASONS}
     menu_items.append((i18n('set_as_season_view'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
+    queries = {'mode': MODES.REFRESH_IMAGES, 'video_type': VIDEO_TYPES.SEASON, 'ids': json.dumps(ids), 'season': season['number']}
+    menu_items.append((i18n('refresh_images'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
     queries = {'mode': MODES.SET_URL_SEARCH, 'video_type': VIDEO_TYPES.SEASON, 'title': title, 'year': year, 'trakt_id': trakt_id, 'season': season['number']}
     menu_items.append((i18n('set_rel_url_search'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
     queries = {'mode': MODES.SET_URL_MANUAL, 'video_type': VIDEO_TYPES.SEASON, 'title': title, 'year': year, 'trakt_id': trakt_id, 'season': season['number']}
@@ -2489,6 +2547,9 @@ def make_episode_item(show, episode, show_subs=True, menu_items=None, screenshot
         watched = True
         label = i18n('mark_as_watched')
 
+    queries = {'mode': MODES.REFRESH_IMAGES, 'video_type': VIDEO_TYPES.EPISODE, 'ids': json.dumps(show['ids']), 'season': episode['season'],
+               'episode': episode['number'], 'screenshots': screenshots}
+    menu_items.append((i18n('refresh_images'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
     if TOKEN:
         show_id = utils2.show_id(show)
         queries = {'mode': MODES.RATE, 'section': SECTIONS.TV, 'season': episode['season'], 'episode': episode['number']}
@@ -2514,17 +2575,27 @@ def make_episode_item(show, episode, show_subs=True, menu_items=None, screenshot
     liz.addContextMenuItems(menu_items, replaceItems=True)
     return liz, liz_url
 
-def make_item(section_params, show, menu_items=None):
+def make_item(section_params, show, menu_items=None, images=True):
     if menu_items is None: menu_items = []
     if not isinstance(show['title'], basestring): show['title'] = ''
     show['title'] = re.sub(' \(\d{4}\)$', '', show['title'])
     label = '%s (%s)' % (show['title'], show['year'])
-    art = image_scraper.get_images(section_params['video_type'], show['ids'])
-    liz = utils.make_list_item(label, show, art)
     trakt_id = show['ids']['trakt']
+    art = image_scraper.get_images(section_params['video_type'], show['ids'], cache_only=not images)
+    if kodi.get_setting('include_people') == 'true':
+        people = trakt_api.get_people(section_params['section'], trakt_id)
+        cast = salts_utils.make_cast(show['ids'], people)
+    else:
+        people = None
+        cast = None
+        
+    liz = utils.make_list_item(label, show, art, cast)
     liz.setProperty('trakt_id', str(trakt_id))
-    people = trakt_api.get_people(section_params['section'], trakt_id) if kodi.get_setting('include_people') == 'true' else None
     info = salts_utils.make_info(show, people=people)
+    
+    # mix-in cast in liz metadata if the setCast method doesn't exist
+    if cast and getattr(liz, 'setCast', None) is None:
+        info['castandrole'] = info['cast'] = [(person['name'], person['role']) for person in cast]
 
     if 'TotalEpisodes' in info:
         liz.setProperty('TotalEpisodes', str(info['TotalEpisodes']))
@@ -2589,6 +2660,8 @@ def make_item(section_params, show, menu_items=None):
 
     queries = {'mode': MODES.ADD_TO_LIBRARY, 'video_type': section_params['video_type'], 'title': show['title'], 'year': show['year'], 'trakt_id': trakt_id}
     menu_items.append((i18n('add_to_library'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
+    queries = {'mode': MODES.REFRESH_IMAGES, 'video_type': section_params['video_type'], 'ids': json.dumps(show['ids'])}
+    menu_items.append((i18n('refresh_images'), 'RunPlugin(%s)' % (kodi.get_plugin_url(queries))),)
 
     if TOKEN:
         if show.get('watched', False):

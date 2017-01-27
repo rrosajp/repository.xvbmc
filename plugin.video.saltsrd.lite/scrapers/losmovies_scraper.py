@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urllib
 import urlparse
 import kodi
 import dom_parser
@@ -68,7 +67,7 @@ class Scraper(scraper.Scraper):
                     hosters.append(hoster)
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search')
         params = {'type': 'movies', 'q': title}

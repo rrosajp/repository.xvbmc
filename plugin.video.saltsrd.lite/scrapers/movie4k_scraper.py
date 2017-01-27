@@ -19,7 +19,7 @@ import re
 import urlparse
 import kodi
 import dom_parser
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -70,7 +70,7 @@ class Scraper(scraper.Scraper):
                 hosters.append(hoster)
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         search_url = urlparse.urljoin(self.base_url, '/movies.php')
         cookies = {'onlylanguage': 'en', 'lang': 'en'}
         params = {'list': 'search', 'search': title}

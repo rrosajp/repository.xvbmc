@@ -18,9 +18,8 @@
 import scraper
 import urlparse
 import re
-import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import VIDEO_TYPES
@@ -74,7 +73,7 @@ class Scraper(scraper.Scraper):
 
         return sources
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search/search_val')
         headers = {'Referer': urlparse.urljoin(self.base_url, '/search')}

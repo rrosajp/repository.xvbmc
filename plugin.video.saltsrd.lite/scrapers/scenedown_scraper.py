@@ -18,7 +18,7 @@
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -82,7 +82,7 @@ class Scraper(scraper.Scraper):
         settings = scraper_utils.disable_sub_check(settings)
         return settings
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         html = self._http_get(self.base_url, params={'s': title, 'submit': 'Find'}, require_debrid=True, cache_limit=1)
         post_pattern = 'class="postTitle">.*?href="(?P<url>[^"]+)[^>]*>(?P<post_title>[^<]+)'
         return self._blog_proc_results(html, post_pattern, '', video_type, title, year)

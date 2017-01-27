@@ -234,7 +234,7 @@
                 <ondown>201</ondown>
                 <onright>201</onright>
                 <onleft>900</onleft>
-                <visible>SubString(System.BuildVersion,17,left)</visible>
+                <visible>String.StartsWith(System.BuildVersion, 17)|String.StartsWith(System.BuildVersion, 18)</visible>
             </control>
             <control type="button" id="200">
                 <description>Continue Button (Jarvis)</description>
@@ -251,7 +251,7 @@
                 <ondown>201</ondown>
                 <onright>201</onright>
                 <onleft>900</onleft>
-                <visible>!SubString(System.BuildVersion,17,left)</visible>
+                <visible>![SubString(System.BuildVersion,17,left)|SubString(System.BuildVersion,18,left)]</visible>
             </control>
             <control type="button" id="201">
                 <description>Cancel Button (Krypton)</description>
@@ -268,7 +268,7 @@
                 <onleft>200</onleft>
                 <ondown>9000</ondown>
                 <onright>9000</onright>
-                <visible>SubString(System.BuildVersion,17,left)</visible>
+                <visible>String.StartsWith(System.BuildVersion, 17)|String.StartsWith(System.BuildVersion, 18)</visible>
             </control>
             <control type="button" id="201">
                 <description>Cancel Button (Jarvis)</description>
@@ -285,7 +285,7 @@
                 <onleft>200</onleft>
                 <ondown>9000</ondown>
                 <onright>9000</onright>
-                <visible>!SubString(System.BuildVersion,17,left)</visible>
+                <visible>![SubString(System.BuildVersion,17,left)|SubString(System.BuildVersion,18,left)]</visible>
             </control>
         </control>
     </controls>

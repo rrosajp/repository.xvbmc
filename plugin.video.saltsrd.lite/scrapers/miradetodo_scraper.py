@@ -18,7 +18,7 @@
 import re
 import urlparse
 import base64
-import log_utils
+import log_utils  # @UnusedImport
 import kodi
 import dom_parser
 from salts_lib import scraper_utils
@@ -146,7 +146,7 @@ class Scraper(scraper.Scraper):
                 sources[stream_url] = quality
         return sources
         
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         html = self._http_get(self.base_url, params={'s': title}, cache_limit=1)
         results = []
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item'}):

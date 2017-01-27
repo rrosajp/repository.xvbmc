@@ -15,20 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import re
 import scraper
 import urlparse
-import re
-import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
-BASE_URL = 'http://www.spacemov.net'
-XHR = {'X-Requested-With': 'XMLHttpRequest'}
+BASE_URL = 'http://www.spacemov.ag'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -60,22 +58,19 @@ class Scraper(scraper.Scraper):
 
         return sources
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/wp-admin/admin-ajax.php')
-        referer = self.base_url + '/?' + urllib.urlencode({'s': title, 'submit': 'Search'})
-        headers = {'Referer': referer}
-        headers.update(XHR)
-        params = {'s': title, 'action': 'dwls_search'}
-        html = self._http_get(search_url, params=params, headers=headers, cache_limit=8)
-        js_data = scraper_utils.parse_json(html, search_url)
-        for match in js_data.get('results', []):
-            match_title_year = match.get('post_title')
-            match_url = match.get('permalink')
-            if match_url and match_title_year:
-                match_title, match_year = scraper_utils.extra_year(match_title_year)
-                if not year or not match_year or year == match_year:
-                    result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
-                    results.append(result)
+        params = {'s': title, 'submit': 'Search'}
+        html = self._http_get(self.base_url, params=params, cache_limit=8)
+        fragment = dom_parser.parse_dom(html, 'div', {'id': 'single-post'})
+        if fragment:
+            for item in dom_parser.parse_dom(fragment[0], 'div', {'class': 'box-bg'}):
+                match = re.search('href="([^"]+)[^>]+>([^<]+)', item)
+                if match:
+                    match_url, match_title_year = match.groups()
+                    match_title, match_year = scraper_utils.extra_year(match_title_year)
+                    if not year or not match_year or year == match_year:
+                        result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
+                        results.append(result)
 
         return results

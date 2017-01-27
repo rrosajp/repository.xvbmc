@@ -18,7 +18,7 @@
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -65,7 +65,7 @@ class Scraper(scraper.Scraper):
             sources.update(self.__get_linked(html))
             sources.update(self.__get_ajax(html, url))
             for source in sources:
-                stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+                stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
                 host = self._get_direct_hostname(source)
                 hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': sources[source], 'views': None, 'rating': None, 'url': stream_url, 'direct': True, 'subs': 'Turkish subtitles'}
                 hosters.append(hoster)
@@ -141,7 +141,7 @@ class Scraper(scraper.Scraper):
         title_pattern = 'class="episode-name"\s+href="(?P<url>[^"]+)">(?P<title>[^<]+)'
         return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         xml_url = urlparse.urljoin(self.base_url, '/series.xml')
         xml = self._http_get(xml_url, cache_limit=24)

@@ -65,7 +65,7 @@ class Scraper(scraper.Scraper):
                 hosters.append(hoster)
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/index.php')
         params = {'search': title, 'image.x': 0, 'image.y': 0}

@@ -18,7 +18,7 @@
 import re
 import string
 import urlparse
-import log_utils
+import log_utils  # @UnusedImport
 import kodi
 import dom_parser
 from salts_lib import scraper_utils
@@ -74,12 +74,12 @@ class Scraper(scraper.Scraper):
 
     def __get_links(self, html):
         hosters = []
-        r = re.search('draw\("([^"]+)', html)
+        r = re.search('salt\("([^"]+)', html)
         if r:
-            plaintext = self.__get_f(self.__caesar(self.__get_f(r.group(1)), 13))
+            plaintext = self.__caesar(self.__get_f(self.__caesar(r.group(1), 13)), 13)
             sources = self._parse_sources_list(plaintext)
             for source in sources:
-                stream_url = source + '|User-Agent=%s&Cookie=%s' % (scraper_utils.get_ua(), self._get_stream_cookies())
+                stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua(), 'Cookie': self._get_stream_cookies()})
                 host = self._get_direct_hostname(stream_url)
                 hoster = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': sources[source]['quality'], 'rating': None, 'views': None, 'direct': True}
                 hosters.append(hoster)
@@ -111,7 +111,7 @@ class Scraper(scraper.Scraper):
     
         return t
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/wp-content/themes/afdah/ajax-search.php')
         data = {'search': title, 'type': 'title'}

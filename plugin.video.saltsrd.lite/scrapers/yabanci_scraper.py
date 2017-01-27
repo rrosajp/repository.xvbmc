@@ -19,7 +19,7 @@
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib import jsunpack
@@ -118,7 +118,7 @@ class Scraper(scraper.Scraper):
         episode_pattern = 'href="([^"]+/sezon-%s/bolum-%s(?!\d)[^"]*)"' % (video.season, video.episode)
         return self._default_get_episode_url(show_url, video, episode_pattern)
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         html = self._http_get(self.base_url, cache_limit=48)
         norm_title = scraper_utils.normalize_title(title)

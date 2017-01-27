@@ -19,7 +19,7 @@
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -104,7 +104,7 @@ class Scraper(scraper.Scraper):
             title_pattern = 'href="(?P<url>[^"]*-\d+-sezon-\d+-bolum[^"]*)[^>]*>.*?class="realcuf">(?P<title>[^<]*)'
             return self._default_get_episode_url(SEASON_URL, video, episode_pattern, title_pattern, data=data, headers=XHR)
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         html = self._http_get(self.base_url, cache_limit=8)
         results = []
         fragment = dom_parser.parse_dom(html, 'div', {'class': '[^"]*dizis[^"]*'})

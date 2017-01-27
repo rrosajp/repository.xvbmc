@@ -19,7 +19,7 @@ import base64
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -97,7 +97,7 @@ class Scraper(scraper.Scraper):
                     hosters.append(hoster)
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search.php')
         html = self._http_get(search_url, params={'q': title}, cache_limit=4)

@@ -18,7 +18,7 @@
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -83,23 +83,33 @@ class Scraper(scraper.Scraper):
                 
         return ''
     
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search')
-        html = self._http_get(search_url, params={'q': title}, cache_limit=1)
         match_year = ''
-        for item in dom_parser.parse_dom(html, 'div', {'id': 'movie-+\d+'}):
-            is_tvshow = dom_parser.parse_dom(item, 'div', {'class': 'movieTV'})
-            if (is_tvshow and video_type == VIDEO_TYPES.TVSHOW) or (not is_tvshow and video_type == VIDEO_TYPES.MOVIE):
-                fragment = dom_parser.parse_dom(item, 'h4', {'class': '[^"]*showRowName[^"]*'})
-                if fragment:
-                    match = re.search('href="([^"]+)[^>]+>([^<]+)', fragment[0])
-                    if match:
-                        match_url, match_title = match.groups()
-    
-                        if not year or not match_year or year == match_year:
-                            result = {'title': scraper_utils.cleanse_title(match_title), 'url': scraper_utils.pathify_url(match_url), 'year': match_year}
-                            results.append(result)
+        seen_urls = {}
+        if video_type == VIDEO_TYPES.MOVIE:
+            pages = ['', '/latest-movies', '/new-movies']
+        else:
+            pages = ['/free-tv-series-online', '/latest-episodes', '/new-episodes']
+
+        norm_title = scraper_utils.normalize_title(title)
+        for page in pages:
+            html = self._http_get(urlparse.urljoin(self.base_url, page), cache_limit=24)
+            for item in dom_parser.parse_dom(html, 'div', {'id': 'movie-+\d+'}):
+                is_tvshow = dom_parser.parse_dom(item, 'div', {'class': 'movieTV'})
+                if (is_tvshow and video_type == VIDEO_TYPES.TVSHOW) or (not is_tvshow and video_type == VIDEO_TYPES.MOVIE):
+                    fragment = dom_parser.parse_dom(item, 'h4', {'class': '[^"]*showRowName[^"]*'})
+                    if fragment:
+                        match = re.search('href="([^"]+)[^>]+>([^<]+)', fragment[0])
+                        if match:
+                            match_url, match_title = match.groups()
+                            if match_url in seen_urls: continue
+                            seen_urls[match_url] = match_title
+                            
+                            match_norm_title = scraper_utils.normalize_title(match_title)
+                            if (match_norm_title in norm_title or norm_title in match_norm_title) and (not year or not match_year or year == match_year):
+                                result = {'title': scraper_utils.cleanse_title(match_title), 'url': scraper_utils.pathify_url(match_url), 'year': match_year}
+                                results.append(result)
 
         return results
 

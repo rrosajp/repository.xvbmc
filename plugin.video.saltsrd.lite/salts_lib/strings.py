@@ -305,5 +305,9 @@ STRINGS = {
     'flush_image_cache': 30296,
     'flush_image_line1': 30297,
     'flush_image_line2': 30298,
-    'flush_complete': 30299
+    'flush_complete': 30299,
+    'refresh_images': 30300,
+    'scraper_updated': 30301,
+    'reset_torba': 30302,
+    'torba_auth_reset': 30303
 }

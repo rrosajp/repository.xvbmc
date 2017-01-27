@@ -18,7 +18,7 @@
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -93,7 +93,7 @@ class Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-select" type="enum" label="     %s" lvalues="30636|30637" default="0" visible="eq(-5,true)"/>' % (name, i18n('auto_select')))
         return settings
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         html = self._http_get(self.base_url, params={'s': title}, require_debrid=True, cache_limit=1)
         post_pattern = '<h\d+[^>]+class="entry-title[^>]*>\s*<[^>]+href="(?P<url>[^"]*/(?P<date>\d{4}/\d{1,2}/\d{1,2})[^"]*)[^>]+>(?:\[ST\]\s+&#8211;\s*)?(?P<post_title>[^<]+)'
         date_format = '%Y/%m/%d'
