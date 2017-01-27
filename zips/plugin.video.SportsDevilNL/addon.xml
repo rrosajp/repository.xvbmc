@@ -6,7 +6,7 @@
   provider-name="Hubbab3, Jairox, Sattekop, EPiC XvBMC, MaxMustermann, Al101">
   <requires>
    <import addon="xbmc.python" version="2.14.0"/>
-   <import addon="repository.xvbmc" version="4.0.0"/>
+   <import addon="repository.xvbmc" version="4.0.1"/>
    <import addon="script.module.simplejson" />
    <import addon="script.module.six" />
    <import addon="script.module.requests" />

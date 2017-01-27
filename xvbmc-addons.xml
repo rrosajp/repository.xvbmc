@@ -506,7 +506,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 
 <addon
   id="plugin.video.SportsDevilNL"
-  version="2016.11.20.NL"
+  version="2017.01.24.NL"
   name="SportsDevilNL (XvBMC)"
   provider-name="Hubbab3, Jairox, Sattekop, EPiC XvBMC, MaxMustermann, Al101">
   <requires>

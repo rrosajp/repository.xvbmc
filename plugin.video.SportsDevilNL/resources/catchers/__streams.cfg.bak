@@ -608,6 +608,8 @@ item_precheck=liveflash.tv/embedplayer
 item_order=video
 @CATCH(liveflash,video)@
 
+
+
 ########################################################
 # Mips.tv - Videos
 ########################################################
@@ -753,24 +755,13 @@ item_order=video
 @CATCH(byetv,'http://www.byetv.org/private/embed.php?a='+video+'&id=&width=670&height=420&autostart=true&strech=')@
 
 ########################################################
-# RTVE - hard coded streams in catcher
-########################################################
-item_infos=http://www.rtve.es/directo/(.*?)/
-item_precheck=rtve.es
-item_order=video
-@CATCH(rtve,video)@
-########################################################
 # Tumarcador
 ########################################################
-item_infos=(http://tumarcador.xyz/canal\d+)
+item_infos=((?:www\.)?tumarcador.xyz/canal\d+)
 item_precheck=tumarcador.xyz
 item_order=video
-@CATCH(tumarcador,video)@
-########################################################
-item_infos=(http://tumarcador.xyz/\w+/\d+)
-item_precheck=tumarcador.xyz
-item_order=video
-@CATCH(tumarcador,video)@
+@CATCH(tumarcador,'http://'+video)@
+
 ########################################################
 # DinoZap - Videos
 ########################################################
@@ -824,8 +815,8 @@ item_precheck=sunhd.info
 item_order=video
 @CATCH(dinozap,video)@
 ########################################################
-item_infos=((?:www\.)?ponlatv.(?:com|net)/channel.php\?file=[^"']+)
-item_precheck=ponlatv.net
+item_infos=((?:www\.)?ponlatv.com/channel.php\?file=[^"']+)
+item_precheck=ponlatv.com
 item_order=video
 @CATCH(dinozap,video)@
 ########################################################
@@ -903,7 +894,7 @@ item_precheck=hdcast.org
 item_precheck=hdcast.org
 @CATCH(hdcast,'http://hdcast.org/embedlive.php?u='+video+'&vw=100%&vh=100%')@
 ########################################################
-@FIND('JS1','[^\"\']*hdcast.org/stream\w+[^\"\']*','f*id','video')@
+@FIND('JS1','[^\"\']*hdcast.org/streamhd[^\"\']*','f*id','video')@
 item_precheck=hdcast.org
 @CATCH(hdcast,'http://hdcast.org/streamhd.php?u='+video+'&vw=100%&vh=100%')@
 
@@ -1348,11 +1339,6 @@ item_infos=>id='([^\"\'].*?)'.*theactionlive.com/livegame[^\"\']*'>
 item_precheck=theactionlive.com
 item_order=video
 @CATCH(theactionlive,video)@
-########################################################
-item_infos=>id='([^\"\'].*?)'.*soccerschedule.online/livegame[^\"\']*'>
-item_precheck=soccerschedule.online
-item_order=video
-@CATCH(theactionlive,video)@
 
 ########################################################
 # ZeroCast - Videos
@@ -1421,7 +1407,7 @@ item_order=video
 ########################################################
 @FIND('JS1','[^\"\']*nowlive.(?:xyz|pw)[^\"\']*','id','video')@
 item_precheck=nowlive
-@CATCH(p2pcast3,'http://nowlive.pw/stream.php?id='+video+'&width=640&height=390&stretching=uniform&p=1')@
+@CATCH(p2pcast,'http://nowlive.pw/stream.php?id='+video+'&width=640&height=390&stretching=uniform&p=1')@
 ########################################################
 item_infos=http://p2pcast.(?:tv|org|tech)/(?:p2pembed|stream).php\?id=(\d+)
 item_precheck=p2pcast
@@ -1533,9 +1519,6 @@ item_precheck=sportstream365.com
 item_order=video
 @CATCH(sportstream365,video)@
 ########################################################
-
-
-
 item_infos=streams247.net/mips.html\?id=(\w+)
 item_precheck=streams247.net
 item_order=video

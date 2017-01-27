@@ -1,4 +1,4 @@
-"""
+﻿"""
 XBMCLocalProxy 0.1
 Copyright 2011 Torben Gerkensmeyer
 
@@ -104,6 +104,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 sp = fURL.split('|')
                 fURL = sp[0]
                 headers = dict(urlparse.parse_qsl(sp[1]))
+                #print headers
                 if 'cdn.sstream.pw' in fURL:
                     fURL = fURL.replace('cdn.sstream.pw',random.choice(s))
                     headers['Host'] = '6b6473616a6b6c647361646a7361643737353637647361393973616768647368686464732e736974656e6f772e6d65'.decode('hex')
@@ -120,10 +121,11 @@ class MyHandler(BaseHTTPRequestHandler):
         self.end_headers()
         
         if (sendData):
-            #print "XBMCLocalProxy: Sending data..."
+            print "XBMCLocalProxy: Sending data..."
             fileout = self.wfile
             try:
                 stream = streams["best"]
+                print streams
                 try:
                     response = stream.open()
                     buf = 'INIT'
