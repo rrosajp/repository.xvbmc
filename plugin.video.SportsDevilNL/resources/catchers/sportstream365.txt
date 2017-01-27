@@ -26,6 +26,6 @@ item_info_convert=getXML('%s','.*?VI['"]*[:,]\s*['"]([^'"]+)['"].*','@purl@')
 item_info_build=%s
 
 item_info_name=url
-item_info_from=rtmp+' app=xlive flashVer=WIN\23,0,0,166 conn=S:client conn=S:3.1.0.13 conn=S:en swfhash=e0611f09cdf1eb05dc8f6ba1ae985c58a9df0126ce9a2902d3ab6ec4c8ef397d swfsize=549555 live=true playpath=raw:'+file+'
+item_info_from=rtmp+' app=xlive flashVer=WIN\23,0,0,166 conn=S:client conn=S:3.1.0.13 conn=S:en swfhash=5aaaa32059cba732636c28519b2ce34a3568f1058a8bd02d6a932643554ccbb4 swfsize=585534 live=true playpath=raw:'+file+'
 item_info_build=%s
 

@@ -21,7 +21,7 @@ import customConversions as cc
 from utils import decryptionUtils as crypt
 from utils import datetimeUtils as dt
 from utils import rowbalance as rb
-#from utils import wasteg as getsaw
+from utils import wasteg as getsaw
 
 from utils.fileUtils import findInSubdirectory, getFileContent, getFileExtension
 from utils.scrapingUtils import findVideoFrameLink, findContentRefreshLink, findRTMP, findJS, findPHP, getHostName, findEmbedPHPLink
@@ -613,7 +613,10 @@ class Parser(object):
 
             elif command == 'decodeRawUnicode':
                 src = cc.decodeRawUnicode(src)
-                
+
+            elif command == 'decodeHex':
+                src = cc.hex2ascii(src)
+                                
             elif command == 'resolve':
                 src = cc.resolve(src)
             
@@ -654,9 +657,6 @@ class Parser(object):
                 
             elif command == 'cjsAesDec':
                 src = crypt.cjsAesDec(src,item.infos[params])
-                
-            elif command == 'm3u8AesDec':
-                src = crypt.m3u8AesDec(src,item.infos[params])
 
             
             elif command == 'drenchDec':
@@ -680,8 +680,7 @@ class Parser(object):
             elif command == 'simpleToken':
                 src = cc.simpleToken(src)
 
-
-			#elif command == 'wasteg':
+            #elif command == 'wasteg':
             #    paramArr = params.split(',')
             #    ref = str(paramArr[1])
             #    src = getsaw.compose(ref, src)
