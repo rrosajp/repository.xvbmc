@@ -65,7 +65,7 @@ class Scraper(scraper.Scraper):
 
         return sources
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         if video_type == VIDEO_TYPES.MOVIE:
             section = '1'

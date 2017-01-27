@@ -18,7 +18,7 @@
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -78,7 +78,7 @@ class Scraper(scraper.Scraper):
                     host = self._get_direct_hostname(source)
                 else:
                     host = urlparse.urlparse(source).hostname
-                stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+                stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
                 direct = sources[source]['direct']
                 quality = sources[source]['quality']
                 hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': direct}
@@ -119,7 +119,7 @@ class Scraper(scraper.Scraper):
                     
         return sources2
         
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         title = re.sub('[^A-Za-z0-9 ]', '', title)
         title = re.sub('\s+', '-', title)

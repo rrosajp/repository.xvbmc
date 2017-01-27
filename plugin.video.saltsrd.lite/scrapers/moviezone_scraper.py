@@ -19,7 +19,7 @@ import scraper
 import urlparse
 import re
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import VIDEO_TYPES
@@ -31,7 +31,7 @@ BASE_URL = 'http://moviezone.ch'
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
 
-    def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
+    def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):  # @UnusedVariable
         self.timeout = 2  # manually set timeout for slow iframe calls
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
 
@@ -76,7 +76,7 @@ class Scraper(scraper.Scraper):
 
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         html = self._http_get(self.base_url, params={'s': title}, read_error=True, cache_limit=16)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item'}):

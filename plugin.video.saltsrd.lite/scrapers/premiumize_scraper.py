@@ -20,7 +20,7 @@ import urllib
 import urlparse
 import xbmcgui
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -227,7 +227,7 @@ class Scraper(scraper.Scraper):
             matches = [link for link in hashes if re.search(airdate_pattern, link[1])]
         return matches
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         if video_type == VIDEO_TYPES.MOVIE:
             return self.__movie_search(title, year)
         else:

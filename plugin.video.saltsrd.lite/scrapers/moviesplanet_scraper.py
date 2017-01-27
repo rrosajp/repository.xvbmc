@@ -21,7 +21,7 @@ import time
 import urlparse
 import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -88,7 +88,7 @@ class Scraper(scraper.Scraper):
                                 
         for source in sources:
             host = self._get_direct_hostname(source)
-            stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+            stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
             if host == 'gvideo':
                 quality = scraper_utils.gv_get_quality(source)
             else:
@@ -101,7 +101,7 @@ class Scraper(scraper.Scraper):
 
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/ajax/search.php')
         timestamp = int(time.time() * 1000)

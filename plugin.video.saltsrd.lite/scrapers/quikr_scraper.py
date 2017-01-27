@@ -19,7 +19,7 @@ import re
 import urlparse
 import kodi
 import dom_parser
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib import jsunpack
 from salts_lib.constants import FORCE_NO_MATCH
@@ -28,7 +28,7 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 BASE_URL = 'http://quikrmovies.to'
-DIRECT_HOSTS = ['quikr.stream', 'openload.stream']
+DIRECT_HOSTS = ['quikr.stream', 'openload.stream', 'qvideos.stream']
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -51,7 +51,7 @@ class Scraper(scraper.Scraper):
         if source_url and source_url != FORCE_NO_MATCH:
             url = urlparse.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=.5)
-            page_quality = QUALITIES.HD720
+            page_quality = QUALITIES.HD720 if video.video_type == VIDEO_TYPES.MOVIE else QUALITIES.HIGH
             for fragment in dom_parser.parse_dom(html, 'div', {'class': '[^"]*embed-responsive[^"]*'}):
                 iframe_url = dom_parser.parse_dom(fragment, 'iframe', ret='data-src')
                 if iframe_url:
@@ -67,7 +67,7 @@ class Scraper(scraper.Scraper):
                     direct = sources[source]['direct']
                     if direct:
                         host = self._get_direct_hostname(source)
-                        stream_url = source + '|User-Agent=%s' % (scraper_utils.get_ua())
+                        stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
                     else:
                         host = urlparse.urlparse(source).hostname
                         stream_url = source
@@ -82,35 +82,31 @@ class Scraper(scraper.Scraper):
         html = self._http_get(iframe_url, headers=headers, cache_limit=.5)
         if jsunpack.detect(html):
             html = jsunpack.unpack(html)
-        log_utils.log(html)
         
         return self._parse_sources_list(html)
     
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         if video_type == VIDEO_TYPES.TVSHOW:
-            url = '/tvshows-az-list/'
+            url = '/tvshows-release-year/%s/'
         else:
-            url = '/movies-az-list/'
+            url = '/release-year/%s/'
 
-        if title:
-            if not title[0].isdigit():
-                url += title[0].upper()
-                
-        url = urlparse.urljoin(self.base_url, url)
-        html = self._http_get(url, cache_limit=48)
-        norm_title = scraper_utils.normalize_title(title)
-        for item in dom_parser.parse_dom(html, 'div', {'class': 'primary_movie_box'}):
-            match_url = dom_parser.parse_dom(item, 'a', ret='href')
-            match_title = dom_parser.parse_dom(item, 'h2', {'class': 'primary_movie_box_title'})
-            match_year = dom_parser.parse_dom(item, 'div', {'class': 'primary_movie_box_year'})
-            if match_url and match_title:
-                match_url = match_url[0]
-                match_title = match_title[0]
-                match_year = match_year[0] if match_year else ''
-                if norm_title in scraper_utils.normalize_title(match_title) and (not match_year or not year or year == match_year):
-                    result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
-                    results.append(result)
+        if year:
+            url = urlparse.urljoin(self.base_url, url % (year))
+            html = self._http_get(url, cache_limit=48)
+            norm_title = scraper_utils.normalize_title(title)
+            for item in dom_parser.parse_dom(html, 'div', {'class': 'primary_movie_box'}):
+                match_url = dom_parser.parse_dom(item, 'a', ret='href')
+                match_title = dom_parser.parse_dom(item, 'h2', {'class': 'primary_movie_box_title'})
+                match_year = dom_parser.parse_dom(item, 'div', {'class': 'primary_movie_box_year'})
+                if match_url and match_title:
+                    match_url = match_url[0]
+                    match_title = match_title[0]
+                    match_year = match_year[0] if match_year else ''
+                    if norm_title in scraper_utils.normalize_title(match_title) and (not match_year or not year or year == match_year):
+                        result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
+                        results.append(result)
         return results
     
     def _get_episode_url(self, show_url, video):

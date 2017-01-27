@@ -19,7 +19,7 @@ import re
 import urllib
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -65,12 +65,12 @@ class Scraper(scraper.Scraper):
                             quality = scraper_utils.gv_get_quality(stream_url)
                         else:
                             quality = scraper_utils.height_get_quality(source)
-                        stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
+                        stream_url += scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
                         hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
                         hosters.append(hoster)
         return hosters
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         search_url = urlparse.urljoin(self.base_url, '/results')
         params = {'q': title}
         html = self._http_get(search_url, params=params, cache_limit=1)

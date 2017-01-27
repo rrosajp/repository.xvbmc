@@ -19,7 +19,7 @@ import urllib
 import urlparse
 
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -127,7 +127,7 @@ class Scraper(scraper.Scraper):
             self.db_connection().set_related_url(video.video_type, video.title, video.year, self.get_name(), url, video.season, video.episode)
         return url
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         return []
 
     @classmethod

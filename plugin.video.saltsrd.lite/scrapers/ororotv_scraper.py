@@ -19,7 +19,7 @@ import urlparse
 import base64
 import datetime
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -89,7 +89,7 @@ class Scraper(scraper.Scraper):
                         if 'name' in episode and norm_title in scraper_utils.normalize_title(episode['name']):
                             return scraper_utils.pathify_url('?id=%s' % (episode['id']))
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         if video_type == VIDEO_TYPES.MOVIE:
             url = '/api/v2/movies'
@@ -129,4 +129,3 @@ class Scraper(scraper.Scraper):
         headers['Authorization'] = 'Basic %s' % (auth_header)
         html = super(self.__class__, self)._http_get(url, data=data, headers=headers, cookies=cookies, cache_limit=cache_limit)
         return scraper_utils.parse_json(html, url)
-

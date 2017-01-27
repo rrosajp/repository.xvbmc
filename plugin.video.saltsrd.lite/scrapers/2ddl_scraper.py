@@ -20,7 +20,7 @@ import re
 import urllib
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib.utils2 import i18n
 from salts_lib import scraper_utils
@@ -116,7 +116,7 @@ class Scraper(scraper.Scraper):
                 
             page_url = dom_parser.parse_dom(html, 'a', {'class': 'nextpostslink'}, ret='href')
     
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search/')
         search_url += urllib.quote_plus(title)

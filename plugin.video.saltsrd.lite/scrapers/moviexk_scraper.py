@@ -19,7 +19,7 @@ import re
 import urllib
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -85,7 +85,7 @@ class Scraper(scraper.Scraper):
                     else:
                         quality = QUALITIES.HIGH
                 
-                stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), urllib.quote(url))
+                stream_url += scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua(), 'Referer': url})
                 source = {'multi-part': False, 'url': stream_url, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
                 sources.append(source)
 
@@ -108,7 +108,7 @@ class Scraper(scraper.Scraper):
         urls = dom_parser.parse_dom(html, 'a', {'data-type': 'watch'}, ret='href')
         return dict(zip(labels, urls))
         
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search/')
         search_url += urllib.quote_plus(title)
@@ -145,5 +145,5 @@ class Scraper(scraper.Scraper):
         if fragment:
             show_url = dom_parser.parse_dom(fragment[0], 'a', ret='href')
             if show_url:
-                episode_pattern = '<a[^>]+href="([^"]+)[^>]+>[Ee][Pp]\s*(?:[Ss]0*%s-)?E?p?0*%s\s*<' % (video.season, video.episode)
+                episode_pattern = 'href="([^"]+)[^>]+>[Ee][Pp]\s*(?:[Ss]0*%s-)?E?p?0*%s(?!\d)' % (video.season, video.episode)
                 return self._default_get_episode_url(show_url[0], video, episode_pattern)

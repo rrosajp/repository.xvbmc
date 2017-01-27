@@ -19,7 +19,7 @@ import re
 import urlparse
 import base64
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -73,7 +73,7 @@ class Scraper(scraper.Scraper):
         episode_pattern = 'href="([^"]*-season-%s-episode-%s(?!\d)[^"]*)' % (video.season, video.episode)
         return self._default_get_episode_url(show_url, video, episode_pattern)
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         html = self._http_get(self.base_url, params={'s': title}, cache_limit=1)
         for item in dom_parser.parse_dom(html, 'div', {'class': 'item'}):

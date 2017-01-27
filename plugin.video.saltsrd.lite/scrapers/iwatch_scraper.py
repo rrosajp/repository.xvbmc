@@ -19,7 +19,7 @@ import re
 import time
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -119,7 +119,7 @@ class Scraper(scraper.Scraper):
             # print '%s, %s, %s, %s' % (num, unit, mult, age)
         return age
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search')
         if video_type == VIDEO_TYPES.MOVIE:

@@ -18,11 +18,9 @@
 import re
 import urlparse
 import urllib
-import random
-import string
 import base64
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -88,7 +86,7 @@ class Scraper(scraper.Scraper):
                     url = urlparse.urljoin(self.base_url, PLAYLIST_URL1 % (link_id))
                     sources = self.__get_link_from_json(url)
                 elif kodi.get_setting('scraper_url'):
-                    token = self.__get_token()
+                    token = scraper_utils.get_token(hash_len=6)
                     cookie = {'%s%s%s' % (COOKIE1, link_id, COOKIE2): token}
                     url_hash = urllib.quote(self.__uncensored(link_id + KEY, token))
                     url = urlparse.urljoin(self.base_url, PLAYLIST_URL2 % (link_id, url_hash))
@@ -99,7 +97,7 @@ class Scraper(scraper.Scraper):
                     if sources[source]['direct']:
                         host = self._get_direct_hostname(source)
                         if host != 'gvideo':
-                            stream_url = source + '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), urllib.quote(page_url))
+                            stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua(), 'Referer': page_url})
                         else:
                             stream_url = source
                     else:
@@ -110,9 +108,6 @@ class Scraper(scraper.Scraper):
                 
         return hosters
 
-    def __get_token(self):
-        return ''.join(random.sample(string.digits + string.ascii_lowercase, 6))
-    
     def __uncensored(self, a, b):
         c = ''
         i = 0
@@ -149,7 +144,7 @@ class Scraper(scraper.Scraper):
         sources = {}
         headers = {'Referer': page_url}
         headers.update(XHR)
-        html = self._http_get(url, cookies=cookies, headers=headers, cache_limit=0)
+        html = self._http_get(url, cookies=cookies, headers=headers, cache_limit=.5)
         js_data = scraper_utils.parse_json(html, url)
         playlist = js_data.get('playlist', [])
         if playlist:

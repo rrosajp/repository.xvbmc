@@ -19,7 +19,7 @@ import re
 import urlparse
 import datetime
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -118,7 +118,7 @@ class Scraper(scraper.Scraper):
             if best_id:
                 return EP_URL % (best_id)
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         if video_type == VIDEO_TYPES.MOVIE:
             results = self.__movie_search(title, year)
         else:
@@ -148,7 +148,7 @@ class Scraper(scraper.Scraper):
 
         return results
     
-    def __tv_search(self, title, year):
+    def __tv_search(self, title, year):  # @UnusedVariable
         results = []
         url = urlparse.urljoin(self.base_url, '/tvshows.html')
         html = self._http_get(url, cache_limit=48)
@@ -162,5 +162,3 @@ class Scraper(scraper.Scraper):
                     result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': match_year}
                     results.append(result)
         return results
-        
-        

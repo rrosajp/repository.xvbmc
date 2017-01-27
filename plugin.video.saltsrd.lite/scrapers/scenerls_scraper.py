@@ -19,7 +19,7 @@ import re
 import urllib
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -89,7 +89,7 @@ class Scraper(scraper.Scraper):
         settings.append('         <setting id="%s-select" type="enum" label="     %s" lvalues="30636|30637" default="0" visible="eq(-5,true)"/>' % (name, i18n('auto_select')))
         return settings
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         search_url = urlparse.urljoin(self.base_url, '/search/%s/')
         search_url = search_url % (urllib.quote_plus(title))
         headers = {'Referer': self.base_url}

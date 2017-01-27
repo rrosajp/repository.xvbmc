@@ -30,7 +30,7 @@ import urlresolver
 from salts_lib import cloudflare
 from salts_lib import cf_captcha
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import Q_ORDER
@@ -47,7 +47,7 @@ MAX_RESPONSE = 1024 * 1024 * 5
 CF_CAPCHA_ENABLED = kodi.get_setting('cf_captcha') == 'true'
 
 class NoRedirection(urllib2.HTTPErrorProcessor):
-    def http_response(self, request, response):
+    def http_response(self, request, response):  # @UnusedVariable
         log_utils.log('Stopping Redirect', log_utils.LOGDEBUG)
         return response
 
@@ -251,6 +251,7 @@ class Scraper(object):
                 result = self.db_connection().get_related_url(VIDEO_TYPES.EPISODE, video.title, video.year, self.get_name(), video.season, video.episode)
                 if result:
                     url = result[0][0]
+                    if isinstance(url, unicode): url = url.encode('utf-8')
                     log_utils.log('Got local related url: |%s|%s|%s|' % (video, self.get_name(), url), log_utils.LOGDEBUG)
                 else:
                     url = self._get_episode_url(url, video)
@@ -366,7 +367,7 @@ class Scraper(object):
                 if not html:
                     return ''
             elif e.code == 503 and 'cf-browser-verification' in html:
-                html = cloudflare.solve(url, self.cj, scraper_utils.get_ua())
+                html = cloudflare.solve(url, self.cj, scraper_utils.get_ua(), extra_headers=headers)
                 if not html:
                     return ''
             else:
@@ -699,12 +700,12 @@ class Scraper(object):
                     sources[stream_url] = {'quality': label, 'direct': True}
         return sources
 
-    def _get_files(self, url, cache_limit=.5):
+    def _get_files(self, url, headers=None, cache_limit=.5):
         sources = []
-        for row in self._parse_directory(self._http_get(url, cache_limit=cache_limit)):
+        for row in self._parse_directory(self._http_get(url, headers=headers, cache_limit=cache_limit)):
             source_url = scraper_utils.urljoin(url, row['link'])
             if row['directory'] and not row['link'].startswith('..'):
-                sources += self._get_files(source_url, cache_limit=cache_limit)
+                sources += self._get_files(source_url, headers={'Referer': url}, cache_limit=cache_limit)
             else:
                 row['url'] = source_url
                 sources.append(row)

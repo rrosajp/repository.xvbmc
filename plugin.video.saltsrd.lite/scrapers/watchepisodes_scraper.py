@@ -18,7 +18,7 @@
 import re
 import urlparse
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -104,7 +104,7 @@ class Scraper(scraper.Scraper):
                     if ep_url and ep_title and norm_title == scraper_utils.normalize_title(ep_title[0]):
                         return scraper_utils.pathify_url(ep_url[0])
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search/ajax_search')
         html = self._http_get(search_url, params={'q': title}, headers=XHR, cache_limit=1)

@@ -21,6 +21,7 @@ import csv
 import json
 import hashlib
 import cPickle
+import threading
 from threading import Semaphore
 import xbmcvfs
 import xbmcgui
@@ -42,7 +43,6 @@ MAX_TRIES = 5
 MYSQL_DATA_SIZE = 512
 MYSQL_URL_SIZE = 255
 MYSQL_MAX_BLOB_SIZE = 16777215
-PRUNE_AGE = 60 * 60 * 24 * 31
 
 INCREASED = False
 UP_THRESHOLD = 0
@@ -62,6 +62,7 @@ SOURCE_CHUNK = 200
 class DB_Connection():
     locks = 0
     writes = 0
+    worker_id = None
     
     def __init__(self):
         global OperationalError
@@ -74,34 +75,31 @@ class DB_Connection():
         self.progress = None
 
         if kodi.get_setting('use_remote_db') == 'true':
-            if self.address is not None and self.username is not None and self.password is not None and self.dbname is not None:
-                import mysql.connector as db_lib
-                from mysql.connector import OperationalError as OperationalError
-                from mysql.connector import DatabaseError as DatabaseError
+            if all((self.address, self.username, self.password, self.dbname)):
+                import mysql.connector as db_lib  # @UnresolvedImport @UnusedImport
+                from mysql.connector import OperationalError as OperationalError  # @UnresolvedImport
+                from mysql.connector import DatabaseError as DatabaseError  # @UnresolvedImport
                 log_utils.log('Loading MySQL as DB engine', log_utils.LOGDEBUG, COMPONENT)
                 self.db_type = DB_TYPES.MYSQL
             else:
                 log_utils.log('MySQL is enabled but not setup correctly', log_utils.LOGERROR, COMPONENT)
                 raise ValueError('MySQL enabled but not setup correctly')
         else:
-            from sqlite3 import dbapi2 as db_lib
-            from sqlite3 import OperationalError as OperationalError
-            from sqlite3 import DatabaseError as DatabaseError
+            from sqlite3 import dbapi2 as db_lib  # @Reimport
+            from sqlite3 import OperationalError as OperationalError  # @UnusedImport @Reimport
+            from sqlite3 import DatabaseError as DatabaseError  # @UnusedImport @Reimport
             log_utils.log('Loading sqlite3 as DB engine', log_utils.LOGDEBUG, COMPONENT)
             self.db_type = DB_TYPES.SQLITE
             db_dir = kodi.translate_path("special://database")
             self.db_path = os.path.join(db_dir, 'saltsrd.lite.db')
         self.db_lib = db_lib
-        self.__connect_to_db()
 
     def flush_cache(self):
-        sql = 'DELETE FROM url_cache'
-        self.__execute(sql)
         if self.db_type == DB_TYPES.SQLITE:
             self.__execute('VACUUM')
 
-    def prune_cache(self):
-        min_age = time.time() - PRUNE_AGE
+    def prune_cache(self, prune_age=31):
+        min_age = time.time() - prune_age * (60 * 60 * 24)
         if self.db_type == DB_TYPES.SQLITE:
             day = {'day': 'DATE(timestamp, "unixepoch")'}
         else:
@@ -114,7 +112,7 @@ class DB_Connection():
             log_utils.log('Pruning url cache of %s rows with date %s' % (count, del_date), log_utils.LOGDEBUG, COMPONENT)
             sql = 'DELETE FROM url_cache WHERE {day} = ?'.format(**day)
             self.__execute(sql, (del_date,))
-            return True
+            return len(rows)
         else:
             return False
     
@@ -150,11 +148,17 @@ class DB_Connection():
         if data is None: data = ''
         if res_header is None: res_header = []
         res_header = json.dumps(res_header)
+        
         # truncate data if running mysql and greater than col size
         if self.db_type == DB_TYPES.MYSQL and len(url) > MYSQL_URL_SIZE:
             url = url[:MYSQL_URL_SIZE]
         if self.db_type == DB_TYPES.MYSQL and len(data) > MYSQL_DATA_SIZE:
             data = data[:MYSQL_DATA_SIZE]
+
+        if isinstance(body, unicode):
+            body = body.encode('utf-8')
+        if self.db_type == DB_TYPES.SQLITE:
+            body = buffer(body)
         sql = 'REPLACE INTO url_cache (url, data, response, res_header, timestamp) VALUES(?, ?, ?, ?, ?)'
         self.__execute(sql, (url, data, body, res_header, now))
 
@@ -187,7 +191,7 @@ class DB_Connection():
             if age < limit:
                 html = rows[0][1]
         log_utils.log('DB Cache: Url: %s, Data: %s, Cache Hit: %s, created: %s, age: %.2fs (%.2fh), limit: %ss' % (url, data, bool(html), created, age, age / (60 * 60), limit), log_utils.LOGDEBUG, COMPONENT)
-        return created, res_header, html
+        return created, res_header, str(html)
 
     def get_all_urls(self, include_response=False, order_matters=False):
         sql = 'SELECT url, data'
@@ -237,20 +241,21 @@ class DB_Connection():
             sql = 'INSERT INTO source_cache (source) VALUES (?)'
             self.__execute(sql, (pickled_row,))
     
-    def cache_images(self, trakt_id, art_dict, season='', episode=''):
+    def cache_images(self, object_type, trakt_id, art_dict, season='', episode=''):
         now = time.time()
         for key in art_dict:
             if not art_dict[key]:
                 art_dict[key] = None
                 
-        sql = 'REPLACE INTO image_cache (trakt_id, season, episode, timestamp, banner, fanart, thumb, poster, clearart, clearlogo) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        self.__execute(sql, (trakt_id, season, episode, now, art_dict.get('banner'), art_dict.get('fanart'), art_dict.get('thumb'),
+        sql = 'REPLACE INTO image_cache (object_type, trakt_id, season, episode, timestamp, banner, fanart, thumb, poster, clearart, clearlogo)\
+                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        self.__execute(sql, (object_type, trakt_id, season, episode, now, art_dict.get('banner'), art_dict.get('fanart'), art_dict.get('thumb'),
                              art_dict.get('poster'), art_dict.get('clearart'), art_dict.get('clearlogo')))
     
-    def get_cached_images(self, trakt_id, season='', episode='', cache_limit=30 * 24):
+    def get_cached_images(self, object_type, trakt_id, season='', episode='', cache_limit=30 * 24):
         art_dict = {}
-        sql = 'SELECT timestamp, banner, fanart, thumb, poster, clearart, clearlogo FROM image_cache WHERE trakt_id = ? and season=? and episode=?'
-        rows = self.__execute(sql, (trakt_id, season, episode))
+        sql = 'SELECT timestamp, banner, fanart, thumb, poster, clearart, clearlogo FROM image_cache WHERE object_type= ? and trakt_id = ? and season=? and episode=?'
+        rows = self.__execute(sql, (object_type, trakt_id, season, episode))
         if rows:
             created, banner, fanart, thumb, poster, clearart, clearlogo = rows[0]
             if time.time() - float(created) < cache_limit * 60 * 60:
@@ -493,7 +498,7 @@ class DB_Connection():
                 self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug VARCHAR(255) NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL, resumepoint DOUBLE NOT NULL, \
                 PRIMARY KEY(slug, season, episode))')
                 self.__execute('CREATE TABLE IF NOT EXISTS source_cache (source TEXT NOT NULL)')
-                self.__execute('CREATE TABLE IF NOT EXISTS image_cache (trakt_id INTEGER NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL,\
+                self.__execute('CREATE TABLE IF NOT EXISTS image_cache (object_type VARCHAR(15), trakt_id INTEGER NOT NULL, season VARCHAR(5) NOT NULL, episode VARCHAR(5) NOT NULL,\
                 timestamp TEXT, banner VARCHAR(255), fanart VARCHAR(255), thumb VARCHAR(255), poster VARCHAR(255), clearart VARCHAR(255), clearlogo VARCHAR(255), \
                 PRIMARY KEY(trakt_id, season, episode))')
             else:
@@ -513,8 +518,8 @@ class DB_Connection():
                 self.__execute('CREATE TABLE IF NOT EXISTS bookmark (slug TEXT NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL, resumepoint DOUBLE NOT NULL, \
                 PRIMARY KEY(slug, season, episode))')
                 self.__execute('CREATE TABLE IF NOT EXISTS source_cache (source TEXT NOT NULL)')
-                self.__execute('CREATE TABLE IF NOT EXISTS image_cache (trakt_id INTEGER NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL,\
-                timestamp, banner TEXT, fanart TEXT, thumb TEXT, poster TEXT, clearart TEXT, clearlogo TEST, PRIMARY KEY(trakt_id, season, episode))')
+                self.__execute('CREATE TABLE IF NOT EXISTS image_cache (object_type TEXT NOT NULL, trakt_id INTEGER NOT NULL, season TEXT NOT NULL, episode TEXT NOT NULL,\
+                timestamp, banner TEXT, fanart TEXT, thumb TEXT, poster TEXT, clearart TEXT, clearlogo TEST, PRIMARY KEY(object_type, trakt_id, season, episode))')
     
             # reload the previously saved backup export
             if db_version is not None and cur_version != db_version:
@@ -542,11 +547,10 @@ class DB_Connection():
 
     def reset_db(self):
         if self.db_type == DB_TYPES.SQLITE:
-            try: self.db.close()
+            try: self.__get_db_connection().close()
             except: pass
             os.remove(self.db_path)
             self.db = None
-            self.__connect_to_db()
             self.init_database(None)
             return True
         else:
@@ -597,13 +601,14 @@ class DB_Connection():
             while True:
                 try:
                     if not is_read: DB_Connection.writes += 1
-                    cur = self.db.cursor()
+                    db_con = self.__get_db_connection()
+                    cur = db_con.cursor()
                     # log_utils.log('Running: %s with %s' % (sql, params), log_utils.LOGDEBUG, COMPONENT)
                     cur.execute(sql, params)
                     if is_read:
                         rows = cur.fetchall()
                     cur.close()
-                    self.db.commit()
+                    db_con.commit()
                     if SPEED == 0:
                         self.__update_writers()
                     return rows
@@ -614,14 +619,15 @@ class DB_Connection():
                         if 'database is locked' in str(e).lower():
                             DB_Connection.locks += 1
                         self.db = None
-                        self.__connect_to_db()
                     elif any(s for s in ['no such table', 'no such column'] if s in str(e)):
-                        self.db.rollback()
+                        if self.db is not None:
+                            db_con.rollback()
                         raise DatabaseRecoveryError(e)
                     else:
                         raise
                 except DatabaseError as e:
-                    self.db.rollback()
+                    if self.db is not None:
+                        db_con.rollback()
                     raise DatabaseRecoveryError(e)
         finally:
             if self.db_type == DB_TYPES.SQLITE and not is_read:
@@ -679,13 +685,17 @@ class DB_Connection():
             sql = 'DROP TABLE IF EXISTS %s' % (db_object)
             self.__execute(sql)
 
-    def __connect_to_db(self):
-        if not self.db:
+    def __get_db_connection(self):
+        worker_id = threading.current_thread().ident
+        # create a connection if we don't have one or it was created in a different worker
+        if self.db is None or self.worker_id != worker_id:
             if self.db_type == DB_TYPES.MYSQL:
                 self.db = self.db_lib.connect(database=self.dbname, user=self.username, password=self.password, host=self.address, buffered=True)
             else:
                 self.db = self.db_lib.connect(self.db_path)
                 self.db.text_factory = str
+            self.worker_id = worker_id
+        return self.db
 
     # apply formatting changes to make sql work with a particular db driver
     def __format(self, sql):

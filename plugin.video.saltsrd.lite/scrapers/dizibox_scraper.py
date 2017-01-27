@@ -20,7 +20,7 @@ import re
 import urlparse
 import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -93,7 +93,7 @@ class Scraper(scraper.Scraper):
             js_data = scraper_utils.parse_json(html, xhr_url)
             try:
                 for source in js_data['VideoSources']:
-                    stream_url = source['file'] + '|User-Agent=%s' % (scraper_utils.get_ua())
+                    stream_url = source['file'] + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
                     host = self._get_direct_hostname(source['file'])
                     label = source.get('label', '')
                     if host == 'gvideo':
@@ -116,7 +116,7 @@ class Scraper(scraper.Scraper):
             stream_url, height = match.groups()
             if stream_url not in seen_urls:
                 seen_urls[stream_url] = True
-                stream_url += '|User-Agent=%s' % (scraper_utils.get_ua())
+                stream_url += scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
                 host = self._get_direct_hostname(stream_url)
                 if host == 'gvideo':
                     quality = scraper_utils.gv_get_quality(stream_url)
@@ -150,7 +150,7 @@ class Scraper(scraper.Scraper):
             episode_pattern = '''href=['"]([^'"]+-%s-sezon-%s-bolum[^'"]*)''' % (video.season, video.episode)
             return self._default_get_episode_url(season_url, video, episode_pattern)
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         html = self._http_get(self.base_url, cache_limit=8)
         norm_title = scraper_utils.normalize_title(title)

@@ -17,7 +17,7 @@
 """
 import re
 import urlparse
-import log_utils
+import log_utils  # @UnusedImport
 import kodi
 import dom_parser
 from salts_lib import scraper_utils
@@ -27,8 +27,8 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
 import scraper
 
-BASE_URL = 'http://www.ddlseries.net'
-QUALITY_MAP = {'SDXVID': QUALITIES.MEDIUM, 'SDX264': QUALITIES.HIGH, 'HD720P': QUALITIES.HD720, 'HD1080P': QUALITIES.HD1080}
+BASE_URL = 'http://www.ddlseries.me'
+QUALITY_MAP = {'SDXVID': QUALITIES.MEDIUM, 'DVD9': QUALITIES.HIGH, 'SDX264': QUALITIES.HIGH, 'HD720P': QUALITIES.HD720, 'HD1080P': QUALITIES.HD1080}
 HEADER_MAP = {'ul.png': 'uploaded.net', 'tb.png': 'turbobit.net', 'utb.png': 'uptobox.com'}
 
 class Scraper(scraper.Scraper):
@@ -81,13 +81,14 @@ class Scraper(scraper.Scraper):
             page_title = dom_parser.parse_dom(html, 'title')
             if page_title:
                 _title, _season, q_str, _is_pack = self.__get_title_parts(page_title[0])
-                quality = QUALITY_MAP.get(q_str, QUALITIES.HIGH)
+                for key in QUALITY_MAP:
+                    if key in q_str:
+                        quality = QUALITY_MAP[key]
+                        break
         
         pattern = '<img[^>]+src="([^"]+)[^>]+alt="[^"]+Download Links">(.*?)(?=<img|</div>)'
         for match in re.finditer(pattern, html, re.I | re.DOTALL):
             image, fragment = match.groups()
-            log_utils.log(image)
-            log_utils.log(fragment)
             image = image.split('/')[-1]
             host = HEADER_MAP.get(image)
             if host:
@@ -95,7 +96,6 @@ class Scraper(scraper.Scraper):
                 for match in re.finditer(ep_pattern, fragment):
                     stream_url = match.group(1)
                     hoster = {'multi-part': False, 'host': host, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'quality': quality, 'direct': False}
-                    log_utils.log(hoster)
                     hosters.append(hoster)
                 
         return hosters
@@ -110,7 +110,7 @@ class Scraper(scraper.Scraper):
         if self.__get_sources(season_url, video):
             return season_url
     
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         try: season = int(season)
         except: season = 0
@@ -138,15 +138,13 @@ class Scraper(scraper.Scraper):
     def __get_title_parts(self, title):
         title = re.sub('</?span[^>]*>', '', title)
         title = title.replace('&nbsp;', ' ')
-        match = re.search('(.*?)\s*-?\s*Season\s+(\d+)\s*\[?([^]]+)', title)
+        match = re.search('(.*?)\s*-?\s*Season\s+(\d+)\s*(.*)', title)
         if match:
             match_title, match_season, extra = match.groups()
             extra = extra.replace(' ', '').upper()
             is_pack = True if '(PACK)' in extra else False
-            extra = extra.replace('(PACK)', '')
+            for s in ('[', ']', '(PACK)', 'EPISODES'):
+                extra = extra.replace(s, '')
             return match_title, match_season, extra, is_pack
         else:
             return title, 0, '', False
-                
-            
-        

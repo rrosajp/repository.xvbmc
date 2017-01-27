@@ -18,9 +18,8 @@
 import scraper
 import urlparse
 import re
-import urllib
 import kodi
-import log_utils
+import log_utils  # @UnusedImport
 import dom_parser
 from salts_lib import scraper_utils
 from salts_lib.constants import VIDEO_TYPES
@@ -86,7 +85,7 @@ class Scraper(scraper.Scraper):
                         host = self._get_direct_hostname(stream_url)
                         if host == 'gvideo':
                             quality = scraper_utils.gv_get_quality(stream_url)
-                            stream_url += '|User-Agent=%s&Referer=%s' % (scraper_utils.get_ua(), urllib.quote(page_url))
+                            stream_url += scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua(), 'Referer': page_url})
                             direct = True
                         else:
                             host = urlparse.urlparse(stream_url).hostname
@@ -100,7 +99,7 @@ class Scraper(scraper.Scraper):
 
         return sources
 
-    def search(self, video_type, title, year, season=''):
+    def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search/%s.html')
         search_url = search_url % (self.__to_slug(title))
