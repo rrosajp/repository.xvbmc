@@ -676,6 +676,27 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
   </extension>
 </addon>
 
+<addon id="plugin.video.youp" name="Youp van t Hek" version="1.0.8" provider-name="Prometheus">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.urlresolver"  version="3.0.12"/>
+    <import addon="script.module.metahandler" version="2.5.1"/>
+    <import addon="repository.xvbmc" version="4.0.1"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+  <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en"></summary>
+    <description lang="en"></description>
+    <disclaimer lang="en"></disclaimer>
+    <language>en</language>
+    <platform>all</platform>
+    <website></website>
+    <email></email>
+  </extension>
+</addon>
+
 <addon id="plugin.video.youtube" name="YouTube" version="5.3.4" provider-name="jdf76, bromix">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
