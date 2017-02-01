@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Merge xSopcast and SportsDevilNL
+# Merge xSopcast and SportsDevil
 #http://forum.xbmc.org/showthread.php?tid=100031&pid=1101338#pid1101338
 
 #Freedocast fix
@@ -68,7 +68,7 @@ class Main:
         self.currentlist = None
         self.addon = None
         
-        common.log('SportsDevilNL initialized')
+        common.log('SportsDevil initialized')
         
     def playVideo(self, videoItem, isAutoplay = False):
         if not videoItem:
@@ -387,7 +387,7 @@ class Main:
     
                 if lItem['title'] != "Favourites":
                         # Add to favourites
-                        contextMenuItem = createContextMenuItem('Add to SportsDevilNL favourites', Mode.ADDTOFAVOURITES, codedItem)
+                        contextMenuItem = createContextMenuItem('Add to SportsDevil favourites', Mode.ADDTOFAVOURITES, codedItem)
                         contextMenuItems.append(contextMenuItem)
                 contextMenuItem = createContextMenuItem('Open with Chrome launcher', Mode.CHROME, codedItem)
                 contextMenuItems.append(contextMenuItem)
@@ -431,7 +431,7 @@ class Main:
 
     def queueAllVideos(self, item):
         dia = DialogProgress()
-        dia.create('SportsDevilNL', 'Get videos...' + item['title'])
+        dia.create('SportsDevil', 'Get videos...' + item['title'])
         dia.update(0)
 
         items = self.getVideos(item, dia)
@@ -486,7 +486,7 @@ class Main:
 
     def run(self, argv=None):
         self.addon = Addon('plugin.video.SportsDevilNL', argv)
-        common.log('SportsDevilNL running')
+        common.log('SportsDevil running')
         
         base = argv[0]
         handle = int(argv[1])
@@ -583,5 +583,5 @@ class Main:
                             
 
         except Exception, e:
-            common.showError('Error running SportsDevilNL')
-            common.log('Error running SportsDevilNL. Reason:' + str(e))
+            common.showError('Error running SportsDevil')
+            common.log('Error running SportsDevil. Reason:' + str(e))
