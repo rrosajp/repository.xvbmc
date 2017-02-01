@@ -6,7 +6,7 @@ class DialogInfo:
 
     def __init__(self):
         self.dlg = xbmcgui.Dialog()
-        self.head = 'SportsDevilNL Info'
+        self.head = 'SportsDevil Info'
 
     def show(self, message):
         self.dlg.ok(self.head, message)
