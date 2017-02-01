@@ -114,13 +114,13 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.Allesin1NL!"
 	   name="Alles in 1 NL"
-	   version="1.0.4"
+	   version="1.0.4x"
        provider-name="XvBMC">
   <requires>
     <import addon="repository.xvbmc" version="4.0.1"/>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.addon.common" version="2.0.0"/>
-    <import addon="plugin.video.youtube" version="5.0.0"/>
+    <import addon="plugin.video.youtube" version="5.3.8x"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>video</provides>
