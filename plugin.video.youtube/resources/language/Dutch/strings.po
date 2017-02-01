@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "Addon Summary"
 msgid "Plugin for YouTube"
-msgstr "Plugin voor Youtube"
+msgstr "Plugin voor YouTube"
 
 msgctxt "Addon Description"
 msgid "YouTube is a one of the biggest video-sharing websites of the world."
@@ -281,7 +281,7 @@ msgstr "Kanalen"
 
 msgctxt "#30501"
 msgid "Playlists"
-msgstr "Aspeellijsten"
+msgstr "Afspeellijsten"
 
 msgctxt "#30502"
 msgid "Go to %s"
@@ -589,4 +589,8 @@ msgstr ""
 
 msgctxt "#30578"
 msgid "Force SSL Certificate verification"
+msgstr ""
+
+msgctxt "#30579"
+msgid "MPEG-DASH is enabled in the YouTube settings, however inputstream.adaptive appears to be disabled. Would you like to enable inputstream.adaptive now?"
 msgstr ""
