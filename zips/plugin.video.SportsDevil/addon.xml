@@ -7,11 +7,11 @@
   <requires>
    <import addon="xbmc.python" version="2.14.0"/>
    <import addon="repository.xvbmc" version="4.0.1"/>
-   <import addon="repository.unofficialsportsdevil" version="1.0.0"/>
    <import addon="script.module.simplejson" />
    <import addon="script.module.six" />
    <import addon="script.module.requests" />
    <import addon="script.module.livestreamer" />
+   <import addon="repository.unofficialsportsdevil" version="1.0.0"/>
   </requires>
   <extension 
     point="xbmc.python.pluginsource"
