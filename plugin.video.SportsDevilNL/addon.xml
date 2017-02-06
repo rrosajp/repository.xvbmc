@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="plugin.video.SportsDevilNL"
-  version="2017.02.03.NL4"
-  name="SportsDevilNL (EndOfLife)"
-  provider-name="Hubbab3, Jairox, Sattekop, EPiC XvBMC, MaxMustermann, Al101">
+  version="2017.02.06.NL"
+  name="SportsDevilNL (no more support)"
+  provider-name="Hubbab3, Jairox, Sattekop, XvBMC, MaxMustermann, Al101">
   <requires>
    <import addon="xbmc.python" version="2.14.0"/>
    <import addon="repository.xvbmc" version="4.0.1"/>
@@ -24,8 +24,8 @@
 <!--	point="xbmc.python.script"						-->
 <!--	library="lib/livestreamerXBMCLocalProxy.py" />	-->
   <extension point="xbmc.addon.metadata">
-    <summary>'End Of Life': Play videos of different sports streaming sites (+NL-sausje +XvBMC-NL_versionnr.) *No more support SportsDevilNL*</summary>
-    <description>'End Of Life': Play videos of different sports streaming sites (ALL CREDiTS -2- Hubbab3, Jairox, Sattekop, MaxMustermann, Al101) *No more support SportsDevilNL*</description>
+    <summary>*No more support SportsDevilNL* use the official addon: https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp.html</summary>
+    <description>*No more support SportsDevilNL* use the official addon: https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp.html (ALL ORIGINAL CREDiTS -2- Hubbab3, Jairox, Sattekop, MaxMustermann, Al101); Unofficial Repo @ https://seo-michael.co.uk/how-to-install-unofficial-sportsdevil-repo/</description>
     <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
 	<forum>https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp-57.html</forum>
 	<source>https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp-57.html</source>
