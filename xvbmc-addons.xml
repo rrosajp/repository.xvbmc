@@ -294,24 +294,6 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
   </extension>
 </addon>
 
-
-<addon id="plugin.video.kmediatorrent" name="KMediaTorrent" version="4.3.7" provider-name="jmarth +OpenELEQ +EPiC (XvBMC NL)">
-    <requires>
-        <import addon="xbmc.python" version="2.14.0"/>
-        <import addon="script.module.requests" version="2.3.5"/>
-        <import addon="script.module.html5lib" version="0.999.0" optional="false"/>
-        <import addon="script.module.beautifulsoup4" version="4.3.2"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="addon.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <platform>all</platform>
-        <summary><![CDATA[EPiC torrent streaming for KODI/XBMC. XvBMC-NL MOD.]]></summary>
-        <description><![CDATA[Watch EPiC torrents directly from KODI/XBMC, without waiting. XvBMC-NL MOD.]]></description>
-    </extension>
-</addon>
-
 <addon id="plugin.video.livestreamer" name="livestreamer" version="1.12.2-blxd2" provider-name="blxd">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
