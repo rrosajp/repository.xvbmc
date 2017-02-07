@@ -26,14 +26,15 @@ import re,base64,urllib,urllib2,uuid
 import xbmc,xbmcgui,xbmcplugin
 import os,shutil,time
 import downloader,extract
+import sqlite3
 import common as Common
 
-# import xbmcaddon
+# import xbmcaddon                             #
 # Set the addon environment                    #
 # addon = xbmcaddon.Addon('script.xvbmc.update')
 
 
-#                ProgTitle="XvBMC Update+Development"                 #
+################ ProgTitle="XvBMC Update+Development" #################
 addonPath      = os.path.join(os.path.join(xbmc.translatePath('special://home'), 'addons'),'script.xvbmc.update')
 mediaPath      = os.path.join(addonPath, 'media')
 xvbmcfanart    = os.path.join(addonPath, 'fanart.jpg')
@@ -67,7 +68,7 @@ uitgeschakeld  = '[COLOR=red]Disabled: [/COLOR]'
 waarschuwing   = '[COLOR red]WARNING: [/COLOR]'
 herstart       = 'PRESS OK TO FORCECLOSE AND REBOOT!'
 forceersluiten = '[COLOR dimgray]indien forceclose niet werkt, herstart uw systeem handmatig, [/COLOR]if forceclose does not work shutdown manually'
-#                ProgTitle="XvBMC Update+Development"                 #
+################ ProgTitle="XvBMC Update+Development" #################
 
 
 #######################################################################
@@ -79,13 +80,14 @@ def mainMenu():
 	addItem('[COLOR red]XvBMC [B]U[/B]pgrade v[B]4[/B].0 beta[/COLOR] [COLOR dimgray] ([/COLOR]RPi[COLOR dimgray][COLOR white]+[/COLOR][/COLOR]P[COLOR dimgray]ortable)[/COLOR] [COLOR red][I]coming soon[/I][/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR lime]XvBMC v[B]3[/B].1 *final* Jarvis[/COLOR] [COLOR dimgray] ([/COLOR]RPi[COLOR dimgray][COLOR white]+[/COLOR][/COLOR]P[COLOR dimgray]ortable)[/COLOR] [COLOR dimgray][I]2017[B]-[/B]01[B]-[/B]xx[/I][/COLOR]', 'url', 2,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]eset Kodi ' +resetinfo, 'url', 3,os.path.join(mediaPath, "dev.png"))
-	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack (v3.1[B]+[/B])[/COLOR]', 'url', 4,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack bulk pack (v3.1[B]+[/B])[/COLOR]','url', 5,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [COLOR darkgreen][B]E[/B]nable[/COLOR] Kodi [COLOR white]Add-ons[/COLOR] [COLOR dimgray](v[COLOR white]17[/COLOR])[/COLOR]', 'url', 14,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack (v3.1[B]+[/B]) [I]~outdated~[/I][/COLOR]', 'url', 4,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack bulk pack (v3.1[B]+[/B]) [I]~outdated~[/I][/COLOR]','url', 5,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]efresh Addons[COLOR white]+[/COLOR]Repos', 'url', 6,os.path.join(mediaPath, "dev.png"))
-	addItem('XvBMC [B]O[/B]ver[B]C[/B]lock (Raspberry [COLOR white]Pi[/COLOR] **only**)', 'url', 7,os.path.join(mediaPath, "dev.png"))	
-	addItem('XvBMC #[B]DEV[/B]# Corner (firmware[COLOR white]-[/COLOR]OS[COLOR white]-[/COLOR]etc[COLOR white].[/COLOR])', 'url', 8,os.path.join(mediaPath, "dev.png"))
-	addItem('XvBMC [B]A[/B]bout (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('XvBMC [B]L[/B]og viewer', 'url', 10,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [COLOR white]O[/COLOR]ver[COLOR white]C[/COLOR]lock [COLOR dimgray] (raspberry pi **only**)[/COLOR]', 'url', 7,os.path.join(mediaPath, "dev.png"))	
+	addItem('XvBMC [COLOR white]#DEV#[/COLOR] Corner [COLOR dimgray](firmware, OS, etc.)[/COLOR]', 'url', 8,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]A[/B]bout [COLOR dimgray](over xvbmc & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)[/COLOR]', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [B]L[/B]og viewer [COLOR dimgray](show \'kodi.log\')[/COLOR]', 'url', 10,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance [COLOR darkgreen][I](kodi schoonmaak)[/I][/COLOR]', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR dimgray]XvBMC Tweaking[/COLOR]', 'url', 12,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 13,os.path.join(mediaPath, "dev.png"))
@@ -410,11 +412,11 @@ def subDEVmenu(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.dev')))
     if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.dev)")
     else:
-        url=base64.b64decode(base)+'script.xvbmc.dev/script.xvbmc.dev-3.04.zip'
+        url=base64.b64decode(base)+'script.xvbmc.dev/script.xvbmc.dev-3.07.zip'
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.xvbmc.dev-3.04.zip')
+        lib=os.path.join(path, 'script.xvbmc.dev-3.07.zip')
         try:
             os.remove(lib)
         except:
@@ -444,11 +446,11 @@ def xvbmcMaintenance(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
     else:
-        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.17.zip'
+        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.19.zip'
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.schoonmaak-1.10.17.zip')
+        lib=os.path.join(path, 'script.schoonmaak-1.10.19.zip')
         try:
             os.remove(lib)
         except:
@@ -468,6 +470,17 @@ def xvbmcMaintenance(url):
             xbmc.executebuiltin("UpdateLocalAddons")
             xbmc.executebuiltin("RunAddon(script.schoonmaak)")
 
+def AddonsEnable(): #Thx. Patrick (en Wilfred)#
+    conn = sqlite3.connect(xbmc.translatePath("special://database/Addons27.db"))
+    c = conn.cursor()
+    c.execute("UPDATE installed SET enabled = 1 WHERE addonID NOT LIKE '%audiodecoder.%' AND addonID NOT LIKE '%inputstream.%' AND addonID NOT LIKE '%pvr.%' AND addonID NOT LIKE '%screensaver.%' AND addonID NOT LIKE '%visualization.%';")
+    conn.commit()
+    conn.close()
+    #dialog = xbmcgui.Dialog()
+    choice = xbmcgui.Dialog().yesno(MainTitle +' : add-ons [B]enabled[/B]', '[B]Herstart[/B] Kodi ter afronding \'enable\' (force close)', '', '[B]Reboot[/B] Kodi to complete \'enable\' (force close)',yeslabel='[COLOR lime]Ja/Yes[/COLOR]',nolabel='[COLOR red]Nee/No[/COLOR]')
+    if choice == 1:
+        os._exit(1)
+    else: pass
 
 def closeandexit():
 #	http://kodi.wiki/view/Keyboard.xml
@@ -700,6 +713,9 @@ elif mode==12:
 
 elif mode==13:
 	closeandexit()
+
+elif mode==14:
+	AddonsEnable()
 
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
