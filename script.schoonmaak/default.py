@@ -30,11 +30,11 @@ import sqlite3
 import common as Common
 
 # import xbmcaddon
-# Set the addon environment                  #
+# Set the addon environment ##################
 # addon = xbmcaddon.Addon('script.schoonmaak')
 
 
-#               ProgTitle ="XvBMC-NL-Maintenance"                     #
+#############   ProgTitle ="XvBMC-NL-Maintenance"          ############
 thumbnailPath = xbmc.translatePath('special://thumbnails');
 cachePath     = os.path.join(xbmc.translatePath('special://home'), 'cache')
 tempPath      = xbmc.translatePath('special://temp')
@@ -43,12 +43,13 @@ mediaPath     = os.path.join(addonPath, 'media')
 xvbmcfanart   = os.path.join(addonPath, 'fanart.jpg')
 databasePath  = xbmc.translatePath('special://database')
 dialog        = xbmcgui.Dialog()
+dp            = xbmcgui.DialogProgress()
 base          = 'aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMv'
 MainTitle     = "XvBMC-NL-Maintenance"
 Windows       = xbmc.translatePath('special://home')
 WindowsCache  = xbmc.translatePath('special://home')
 OtherCache    = xbmc.translatePath('special://home/temp')
-#               ProgTitle ="XvBMC-NL-Maintenance"                     #
+#############   ProgTitle ="XvBMC-NL-Maintenance"          ############
 
 
 #######################################################################
@@ -71,15 +72,16 @@ def mainMenu():
 	addItem('[B]C[/B]lear Cache','url', 2,os.path.join(mediaPath, "cache.png"))
 	addItem('[B]D[/B]elete Thumbnails', 'url', 3,os.path.join(mediaPath, "thumbs.png"))
 	addItem('[B]F[/B]lush Add-ons (Salts HD/RD lite, Exodus, etc.)', 'url', 4,os.path.join(mediaPath, "packages.png"))
+	addItem('[B]F[/B]orce Close Kodi (Kill)', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]K[/B]odi versie (WhoAm[B]i[/B])', 'url', 13,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[B]P[/B]urge Packages', 'url', 5,os.path.join(mediaPath, "packages.png"))
 	addItem('[B]R[/B]aspberry [COLOR white]Pi[/COLOR] Extreme [B]C[/B]rap[B]C[/B]leaner [COLOR dimgray](it\'s not a fresh restart)[/COLOR]', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 7,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[B]R[/B]emove addons.db', 'url', 8,os.path.join(mediaPath, "thumbs.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC About (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Build [COLOR red]Purge[/COLOR] (image crap cleaner)', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Convert Physical (HOME) Paths To Special', 'url', 15,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC UPDATER(r) [B]&[/B] Development [COLOR darkgreen][I](kodi dev.tools)[/I][/COLOR]', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B]K[/B]ill kodi  (force close)', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]K[/B]odi versie (WhoAm[B]i[/B])', 'url', 13,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 14,os.path.join(mediaPath, "kmbroom.png"))
 
 
@@ -125,15 +127,13 @@ def get_params():
 #######################################################################
 
 def setupCacheEntries():
-    entries = 8 #make sure this reflects the amount of entries you have
-    dialogName = ["MP3 Streams", "Quasar", "SportsDevil", "SportsDevilNL", "Simple Downloader", "Spotitube", "Kmediatorrent", "SkinHelperService"]
+    entries = 6 #make sure this reflects the amount of entries you have
+    dialogName = ["MP3 Streams", "Quasar", "SportsDevil", "Simple Downloader", "Spotitube", "SkinHelperService"]
     pathName = ["special://profile/addon_data/plugin.audio.mp3streams/temp_dl",
 				"special://profile/addon_data/plugin.video.quasar/cache",
 				"special://profile/addon_data/plugin.video.SportsDevil/cache",
-				"special://profile/addon_data/plugin.video.SportsDevilNL/cache",
 				"special://profile/addon_data/script.module.simple.downloader",
 				"special://profile/addon_data/plugin.video.spotitube/cache",
-				"special://profile/addon_data/plugin.video.kmediatorrent/cache",
 				"special://profile/addon_data/script.skin.helper.service/musicartcache"]
                     
     cacheEntries = []
@@ -419,11 +419,11 @@ def xvbmcupdater(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.update')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
     else:
-        url=base64.b64decode(base)+'script.xvbmc.update/script.xvbmc.update-4.0.3.zip'
+        url=base64.b64decode(base)+'script.xvbmc.update/script.xvbmc.update-4.0.4.zip'
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.xvbmc.update-4.0.3.zip')
+        lib=os.path.join(path, 'script.xvbmc.update-4.0.4.zip')
         try:
             os.remove(lib)
         except:
@@ -432,7 +432,6 @@ def xvbmcupdater(url):
         if os.path.exists(lib):
             addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
             time.sleep(2)
-            dp = xbmcgui.DialogProgress()
             dp.create("XvBMC Nederland - Maintenance","XvBMC-NL: doing some extracting VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
             extract.all(lib,addonfolder,dp)
@@ -618,10 +617,10 @@ def autocleannow():
                     shutil.rmtree(os.path.join(root, d))
 
     if AutoClean==True:
-        #dialog.ok(MainTitle, "Auto Remove Crash Log Files...")
+        #dialog.ok(MainTitle, "Auto.Remove Crash Log Files...")
         AutoCrash()
     else:
-        #dialog.ok(MainTitle, "Skip auto remove crash log files...")
+        #dialog.ok(MainTitle, "Skip auto.remove crash log files...")
         xbmc.log(str(AutoClean))
 
     choice = xbmcgui.Dialog().yesno(MainTitle,"[COLOR white][B]A[/B]uto [B]C[/B]lean finished:[/COLOR]","[I]cache, crashlogs, packages & thumbnails are removed.[/I]","Reboot your device now to finish the process?", yeslabel='[B][COLOR green]YES[/COLOR][/B]',nolabel='[B][COLOR red]NO[/COLOR][/B]')
@@ -672,6 +671,28 @@ def AutoCrash():
 			File=infile
 			print infile
 			os.remove(infile)
+
+
+#######################################################################
+#						Convert physical to special
+#######################################################################	
+
+def Fix_Special(url):
+    HOME         =  xbmc.translatePath('special://home')
+    dialog = xbmcgui.Dialog()
+    dp.create(MainTitle,"Renaming paths...",'', 'Please Wait')
+    for root, dirs, files in os.walk(HOME):  #Search all .xml-files +replace physical with special
+        for file in files:
+            if file.endswith(".xml"):
+                 dp.update(0,"Fixing","[COLOR green]" + file + "[/COLOR]", "Please wait.....")
+                 a=open((os.path.join(root, file))).read()
+                 b=a.replace(HOME, 'special://home/')
+                 f = open((os.path.join(root, file)), mode='w')
+                 f.write(str(b))
+                 f.close()
+				 
+    dialog.ok(MainTitle, "All physical (home) paths have been converted to special","To complete this process Kodi will force close now!")
+    Common.KillKodi()
 
 
 #######################################################################
@@ -765,6 +786,9 @@ elif mode==13:
 
 elif mode==14:
 	closeandexit()
+
+elif mode==15:
+	Fix_Special(url)
 
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
