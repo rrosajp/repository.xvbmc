@@ -80,7 +80,7 @@ def mainMenu():
 	addItem('[COLOR red]XvBMC [B]U[/B]pgrade v[B]4[/B].0 beta[/COLOR] [COLOR dimgray] ([/COLOR]RPi[COLOR dimgray][COLOR white]+[/COLOR][/COLOR]P[COLOR dimgray]ortable)[/COLOR] [COLOR red][I]coming soon[/I][/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR lime]XvBMC v[B]3[/B].1 *final* Jarvis[/COLOR] [COLOR dimgray] ([/COLOR]RPi[COLOR dimgray][COLOR white]+[/COLOR][/COLOR]P[COLOR dimgray]ortable)[/COLOR] [COLOR dimgray][I]2017[B]-[/B]01[B]-[/B]xx[/I][/COLOR]', 'url', 2,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]eset Kodi ' +resetinfo, 'url', 3,os.path.join(mediaPath, "dev.png"))
-	addItem('XvBMC [COLOR darkgreen][B]E[/B]nable[/COLOR] Kodi [COLOR white]Add-ons[/COLOR] [COLOR dimgray](v[COLOR white]17[/COLOR])[/COLOR]', 'url', 14,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('XvBMC [COLOR darkgreen][B]E[/B]nable[/COLOR] Kodi [COLOR white]Addons[/COLOR] [COLOR dimgray](v[COLOR white]17[/COLOR] Krypton)[/COLOR]', 'url', 14,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack (v3.1[B]+[/B]) [I]~outdated~[/I][/COLOR]', 'url', 4,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack bulk pack (v3.1[B]+[/B]) [I]~outdated~[/I][/COLOR]','url', 5,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]efresh Addons[COLOR white]+[/COLOR]Repos', 'url', 6,os.path.join(mediaPath, "dev.png"))
@@ -175,7 +175,7 @@ def XvbmcUpgradePortable(url):
             addonfolder = xbmc.translatePath(os.path.join('special://','home'))
             time.sleep(3)
             dp = xbmcgui.DialogProgress()
-            dp.create("XvBMC Nederland - UGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
+            dp.create("XvBMC Nederland - UPGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
             extract.all(lib,addonfolder,dp)
             dp.close()
@@ -235,7 +235,7 @@ def XvbmcPortableFinal(url):
             addonfolder = xbmc.translatePath(os.path.join('special://','home'))
             time.sleep(3)
             dp = xbmcgui.DialogProgress()
-            dp.create("XvBMC Nederland - UGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
+            dp.create("XvBMC Nederland - UPGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
             extract.all(lib,addonfolder,dp)
             dp.close()
@@ -295,7 +295,7 @@ def XvbmcResetPortable(url):
             addonfolder = xbmc.translatePath(os.path.join('special://','home'))
             time.sleep(3)
             dp = xbmcgui.DialogProgress()
-            dp.create("XvBMC Nederland - UGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
+            dp.create("XvBMC Nederland - UPGRADER","XvBMC-NL: doing some upgrading VOODOO...",'', 'Please Wait')
             dp.update(0,"", "*Extracting ZiP Please Wait*")
             extract.all(lib,addonfolder,dp)
             dp.close()
@@ -470,17 +470,23 @@ def xvbmcMaintenance(url):
             xbmc.executebuiltin("UpdateLocalAddons")
             xbmc.executebuiltin("RunAddon(script.schoonmaak)")
 
-def AddonsEnable(): #Thx. Patrick (en Wilfred)#
-    conn = sqlite3.connect(xbmc.translatePath("special://database/Addons27.db"))
-    c = conn.cursor()
-    c.execute("UPDATE installed SET enabled = 1 WHERE addonID NOT LIKE '%audiodecoder.%' AND addonID NOT LIKE '%inputstream.%' AND addonID NOT LIKE '%pvr.%' AND addonID NOT LIKE '%screensaver.%' AND addonID NOT LIKE '%visualization.%';")
-    conn.commit()
-    conn.close()
-    #dialog = xbmcgui.Dialog()
-    choice = xbmcgui.Dialog().yesno(MainTitle +' : add-ons [B]enabled[/B]', '[B]Herstart[/B] Kodi ter afronding \'enable\' (force close)', '', '[B]Reboot[/B] Kodi to complete \'enable\' (force close)',yeslabel='[COLOR lime]Ja/Yes[/COLOR]',nolabel='[COLOR red]Nee/No[/COLOR]')
-    if choice == 1:
-        os._exit(1)
-    else: pass
+def AddonsEnable():
+    databasePath   = xbmc.translatePath('special://database')
+    adb27 = os.path.join(databasePath,"Addons27.db") #krypton
+    if os.path.exists(adb27):
+        #Thx. Patrick (en Wilfred)#
+        conn = sqlite3.connect(xbmc.translatePath("special://database/Addons27.db"))
+        c = conn.cursor()
+        c.execute("UPDATE installed SET enabled = 1 WHERE addonID NOT LIKE '%audiodecoder.%' AND addonID NOT LIKE '%inputstream.%' AND addonID NOT LIKE '%pvr.%' AND addonID NOT LIKE '%screensaver.%' AND addonID NOT LIKE '%visualization.%';")
+        conn.commit()
+        conn.close()
+        #dialog = xbmcgui.Dialog()
+        choice = xbmcgui.Dialog().yesno(MainTitle +' : add-ons [B]enabled[/B]', '[COLOR=green][B]!!!  FINISHED  !!![/B][/COLOR]', '[B]Herstart[/B] Kodi ter afronding \'enable\' (force close)', '[B]Reboot[/B] Kodi to complete \'enable\' (force close)',yeslabel='[COLOR lime]Ja/Yes[/COLOR]',nolabel='[COLOR red]Nee/No[/COLOR]')
+        if choice == 1:
+            os._exit(1)
+        else: pass
+    else:
+        dialog.ok(MainTitle +' : add-ons enabler', '[COLOR=red][B]!!!  NOPE  !!![/B][/COLOR]','[US] you\'re not running Kodi v17 Krypton.','[NL] dit is geen Kodi v17 Krypton.')
 
 def closeandexit():
 #	http://kodi.wiki/view/Keyboard.xml
