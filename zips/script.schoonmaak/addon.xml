@@ -12,9 +12,9 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <summary lang="en">XvBMC Nederland - Kodi Schoonmaak</summary>
-    <description lang="en">XvBMC Maintenance/Schoonmaak ; CrapCleaner + Purge.</description>
-    <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!! more info @ http://bit.ly/XvBMC-NL !!!</disclaimer>
+    <summary lang="en">XvBMC Nederland - Kodi Schoonmaak (CleanUp-tool)</summary>
+    <description lang="en">XvBMC Maintenance/Schoonmaak ; CrapCleaner, Purge and Refresh.</description>
+    <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!! MORE iNFO @ http://bit.ly/XvBMC-NL !!!</disclaimer>
     <platform>all</platform>
     <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
     <forum>http://bit.ly/XvBMC-Pi</forum>
