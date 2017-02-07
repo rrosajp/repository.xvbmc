@@ -6,7 +6,7 @@
 
 #   script.Schoonmaak (EPiC Kodi Schoonmaak XvBMC Nederland)
 #
-#   Copyright (C) 2016
+#   Copyright (C) 2017
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -68,19 +68,19 @@ class cacheEntry:
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('[B]A[/B]uto Clean (cache, crashlogs, packages & thumbnails)','url', 1,os.path.join(mediaPath, "cache.png"))
 	addItem('[B]C[/B]lear Cache','url', 2,os.path.join(mediaPath, "cache.png"))
 	addItem('[B]D[/B]elete Thumbnails', 'url', 3,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B]F[/B]lush Add-ons (Salts HD/RD lite, Exodus, etc.)', 'url', 4,os.path.join(mediaPath, "packages.png"))
-	addItem('[B]F[/B]orce Close Kodi (Kill)', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
-	addItem('[B]K[/B]odi versie (WhoAm[B]i[/B])', 'url', 13,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]F[/B]lush Add-ons [COLOR dimgray](salts HD/RD lite & Exodus \'cache+temp\' files)[/COLOR]', 'url', 4,os.path.join(mediaPath, "packages.png"))
+	addItem('[B]F[/B]orce Close Kodi', 'url', 12,os.path.join(mediaPath, "kmbroom.png"))
+	addItem('[B]F[/B]ull \"auto\" Clean [COLOR dimgray](cache, crashlogs, packages & thumbnails)[/COLOR]','url', 1,os.path.join(mediaPath, "cache.png"))
+	addItem('[B]K[/B]odi versie', 'url', 13,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[B]P[/B]urge Packages', 'url', 5,os.path.join(mediaPath, "packages.png"))
-	addItem('[B]R[/B]aspberry [COLOR white]Pi[/COLOR] Extreme [B]C[/B]rap[B]C[/B]leaner [COLOR dimgray](it\'s not a fresh restart)[/COLOR]', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 7,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[B]R[/B]emove addons.db', 'url', 8,os.path.join(mediaPath, "thumbs.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC About (over & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Build [COLOR red]Purge[/COLOR] (image crap cleaner)', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC Convert Physical (HOME) Paths To Special', 'url', 15,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]A[/B]bout [COLOR dimgray](over xvbmc & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)[/COLOR]', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]B[/B]uild [COLOR red][B]P[/B]urge[/COLOR] [COLOR dimgray](crap clean your image)[/COLOR]', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]C[/B]onvert Physical (\'home\') Paths to Special', 'url', 15,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]R[/B]aspberry [COLOR white]Pi[/COLOR] [B]E[/B]xtreme [B]C[/B]rap[B]C[/B]leaner [COLOR dimgray]([B]no[/B] factory reset)[/COLOR]', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC UPDATER(r) [B]&[/B] Development [COLOR darkgreen][I](kodi dev.tools)[/I][/COLOR]', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 14,os.path.join(mediaPath, "kmbroom.png"))
 
@@ -401,7 +401,8 @@ def AddonsDatabaseRemoval():
                 except:
                     removed = False
             if removed:
-                dialog.ok(MainTitle, "Please reboot your system to rebuild addons database...")
+                dialog.ok(MainTitle, "Your system will reboot to rebuild addons.db...")
+                Common.killKodi
             else:
                 dialog.ok(MainTitle, "Removal failed!", "try manual remove, see: http://kodi.wiki/view/Database_version")
         except:
@@ -692,7 +693,7 @@ def Fix_Special(url):
                  f.close()
 				 
     dialog.ok(MainTitle, "All physical (home) paths have been converted to special","To complete this process Kodi will force close now!")
-    Common.KillKodi()
+    Common.killKodi()
 
 
 #######################################################################
