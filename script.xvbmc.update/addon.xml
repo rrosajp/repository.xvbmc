@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.xvbmc.update"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; Development [COLOR darkgreen] [I](v4)[/I][/COLOR]"
-       version="4.0.6"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; [COLOR white]DEV[/COLOR]elopment [COLOR darkgreen] [I](v4+)[/I][/COLOR]"
+       version="4.0.7"
        provider-name="EPiC XvBMC-NL">
   <requires>
-    <import addon="xbmc.python" version="2.14.0"/>
+    <import addon="repository.xvbmc"  version="4.0.1"/>
+    <import addon="xbmc.python"       version="2.14.0"/>
     <import addon="script.schoonmaak" version="1.10.19"/>
     <import addon="script.xvbmc.dev"  version="3.07" optional="true"/>
     <import addon="script.xvbmc.oc"   version="3.03" optional="true"/>
-    <import addon="repository.xvbmc"  version="4.0.1"/>
   </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">XvBMC Nederland - UPDATE(r)+DEVelopment v4+</summary>
-    <description lang="en">XvBMC's UPDATE(r) + DEVelopment ; updates, tweaks, config's, etc.</description>
+    <description lang="en">XvBMC's UPDATE(r)+DEVelopment; updates, tools, config, tweaks, etc.</description>
     <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!! MORE iNFO @ http://bit.ly/XvBMC-NL !!!</disclaimer>
     <platform>all</platform>
     <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
