@@ -61,7 +61,7 @@ upgrade31      = 'XvBMC v3.1 *[B]final[/B]* (Jarvis)'
 upgrade31dl    = 'Download XvBMC\'s [COLOR=lime]v3.1 *final* 13-10-\'16 (Pi)[/COLOR]'
 resetos        = 'XvBMC Reset Kodi'
 resetosdl      = 'import XvBMC\'s [COLOR=lime]Kodi defaults[/COLOR]'
-resetinfo      = '[COLOR dimgray] (default[/COLOR] RPi[COLOR white]+[/COLOR]P[COLOR dimgray]ortable) [I]\'Jarvis 16.1\'[/I][/COLOR]'
+resetinfo      = '[COLOR dimgray] (default RPi+Portable) [I]\'Jarvis 16.1\'[/I][/COLOR]'
 comingsoon     = '[B]Coming soon:[/B] onze nieuwste [COLOR=lime]v4 *beta*[/COLOR]'
 ingeschakeld   = '[COLOR red]INSTALL: [/COLOR]'
 uitgeschakeld  = '[COLOR=red]Disabled: [/COLOR]'
@@ -77,9 +77,10 @@ forceersluiten = '[COLOR dimgray]indien forceclose niet werkt, herstart uw syste
 
 def mainMenu():
 	xbmc.executebuiltin("Container.SetViewMode(51)")
-	addItem('[COLOR red]XvBMC [B]U[/B]pgrade v[B]4[/B].0 beta[/COLOR] [COLOR dimgray] ([/COLOR]RPi[COLOR dimgray][COLOR white]+[/COLOR][/COLOR]P[COLOR dimgray]ortable)[/COLOR] [COLOR red][I]coming soon[/I][/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[COLOR lime]XvBMC v[B]3[/B].1 *final* Jarvis[/COLOR] [COLOR dimgray] ([/COLOR]RPi[COLOR dimgray][COLOR white]+[/COLOR][/COLOR]P[COLOR dimgray]ortable)[/COLOR] [COLOR dimgray][I]2017[B]-[/B]01[B]-[/B]xx[/I][/COLOR]', 'url', 2,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR red]XvBMC [B]U[/B]pgrade v[B]4[/B].0 beta[/COLOR] [COLOR dimgray] (RPi+Portable)[/COLOR] [COLOR red][I]coming soon[/I][/COLOR]', 'url', 1,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[COLOR lime]XvBMC v[B]3[/B].1 *final* Jarvis[/COLOR] [COLOR dimgray] (RPi+Portable)[/COLOR] [COLOR dimgray][I]2017[B]-[/B]01[B]-[/B]xx[/I][/COLOR]', 'url', 2,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]R[/B]eset Kodi ' +resetinfo, 'url', 3,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]A[/B]dvancedsettings Unlocker [COLOR dimgray](reset)[/COLOR]', 'url', 12,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [COLOR darkgreen][B]E[/B]nable[/COLOR] Kodi [COLOR white]Addons[/COLOR] [COLOR dimgray](v[COLOR white]17[/COLOR] Krypton)[/COLOR]', 'url', 14,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack (v3.1[B]+[/B]) [I]~outdated~[/I][/COLOR]', 'url', 4,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR dimgray]XvBMC [B]S[/B]ervice[B]P[/B]ack bulk pack (v3.1[B]+[/B]) [I]~outdated~[/I][/COLOR]','url', 5,os.path.join(mediaPath, "xvbmc.png"))
@@ -89,7 +90,6 @@ def mainMenu():
 	addItem('XvBMC [B]A[/B]bout [COLOR dimgray](over xvbmc & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)[/COLOR]', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]L[/B]og viewer [COLOR dimgray](show \'kodi.log\')[/COLOR]', 'url', 10,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance [COLOR darkgreen][I](kodi schoonmaak)[/I][/COLOR]', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[COLOR dimgray]XvBMC Tweaking[/COLOR]', 'url', 12,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 13,os.path.join(mediaPath, "dev.png"))
 
 
@@ -437,9 +437,22 @@ def subDEVmenu(url):
             xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
 
 
-def xvbmcTweak():
+def unlocker():
 #	EPiC XvBMC user preferences and tweaking
-	dialog.ok(MainTitle +' Tweaks', 'EPiC XvBMC Tweaking bitches...', 'Coming soon to a theater near you [B];-p[/B]')
+    dialog.ok(MainTitle +' - unlocker',' ' , 'unlock advancedsettings for this build', '[COLOR dimgray](+reset \'advancedsettings.xml\' -use at your own risk)[/COLOR]')
+    addonmappie=xbmc.translatePath(os.path.join('special://home/userdata/'))
+    advancedunlock=base64.b64decode('YWR2YW5jZWRzZXR0aW5ncy54bWw=')
+    removed = True
+    try:
+        os.unlink(addonmappie+advancedunlock)
+    except:
+        removed = False
+
+    if removed:
+        dialog.ok(MainTitle +' - [B]UNLOCKED[/B]', '[COLOR=green][B]!!!  FINISHED  !!![/B][/COLOR]', '[B]Herstart[/B] Kodi ter afronding \'unlocker\' (force close)', '[B]Reboot[/B] Kodi to complete \'unlocker\' (force close)')
+        os._exit(1)
+    else:
+        dialog.ok(MainTitle +' - [B]OOOOOOPS[/B]', '[COLOR=red][B]!!!  Failed  !!![/B][/COLOR]', '[B]Nope![/B] helaas geen succes (niks te \'unlocken\')', '[B]Nope![/B] close but no cigar  (nothing to \'unlock\')')
 
 
 def xvbmcMaintenance(url):
@@ -715,7 +728,7 @@ elif mode==11:
 	xvbmcMaintenance(url)
 
 elif mode==12:
-    xvbmcTweak()
+    unlocker()
 
 elif mode==13:
 	closeandexit()
