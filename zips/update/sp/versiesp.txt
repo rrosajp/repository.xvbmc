@@ -1,5 +1,5 @@
-name="outdated"
+name="disabled"
 url=" "
 img=" "
 fanart=" "
-description=" "
+description="XvBMC ServicePacks"
