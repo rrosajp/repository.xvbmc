@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.xvbmc.dev"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [I][COLOR darkgreen] v3[/COLOR][/I]"
-       version="3.07"
+       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [COLOR darkgreen] [I](v4+)[/I][/COLOR]"
+       version="4.0.0"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
 	<import addon="repository.xvbmc" version="4.0.1"/>
-<!--<import addon="os.openelec.tv" version="7.0" />-->
+<!--<import addon="os.openelec.tv" version="7.0" optional="false" />-->
+<!--<import addon="os.libreelec.tv" version="7.0" optional="false"/>-->
   </requires>
-   <extension point="xbmc.python.script" library="xvbmc-dev.py">
+   <extension point="xbmc.python.script" library="default.py">
    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">XvBMC Nederland - #DEV# Corner (v3.1) RPi2+3</summary>
     <description lang="en">XvBMC #DEV# ; Firmware &amp; LibreELEC + OpenElec OS-updates Raspberry Pi 2+3 (XvBMC-NL v3.1)</description>
 	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!! more info @ http://bit.ly/XvBMC-NL !!!</disclaimer>
-	<platform>all</platform>
+	<platform>linux</platform>  <!-- open-/libreelec -->
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
     <forum>http://bit.ly/XvBMC-Pi</forum>
     <website>http://bit.ly/XvBMC-NL</website>

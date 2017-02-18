@@ -4,28 +4,22 @@
 	IF you copy/paste 'script.xvbmc.dev' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
 """
  
-import xbmc, xbmcgui
-import shutil
+import xbmc,xbmcaddon,xbmcgui,xbmcplugin
+import os,shutil,time
 import urllib2,urllib
-import os
-import time
 import downloader
 #import extract
 
 
-# import xbmcaddon
-# Set the addon environment
-# addon = xbmcaddon.Addon('script.xvbmc.dev')
-
-# Refresh addon environment
-# xbmc.executebuiltin("UpdateLocalAddons")
-
+################ ProgTitle = "XvBMC DEV"  ######################
+AddonID        = 'script.xvbmc.dev'
+addon_id       = 'script.xvbmc.dev'
+ADDON          = xbmcaddon.Addon(id=addon_id)
+dialog         = xbmcgui.Dialog()
+piOS           = '[COLOR red]\'RPi\'[/COLOR]'
 testedfirmware = '-29dec_2016 -LE703'     # knownworkingfirmware
 xvbmcbuildfirm = '-20jan_2017 -v31_image' # currentxvbmcfirmware 
-
-# ProgTitle="XvBMC DEV" #
-dialog = xbmcgui.Dialog()
-# ProgTitle="XvBMC DEV" #
+################ ProgTitle = "XvBMC DEV"  ######################
 
 
 def showMenu():
@@ -36,12 +30,12 @@ def showMenu():
     userchoice.append('XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware -Cutting Edge)')
     userchoice.append('XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware '+testedfirmware +')')
     userchoice.append('XvBMC #DEV# Corner ([COLOR white]Pi[/COLOR] Firmware '+xvbmcbuildfirm +')')
-    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3)')
-    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1)')
+    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3) '+piOS)
+    userchoice.append('XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1) '+piOS)
     userchoice.append('[B][COLOR white]Exit[/COLOR][/B]')
     
     # Display the menu
-    inputchoice = xbmcgui.Dialog().select("XvBMC Nederland #DEV# Menu", 
+    inputchoice = xbmcgui.Dialog().select('XvBMC Nederland '+piOS+'[B]-[/B]#DEV#[B]-[/B]Menu ', 
                                            userchoice)
     # Process menu actions
     
@@ -58,11 +52,11 @@ def showMenu():
         FirmwareImage()
     
 	#    /releases.libreelec.tv/LibreELEC-RPi2.arm-etceteraetceteraetcetera
-    elif userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3)':
+    elif userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Libre[/COLOR]ELEC_arm-7.0.3) '+piOS:
         SystemOS()
     
     #    /openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-etceteraetceteraetcetera
-    elif userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1)':
+    elif userchoice[inputchoice] == 'XvBMC #DEV# Corner ([COLOR white]Open[/COLOR]ELEC_arm-7.0.1) '+piOS:
         OpenElecTV()
 
 
@@ -101,7 +95,7 @@ class SystemOSClass(xbmcgui.Window):
 		path = xbmc.translatePath(os.path.join('/storage/.update/',''))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","XvBMC-DEV: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'libreelec702.tar')
+		lib=os.path.join(path, 'libreelec703.tar')
 		try:
 			os.remove(lib)
 		except:
@@ -123,7 +117,7 @@ class OpenElecTVClass(xbmcgui.Window):
 		path = xbmc.translatePath(os.path.join('/storage/.update/',''))
 		dp = xbmcgui.DialogProgress()
 		dp.create("XvBMC Nederland","XvBMC-DEV: doing some VOODOO...",'', 'Please Wait')
-		lib=os.path.join(path, 'openelec6953.tar')
+		lib=os.path.join(path, 'openelec701.tar')
 		try:
 			os.remove(lib)
 		except:
