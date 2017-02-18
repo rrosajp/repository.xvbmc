@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.xvbmc.update"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; [COLOR white]DEV[/COLOR]elopment [COLOR darkgreen] [I](v4+)[/I][/COLOR]"
-       version="4.0.7"
+       version="4.0.8"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="repository.xvbmc"  version="4.0.1"/>
