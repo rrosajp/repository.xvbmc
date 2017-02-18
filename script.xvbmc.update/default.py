@@ -52,7 +52,7 @@ pirestorefinal = 'ua67cbfa5nf1pvf/20161224210044.tar' # raspberry-final
 pirestoreupgrd = 'ToDO'                               # betas-4-raspberrys 
 raspberryPi    = '[COLOR=white]\'Raspberry Pi\'[/COLOR]'
 Standalonefork = '[COLOR=white]\'Standalone\'[/COLOR]'
-waarschuwing   = '[COLOR=red][B]!!!  WARNING  !!![/B][/COLOR]'
+warning        = '[COLOR=red][B]!!!  WARNING  !!![/B][/COLOR]'
 readme         = 'if you\'re seeing this message read this first[B]:[/B]'
 noservicepack  = 'Sorry the [B]S[/B]ervice[B]P[/B]ack update is [COLOR=red]outdated[/COLOR] at this moment'
 notforked      = '[COLOR dimgray](a new XvBMC\'s [B]Pi[/B]-image *fork* is coming soon[B]...[/B])[/COLOR]'
@@ -455,29 +455,52 @@ def subDEVmenu(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.dev')))
     if pluginpath: xbmc.executebuiltin("XBMC.RunAddon(script.xvbmc.dev)")
     else:
-        url=base64.b64decode(base)+'script.xvbmc.dev/script.xvbmc.dev-3.07.zip'
-        path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
-        if not os.path.exists(path):
-            os.makedirs(path)
-        lib=os.path.join(path, 'script.xvbmc.dev-3.07.zip')
-        try:
-            os.remove(lib)
-        except:
-            pass
-        downloader.download(url, lib)
-        if os.path.exists(lib):
-            addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
-            time.sleep(3)
-            dp = xbmcgui.DialogProgress()
-            dp.create("XvBMC Nederland - Updater","XvBMC-#DEV: doing some VOODOO...",'', 'Please Wait')
-            dp.update(0,"", "*Extracting ZiP Please Wait*")
-            extract.all(lib,addonfolder,dp)
-            dp.close()
-            try: os.remove(lib)
-            except: pass
-            print '=== Kodi.#DEV XvBMC Nederland ==='
-            xbmc.executebuiltin("UpdateLocalAddons")
-            xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
+        myplatform = Common.platform()
+        print "Platform: " + str(myplatform)
+        if myplatform == 'linux': # Open-/LibreELEC #linux
+            url=base64.b64decode(base)+'script.xvbmc.dev/script.xvbmc.dev-4.0.0.zip'
+            path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
+            if not os.path.exists(path):
+                os.makedirs(path)
+            lib=os.path.join(path, 'script.xvbmc.dev-4.0.0.zip')
+            try:
+                os.remove(lib)
+            except:
+                pass
+            downloader.download(url, lib)
+            if os.path.exists(lib):
+                addonfolder = xbmc.translatePath(os.path.join('special://','home','addons',''))
+                time.sleep(3)
+                dp = xbmcgui.DialogProgress()
+                dp.create("XvBMC Nederland - Updater","XvBMC-#DEV: doing some VOODOO...",'', 'Please Wait')
+                dp.update(0,"", "*Extracting ZiP Please Wait*")
+                extract.all(lib,addonfolder,dp)
+                dp.close()
+                try: os.remove(lib)
+                except: pass
+                print '=== Kodi.#DEV XvBMC Nederland ==='
+                xbmc.executebuiltin("UpdateLocalAddons")
+               #xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
+
+                xbmc_version=xbmc.getInfoLabel("System.BuildVersion")
+                version=float(xbmc_version[:4])
+                if version >= 17.0 and version <= 17.9:
+                    codename = 'Krypton'
+                else:
+                    codename = 'Pass'
+                if codename == "Krypton": #Krypton
+                    xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
+                    dialog.ok(warning, '[B]...if[/B] #DEV#-Addon isn\'t enabled after reboot,', 'please enable add-ons with our \'addon-enabler\' yourself.', '[COLOR dimgray](geen #DEV#-Addon; gebruik handmatige \'addon-enabbler\')[/COLOR]')
+                    AddonsEnable()
+                else:
+                   #dialog.ok(MainTitle +' : add-ons enabler', '[COLOR=red][B]!!!  NOPE  !!![/B][/COLOR]','[US] you\'re not running Kodi v17 Krypton.','[NL] dit is geen Kodi v17 Krypton.')
+                    xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
+
+        else: #rest
+            dialog.ok(warning, '[COLOR=red][B]!!!  NOPE  !!![/B][/COLOR]','[US] you\'re running a \'none linux os\' ie. Open-/LibreELEC','[NL] dit is geen Raspberry Pi met Open-/LibreELEC OS...')
+            print "none linux os"
+#           xbmc.executebuiltin("UpdateLocalAddons")
+#           xbmc.executebuiltin("RunAddon(script.xvbmc.dev)")
 
 
 def unlocker():
@@ -696,7 +719,7 @@ elif mode==4:
         #ServicePack(url) # BLOCKED-4-NOW (v4.0) # 
     else: #rest
         print "none linux os"
-        dialog.ok(waarschuwing,  readme, noservicepack, notforked) # DiSABLE indien SP *online* #
+        dialog.ok(warning,  readme, noservicepack, notforked) # DiSABLE indien SP *online* #
         #ServicePack(url) # BLOCKED-4-NOW (v4.0) # 
 
 elif mode==5:
@@ -708,7 +731,7 @@ elif mode==5:
         #ServicePack(url) # BLOCKED-4-NOW (v4.0) # 
     else: #rest
         print "none linux os"
-        dialog.ok(waarschuwing,  readme, noservicepack, notforked) # DiSABLE indien SP *online* #
+        dialog.ok(warning,  readme, noservicepack, notforked) # DiSABLE indien SP *online* #
         #UpdateRollup(url) # BLOCKED-4-NOW (v4.0) # 
 
 #elif mode==6:
