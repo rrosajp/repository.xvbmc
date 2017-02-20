@@ -928,14 +928,14 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 
 <addon id="script.xvbmc.update"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; [COLOR white]DEV[/COLOR]elopment [COLOR darkgreen] [I](v4+)[/I][/COLOR]"
-       version="4.0.9"
+       version="4.0.10"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="repository.xvbmc"  version="4.0.1"/>
     <import addon="xbmc.python"       version="2.14.0"/>
     <import addon="script.schoonmaak" version="1.10.19"/>
-    <import addon="script.xvbmc.dev"  version="4.0.0" optional="true"/>
-    <import addon="script.xvbmc.oc"   version="3.03" optional="true"/>
+<!--<import addon="script.xvbmc.dev"  version="4.0.0" optional="true"/>-->
+<!--<import addon="script.xvbmc.oc"   version="4.0.0" optional="true"/>-->
   </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>executable</provides>
