@@ -4,21 +4,20 @@
 	IF you copy/paste 'script.xvbmc.oc' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
 """
 
-import xbmc, xbmcgui
-import shutil
+import xbmc,xbmcaddon,xbmcgui,xbmcplugin
+import os,shutil,time
 import urllib2,urllib
-import os
-import time
+#import downloader
+#import extract
 
 
-# import xbmcaddon
-# Set the addon environment
-# addon = xbmcaddon.Addon('script.xvbmc.oc')
-
-
-# ProgTitle="XvBMC OverClock" #
-dialog = xbmcgui.Dialog()
-# ProgTitle="XvBMC OverClock" #
+################ ProgTitle = "XvBMC OC"   ######################
+AddonID        = 'script.xvbmc.oc'
+addon_id       = 'script.xvbmc.oc'
+ADDON          = xbmcaddon.Addon(id=addon_id)
+dialog         = xbmcgui.Dialog()
+piOC           = 'XvBMC overclock [COLOR white]Pi[/COLOR]'
+################ ProgTitle = "XvBMC OC"   ######################
 
 
 def showMenu():
@@ -26,31 +25,31 @@ def showMenu():
     
     # Create list of menu items
     userchoice = []
-    userchoice.append("XvBMC overclock [COLOR white]Pi[/COLOR] -None")
-    userchoice.append("XvBMC overclock [COLOR white]Pi[/COLOR] -High")
-    userchoice.append("XvBMC overclock [COLOR white]Pi[/COLOR] -Turbo")
-    userchoice.append("XvBMC overclock [COLOR white]Pi[/COLOR] -Max")
+    userchoice.append(piOC+' -None')
+    userchoice.append(piOC+' -High')
+    userchoice.append(piOC+' -Turbo')
+    userchoice.append(piOC+' -Max')
     userchoice.append("[B][COLOR white]Exit[/COLOR][/B]")
     
     # Display the menu
-    inputchoice = xbmcgui.Dialog().select("XvBMC Nederland #OVERCLOCK# Menu", 
+    inputchoice = xbmcgui.Dialog().select("XvBMC Nederland [B]-[/B] #OVERCLOCK# [COLOR red]\'RPi\'[/COLOR]", 
                                            userchoice)
     # Process menu actions
     
     #	/resources/data/config-noclock.txt
-    if userchoice[inputchoice] == "XvBMC overclock [COLOR white]Pi[/COLOR] -None":
+    if userchoice[inputchoice] == piOC+' -None':
         Config0()
     
     #	/resources/data/config-high.txt
-    elif userchoice[inputchoice] == "XvBMC overclock [COLOR white]Pi[/COLOR] -High":
+    elif userchoice[inputchoice] == piOC+' -High':
         Config1()
 	
     #	/resources/data/config-turbo.txt
-    elif userchoice[inputchoice] == "XvBMC overclock [COLOR white]Pi[/COLOR] -Turbo":
+    elif userchoice[inputchoice] == piOC+' -Turbo':
         Config2()
     
     #	/resources/data/config-x265.txt
-    elif userchoice[inputchoice] == "XvBMC overclock [COLOR white]Pi[/COLOR] -Max":
+    elif userchoice[inputchoice] == piOC+' -Max':
         Config3()
 
 
