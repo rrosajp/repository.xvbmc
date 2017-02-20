@@ -127,7 +127,9 @@ def getSource(params, src):
         paramPage = params.strip('\',\'')
 
     paramPage = paramPage.replace('%s', src)
-    return common.getHTML(paramPage, None, paramReferer)
+    data = common.getHTML(paramPage, None, paramReferer)
+    #common.log('JairoX0:' + data)
+    return data
 
 
 def parseText(item, params, src):
@@ -144,6 +146,7 @@ def parseText(item, params, src):
     variables = []
     if len(paramArr) > 2:
         variables = paramArr[2].split('|')
+    #common.log('JairoX2:' + text)
     return reg.parseText(text, regex, variables)
 
 
@@ -182,13 +185,32 @@ def getInfo(item, params, src, xml=False, mobile=False):
         pass
 
     common.log('Get Info from: "'+ paramPage + '" from "' + referer + '"')
+    #common.log('JairoX1:' + paramRegex)
     data = common.getHTML(paramPage, form_data, referer, xml, mobile, ignoreCache=False,demystify=True)
+    #common.log('JairoX2:' + data)
     return reg.parseText(data, paramRegex, variables)
+
+def hex2ascii(src):
+    import binascii
+    ascii_string = binascii.unhexlify(src)
+    return ascii_string
 
 
 def decodeBase64(src):
-    from base64 import b64decode
-    return b64decode(src)
+    import base64
+    import binascii
+    ds = src
+    while len(ds)>=4 and re.match(r"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",ds): #keep decoding in case of multiple encodings
+        #common.log("Jairox5:" + src)
+        try:
+            ds = base64.decodestring(ds)
+            ds.encode('ascii', 'strict') #check if result is valid ascii
+        except UnicodeDecodeError: #decoded string not ascii
+            ds = ''
+            break
+        except binascii.Error: #nothing left to decode         
+            break
+    return ds
 
 def encodeBase64(src):
     from base64 import b64encode
@@ -199,7 +221,7 @@ def decodeRawUnicode(src):
         return src
     except:
         return src
-    
+
 def simpleToken(url):
     import requests,zlib
     time = common.getSetting(url+'_time')
@@ -221,48 +243,52 @@ def simpleToken(url):
         common.setSetting(url+'_time',r.headers['Last-Modified'])
         return token
     
+      
 def resolve(src):
     try:
         parsed_link = urlparse.urlsplit(src)
         tmp_host = parsed_link.netloc.split(':')
         if 'streamlive.to' in tmp_host[0]:
-            servers = ['62.210.139.136','184.173.85.91']
-                       #'80.82.78.4'
-                       #'89.248.168.57'
-                       #'93.174.93.230'
-                       #'89.248.169.55'
-
-                       #'184.173.85.91'
-                       #'62.210.139.136'
+            servers = ['89.248.169.48',
+                       '94.102.63.54',
+                       '89.248.169.55']
             import random
-            tmp_host[0] = '184.173.85.91' # random.choice(servers)
+            tmp_host[0] = random.choice(servers)
         elif tmp_host[0] == 'xlive.sportstream365.com':
-            servers = ["91.192.80.210","93.189.57.254","93.189.62.10"]
+            servers = ["185.56.139.162",
+                       "93.189.57.254",
+                       "93.189.62.10",
+                       "185.49.70.58",
+                       "46.28.205.96",
+                       "178.17.168.90",
+                       "185.28.190.69",
+                       "85.114.135.215",
+                       "94.242.254.211"]
             import random
             tmp_host[0] = random.choice(servers)
         elif tmp_host[0] == 'live.pub.stream':
-            servers =  ['195.154.167.95',
-                        '195.154.168.218',
-                        '195.154.168.222',
-                        '195.154.168.230',
-                        '195.154.168.233',
-                        '195.154.169.233',
-                        '195.154.169.234',
-                        '195.154.169.244',
-                        '195.154.172.90',
-                        '195.154.173.124',
-                        '195.154.177.110',
-                        '195.154.179.159',
-                        '195.154.179.167',
-                        '195.154.179.174',
-                        '195.154.182.101',
-                        '195.154.185.109',
-                        '195.154.185.113',
-                        '195.154.187.23',
-                        '195.154.187.46',
-                        '62.210.203.163',
-                        '62.210.203.167',
-                        '62.210.203.170']
+            servers = [ "195.154.169.244",
+                        "195.154.185.109",
+                        "195.154.179.159",
+                        "195.154.167.95",
+                        "62.210.203.163",
+                        "195.154.168.230",
+                        "62.210.203.170",
+                        "62.210.203.167",
+                        "195.154.173.124",
+                        "195.154.172.90",
+                        "195.154.179.167",
+                        "195.154.177.110",
+                        "195.154.179.174",
+                        "195.154.168.218",
+                        "195.154.185.113",
+                        "195.154.187.46",
+                        "195.154.168.233",
+                        "195.154.187.23",
+                        "195.154.168.222",
+                        "195.154.169.233",
+                        "195.154.169.234",
+                        "195.154.182.101"]
             import random
             tmp_host[0] = random.choice(servers)
         else:
@@ -369,6 +395,31 @@ def decodeXppod(src):
 
 def decodeXppod_hls(src):
     return xp.decode_hls(src)
+
+def bcast64(src):
+    _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='    
+    t = ""
+    f = 0
+    e = re.sub(r'[^A-Za-z0-9\+\/\=]','',src)
+    while f < len(e):
+        s = _keyStr.index(e[f])
+        f += 1
+        o = _keyStr.index(e[f])
+        f += 1
+        u = _keyStr.index(e[f])
+        f += 1
+        a = _keyStr.index(e[f])
+        f += 1
+        n = s << 2 | o >> 4
+        r = (o & 15) << 4 | u >> 2
+        i = (u & 3) << 6 | a
+        t = t + chr(n);
+        if (u != 64):
+            t = t + chr(r)
+        if (a != 64):
+            t = t + chr(i)
+    return t
+
 
 def getCookies(cookieName, url):
     domain = urlparse.urlsplit(url).netloc
