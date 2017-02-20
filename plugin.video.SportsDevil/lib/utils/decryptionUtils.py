@@ -9,6 +9,7 @@ try: import json
 except ImportError: import simplejson as json
 try: from Crypto.Cipher import AES
 except ImportError: import pyaes as AES
+#import lib.common
 
 def encryptDES_ECB(data, key):
     data = data.encode()
@@ -39,15 +40,15 @@ def m3u8AesDec(data, key):
         aes = AES.new(key.decode('hex'), AES.MODE_CBC, _in[1].decode('hex'))
         return unpad(aes.decrypt(_in[0].decode('hex')))
     except: return data
-    
+		
 def drenchDec(data, key):
     from drench import blowfish
     return blowfish(key).decrypt(data)
 
 def zdecode(data):
-    sym_re = (r",'(?=[\w|]+1935|[\w|]+smil)(?=[\w|]+strfn)(?=[\w|]+tsux)([\w|]+)'\.split")
+    sym_re = (r".*'(.*)'\.split")
     symtab = re.search(sym_re, data).groups()[0].split('|')
-    tab_re = (r""".*'(\d+=[\W\d]+;(?!\\))'""")
+    tab_re = (r""",'(\d=[\W\d]+;)',""")
     tab = re.search(tab_re, data).groups()[0].decode('unicode-escape')
 
     def lookup(match):
@@ -81,7 +82,7 @@ def onetv(playpath):
     from base64 import b64encode
     user_agent = 'Mozilla%2F5.0%20%28Linux%3B%20Android%205.1.1%3B%20Nexus%205%20Build%2FLMY48B%3B%20wv%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Version%2F4.0%20Chrome%2F43.0.2357.65%20Mobile%20Safari%2F537.36'
     token = "65rSw"+"UzRad"
-    servers = ['46.234.113.2','185.102.219.72','185.102.219.67','185.152.64.235', '185.152.64.236', '185.59.222.232', '185.102.219.67']
+    servers = ['46.234.113.2','185.152.64.235', '185.59.222.232', '185.152.64.234']
     time_stamp = str(int(time.time()) + 14400)
     to_hash = "{0}{1}/hls/{2}".format(token,time_stamp,playpath)
     out_hash = b64encode(md5.new(to_hash).digest()).replace("+", "-").replace("/", "_").replace("=", "")
@@ -114,6 +115,48 @@ def ntos(n):
         n = "0" + n
     n = "%" + n
     return urllib.unquote(n)
+
+
+def decryptSaurus(data):
+    #lib.common.log("JairoX3:" + data)
+    aeskeys = [ '5e4542404f4c757e4431675f373837385649313133356f3152693935366e4361',
+                    '5e5858405046757e4631775f33414141514e3133393973315775336c34695a5a',
+                    '5e4d58405044757e73314a5f39373837514e313335396a3144793833366e527a'
+              ]
+    r = re.compile(r":(\"(?!http)\w+\.\w+\.m3u8\")")
+    r2 = re.compile(r"((?!http)\w+\.\w+\.m3u8)")
+    gs = r.findall(data) or r2.findall(data)
+    if gs:
+        for g in gs:
+            for aeskey in aeskeys:
+                if re.match(r"{.*:.*}", g):
+                   _in = json.loads(g).split('.')
+                else:
+                   _in = g.split('.')
+                aes = AES.new(aeskey.decode('hex'), AES.MODE_CBC, _in[1].decode('hex'))            
+                unpad = lambda s : s[0:-ord(s[-1])]
+                try:
+                    _url = unpad(aes.decrypt(_in[0].decode('hex')))
+                except:
+                    _url = None
+                if _url and re.match(r'http://.*m3u8', _url):
+                    try:
+                        if re.match(r"{.*:.*}", data):
+                           data = data.replace(g,json.dumps( _url ))
+                        else:
+                           data = _url
+                        break
+                    except:
+                        continue
+    else:            
+        r = re.compile(r":(\"(?!http)[\w=\\/\+]+\.m3u8\")")
+        gs = r.findall(data)
+        if gs:
+            for g in gs:
+                data = data.replace(g,json.dumps(decryptDES_ECB(json.loads(g)[:-5], '5333637233742600'.decode('hex'))))
+
+    return data
+
 
 def doDemystify(data):
     escape_again=False
@@ -200,6 +243,7 @@ def doDemystify(data):
         except:
             pass
 
+    
     # n98c4d2c
     if 'function n98c4d2c(' in data:
         gs = parseTextToGroups(data, ".*n98c4d2c\(''\).*?'(%[^']+)'.*")
@@ -264,7 +308,7 @@ def doDemystify(data):
                 data = data.replace(g,'|')
 
     if """.replace(""" in data:
-        r = re.compile(r""".replace\(["'](...[^"']+)["'],\s*["']([^"']*)["']\)""")
+        r = re.compile(r""".replace\(["']([^"']+)["'],\s*["']([^"']*)["']\)""")
         gs = r.findall(data)
         if gs:
             for g in gs:
