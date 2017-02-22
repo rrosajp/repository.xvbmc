@@ -337,6 +337,25 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
   </extension>
 </addon>
 
+<addon id="plugin.video.POKER"
+	name="POKER"
+	version="1.0.2"
+	provider-name="XVBMC">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.0.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">XVBMC POKER COLLECTIE</summary>
+    <description lang="en">Youtube Streams</description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon id="plugin.video.quasar" name="Quasar" version="0.9.36.1" provider-name="scakemyer, xvbmc">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
@@ -358,6 +377,25 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
         <summary><![CDATA[Quasar: Torrent streaming - v0.9.35 XvBMC version-control]]></summary>
         <description><![CDATA[Stream torrent files - v0.9.35 XvBMC version-control]]></description>
     </extension>
+</addon>
+
+<addon id="plugin.video.Relax"
+	name="Relax"
+	version="1.0.3"
+	provider-name="XVBMC">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.0.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Xvbmc Relax collectie</summary>
+    <description lang="en">Ontspan</description>
+    <platform>all</platform>
+  </extension>
 </addon>
 
 <!--suppress ALL -->
