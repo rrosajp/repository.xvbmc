@@ -1,0 +1,12 @@
+[B]Version 1.0.4[/B]
+ + updates + voodoo
+
+[B]Version 1.0.3[/B]
+ + add-on = 8bit 3:)
+
+[B]Version 1.0.1/2[/B]
+ + setView + code cosmetics
+
+[B]Version 1.0.0[/B]
+ + intitial release 
+ ! [EPiC XvBMC Nederland]
