@@ -16,6 +16,10 @@ import pyamf
 from pyamf import remoting
 import httplib
 
+# prevent cpyamf to be the main PyAMF module (See #720)
+import sys
+sys.modules['cpyamf'] = sys.modules['pyamf']
+
 
 class BrightCove:
     """ BrightCove is used to get video info of videos that use the
@@ -123,7 +127,7 @@ class BrightCove:
         pyamf.register_class(ViewerExperienceRequest, 'com.brightcove.experience.ViewerExperienceRequest')
         pyamf.register_class(ContentOverride, 'com.brightcove.experience.ContentOverride')
 
-        contentOverrides = [ContentOverride(int(contentId))]
+        contentOverrides = [ContentOverride(str(contentId))]
         viewerExperienceRequest = ViewerExperienceRequest(url, contentOverrides, int(experienceId), playerKey)
 
         envelope = remoting.Envelope(amfVersion=self.amfVersion)

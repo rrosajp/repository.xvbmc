@@ -2,8 +2,8 @@ import mediaitem
 import chn_class
 
 from regexer import Regexer
-from streams.brightcove import BrightCove
 from streams.m3u8 import M3u8
+from helpers.jsonhelper import JsonHelper
 
 from parserdata import ParserData
 from logger import Logger
@@ -32,7 +32,7 @@ class Channel(chn_class.Channel):
         # setup the urls
         self.baseUrl = "http://www.kijk.nl"
         # Just retrieve a single page with 200 items (should be all)
-        self.mainListUri = "http://www.kijk.nl/ajax/section/overview/programs-abc-ABCDEFGHIJKLMNOPQRSTUVWXYZ/1/200"
+        self.mainListUri = "http://www.kijk.nl/ajax/section/overview/programs-abc-ABCDEFGHIJKLMNOPQRSTUVWXYZ/1/400"
 
         channelId = None
         if self.channelCode == 'veronica':
@@ -50,29 +50,30 @@ class Channel(chn_class.Channel):
             self.noImage = "net5image.png"
 
         # setup the main parsing data
-        self.episodeItemRegex = 'data-srchd="(?<thumburl>[^"]+)"[^>]*>\W*<noscript>\W*<img[^>]*>\W*</noscript>[\w\W]' \
-                                '{0,750}?data-itemid="[^"]+\.%s"[^>]*data-title="(?<title>[^"]+)"></div>\W+</div>' \
-                                '\W+</a>\W+<a href="(?<url>[^"]+)"[^>]+>\W+<div class="info[^>]*>\W+<h3[\w\W]{0,1500}' \
-                                '?<p class="meta" itemprop="description">(?<description>[^<]+)'\
+        self.episodeItemRegex = '(?:data-srchd="(?<thumburl>[^"]+)"[^>]*>\W*<noscript>\W*<img[^>]*>\W*</noscript>[\w\W]' \
+                                '{0,750}?){0,1}data-itemid="[^"]+\.%s"[^>]*data-title="(?<title>[^"]+)"></div>\W+</div>' \
+                                '\W+</a>\W+<a href="(?<url>[^"]+)"[^>]+>\W+<div class="info[^>]*>\W+'\
                                 .replace("(?<", "(?P<") \
                                 % (channelId or self.channelCode,)
-        self._AddDataParser(self.mainListUri, matchType=ParserData.MatchExact,
+        self._AddDataParser(self.mainListUri, name="Mainlist Parsing", matchType=ParserData.MatchExact,
+                            preprocessor=self.AddOthers,
                             parser=self.episodeItemRegex, creator=self.CreateEpisodeItem)
 
         # normal video items
-        self.videoItemRegex = 'data-srchd="(?<thumburl>[^"]+)"[^>]* alt="(?<title>[^"]+)"[^>]*>[\w\W]{0,1000}?' \
-                              'itemprop="datePublished" content="(?<date>[^"]+)[\w\W]{0,1000}itemprop="description">' \
-                              '(?<description>[^<]+)<a href="(?<url>[^"]+)/[^"]+"'\
+        self.videoItemRegex = '(?:data-srchd="(?<thumburl>[^"]+)"[\w\W]{0,2000}?){0,1}itemprop="datePublished" content="(?<date>[^"]+)[\w\W]{0,800}?<div class="title">(?<title>[^<]+)<[\w\W]{0,800}?<a href="(?<url>[^"]+)/[^"]+"' \
                               .replace("(?<", "(?P<")
-        self._AddDataParser("*", parser=self.videoItemRegex, creator=self.CreateVideoItem, updater=self.UpdateVideoItem)
+        self._AddDataParser("*", name="Standard Videos",
+                            parser=self.videoItemRegex, creator=self.CreateVideoItem,
+                            updater=self.UpdateVideoItem)
 
         # ajax video items
-        self.ajaxItemRegex = '<img src="(?<thumburl>[^"]+)"[^>]* itemprop="thumbnailUrl"[^>]*>\W*</noscript>[\w\W]' \
-                             '{0,1000}?data-title="(?<title>[^"]+)">\W*</div>\W*</div>\W*</a>\W*<a[^>]+href="' \
-                             '(?<url>[^"]+)/[^"]+"[^>]+\W+<div[^>]+>\W+<(?:div class="desc[^>]+|h3[^>]*)>' \
-                             '(?<description>[^<]+)[\W\w]{0,400}?<div class="airdate[^>]+?(?:content="' \
-                             '(?<date>[^"]+)"|>)'.replace("(?<", "(?P<")
-        self._AddDataParser("http://www.kijk.nl/ajax/section/series/",
+        self.ajaxItemRegex = '(?:<img src="(?<thumburl>[^"]+)"[^>]* itemprop="thumbnailUrl"[^>]*>' \
+                             '\W*</noscript>[\w\W]{0,1000}?){0,1}data-title="(?<title>[^"]+)">\W*' \
+                             '</div>\W*</div>\W*</a>\W*<a[^>]+href="(?<url>[^"]+)/[^"]+"[^>]+\W+' \
+                             '<div[^>]+>\W+<(?:div class="desc[^>]+|h3[^>]*)>' \
+                             '(?<description>[^<]+)[\W\w]{0,1000}?<div class="airdate[^>]+?' \
+                             '(?:content="(?<date>[^"]+)"|>)'.replace("(?<", "(?P<")
+        self._AddDataParser("http://www.kijk.nl/ajax/section/series/", name="Ajax Videos",
                             parser=self.ajaxItemRegex, creator=self.CreateVideoItem)
 
         # folders
@@ -83,10 +84,9 @@ class Channel(chn_class.Channel):
                                 .replace("(?<", "(?P<")]
 
         # we both need folders in the normal and ajax pages.
-        self._AddDataParser("*", parser=self.folderItemRegex, creator=self.CreateFolderItem)
-        self._AddDataParser("http://www.kijk.nl/ajax/section/series/",
+        self._AddDataParser("*", name="Default Folder", parser=self.folderItemRegex, creator=self.CreateFolderItem)
+        self._AddDataParser("http://www.kijk.nl/ajax/section/series/", name="Ajax Folders",
                             parser=self.folderItemRegex, creator=self.CreateFolderItem)
-        self.mediaUrlRegex = '<object id=@"myExperience[\w\W]+?playerKey@" value=@"([^@]+)[\w\W]{0,1000}?videoPlayer@" value=@"(\d+)@"'.replace("@", "\\\\")
 
         #===============================================================================================================
         # non standard items
@@ -104,43 +104,34 @@ class Channel(chn_class.Channel):
         # ====================================== Actual channel setup STOPS here =======================================
         return
 
-    # def PreProcessFolderList(self, data):
-    #     """Performs pre-process actions for data processing/
-    #
-    #     Arguments:
-    #     data : string - the retrieve data that was loaded for the current item and URL.
-    #
-    #     Returns:
-    #     A tuple of the data and a list of MediaItems that were generated.
-    #
-    #
-    #     Accepts an data from the ProcessFolderList method, BEFORE the items are
-    #     processed. Allows setting of parameters (like title etc) for the channel.
-    #     Inside this method the <data> could be changed and additional items can
-    #     be created.
-    #
-    #     The return values should always be instantiated in at least ("", []).
-    #
-    #     """
-    #
-    #     Logger.Info("Performing Pre-Processing")
-    #     items = []
-    #
-    #     dataStart = data.find('<h2 class="showcase-heading">')
-    #     # end = data.find('_SerieSeasonSlider"')
-    #     end = data.find('</li></ul></div><div')
-    #     if end > 0:
-    #         end += 20  # we want the </li> in case we found it
-    #     resultData = data[dataStart:end]
-    #
-    #     # Add a Clips item
-    #     # if "_Clips" in self.parentItem.url:
-    #     #     # self.CreateVideoItem = self.CreateClipItem
-    #     #     Logger.Trace("Switching to CLIPS regex")
-    #     #     self.videoItemRegex = self.clipItemRegex
-    #
-    #     Logger.Debug("Pre-Processing finished")
-    #     return resultData, items
+    def AddOthers(self, data):
+        """Performs pre-process actions for data processing/
+
+        Arguments:
+        data : string - the retrieve data that was loaded for the current item and URL.
+
+        Returns:
+        A tuple of the data and a list of MediaItems that were generated.
+
+
+        Accepts an data from the ProcessFolderList method, BEFORE the items are
+        processed. Allows setting of parameters (like title etc) for the channel.
+        Inside this method the <data> could be changed and additional items can
+        be created.
+
+        The return values should always be instantiated in at least ("", []).
+
+        """
+
+        Logger.Info("Performing Pre-Processing")
+        items = []
+
+        others = "http://www.kijk.nl/ajax/section/overview/popular_PopularFormats/1/100"
+        otherData = UriHandler.Open(others, proxy=self.proxy)
+        data += otherData
+
+        Logger.Debug("Pre-Processing finished")
+        return data, items
 
     def CreateFolderItem(self, resultSet):
         """Creates a MediaItem of type 'folder' using the resultSet from the regex.
@@ -247,8 +238,11 @@ class Channel(chn_class.Channel):
         item.type = 'video'
         if "description" in resultSet:
             item.description = resultSet['description']
-        item.thumb = resultSet['thumburl']
+
         item.icon = self.icon
+        item.thumb = self.noImage
+        if resultSet['thumburl']:
+            item.thumb = resultSet['thumburl']
 
         date = resultSet["date"]
         if date:
@@ -292,29 +286,42 @@ class Channel(chn_class.Channel):
 
         videoId = item.url[item.url.rfind("/") + 1:]
 
-        url = "http://embed.kijk.nl/?width=868&height=491&video=%s" % (videoId,)
-        referer = "http://www.kijk.nl/video/%s" % (videoId,)
-
-        # now the mediaurl is derived. First we try WMV
-        data = UriHandler.Open(url, proxy=self.proxy, referer=referer)
-        Logger.Trace(self.mediaUrlRegex)
-        objectData = Regexer.DoRegex(self.mediaUrlRegex, data)[0]
-        Logger.Trace(objectData)
-
-        # seed = "61773bc7479ab4e69a5214f17fd4afd21fe1987a"
-        # seed = "0a2b91ec0fdb48c5dd5239d3e796d6f543974c33"
-        seed = "0b0234fa8e2435244cdb1603d224bb8a129de5c1"
-        amfHelper = BrightCove(Logger.Instance(), objectData[0], objectData[1], url, seed)  # , proxy=ProxyInfo("localhost", 8888)
-        item.description = amfHelper.GetDescription()
-
+        # url = "http://embed.kijk.nl/?width=868&height=491&video=%s" % (videoId,)
+        url = "http://embed.kijk.nl/video/%s?width=868&height=491" % (videoId,)
+        referer = "http://embed.kijk.nl/video/%s" % (videoId,)
         part = item.CreateNewEmptyMediaPart()
-        for stream, bitrate in amfHelper.GetStreamInfo():
-            if "m3u8" in stream:
-                for s, b in M3u8.GetStreamsFromM3u8(stream, self.proxy):
-                    item.complete = True
-                    # s = self.GetVerifiableVideoUrl(s)
-                    part.AppendMediaStream(s, b)
-            part.AppendMediaStream(stream.replace("&mp4:", ""), bitrate)
 
-        item.complete = True
+        # First try the new BrightCove JSON
+        data = UriHandler.Open(url, proxy=self.proxy, referer=referer)
+        brightCoveRegex = '<video[^>]+data-video-id="(?<videoId>[^"]+)[^>]+data-account="(?<videoAccount>[^"]+)'
+        brightCoveData = Regexer.DoRegex(Regexer.FromExpresso(brightCoveRegex), data)
+        if brightCoveData:
+            Logger.Info("Found new BrightCove JSON data")
+            brightCoveUrl = 'https://edge.api.brightcove.com/playback/v1/accounts/%(videoAccount)s/videos/%(videoId)s' % brightCoveData[0]
+            headers = {"Accept": "application/json;pk=BCpkADawqM3ve1c3k3HcmzaxBvD8lXCl89K7XEHiKutxZArg2c5RhwJHJANOwPwS_4o7UsC4RhIzXG8Y69mrwKCPlRkIxNgPQVY9qG78SJ1TJop4JoDDcgdsNrg"}
+            brightCoveData = UriHandler.Open(brightCoveUrl, proxy=self.proxy, additionalHeaders=headers)
+            brightCoveJson = JsonHelper(brightCoveData)
+            streams = filter(lambda d: d["container"] == "M2TS", brightCoveJson.GetValue("sources"))
+            if streams:
+                # noinspection PyTypeChecker
+                streamUrl = streams[0]["src"]
+                for s, b in M3u8.GetStreamsFromM3u8(streamUrl, self.proxy):
+                    item.complete = True
+                    part.AppendMediaStream(s, b)
+                return item
+
+        # fallback to the Ericson Streams
+        Logger.Info("No BrightCove JSON data found. Trying other API")
+        url = "http://embed.kijk.nl/api/video/%s" % (videoId,)
+        data = UriHandler.Open(url, proxy=self.proxy, referer=referer)
+        videoJson = JsonHelper(data)
+        m3u8Url = videoJson.GetValue("playlist")
+        for s, b in M3u8.GetStreamsFromM3u8(m3u8Url, self.proxy, appendQueryString=True):
+            if "_enc_" in s:
+                Logger.Warning("Found encrypted stream. Skipping %s", s)
+                continue
+
+            item.complete = True
+            # s = self.GetVerifiableVideoUrl(s)
+            part.AppendMediaStream(s, b)
         return item

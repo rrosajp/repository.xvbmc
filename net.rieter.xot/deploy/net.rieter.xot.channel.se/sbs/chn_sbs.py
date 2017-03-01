@@ -1,15 +1,13 @@
 # coding:UTF-8
-import datetime
 
-#===============================================================================
-# Make global object available
-#===============================================================================
-from helpers.jsonhelper import JsonHelper
+
 import mediaitem
 import chn_class
 
+from helpers.jsonhelper import JsonHelper
 from helpers.languagehelper import LanguageHelper
-from helpers import subtitlehelper
+from helpers.datehelper import DateHelper
+from helpers.subtitlehelper import SubtitleHelper
 from urihandler import UriHandler
 from streams.m3u8 import M3u8
 from helpers.htmlentityhelper import HtmlEntityHelper
@@ -49,7 +47,8 @@ class Channel(chn_class.Channel):
             self.baseUrl = "http://www.dplay.se/api/v2/ajax"
             # self.liveUrl = "https://secure.dplay.se/secure/api/v2/user/authorization/stream/132040"
             # self.fanart = "http://a1.res.cloudinary.com/dumrsasw1/image/upload/Kanal5-channel-large_kxf7fn.jpg"
-            self.recentUrl = "%s/modules?page_id=132040&module_id=5024&items=%s&page=0"
+            # Recent URL changes over time. See the 'website -> channel' page
+            self.recentUrl = "%s/modules?page_id=132040&module_id=7556&items=%s&page=0"
 
             # - From the /program/ page (requires slugs for filtering)
             # self.mainListFormat = "%s/modules?page_id=23&module_id=19&items=%s&page=%s"
@@ -392,7 +391,7 @@ class Channel(chn_class.Channel):
         timeStamp = resultSet.get("video_metadata_svod_start_time", None)
         if timeStamp:
             timeStamp = int(timeStamp)
-            date = datetime.datetime.fromtimestamp(timeStamp)
+            date = DateHelper.GetDateFromPosix(timeStamp)
             item.SetDate(date.year, date.month, date.day, date.hour, date.minute, date.second)
 
         item.isPaid = "Packages-Free" not in resultSet["video_metadata_package"]
@@ -466,10 +465,23 @@ class Channel(chn_class.Channel):
 
         if len(item.MediaItemParts) > 0:
             part = item.MediaItemParts[0]
-            part.Subtitle = videoInfo[self.subtitleKey]
-            Logger.Trace("Fetching subtitle from %s", part.Subtitle)
-            if part.Subtitle.startswith("http"):
-                part.Subtitle = subtitlehelper.SubtitleHelper.DownloadSubtitle(part.Subtitle, format="srt", proxy=self.proxy)
+            subtitle = None
+            # check for the main key and otherwise just fall back.
+            if self.subtitleKey in videoInfo and videoInfo[self.subtitleKey]:
+                subtitle = videoInfo[self.subtitleKey]
+            else:
+                for key in videoInfo.keys():
+                    if not key.startswith("subtitles_") or not key.endswith("_srt"):
+                        continue
+                    if not videoInfo[key]:
+                        continue
+
+                    subtitle = videoInfo[key]
+                    break
+
+            if subtitle is not None and subtitle.startswith("http"):
+                Logger.Trace("Fetching subtitle from %s", subtitle)
+                part.Subtitle = SubtitleHelper.DownloadSubtitle(subtitle, format="srt", proxy=self.proxy)
 
         return item
 

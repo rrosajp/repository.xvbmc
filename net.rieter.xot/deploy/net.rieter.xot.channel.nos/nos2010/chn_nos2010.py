@@ -1,5 +1,5 @@
 import datetime
-import cookielib
+import re
 
 import mediaitem
 import contextmenu
@@ -18,6 +18,8 @@ from addonsettings import AddonSettings
 from helpers.datehelper import DateHelper
 from parserdata import ParserData
 from helpers.languagehelper import LanguageHelper
+from helpers.htmlentityhelper import HtmlEntityHelper
+from vault import Vault
 
 
 class Channel(chn_class.Channel):
@@ -75,11 +77,7 @@ class Channel(chn_class.Channel):
                             updater=self.UpdateVideoItemLive)
 
         self._AddDataParser("/live", matchType=ParserData.MatchEnd, preprocessor=self.GetAdditionalLiveItems,
-                            parser='<img[^>]+src="([^"]+)" /></a>[\w\W]{0,400}?<div class=\'item current-item\'>\W+'
-                                   '<div class=\'time now\'>Nu</div>\W+<div class=\'description\'>\W+'
-                                   '<a href="/live/([^"]+)" class="now">([^<]+)[\w\W]{0,200}?'
-                                   '<div class=\'item next-item\'>\W+<div class=\'time next\'>([^<]+)</div>\W+'
-                                   '<div class=\'description next\'>\W+<[^>]+>([^<]+)',
+                            parser="<img[^>]+alt=\"Logo van ([^\"]+)\" [^>]+src=\"([^\"]+)\" /></a>[\w\W]{0,400}?<div class='item current-item'>\W+<div class='time now'>Nu</div>\W+<div class='description'>\W+<a[^>]+href=\"/live/([^\"]+)\"[^>]*>([^<]+)[\w\W]{0,400}?<div class='item next-item'>\W+(?:<div class='time next'>([^<]+)</div>\W+<div class='description next'>\W+<[^>]+>([^<]+)|</div>)",
                             creator=self.CreateLiveTv, updater=self.UpdateVideoItemLive)
 
         # and some additional ones that might not appear in the first list
@@ -100,7 +98,7 @@ class Channel(chn_class.Channel):
 
         # genres
         self._AddDataParser("http://www.npo.nl/uitzending-gemist", matchType=ParserData.MatchExact,
-                            parser='<option value="(\d+)"[^>]*>([^<]+)<',
+                            parser='<li><a[^>]*\.genre\.[^>]*href="[^"]+=(\d+)">([^>]+)</a></li>',
                             creator=self.CreateGenreItem)
 
         # Set self.nonMobilePageSize to 0 to enable mobile pages
@@ -108,40 +106,61 @@ class Channel(chn_class.Channel):
         self.nonMobileMaxPageSize = 100
 
         # Non-mobile folders -> indicator if there are more items
-        self.nonMobilePageRegex = "<div class=\Wsearch-results\W (?:data-num-found=\W(?<Total>\d+)\W " \
-                                  "data-rows=\W(?<PageSize>\d+)\W data-start=\W(?<CurrentStart>\d+)\W|" \
+        self.nonMobilePageRegex = "(?:data-num-found=\W(?<Total>\d+)\W data-rows=\W(?<PageSize>" \
+                                  "\d+)\W data-start=\W(?<CurrentStart>\d+)\W|data-current-page=" \
+                                  "'(?<CurrentPage>\d+)' data-pages='(?<TotalPages>\d+)'|" \
                                   "data-page=\W(?<Page>\d+)\W)".replace("(?<", "(?P<")
-        self._AddDataParser("*", parser=self.nonMobilePageRegex, creator=self.CreatePageItemNonMobile)
-
-        # Non-mobile videos: for the old pages
+        # Non-mobile videos: for the old pages such as the 'day' pages
         self.nonMobileVideoItemRegex = 'src="(?<Image>[^"]+)"\W+>(?<Premium><div class="not-' \
                                        'available-image-overlay">)?[\w\W]{0,500}?</a></div>\W*' \
-                                       '</div>\W*<div[^>]*>\W*<a href="(?<Url>[^"]+/(?<Day>\d+)-' \
+                                       '</div>\W*<div[^>]*>\W*<a[^>]*href="(?<Url>[^"]+/(?<Day>\d+)-' \
                                        '(?<Month>\d+)-(?<Year>\d+)/(?<WhatsOnId>[^/"]+))"[^>]*>' \
-                                       '<h4>(?<Title>[^<]+)<[\W\w]{0,600}?<p[^>]+>(?<Description>' \
+                                       '<h4>(?<Title>[^<]+)<[\W\w]{0,600}?<p[^>]*>(?<Description>' \
                                        '[^<]*)'.replace('(?<', '(?P<')
-        self._AddDataParser("*", parser=self.nonMobileVideoItemRegex, creator=self.CreateVideoItemNonMobile,
+
+        # Pages based on searching
+        self._AddDataParser("http://www.npo.nl/zoeken?",
+                            preprocessor=self.AddNextPageItem,
+                            parser=self.nonMobileVideoItemRegex,
+                            creator=self.CreateVideoItemNonMobile,
                             updater=self.UpdateVideoItem)
 
-        # Non-mobile videos: for the new pages
+        # The A-Z pages
+        programRegex = Regexer.FromExpresso(
+            '<div[^>]+strip-item[^>]+>\W+<a[^>]+href="(?<Url>[^"]+)/(?<WhatsOnId>[^"]+)"[^>]*>'
+            '[^<]*</a>\W*<div[^>]*>\W*<img[^>]+data-img-src="(?<Image>[^"]+)"[\w\W]{0,1000}?'
+            '<h3[^>]*>[\n\r]*(?<Title>[^<]+)[\n\r]*<')
+        self._AddDataParser("^http://www.npo.nl/programmas/a-z(/[a-z])?", matchType=ParserData.MatchRegex,
+                            name="The A-Z Page video items",
+                            parser=programRegex, creator=self.CreateFolderItemAlpha)
+        self._AddDataParser("^http://www.npo.nl/programmas/a-z(/[a-z])?", matchType=ParserData.MatchRegex,
+                            name="The A-Z Page page items",
+                            parser=self.nonMobilePageRegex, creator=self.CreatePageItemNonMobile)
+
+        # favorites
+        favRegex = 'data-mid=\'(?<id>[^"\']+)\'>\W*<a[^>]*href="(?<url>[^"]+)[^>]*>[^>]*</a>\W*' \
+                   '<div[^>]*>\W*<img[^>]*src="(?<thumburl>[^"]+)"[^>]*>\W*</div>[\w\W]{0,400}?' \
+                   '<div[^>]*title\'[^>]*>(?<title>[^<]*)</div>'
+        favRegex = Regexer.FromExpresso(favRegex)
+        self._AddDataParser("https://mijn.npo.nl/profiel/favorieten", name="Favourites with logon",
+                            requiresLogon=True, parser=favRegex, creator=self.CreateFolderItem)
+
+        # Non-mobile videos: for the new pages with a direct URL
         self.nonMobileVideoItemRege2 = 'src="(?<Image>[^"]+)"[^>]+>\W*</a></div>\W*<div[^>]*>\W*<h3><a href="' \
                                        '(?<Url>[^"]+/(?<Day>\d+)-(?<Month>\d+)-(?<Year>\d+)/(?<WhatsOnId>[^/"]+))"' \
                                        '[^>]*>(?<Title>[^<]+)<[\W\w]{0,600}?<p[^>]*>' \
                                        '(?<Description>[^<]*)'.replace('(?<', '(?P<')
-        self._AddDataParser("*", parser=self.nonMobileVideoItemRege2, creator=self.CreateVideoItemNonMobile,
+
+        self._AddDataParser("*", preprocessor=self.AddNextPageItem)
+        self._AddDataParser("*",
+                            parser=self.nonMobileVideoItemRege2, creator=self.CreateVideoItemNonMobile,
                             updater=self.UpdateVideoItem)
 
-        self._AddDataParser("^http://www.npo.nl/a-z(/[a-z])?\?page=", matchType=ParserData.MatchRegex,
-                            parser=self.nonMobilePageRegex, creator=self.CreatePageItemNonMobile)
-        programRegex = Regexer.FromExpresso(
-            '<a href="(?<Url>[^"]+)/(?<WhatsOnId>[^"]+)">\W*<img[^>]+src="'
-            '(?<Image>[^"]+)" />\W*</a>\W*</div>\W*</div>\W*<div[^<]+<a[^>]*><h4>'
-            '[\n\r]*(?<Title>[^<]+)\W*<span[^>]*>[^>]+>\W*<span[^>]*>[^>]+>\W*</h4>'
-            '\W*<h5>(?:[^>]*>){2}[^<]*(?:<a[^>]*>\w+ (?<Day>\d+) (?<MonthName>\w+) '
-            '(?<Year>\d+)[^>]*(?<Hour>\d+):(?<Minutes>\d+)</a></h5>\W*)?<p[^>]*>'
-            '(?:<span>)?(?<Description>[^<]*)')
-        self._AddDataParser("^http://www.npo.nl/a-z(/[a-z])?\?page=", matchType=ParserData.MatchRegex,
-                            parser=programRegex, creator=self.CreateFolderItemAlpha)
+        self._AddDataParser("*",
+                            parser=self.nonMobileVideoItemRegex, creator=self.CreateVideoItemNonMobile,
+                            updater=self.UpdateVideoItem)
+
+        self._AddDataParser("*", parser=self.nonMobilePageRegex, creator=self.CreatePageItemNonMobile)
 
         # needs to be here because it will be too late in the script version
         self.__IgnoreCookieLaw()
@@ -149,9 +168,56 @@ class Channel(chn_class.Channel):
         # ===============================================================================================================
         # non standard items
         # self.__TokenTest()
+        self.__NextPageAdded = False
 
         # ====================================== Actual channel setup STOPS here =======================================
         return
+
+    def LogOn(self):
+        """ Makes sure that we are logged on. """
+
+        username = self._GetSetting("username")
+        if not username:
+            Logger.Info("No user name for TV4 Play, not logging in")
+            return False
+
+        # cookieValue = self._GetSetting("cookie")
+        cookie = UriHandler.GetCookie("npo_portal_auth_token", ".mijn.npo.nl")
+        if cookie:
+            expireDate = DateHelper.GetDateFromPosix(float(cookie.expires))
+            Logger.Info("Found existing valid NPO token (valid until: %s)", expireDate)
+            return True
+
+        v = Vault()
+        password = v.GetChannelSetting(self.guid, "password")
+        # get the logon security token: http://www.npo.nl/sign_in_modal
+        tokenData = UriHandler.Open("http://www.npo.nl/sign_in_modal",
+                                    proxy=self.proxy, noCache=True)
+        token = Regexer.DoRegex('name="authenticity_token"[^>]+value="([^"]+)"', tokenData)[0]
+
+        # login: https://mijn.npo.nl/sessions POST
+        # utf8=%E2%9C%93&authenticity_token=<token>&email=<username>&password=<password>&remember_me=1&commit=Inloggen
+        postData = {
+            "token": HtmlEntityHelper.UrlEncode(token),
+            "email": HtmlEntityHelper.UrlEncode(username),
+            "password": HtmlEntityHelper.UrlEncode(password)
+        }
+        postData = "utf8=%%E2%%9C%%93&authenticity_token=%(token)s&email=%(email)s&" \
+                   "password=%(password)s&remember_me=1&commit=Inloggen" % postData
+        data = UriHandler.Open("https://mijn.npo.nl/sessions", noCache=True, proxy=self.proxy,
+                               params=postData)
+        if not data:
+            Logger.Error("Error logging in: no response data")
+            return False
+
+        # extract the cookie and store
+        authCookie = UriHandler.GetCookie("npo_portal_auth_token", ".mijn.npo.nl")
+        if not authCookie:
+            Logger.Error("Error logging in: Cookie not found.")
+            return False
+
+        # The cookie should already be in the jar now
+        return True
 
     def GetAdditionalLiveItems(self, data):
         Logger.Info("Processing Live items")
@@ -196,7 +262,7 @@ class Channel(chn_class.Channel):
             }
 
             for stream in liveStreams:
-                Logger.Debug("Adding %s video item to sub item list: %s", parent, stream)
+                Logger.Debug("Adding video item to '%s' sub item list: %s", parent, stream)
                 liveData = liveStreams[stream]
                 item = mediaitem.MediaItem(stream, liveData["url"])
                 item.icon = parent.icon
@@ -216,6 +282,16 @@ class Channel(chn_class.Channel):
         search.dontGroup = True
         search.SetDate(2200, 1, 1, text="")
         items.append(search)
+
+        favs = mediaitem.MediaItem("Favorieten", "https://mijn.npo.nl/profiel/favorieten")
+        favs.complete = True
+        favs.description = "Favorieten van de NPO.nl website. Het toevoegen van favorieten " \
+                           "wordt nog niet ondersteund."
+        favs.icon = self.icon
+        favs.thumb = self.noImage
+        favs.dontGroup = True
+        favs.SetDate(2200, 1, 1, text="")
+        items.append(favs)
 
         extra = mediaitem.MediaItem("Populair", "%s/episodes/popular.json" % (self.baseUrl,))
         extra.complete = True
@@ -324,7 +400,9 @@ class Channel(chn_class.Channel):
         """
 
         items = []
-        data = Regexer.DoRegex('NPW.config.channels=([\w\W]+?);NPW\.config', data)[-1].rstrip(";")
+        data = Regexer.DoRegex('NPW.config.channels=([\w\W]+?),NPW\.config\.', data)[-1].rstrip(";")
+        # fixUp some json
+        data = re.sub('(\w+):([^/])', '"\\1":\\2', data)
         return data, items
 
     def AlphaListing(self, data):
@@ -353,16 +431,22 @@ class Channel(chn_class.Channel):
         for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ0":
             if char == "0":
                 char = "0-9"
-                subItem = mediaitem.MediaItem(titleFormat % (char,), "http://www.npo.nl/a-z?page=1")
+                subItem = mediaitem.MediaItem(titleFormat % (char,), "http://www.npo.nl/programmas/a-z")
             else:
                 subItem = mediaitem.MediaItem(titleFormat % (char,),
-                                              "http://www.npo.nl/a-z/%s?page=1" % (char.lower(),))
+                                              "http://www.npo.nl/programmas/a-z/%s" % (char.lower(),))
             subItem.complete = True
             subItem.icon = self.icon
             subItem.thumb = self.noImage
             subItem.dontGroup = True
             items.append(subItem)
         return data, items
+
+    def CreateFolderItem(self, resultSet):
+        item = chn_class.Channel.CreateFolderItem(self, resultSet)
+        if item.thumb.startswith("//"):
+            item.thumb = "https:%s" % (item.thumb, )
+        return item
 
     def CreateFolderItemAlpha(self, resultSet):
         """Creates a MediaItem of type 'folder' using the resultSet from the regex.
@@ -382,7 +466,7 @@ class Channel(chn_class.Channel):
         item = self.CreateVideoItemNonMobile(resultSet)
         item.type = 'folder'
         item.url = "http://www.npo.nl%(Url)s/%(WhatsOnId)s/search?end_date=&media_type=broadcast&rows=%%s&start=0&start_date=" % resultSet
-        item.url = item.url % (self.nonMobilePageSize,)
+        item.url %= self.nonMobilePageSize,
 
         return item
 
@@ -475,7 +559,7 @@ class Channel(chn_class.Channel):
 
         # look for better values
         posix = data.get('broadcasted_at', posix)
-        broadcasted = datetime.datetime.fromtimestamp(posix)
+        broadcasted = DateHelper.GetDateFromPosix(posix)
         description = resultSet.get('description', description)
         videoId = data.get('whatson_id', None)
 
@@ -535,6 +619,32 @@ class Channel(chn_class.Channel):
         item.complete = True
         return item
 
+    def AddNextPageItem(self, data):
+        """ Add a possible next-page item
+        @param data: the input data
+
+        """
+
+        items = []
+        if self.__NextPageAdded:
+            return data, items
+
+        currentPage = Regexer.DoRegex("page=(\d+)", self.parentItem.url)
+        for page in currentPage:
+            nextPage = int(page) + 1
+            url = self.parentItem.url.replace("page=%s" % (page, ), "page=%s" % (nextPage,))
+            pageItem = mediaitem.MediaItem("\a.: Meer afleveringen :.", url)
+            pageItem.thumb = self.parentItem.thumb
+            pageItem.complete = True
+            pageItem.SetDate(2200, 1, 1, text="")
+            pageItem.HttpHeaders["X-Requested-With"] = "XMLHttpRequest"
+            pageItem.HttpHeaders["Accept"] = "text/html, */*; q=0.01"
+            items.append(pageItem)
+            Logger.Debug("Adding page item based on URL")
+            self.__NextPageAdded = True
+            break
+        return data, items
+
     def CreatePageItemNonMobile(self, resultSet):
         """Creates a MediaItem of type 'folder' using the resultSet from the regex.
 
@@ -552,12 +662,20 @@ class Channel(chn_class.Channel):
 
         # Used for paging in the episode listings
         Logger.Trace(resultSet)
+        if self.__NextPageAdded:
+            return None
 
         if "Page" in resultSet and resultSet["Page"]:
+            Logger.Debug("Adding page item based on 'Page' index only.")
             # page from date search result
             title = "\a.: Meer programma's :."
             page = int(resultSet["Page"])
-            url = self.parentItem.url.replace("page=%s" % (page,), "page=%s" % (page + 1,))
+            if "page=" in self.parentItem.url:
+                url = self.parentItem.url.replace("page=%s" % (page,), "page=%s" % (page + 1,))
+            elif "?" in self.parentItem.url:
+                url = "%s&page=%s" % (self.parentItem.url, page + 1)
+            else:
+                url = "%s?page=%s" % (self.parentItem.url, page + 1)
 
             # if "page=" in self.parentItem.url:
             #     url = self.parentItem.url.replace("page=%s" % (page, ), "page=%s" % (page + 1, ))
@@ -575,8 +693,11 @@ class Channel(chn_class.Channel):
             item.HttpHeaders["X-Requested-With"] = "XMLHttpRequest"
             item.HttpHeaders["Accept"] = "text/html, */*; q=0.01"
             item.complete = True
+            self.__NextPageAdded = True
             return item
-        else:
+
+        elif "CurrentStart" in resultSet and resultSet['CurrentStart']:
+            Logger.Debug("Adding page item based on 'Total, CurrentStart, PageSize' values.")
             # page from episode list
             totalSize = int(resultSet["Total"])
             currentPage = int(resultSet["CurrentStart"])
@@ -586,6 +707,7 @@ class Channel(chn_class.Channel):
                 Logger.Debug(
                     "Not adding next page item. All items displayed (Total=%s vs Current=%s)",
                     totalSize, nextPage)
+                self.__NextPageAdded = True
                 return None
             else:
                 pageSize = self.nonMobileMaxPageSize
@@ -600,7 +722,34 @@ class Channel(chn_class.Channel):
                 pageItem.thumb = self.parentItem.thumb
                 pageItem.complete = True
                 pageItem.SetDate(2200, 1, 1, text="")
+                self.__NextPageAdded = True
                 return pageItem
+
+        elif "TotalPages" in resultSet and resultSet["TotalPages"]:
+            Logger.Debug("Adding page item based on 'TotalPages' and 'CurrentPage'")
+            # Page 2 is:
+            # http://www.npo.nl/baby-te-huur/POMS_S_BNN_097316/search?page=2&category=all
+            # But page 1 is:
+            # http://www.npo.nl/baby-te-huur/POMS_S_BNN_097316/search?end_date=&media_type=broadcast&rows=50&start=0&start_date=
+            currentPage = int(resultSet["CurrentPage"])
+            totalPages = int(resultSet["TotalPages"])
+            if currentPage >= totalPages:
+                Logger.Debug("No more additional pages")
+                self.__NextPageAdded = True
+                return None
+
+            url = self.parentItem.url.split("?")[0]
+            url = "%s?page=%s&category=all" % (url, currentPage + 1)
+            pageItem = mediaitem.MediaItem("\a.: Meer afleveringen :.", url)
+            pageItem.thumb = self.parentItem.thumb
+            pageItem.complete = True
+            pageItem.SetDate(2200, 1, 1, text="")
+            self.__NextPageAdded = True
+            return pageItem
+
+        else:
+            Logger.Warning("No paging information found.")
+            return None
 
     def CreateVideoItemNonMobile(self, resultSet):
         """Creates a MediaItem of type 'video' using the resultSet from the regex.
@@ -625,7 +774,7 @@ class Channel(chn_class.Channel):
 
         name = resultSet["Title"].strip()
         videoId = resultSet["WhatsOnId"]
-        description = resultSet["Description"]
+        description = resultSet.get("Description")
 
         item = mediaitem.MediaItem(name, videoId)
         item.icon = self.icon
@@ -634,7 +783,7 @@ class Channel(chn_class.Channel):
         item.description = description
         item.thumb = resultSet["Image"].replace("s174/c174x98", "s348/c348x196")
         if item.thumb.startswith("//"):
-            item.thumb = self.noImage
+            item.thumb = "https:%s" % (item.thumb, )
 
         if "Premium" in resultSet and resultSet["Premium"]:
             item.isPaid = True
@@ -707,20 +856,23 @@ class Channel(chn_class.Channel):
         Logger.Trace("Content = %s", resultSet)
 
         # first regex matched -> video channel
-        name = resultSet[1]
-        name = name.replace("-", " ").capitalize()
-        name = "%s: %s" % (name, resultSet[2].strip())
-        description = "Nu: %s\nStraks om %s: %s" % (resultSet[2].strip(), resultSet[3], resultSet[4].strip())
+        name = resultSet[0]
+        # name = name.replace("-", " ").capitalize()
+        name = "%s: %s" % (name, resultSet[3].strip())
+        if resultSet[4]:
+            description = "Nu: %s\nStraks om %s: %s" % (resultSet[3].strip(), resultSet[4], resultSet[4].strip())
+        else:
+            description = "Nu: %s" % (resultSet[3].strip(), )
 
-        item = mediaitem.MediaItem(name, "%s/live/%s" % (self.baseUrlLive, resultSet[1]), type="video")
+        item = mediaitem.MediaItem(name, "%s/live/%s" % (self.baseUrlLive, resultSet[2]), type="video")
         item.description = description
 
-        if resultSet[0].startswith("http"):
-            item.thumb = resultSet[0].replace("regular_", "").replace("larger_", "")
-        elif resultSet[0].startswith("//"):
-            item.thumb = "http:%s" % (resultSet[0].replace("regular_", "").replace("larger_", ""),)
+        if resultSet[1].startswith("http"):
+            item.thumb = resultSet[1].replace("regular_", "").replace("larger_", "")
+        elif resultSet[1].startswith("//"):
+            item.thumb = "http:%s" % (resultSet[1].replace("regular_", "").replace("larger_", ""),)
         else:
-            item.thumb = "%s%s" % (self.baseUrlLive, resultSet[0].replace("regular_", "").replace("larger_", ""))
+            item.thumb = "%s%s" % (self.baseUrlLive, resultSet[1].replace("regular_", "").replace("larger_", ""))
 
         item.icon = self.icon
         item.complete = False
@@ -953,7 +1105,7 @@ class Channel(chn_class.Channel):
         Logger.Trace("Using Generic UpdateVideoItem method")
 
         # get the subtitle
-        subTitleUrl = "http://e.omroep.nl/tt888/%s" % (episodeId,)
+        subTitleUrl = "http://tt888.omroep.nl/tt888/%s" % (episodeId,)
         subTitlePath = subtitlehelper.SubtitleHelper.DownloadSubtitle(subTitleUrl, episodeId + ".srt", format='srt',
                                                                       proxy=self.proxy)
 
@@ -1118,39 +1270,9 @@ class Channel(chn_class.Channel):
 
         Logger.Info("Setting the Cookie-Consent cookie for www.uitzendinggemist.nl")
 
-        # the rfc2109 parameters is not valid in Python 2.4 (Xbox), so we ommit it.
-        c = cookielib.Cookie(version=0, name='site_cookie_consent', value='yes', port=None, port_specified=False,
-                             domain='.www.uitzendinggemist.nl', domain_specified=True, domain_initial_dot=False,
-                             path='/', path_specified=True, secure=False, expires=2327431273, discard=False,
-                             comment=None, comment_url=None, rest={'HttpOnly': None})  # , rfc2109=False)
-        UriHandler.Instance().cookieJar.set_cookie(c)
+        UriHandler.SetCookie(name='site_cookie_consent', value='yes', domain='.www.uitzendinggemist.nl')
+        UriHandler.SetCookie(name='npo_cc', value='tmp', domain='.www.uitzendinggemist.nl')
 
-        # a second cookie seems to be required
-        c = cookielib.Cookie(version=0, name='npo_cc', value='tmp', port=None, port_specified=False,
-                             domain='.www.uitzendinggemist.nl', domain_specified=True, domain_initial_dot=False,
-                             path='/', path_specified=True, secure=False, expires=2327431273, discard=False,
-                             comment=None, comment_url=None, rest={'HttpOnly': None})  # , rfc2109=False)
-        UriHandler.Instance().cookieJar.set_cookie(c)
-
-        # the rfc2109 parameters is not valid in Python 2.4 (Xbox), so we ommit it.
-        c = cookielib.Cookie(version=0, name='site_cookie_consent', value='yes', port=None, port_specified=False,
-                             domain='.www.npo.nl', domain_specified=True, domain_initial_dot=False, path='/',
-                             path_specified=True, secure=False, expires=2327431273, discard=False, comment=None,
-                             comment_url=None, rest={'HttpOnly': None})  # , rfc2109=False)
-        UriHandler.Instance().cookieJar.set_cookie(c)
-
-        # Set-Cookie: npo_cc=30; path=/; domain=www.npo.nl; expires=Tue, 09-Aug-2044 21:55:39 GMT
-        c = cookielib.Cookie(version=0, name='npo_cc', value='30', port=None, port_specified=False,
-                             domain='.www.npo.nl', domain_specified=True, domain_initial_dot=False, path='/',
-                             path_specified=True, secure=False, expires=2327431273, discard=False, comment=None,
-                             comment_url=None, rest={'HttpOnly': None})  # , rfc2109=False)
-        UriHandler.Instance().cookieJar.set_cookie(c)
-
-        # http://pilot.odcontent.omroep.nl/codem/h264/1/nps/rest/2013/NPS_1220255/NPS_1220255.ism/NPS_1220255.m3u8
-        # balancer://sapi2cluster=balancer.sapi2a
-
-        # c = cookielib.Cookie(version=0, name='balancer://sapi2cluster', value='balancer.sapi2a', port=None, port_specified=False, domain='.pilot.odcontent.omroep.nl', domain_specified=True, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=2327431273, discard=False, comment=None, comment_url=None, rest={'HttpOnly': None})  # , rfc2109=False)
-        # UriHandler.Instance().cookieJar.set_cookie(c)
-        # c = cookielib.Cookie(version=0, name='balancer://sapi1cluster', value='balancer.sapi1a', port=None, port_specified=False, domain='.pilot.odcontent.omroep.nl', domain_specified=True, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=2327431273, discard=False, comment=None, comment_url=None, rest={'HttpOnly': None})  # , rfc2109=False)
-        # UriHandler.Instance().cookieJar.set_cookie(c)
+        UriHandler.SetCookie(name='site_cookie_consent', value='yes', domain='.npo.nl')
+        UriHandler.SetCookie(name='npo_cc', value='30', domain='.npo.nl')
         return

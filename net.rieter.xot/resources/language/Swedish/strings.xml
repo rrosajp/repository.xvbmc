@@ -11,7 +11,7 @@
     <string id="30008">Lettiska</string>
     <string id="30009">Allmän</string>
     <string id="30010">Kanaler</string>
-    <string id="30011">Omstart av Retrospect krävs.</string>
+    <string id="30011">Omstart av Retrospect krävs</string>
     <string id="30012">Andra</string>
     <string id="30013">Fransk-Kanadensiska</string>
     <string id="30014">Engelsk-Kanadensiska</string>
@@ -19,8 +19,8 @@
     <string id="30016">Sortera efter</string>
     <string id="30017">Namn</string>
     <string id="30018">Datum</string>
-    <string id="30019">Show DRM Warning</string>
-    <string id="30020">Högsta strömbits-hastighet</string>
+    <string id="30019">Visa DRM-varningar</string>
+    <string id="30020">Högsta strömbitshastighet</string>
     <string id="30021">Visa undertexter</string>
     <string id="30022">Om det finns</string>
     <string id="30023">Aldrig</string>
@@ -39,20 +39,20 @@
     <string id="30036">- Lösenord</string>
     <string id="30037">"BBC iPlayer"-inställningar</string>
     <string id="30040">Kanaler</string>
-    <string id="30041">Tillgängligt efter du startat Retrospect för första gången.</string>
+    <string id="30041">Tillgängligt efter att du startat Retrospect för första gången.</string>
     <string id="30042">Aktiverad</string>
     <string id="30043">Mapp-prefix</string>
     <string id="30044">Estniska</string>
     <string id="30045">Danska</string>
-    <string id="30046">DRM/Geo Location/Premium filters</string>
+    <string id="30046">DRM/Geo Plats/Premium-filter</string>
     <string id="30047">Tyska</string>
     <string id="30048">Loggnivå</string>
     <string id="30049">Uitzendinggemist.nl-inställningar</string>
-    <string id="30050">Buffert-sökväg</string>
-    <string id="30051">Töm bufferten efter # dagar (0=Ingen buffert)</string>
+    <string id="30050">Sökväg för buffert</string>
+    <string id="30051">Töm bufferten efter # dagar (0=ingen buffert)</string>
     <string id="30052">Skicka användningsstatistik</string>
     <string id="30053">Utseende</string>
-    <string id="30054">Ändra visningsnamn (omstart av XBMC krävs)</string>
+    <string id="30054">Ändra visningsnamn (omstart av Kodi krävs)</string>
     <string id="30055">Avancerat</string>
     <string id="30056">Nederländska</string>
     <string id="30057">Brittiska</string>
@@ -68,23 +68,32 @@
     <string id="30067">Visa kanaler i kategorier</string>
     <string id="30068">Aktiv</string>
     <string id="30069">Kanalinställningar</string>
-    <string id="30070">Låt XBMC välja bästa strömbits-hastighet</string>
+    <string id="30070">Låt Kodi välja bästa strömbitshastighet</string>
     <string id="30071">Inställningar för proxy</string>
     <string id="30072">- Typ</string>
-    <string id="30073">- Geo-låsta = º, DRM-skyddade = ^ and Premium = ª.</string>
+    <string id="30073">- Geo-låsta = º, DRM-skyddade = ^ och Premium = ª.</string>
     <string id="30074">Inaktiverad</string>
     <string id="30075">Vid tom lista</string>
     <string id="30076">visa felet</string>
     <string id="30077">visa en tom lista</string>
     <string id="30078">visa ett meddelande</string>
     <string id="30079">Lokalt IP (0.0.0.0=inaktiverad)</string>
-    <string id="30080">Filter DRM protected items</string>
-    <string id="30081">Filter Premium/Paid items</string>
-    <string id="30082">Apply filter to</string>
-    <string id="30083">Folders &amp; Streams</string>
-    <string id="30084">Streams Only</string>
+    <string id="30080">Filtrera DRM-skyddade objekt</string>
+    <string id="30081">Filtrera premium/betalda objekt</string>
+    <string id="30082">Tilldela filter till</string>
+    <string id="30083">Mappar &amp; strömmar</string>
+    <string id="30084">Endast strömmar</string>
     <string id="30085">GEO-låsta</string>
-    <string id="30086">Göm Fanart</string>
+    <string id="30086">Dölj fanart</string>
+    <string id="30087">Blanda mappar och strömmar vid sorteringen</string>
+    <string id="30088">Finska</string>
+    <string id="30089">Lösenordsskydd</string>
+    <string id="30090">Lösenordet skyddar lagrade lösenord krypterat med hjälp av en kod.</string>
+    <string id="30091">Ändra koden</string>
+    <string id="30092">Återställ alla koder</string>
+    <string id="30093">Lösenord</string>
+    <string id="30094">Användarnamn</string>
+    <string id="30095">Visa dolda objekt</string>
 
     <string id="30100">Ingen</string>
     <string id="30101">Regionala</string>
@@ -97,6 +106,7 @@
     <string id="30108">Andra</string>
 
     <!-- used for list limits -->
+    <string id="30199">10</string>
     <string id="30200">50</string>
     <string id="30201">75</string>
     <string id="30202">100</string>
@@ -109,7 +119,7 @@
     <string id="30502">Favoriter</string>
     <string id="30503">Kanalfavoriter</string>
     <string id="30504">Lägg till</string>
-    <string id="30505">Göm</string>
+    <string id="30505">Dölj</string>
     <string id="30506">Ta bort</string>
     <string id="30507">Kanaler</string>
     <string id="30508">Inga favoriter tillgängliga</string>
@@ -142,8 +152,8 @@
     <string id="30535">Verifierar tilläggsförråd</string>
     <string id="30536">Letar efter buffertmapp</string>
     <string id="30537">Rensar buffertmappen</string>
-    <string id="30538">Den valda LIVE-strömmen gick inte|att spela upp.</string>
-    <string id="30539">LIVE-sändning</string>
+    <string id="30538">Den valda live-strömmen gick inte|att spela upp.</string>
+    <string id="30539">Live-sändning</string>
     <string id="30540">GEO-låsta</string>
     <string id="30541">Köa objekt</string>
     <string id="30542">Startar %s.</string>
@@ -154,14 +164,30 @@
     <string id="30547">Fler sidor</string>
     <string id="30548">Klipp</string>
     <string id="30549">Kunde inte ta emot programlistan.</string>
-    <string id="30550">Det valda avsnittet gick inte att spela upp.</string>
+    <string id="30550">Hittade inga program eller avsnitt.</string>
     <string id="30551">Idag</string>
     <string id="30552">Igår</string>
-    <string id="30553">Dagen före igår</string>
-    <string id="30554">DRM Protection</string>
-    <string id="30555">The selected item is DRM protected and|might not play on Kodi.</string>
-    <string id="30556">Initialising channel(s)</string>
-    <string id="30557">Channels have been updated or installed. Performing first time actions. This could take some time.</string>
-    <string id="30558">Fetching Textures</string>
-    <string id="30559">Fetching missing textures. This could take some time depending on the internet and system speed.</string>
+    <string id="30553">I förrgår</string>
+    <string id="30554">DRM-skydd</string>
+    <string id="30555">Valt objekt är DRM-skyddat och|kanske inte går att spela upp|i Kodi.</string>
+    <string id="30556">Initierar kanal(er)</string>
+    <string id="30557">Kanaler har blivit uppdaterade eller installerade. Utför|förstagångsåtgärder. Detta kan ta en stund.</string>
+    <string id="30558">Hämtar texturer</string>
+    <string id="30559">Hämtar saknade texturer. Detta kan ta en stund beroende på internet och systemets hastighet.</string>
+    <string id="30560">Betalvideo</string>
+    <string id="30561">Valt objekt är inte gratis och kanske inte går att spela upp i Kodi.</string>
+    <string id="30562">Användarnamn och/eller lösenord har inte angivits i tilläggsinställningarna</string>
+    <string id="30563">Dölj objekt</string>
+    <string id="30564">Visa dolt objekt</string>
+    <string id="30565">Dolda objekt</string>
+    <string id="30566">För att visa dolda objekt igen, ställ in Retrospect att först visa dolda objekt. Använd sedan innehållsmenyn för att visa dolda objekt.</string>
+
+    <string id="30590">Ange en ny kod för Retrospect</string>
+    <string id="30591">Ingen kod angiven för Retrospect</string>
+    <string id="30592">Repetera den nya koden för Retrospect</string>
+    <string id="30593">Koderna matchade inte</string>
+    <string id="30594">Ange ett värde för inställning: '%s'</string>
+    <string id="30595">Ange koden för Retrospect</string>
+    <string id="30596">Felaktig kod angiven för Retrospect</string>
+    <string id="30597">Om du återställer koden går alla sparade inloggningar förlorade. Är du säker?</string>
 </strings>

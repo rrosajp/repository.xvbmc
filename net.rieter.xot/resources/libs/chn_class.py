@@ -1,3 +1,4 @@
+# coding=utf-8
 #==============================================================================
 # LICENSE Retrospect-Framework - CC BY-NC-ND
 #===============================================================================
@@ -12,25 +13,25 @@ import urlparse
 from datetime import datetime
 
 import xbmc
-
 import mediaitem
+
 from regexer import Regexer
+from cloaker import Cloaker
 from xbmcwrapper import XbmcWrapper, XbmcDialogProgressWrapper
 from config import Config
 from initializer import Initializer
-# from environments import Environments
-from helpers import htmlentityhelper
-from helpers import stopwatch
-from helpers import encodinghelper
-from helpers.jsonhelper import JsonHelper
-from helpers.languagehelper import LanguageHelper
-from helpers.statistics import Statistics
-from addonsettings import AddonSettings
-
 from logger import Logger
 from urihandler import UriHandler
 from parserdata import ParserData
 from textures import TextureHandler
+
+from helpers.stopwatch import StopWatch
+from helpers.htmlentityhelper import HtmlEntityHelper
+from helpers.encodinghelper import EncodingHelper
+from helpers.jsonhelper import JsonHelper
+from helpers.languagehelper import LanguageHelper
+from helpers.statistics import Statistics
+from addonsettings import AddonSettings
 
 
 class Channel:
@@ -64,6 +65,7 @@ class Channel:
 
         # Initialize channel stuff from ChannelInfo object
         self.guid = channelInfo.guid
+        self.id = channelInfo.id
 
         self.channelName = channelInfo.channelName
         self.safeName = channelInfo.safeName
@@ -75,6 +77,7 @@ class Channel:
         self.category = channelInfo.category
         self.language = channelInfo.language
         self.path = channelInfo.path
+        self.version = channelInfo.version
 
         # get the textures from the channelinfo and get their full uri's.
         self.icon = TextureHandler.Instance().GetTextureUri(self, channelInfo.icon)
@@ -87,9 +90,6 @@ class Channel:
         self.contextMenuItems = []
 
         # configure login stuff
-        self.passWord = ""
-        self.userName = ""
-        self.logonUrl = ""
         self.requiresLogon = False
 
         # setup the urls
@@ -147,14 +147,6 @@ class Channel:
         # self.icon = self.GetImageLocation(self.icon) -> already in the __init__
         # self.fanart = self.GetImageLocation(self.fanart) -> already in the __init__
         self.noImage = TextureHandler.Instance().GetTextureUri(self, self.noImage)
-
-        # perhaps log on?
-        self.loggedOn = self.LogOn(self.userName, self.passWord)
-
-        if not self.loggedOn:
-            Logger.Error('Not logged on...exiting')
-            return False
-
         return
 
     #noinspection PyUnusedLocal
@@ -216,15 +208,29 @@ class Channel:
         if item is None:
             Logger.Info("ProcessFolderList :: No item was specified. Assuming it was the main channel list")
             url = self.mainListUri
-            headers = self.httpHeaders
         elif len(item.items) > 0:
             return item.items
         else:
             url = item.url
+
+        # Determine the handlers and process
+        dataParsers = self.__GetDataParsers(url)
+        if filter(lambda p: p.LogOnRequired, dataParsers):
+            Logger.Info("One or more dataparsers require logging in.")
+            self.loggedOn = self.LogOn()
+
+        # now set the headers here and not earlier in case they might have been update by the logon
+        if item is not None and item.HttpHeaders:
             headers = item.HttpHeaders
+        else:
+            headers = self.httpHeaders
 
         if url.startswith("http:") or url.startswith("https:") or url.startswith("file:"):
-            data = UriHandler.Open(url, proxy=self.proxy, additionalHeaders=headers)
+            # Disable cache on live folders
+            noCache = item is not None and not item.IsPlayable() and item.isLive
+            if noCache:
+                Logger.Debug("Disabling cache for '%s'", item)
+            data = UriHandler.Open(url, proxy=self.proxy, additionalHeaders=headers, noCache=noCache)
         elif url.startswith("#"):
             data = ""
         elif url == "searchSite":
@@ -233,9 +239,6 @@ class Channel:
         else:
             Logger.Debug("Unknown URL format. Setting data to ''")
             data = ""
-
-        # Determine the handlers and process
-        dataParsers = self.__GetDataParsers(url)
 
         # first check if there is a generic pre-processor
         preProcs = filter(lambda p: p.IsGenericPreProcessor(), dataParsers)
@@ -254,6 +257,9 @@ class Channel:
             Logger.Debug("Processing %s", dataParser)
             (data, preItems) = dataParser.PreProcessor(data)
             items += preItems
+
+            if isinstance(data, JsonHelper):
+                Logger.Debug("Generic preprocessor resulted in JsonHelper data")
 
         # The the other handlers
         Logger.Trace("Processing %s Normal DataParsers", len(dataParsers))
@@ -279,7 +285,10 @@ class Channel:
                 if handlerJson is None:
                     # Cache the json requests to improve performance
                     Logger.Trace("Caching JSON results for Dataparsing")
-                    handlerJson = JsonHelper(handlerData, Logger.Instance())
+                    if isinstance(handlerData, JsonHelper):
+                        handlerJson = handlerData
+                    else:
+                        handlerJson = JsonHelper(handlerData, Logger.Instance())
 
                 Logger.Trace(dataParser.Parser)
                 parserResults = handlerJson.GetValue(fallback=[], *dataParser.Parser)
@@ -288,13 +297,19 @@ class Channel:
                     # if there is just one match, return that as a list
                     parserResults = [parserResults]
             else:
-                parserResults = Regexer.DoRegex(dataParser.Parser, handlerData)
+                if isinstance(handlerData, JsonHelper):
+                    raise ValueError("Cannot perform Regex Parser on JsonHelper.")
+                else:
+                    parserResults = Regexer.DoRegex(dataParser.Parser, handlerData)
 
             Logger.Debug("Processing DataParser.Creator for %s items", len(parserResults))
             for parserResult in parserResults:
-                handlerItem = dataParser.Creator(parserResult)
-                if handlerItem is not None:
-                    items.append(handlerItem)
+                handlerResult = dataParser.Creator(parserResult)
+                if handlerResult is not None:
+                    if isinstance(handlerResult, list):
+                        items += handlerResult
+                    else:
+                        items.append(handlerResult)
 
         # should we exclude DRM/GEO?
         hideGeoLocked = AddonSettings.HideGeoLockedItemsForLocation(self.language)
@@ -317,8 +332,17 @@ class Channel:
             items = filter(lambda i: not i.isPaid or i.type == typeToExclude, items)
             # items = filter(lambda i: not i.isPaid or i.type == "folder", items)
 
+        cloaker = Cloaker(Config.profileDir, self.guid, logger=Logger.Instance())
+        if not AddonSettings.ShowCloakedItems():
+            Logger.Debug("Hiding Cloaked items")
+            items = filter(lambda i: not cloaker.IsCloaked(i.url), items)
+        else:
+            cloakedItems = filter(lambda i: cloaker.IsCloaked(i.url), items)
+            for c in cloakedItems:
+                c.isCloaked = True
+
         if len(items) != oldCount:
-            Logger.Info("Hidden %s items due to DRM/GEO/Premium filter (Hide Folders=%s)",
+            Logger.Info("Hidden %s items due to DRM/GEO/Premium/Cloak filter (Hide Folders=%s)",
                         oldCount - len(items), hideFolders)
 
         # Check for grouping or not
@@ -400,6 +424,10 @@ class Channel:
             Logger.Error("No videoupdater found cannot update item.")
             return item
 
+        if dataParser.LogOnRequired:
+            Logger.Info("One or more dataparsers require logging in.")
+            self.loggedOn = self.LogOn()
+
         Logger.Debug("Processing Updater from %s", dataParser)
         return dataParser.Updater(item)
 
@@ -429,7 +457,7 @@ class Channel:
         Logger.Trace("Retrieved %s chars as mainlist data", len(data))
 
         # first process folder items.
-        watch = stopwatch.StopWatch('Mainlist', Logger.Instance())
+        watch = StopWatch('Mainlist', Logger.Instance())
 
         episodeItems = []
         if not self.episodeItemRegex == "" and self.episodeItemRegex is not None:
@@ -491,7 +519,7 @@ class Channel:
             if needle:
                 Logger.Debug("Searching for '%s'", needle)
                 # convert to HTML
-                needle = htmlentityhelper.HtmlEntityHelper.UrlEncode(needle)
+                needle = HtmlEntityHelper.UrlEncode(needle)
                 searchUrl = url % (needle, )
                 temp = mediaitem.MediaItem("Search", searchUrl)
                 return self.ProcessFolderList(temp)
@@ -641,7 +669,7 @@ class Channel:
         for result in resultSet:
             total = "%s%s" % (total, result)
 
-        total = htmlentityhelper.HtmlEntityHelper.StripAmp(total)
+        total = HtmlEntityHelper.StripAmp(total)
 
         if not self.pageNavigationRegexIndex == '':
             item = mediaitem.MediaItem(resultSet[self.pageNavigationRegexIndex], urlparse.urljoin(self.baseUrl, total))
@@ -740,7 +768,7 @@ class Channel:
             url = "%s/%s" % (self.baseUrl.rstrip('/'), url.lstrip('/'))
 
         # The title
-        if "subtitle" in resultSet:
+        if "subtitle" in resultSet and resultSet["subtitle"] is not None:
             title = "%(title)s - %(subtitle)s" % resultSet
         else:
             title = resultSet["title"]
@@ -832,7 +860,7 @@ class Channel:
                 return item
 
             i = 1
-            bitrate = AddonSettings.GetMaxStreamBitrate()
+            bitrate = AddonSettings.GetMaxStreamBitrate(self)
             for mediaItemPart in item.MediaItemParts:
                 Logger.Info("Trying to download %s", mediaItemPart)
                 stream = mediaItemPart.GetMediaStreamForBitrate(bitrate)
@@ -859,12 +887,8 @@ class Channel:
         return item
 
     #noinspection PyUnusedLocal
-    def LogOn(self, *args):
+    def LogOn(self):
         """Logs on to a website, using an url.
-
-        Arguments:
-        userName : string - the username to use to log on
-        passWord : string - the password to use to log on
 
         Returns:
         True if successful.
@@ -916,7 +940,7 @@ class Channel:
 
         if bitrate is None:
             # use the bitrate from the xbmc settings if bitrate was not specified and the item is MultiBitrate
-            bitrate = AddonSettings.GetMaxStreamBitrate()
+            bitrate = AddonSettings.GetMaxStreamBitrate(self)
 
         # should we download items?
         Logger.Debug("Checking for not streamable parts")
@@ -929,7 +953,7 @@ class Channel:
                     Logger.Debug("Downloading not streamable part: %s\nDownloading Stream: %s", part, stream)
 
                     # we need a unique filename
-                    fileName = encodinghelper.EncodingHelper.EncodeMD5(stream.Url)
+                    fileName = EncodingHelper.EncodeMD5(stream.Url)
                     extension = UriHandler.GetExtensionFromUrl(stream.Url)
 
                     # now we force the busy dialog to close, else we cannot cancel the download
@@ -999,9 +1023,19 @@ class Channel:
         if self.swfUrl == "":
             return url
 
-        # return "%s --swfVfy -W %s" % (url, self.swfUrl)
-        # return "%s swfurl=%s swfvfy=true" % (url, self.swfUrl)
-        return "%s swfurl=%s swfvfy=1" % (url, self.swfUrl)
+        # Kodi 17.x also accepts an SWF-url as swfvfy option (https://www.ffmpeg.org/ffmpeg-protocols.html#rtmp).
+        # This option should be set via the XbmcListItem.setProperty, so within Retrospect via:
+        #   part.AddProperty("swfvfy", self.swfUrl)
+        # Or as an URL parameter swfvfy where we add the full URL instead of just 1:
+        #   return "%s swfvfy=%s" % (url, self.swfUrl)
+
+        if AddonSettings.IsMinVersion(17):
+            Logger.Debug("Using Kodi 17+ RTMP parameters")
+            return "%s swfvfy=%s" % (url, self.swfUrl)
+        else:
+            Logger.Debug("Using Legacy (Kodi 16 and older) RTMP parameters")
+            # return "%s swfurl=%s swfvfy=true" % (url, self.swfUrl)
+            return "%s swfurl=%s swfvfy=1" % (url, self.swfUrl)
 
     def GetImageLocation(self, image):
         """returns the path for a specific image name.
@@ -1020,7 +1054,7 @@ class Channel:
 
         return TextureHandler.Instance().GetTextureUri(self, image)
 
-    def _AddDataParsers(self, urls, preprocessor=None,
+    def _AddDataParsers(self, urls, name=None, preprocessor=None,
                         parser=None, creator=None, updater=None,
                         json=False, matchType=ParserData.MatchStart):
         """ Adds a DataParser to the handlers dictionary for the  given urls
@@ -1038,7 +1072,7 @@ class Channel:
         """
 
         for url in urls:
-            self._AddDataParser(url, preprocessor, parser, creator, updater, json, matchType=matchType)
+            self._AddDataParser(url, name, preprocessor, parser, creator, updater, json, matchType=matchType)
         return
 
     def _GetSetting(self, settingId, valueForNone=None):
@@ -1052,10 +1086,10 @@ class Channel:
         setting = AddonSettings.GetChannelSetting(self.guid, settingId, valueForNone)
         return setting
 
-    def _AddDataParser(self, url,
-                       preprocessor=None,
+    # noinspection PyPropertyAccess
+    def _AddDataParser(self, url, name=None, preprocessor=None,
                        parser=None, creator=None, updater=None,
-                       json=False, matchType=ParserData.MatchStart):
+                       json=False, matchType=ParserData.MatchStart, requiresLogon=False):
         """ Adds a DataParser to the handlers dictionary
 
         @param url:             The URL that triggers these handlers
@@ -1065,18 +1099,22 @@ class Channel:
         @param updater:         The updater called for updating a item
         @param json:            Indication whether the parsers are JSON (True) or Regex (False)
         @param matchType:       The type of matching to use
+        @param name:            The name of the dataparser
+        @param requiresLogon:   Do we need to logon for this?
 
         @return: Nothing
 
         """
 
         data = ParserData(url)
+        data.Name = name
         data.PreProcessor = preprocessor
         data.Parser = parser
         data.Creator = creator
         data.Updater = updater
         data.IsJson = json
         data.MatchType = matchType
+        data.LogOnRequired = requiresLogon
 
         if url in self.dataParsers:
             self.dataParsers[url].append(data)
@@ -1184,11 +1222,13 @@ class Channel:
         """Returns a string representation of the current channel."""
 
         if self.channelCode is None:
-            return "%s [%s, %s, %s] (Order: %s)" % (
-                self.channelName, self.language, self.category, self.guid, self.sortOrder)
+            return "%s [%s-%s, %s, %s, %s] (Order: %s)" % (
+                self.channelName, self.id, self.version, self.language, self.category, self.guid,
+                self.sortOrder)
         else:
-            return "%s (%s) [%s, %s, %s] (Order: %s)" % (
-                self.channelName, self.channelCode, self.language, self.category, self.guid, self.sortOrder)
+            return "%s (%s) [%s-%s, %s, %s, %s] (Order: %s)" % (
+                self.channelName, self.channelCode, self.id, self.version, self.language,
+                self.category, self.guid, self.sortOrder)
 
     def __eq__(self, other):
         """Compares to channel objects for equality

@@ -395,7 +395,7 @@ sorted chronologically):
 - Richard Willems
 - Henk Haan
 - Michel van Verk
-- Progress text & konsult
+- Hans Filipsson
 - Magnus Bertilsson
 - Sean Berger
 - LHM Damen
@@ -416,3 +416,26 @@ sorted chronologically):
 - Johan Asplund
 - Björn Axelsson
 - Gunilla Westermark
+- Tobbe Eriksson
+- Bram De Waal
+- Michiel Ton
+- Hans Filipsson
+- Micha Van Wijngaarden
+- Daniel Sandman
+- Johan Johansson
+- Andreas Rehnmark
+- Jan Den Tandt
+- Theo Schoen
+- Daniel Skagerö
+- Robert Rutherford
+- Ulf Svensson
+- Bert Olsson
+- Svante Dackemyr
+- Koen Bekaert
+- Rob Hermans
+- Marcin Rönndahl
+- Robert Smedjeborg
+- Bo Johansson
+- Olivier De Groote
+- Robin Lövgren
+- Koen Bekaert (second donation!)

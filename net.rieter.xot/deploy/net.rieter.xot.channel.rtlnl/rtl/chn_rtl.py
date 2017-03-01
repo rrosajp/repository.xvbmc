@@ -1,5 +1,4 @@
 import datetime
-import cookielib
 
 import mediaitem
 import chn_class
@@ -10,6 +9,7 @@ from urihandler import UriHandler
 from helpers.jsonhelper import JsonHelper
 from streams.m3u8 import M3u8
 from parserdata import ParserData
+from helpers.datehelper import DateHelper
 
 
 class Channel(chn_class.Channel):
@@ -48,11 +48,9 @@ class Channel(chn_class.Channel):
 
         #===============================================================================================================
         # non standard items
-        self.iconSet = dict()
         self.largeIconSet = dict()
 
         for channel in ["rtl4", "rtl5", "rtl7", "rtl8"]:
-            self.iconSet[channel] = self.GetImageLocation("%sicon.png" % (channel,))
             self.largeIconSet[channel] = self.GetImageLocation("%slarge.png" % (channel,))
 
         self.__IgnoreCookieLaw()
@@ -136,7 +134,7 @@ class Channel(chn_class.Channel):
 
         channel = resultSet.get("station", "folder").lower()
         if channel in self.largeIconSet:
-            item.icon = self.iconSet[channel]
+            item.icon = self.largeIconSet[channel]
             item.thumb = self.largeIconSet[channel]
 
         progLogo = resultSet.get("proglogo", None)
@@ -319,8 +317,8 @@ class Channel(chn_class.Channel):
                 if tariff["tariff"] > 0:
                     start = tariff.get("start", 0)
                     end = tariff.get("stop", 2147483647)
-                    start = datetime.datetime.fromtimestamp(start)
-                    end = datetime.datetime.fromtimestamp(end)
+                    start = DateHelper.GetDateFromPosix(start)
+                    end = DateHelper.GetDateFromPosix(end)
                     now = datetime.datetime.now()
                     if start < now < end:
                         premiumItem = True
@@ -340,14 +338,14 @@ class Channel(chn_class.Channel):
 
         station = resultSet.get("station", None)
         if station:
-            icon = self.iconSet.get(station.lower(), None)
+            icon = self.largeIconSet.get(station.lower(), None)
             if icon:
                 Logger.Trace("Setting icon to: %s", icon)
                 item.icon = icon
 
         dateTime = resultSet.get("display_date", None)
         if dateTime:
-            dateTime = datetime.datetime.fromtimestamp(int(dateTime))
+            dateTime = DateHelper.GetDateFromPosix(int(dateTime))
             item.SetDate(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second)
 
         return item
@@ -386,6 +384,12 @@ class Channel(chn_class.Channel):
         m3u8Url = "%s/%s" % (m3u8Urls[0][0], m3u8Urls[0][1])
 
         part = item.CreateNewEmptyMediaPart()
+        # prevent the "418 I'm a teapot" error
+        part.HttpHeaders["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0"
+        # Remove the Range header to make all streams start at the beginning.
+        Logger.Debug("Setting an empty 'Range' http header to force playback at the start of a stream")
+        part.HttpHeaders["Range"] = ''
+
         for s, b in M3u8.GetStreamsFromM3u8(m3u8Url, self.proxy):
             item.complete = True
             part.AppendMediaStream(s, b)
@@ -398,6 +402,5 @@ class Channel(chn_class.Channel):
         Logger.Info("Setting the Cookie-Consent cookie for www.uitzendinggemist.nl")
 
         # the rfc2109 parameters is not valid in Python 2.4 (Xbox), so we ommit it.
-        c = cookielib.Cookie(version=0, name='rtlcookieconsent', value='yes', port=None, port_specified=False, domain='.www.rtl.nl', domain_specified=True, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=2327431273, discard=False, comment=None, comment_url=None, rest={'HttpOnly': None})  # , rfc2109=False)
-        UriHandler.Instance().cookieJar.set_cookie(c)
+        UriHandler.SetCookie(name='rtlcookieconsent', value='yes', domain='.www.rtl.nl')
         return

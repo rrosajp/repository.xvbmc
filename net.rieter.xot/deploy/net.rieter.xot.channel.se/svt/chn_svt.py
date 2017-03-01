@@ -1,19 +1,14 @@
 # coding:UTF-8
-import urlparse
 import datetime
-import time
 
 # import contextmenu
 import chn_class
 import mediaitem
 
 from regexer import Regexer
-from helpers import htmlentityhelper
 from helpers import subtitlehelper
 from helpers.jsonhelper import JsonHelper
-from helpers.xmlhelper import XmlHelper
 from helpers.datehelper import DateHelper
-from xbmcwrapper import XbmcWrapper
 from helpers.languagehelper import LanguageHelper
 from streams.m3u8 import M3u8
 
@@ -37,87 +32,103 @@ class Channel(chn_class.Channel):
         chn_class.Channel.__init__(self, channelInfo)
 
         # ============== Actual channel setup STARTS here and should be overwritten from derived classes ===============
-        self.useAtom = False  # : The atom feeds just do not give all videos
         self.noImage = "svtimage.png"
 
         # setup the urls
-        self.mainListUri = "http://www.svtplay.se/program"
-        # self.baseUrl = "http://www.svtplay.se/ajax/sok/forslag.json"
+        self.mainListUri = "http://www.svtplay.se/ajax/sok/forslag.json"
+        self.mainListUri = "http://www.svtplay.se/api/all_titles_and_singles"
         self.baseUrl = "http://www.svtplay.se"
-        self.swfUrl = "%s/public/swf/video/svtplayer-2013.23.swf" % (self.baseUrl,)
+        self.swfUrl = "http://media.svt.se/swf/video/svtplayer-2016.01.swf"
 
-        # Generic pre-processor
-        self._AddDataParser("*", preprocessor=self.PreProcessFolderList)
+        # setup the intial listing based on Alphabeth and specials
+        self._AddDataParser(self.mainListUri, matchType=ParserData.MatchExact, json=True,
+                            preprocessor=self.AddLiveItemsAndGenres)
+        # in case we use the forslag.json
+        self._AddDataParser("http://www.svtplay.se/ajax/sok/forslag.json",
+                            matchType=ParserData.MatchExact, json=True,
+                            parser=(), creator=self.CreateJsonEpisodeItemSok)
+        # in case we use the All Titles and Singles
+        self._AddDataParser("http://www.svtplay.se/api/all_titles_and_singles",
+                            matchType=ParserData.MatchExact, json=True,
+                            preprocessor=self.FetchThumbData,
+                            parser=(), creator=self.MergeJsonEpisodeItem)
 
-        # setup the intial listing
-        self.episodeItemRegex = '<li class="play_js[^>]*data-abroad="([^"]+)"[^>]*>\W*' \
-                                '<a href="/([^"]+)"[^>]*>([^<]+)</a>\W*</li>'
-        self._AddDataParser(self.mainListUri, matchType=ParserData.MatchExact, preprocessor=self.AddLiveItems,
-                            parser=self.episodeItemRegex, creator=self.CreateEpisodeItem)
-
-        # setup channel listing
-        # self._AddDataParser("http://www.svtplay.se/kanaler",
-        # self._AddDataParser("http://www.svtplay.se/api/channel_page",
+        # setup channel listing based on JSON data
         self._AddDataParser("#kanaler",
                             preprocessor=self.LoadChannelData,
                             json=True,
                             parser=("channels", ),
                             creator=self.CreateChannelItem)
-        self._AddDataParser("http://www.svt.se/videoplayer-api/", updater=self.UpdateChannelItem)
 
-        # pages with extended video info
-        extendedRegex = 'data-title="([^"]+)"\W+data-description="([^"]*)"[\w\W]{0,200}?' \
-                        'data-broadcasted="(?:([^ "]+) ([^. "]+)[ .]([^"]+))?"\W+' \
-                        'data-published="(?:([^ "]+) ([^. "]+)[ .]([^"]+))?"[\w\W]{0,200}?' \
-                        'data-abroad="([^"]+)[\w\W]{0,400}?<a[^>]+href="/((?:klipp|video)/\d+)[^"]+"[\w\W]{0,1400}?' \
-                        '<img[^>]+class="play_[^>]+?(?:data-imagename|src)="([^"]+)"'
-        self._AddDataParser("^http://www.svtplay.se/(senaste|sista-chansen|populara)\?sida=1$",
-                            matchType=ParserData.MatchRegex,
-                            parser=extendedRegex, creator=self.CreateVideoItemExtended)
+        # special pages (using JSON) using a generic pre-processor to extract the data
+        specialJsonPages = "^https?://www.svtplay.se/(senaste|sista-chansen|populara|live)\?sida=\d+$"
+        self._AddDataParser(specialJsonPages,
+                            matchType=ParserData.MatchRegex, preprocessor=self.ExtractJsonData)
+        self._AddDataParser(specialJsonPages,
+                            matchType=ParserData.MatchRegex, json=True,
+                            parser=("gridPage", "content"),
+                            creator=self.CreateJsonItem)
+        self._AddDataParser(specialJsonPages,
+                            matchType=ParserData.MatchRegex, json=True,
+                            parser=("gridPage", "pagination"),
+                            creator=self.CreateJsonPageItem)
 
-        # setup the normal video items
-        liveItemRegex = '<a href="/((?:live|video)/\d+)[\W\w]{0,2000}?<time\W+datetime="(\d+)-(\d+)-(\d+)T' \
-                        '(\d+):(\d+)\+\d+:\d+">\d+[:.]\d+</time>[^/]+</time>\W+</(?:span|div)>\W+<(?:div[^>]+>' \
-                        '|h5|h1[^>]+>|span[^>]+>)([^<]+)'
-        videoItemRegex = '<img[^>]+src="([^"]+)" />\W+<span class="play_vertical[^"]+?(only-sweden){0,1}">[\w\W]{0,1500}?<a href="/((?:live|video|klipp)/\d+)[^>]+>([^<]+)<[\w\W]{0,1500}?<p[^>]+description-text"\W*>([^<]+)<'
+        # genres (using JSON)
+        self._AddDataParser("http://www.svtplay.se/genre",
+                            preprocessor=self.ExtractJsonData, json=True,
+                            name="Parser for dynamically parsing tags/genres from overview",
+                            matchType=ParserData.MatchExact,
+                            parser=("clusters", "alphabetical"),
+                            creator=self.CreateJsonGenre)
 
-        self.videoItemRegex = (videoItemRegex, liveItemRegex)
-        self._AddDataParser("*", parser=self.videoItemRegex, creator=self.CreateVideoItem, updater=self.UpdateVideoItem)
+        self._AddDataParser("http://www.svtplay.se/genre/",
+                            preprocessor=self.ExtractJsonData, json=True,
+                            name="Video/Folder parsers for items in a Genre/Tag",
+                            parser=("clusterPage", "titlesAndEpisodes"),
+                            creator=self.CreateJsonItem)
 
-        # setup the categories
+        self._AddDataParser("http://www.svtplay.se/sok?q=", preprocessor=self.ExtractJsonData)
+        self._AddDataParser("http://www.svtplay.se/sok?q=", json=True,
+                            parser=("searchPage", "episodes"),
+                            creator=self.CreateJsonItem)
+        self._AddDataParser("http://www.svtplay.se/sok?q=", json=True,
+                            parser=("searchPage", "titles"),
+                            creator=self.CreateJsonItem)
+
+        # slugged items for which we need to filter tab items
+        self._AddDataParser("^https?://www.svtplay.se/[^?]+\?tab=", matchType=ParserData.MatchRegex,
+                            preprocessor=self.ExtractSlugData, json=True, updater=self.UpdateVideoHtmlItem)
+
+        # Other Json items
+        self._AddDataParser("*", preprocessor=self.ExtractJsonData, json=True)
+
+        self.__showSomeVideosInListing = True
+        self.__listedRelatedTab = "RELATED_VIDEO_TABS_LATEST"
+        self._AddDataParser("*", json=True,
+                            preprocessor=self.ListSomeVideos,
+                            parser=("videoTitlePage", "relatedVideosTabs"),
+                            creator=self.CreateJsonFolderItem)
+
+        # And the old stuff
         catRegex = Regexer.FromExpresso('<article[^>]+data-title="(?<Title>[^"]+)"[^"]+data-description="(?<Description>[^"]*)"[^>]+data-broadcasted="(?:(?<Date1>[^ "]+) (?<Date2>[^. "]+)[ .](?<Date3>[^"]+))?"[^>]+data-abroad="(?<Abroad>[^"]+)"[^>]+>\W+<a[^>]+href="(?<Url>[^"]+)"[\w\W]{0,5000}?<img[^>]+src="(?<Thumb>[^"]+)')
-        self._AddDataParser("^http://www.svtplay.se/[^/?]+\?tab=titlar$", matchType=ParserData.MatchRegex,
-                            preprocessor=self.StripNonCategories, parser=catRegex, creator=self.CreateCategoryItem)
-        self._AddDataParser("http://www.svtplay.se/sok", parser=catRegex, creator=self.CreateCategoryItem)
-        # self._AddDataParser("^http://www.svtplay.se/[^/?]+\?tab=titlar$", matchType=ParserData.MatchRegex,
-        #                     parser=extendedRegex, creator=self.CreateVideoItemExtended)
+        self._AddDataParser("http://www.svtplay.se/barn",
+                            matchType=ParserData.MatchExact,
+                            preprocessor=self.StripNonCategories, parser=catRegex,
+                            creator=self.CreateCategoryItem)
 
-        # set the more items
-        moreitemsRegex = 'tab=(\w+)[^>]+data-target="play_title-page__content--more-clips">'
-        self._AddDataParser("*", parser=moreitemsRegex, creator=self.CreateMoreItem)
-
-        self.mediaUrlRegex = '"url":"([^"]+)","bitrate":(\d+)'
-
-        self.atomItemRegex = "<entry>.+</entry>"
-        if self.useAtom:
-            # self.videoItemRegex = self.atomItemRegex
-            # self.CreateVideoItem = self.CreateVideoItemXml
-            self._AddDataParser("*", parser=self.atomItemRegex, creator=self.CreateVideoItemXml)
+        # Update via HTML pages
+        self._AddDataParser("http://www.svtplay.se/video/", updater=self.UpdateVideoHtmlItem)
+        self._AddDataParser("http://www.svtplay.se/klipp/", updater=self.UpdateVideoHtmlItem)
+        # Update via the new API urls
+        self._AddDataParser("http://www.svt.se/videoplayer-api/", updater=self.UpdateVideoApiItem)
 
         # ===============================================================================================================
         # non standard items
-        # self.categoryName = ""
-        # self.currentUrlPart = ""
-        self.__klippName = LanguageHelper.GetLocalizedString(LanguageHelper.Clips)
-        self.__klippUrlIndicator = "tab=klipp"
+        self.__thumbLookup = dict()
 
         # ===============================================================================================================
         # Test cases:
-        #   Östnytt: /klipp
-        #   Alfons Åberg: pages, /klipp /video, folders, subtitles
-        #   Nobel: Live channels / klipps / subtitles
-        #
-        #   artists_in_residence - FLV
+        #   Affaren Ramel: just 1 folder -> should only list videos
 
         # ====================================== Actual channel setup STOPS here =======================================
         return
@@ -137,7 +148,7 @@ class Channel(chn_class.Channel):
         url = "http://www.svtplay.se/sok?q=%s"
         return chn_class.Channel.SearchSite(self, url)
 
-    def AddLiveItems(self, data):
+    def AddLiveItemsAndGenres(self, data):
         """ Adds the Live items, Channels and Last Episodes to the listing.
 
         @param data:    The data to use.
@@ -150,7 +161,7 @@ class Channel(chn_class.Channel):
 
         extraItems = {
             "Kanaler": "#kanaler",
-            "Livesändningar": "http://www.svtplay.se/ajax/live?sida=1",
+            "Livesändningar": "http://www.svtplay.se/live?sida=1",
 
             "S&ouml;k": "searchSite",
             "Senaste program": "http://www.svtplay.se/senaste?sida=1",
@@ -160,13 +171,50 @@ class Channel(chn_class.Channel):
 
         # http://www.svtplay.se/ajax/dokumentar/titlar?filterAccessibility=&filterRights=
         categoryItems = {
-            "Film & Drama": "http://www.svtplay.se/filmochdrama?tab=titlar",
-            "Barn": "http://www.svtplay.se/barn?tab=titlar",
-            "Dokumentär": "http://www.svtplay.se/dokumentar?tab=titlar",
-            "Kultur & Nöje": "http://www.svtplay.se/kulturochnoje?tab=titlar",
-            "Nyheter": "http://www.svtplay.se/nyheter?tab=titlar",
-            "Samhälle & Fakta": "http://www.svtplay.se/samhalleochfakta?tab=titlar",
-            "Sport": "http://www.svtplay.se/sport?tab=titlar",
+            "Drama": (
+                "http://www.svtplay.se/genre/drama",
+                "http://www.svtstatic.se/play/play5/images/categories/posters/drama-d75cd2da2eecde36b3d60fad6b92ad42.jpg"
+            ),
+            "Dokumentär": (
+                "http://www.svtplay.se/genre/dokumentar",
+                "http://www.svtstatic.se/play/play5/images/categories/posters/dokumentar-00599af62aa8009dbc13577eff894b8e.jpg"
+            ),
+            "Humor": (
+                "http://www.svtplay.se/genre/humor",
+                "http://www.svtstatic.se/play/play5/images/categories/posters/humor-abc329317eedf789d2cca76151213188.jpg"
+            ),
+            "Livsstil": (
+                "http://www.svtplay.se/genre/livsstil",
+                "http://www.svtstatic.se/play/play5/images/categories/posters/livsstil-2d9cd77d86c086fb8908ce4905b488b7.jpg"
+            ),
+            "Underhållning": (
+                "http://www.svtplay.se/genre/underhallning",
+                "http://www.svtstatic.se/play/play5/images/categories/posters/underhallning-a60da5125e715d74500a200bd4416841.jpg"
+            ),
+            "Kultur": (
+                "http://www.svtplay.se/genre/kultur",
+                "http://www.svtstatic.se/play/play5/images/categories/posters/kultur-93dca50ed1d6f25d316ac1621393851a.jpg"
+            ),
+            "Samhälle & Fakta": (
+                "http://www.svtplay.se/genre/samhalle-och-fakta",
+                "http://www.svtstatic.se/play/play5/images/categories/posters/samhalle-och-fakta-3750657f72529a572f3698e01452f348.jpg"
+            ),
+            "Film": (
+                "http://www.svtplay.se/genre/film",
+                "http://www.svtstatic.se/image-cms/svtse/1436202866/svtplay/article2952281.svt/ALTERNATES/large/film1280-jpg"
+            ),
+            "Barn": (
+                "http://www.svtplay.se/genre/barn",
+                "http://www.svtstatic.se/play/play5/images/categories/posters/barn-c17302a6f7a9a458e0043b58bbe8ab79.jpg"
+            ),
+            "Nyheter": (
+                "http://www.svtplay.se/genre/nyheter",
+                "https://www.svtstatic.se/play/play6/images/categories/posters/nyheter.e67ff1b5770152af4690ad188546f9e9.jpg"
+            ),
+            "Sport": (
+                "http://www.svtplay.se/genre/sport",
+                "https://www.svtstatic.se/play/play6/images/categories/posters/sport.98b65f6627e4addbc4177542035ea504.jpg"
+            )
         }
 
         for title, url in extraItems.iteritems():
@@ -177,20 +225,49 @@ class Channel(chn_class.Channel):
             newItem.SetDate(2099, 1, 1, text="")
             items.append(newItem)
 
-        newItem = mediaitem.MediaItem("\a.: Genrer :.", "")
+        newItem = mediaitem.MediaItem("\a.: Kategorier :.", "http://www.svtplay.se/genre")
         newItem.complete = True
         newItem.thumb = self.noImage
         newItem.dontGroup = True
         newItem.SetDate(2099, 1, 1, text="")
-        for title, url in categoryItems.iteritems():
+        for title, (url, thumb) in categoryItems.iteritems():
             catItem = mediaitem.MediaItem(title, url)
             catItem.complete = True
-            catItem.thumb = self.noImage
+            catItem.thumb = thumb or self.noImage
             catItem.dontGroup = True
             # catItem.SetDate(2099, 1, 1, text="")
             newItem.items.append(catItem)
         items.append(newItem)
+
+        newItem = mediaitem.MediaItem("\a.: Genrer/Tags :.", "http://www.svtplay.se/genre")
+        newItem.complete = True
+        newItem.thumb = self.noImage
+        newItem.dontGroup = True
+        newItem.SetDate(2099, 1, 1, text="")
+        items.append(newItem)
+
         return data, items
+
+    def FetchThumbData(self, data):
+        items = []
+
+        thumbData = UriHandler.Open("http://www.svtplay.se/ajax/sok/forslag.json", proxy=self.proxy)
+        json = JsonHelper(thumbData)
+        for jsonData in json.GetValue():
+            if "thumbnail" not in jsonData:
+                continue
+            self.__thumbLookup[jsonData["url"]] = jsonData["thumbnail"]
+
+        return data, items
+
+    def MergeJsonEpisodeItem(self, resultSet):
+
+        thumb = self.__thumbLookup.get(resultSet["contentUrl"])
+        if thumb:
+            resultSet["poster"] = thumb
+
+        item = self.CreateJsonEpisodeItem(resultSet)
+        return item
 
     # noinspection PyUnusedLocal
     def LoadChannelData(self, data):
@@ -206,7 +283,99 @@ class Channel(chn_class.Channel):
         data = UriHandler.Open("http://www.svtplay.se/api/channel_page", proxy=self.proxy, noCache=True)
         return data, items
 
-    def CreateEpisodeItem(self, resultSet):
+    def ExtractJsonData(self, data):
+        return self.__ExtractJsonData(data, "(?:__svtplay|__reduxStore)")
+
+    def ExtractSlugData(self, data):
+        """ Extracts the correct Slugged Data for tabbed items """
+
+        Logger.Info("Extracting Slugged data during pre-processing")
+        data, items = self.ExtractJsonData(data)
+        # data, items = self.ExtractJsonDataRedux(data)
+
+        json = JsonHelper(data)
+        slugs = json.GetValue("videoTitlePage", "relatedVideosTabs")
+        for slugData in slugs:
+            tabSlug = "?tab=%s" % (slugData["slug"], )
+            if not self.parentItem.url.endswith(tabSlug):
+                continue
+
+            for item in slugData["videos"]:
+                items.append(self.CreateJsonItem(item))
+
+        return data, items
+
+    def CreateJsonEpisodeItem(self, resultSet):
+        """Creates a new MediaItem for an episode
+
+        Arguments:
+        resultSet : list[string] - the resultSet of the self.episodeItemRegex
+
+        Returns:
+        A new MediaItem of type 'folder'
+
+        This method creates a new MediaItem from the Regular Expression
+        results <resultSet>. The method should be implemented by derived classes
+        and are specific to the channel.
+
+        """
+
+        Logger.Trace(resultSet)
+
+        if "titleArticleId" in resultSet:
+            return None
+
+        # url = "%s/%s?tab=program" % (self.baseUrl, resultSet['urlFriendlyTitle'], )
+        url = "%s%s" % (self.baseUrl, resultSet['contentUrl'],)
+        if "/video/" in url:
+            return None
+
+        item = mediaitem.MediaItem(resultSet['programTitle'], url)
+        item.icon = self.icon
+        item.isGeoLocked = resultSet.get('onlyAvailableInSweden', False)
+        item.description = resultSet.get('description')
+
+        thumb = self.noImage
+        if "poster" in resultSet:
+            thumb = resultSet["poster"]
+            thumb = self.__GetThumb(thumb or self.noImage)
+
+        item.thumb = thumb
+        return item
+
+    def CreateJsonEpisodeItemSok(self, resultSet):
+        """Creates a new MediaItem for an episode
+
+        Arguments:
+        resultSet : list[string] - the resultSet of the self.episodeItemRegex
+
+        Returns:
+        A new MediaItem of type 'folder'
+
+        This method creates a new MediaItem from the Regular Expression
+        results <resultSet>. The method should be implemented by derived classes
+        and are specific to the channel.
+
+        """
+
+        Logger.Trace(resultSet)
+        url = resultSet["url"]
+        if url.startswith("/video") or url.startswith("/genre") or url.startswith('/oppetarkiv'):
+            return None
+
+        url = "%s%s" % (self.baseUrl, url, )
+        item = mediaitem.MediaItem(resultSet['title'], url)
+        item.icon = self.icon
+        item.thumb = resultSet.get("thumbnail", self.noImage)
+        if item.thumb.startswith("//"):
+            item.thumb = "http:%s" % (item.thumb, )
+        item.thumb = item.thumb.replace("/small/", "/large/")
+
+        item.isGeoLocked = resultSet.get('onlyAvailableInSweden', False)
+        item.complete = True
+        return item
+
+    def CreateJsonPageItem(self, resultSet):
         """Creates a new MediaItem for an episode
 
         Arguments:
@@ -221,20 +390,171 @@ class Channel(chn_class.Channel):
 
         """
         Logger.Trace(resultSet)
-        url = htmlentityhelper.HtmlEntityHelper.StripAmp(urlparse.urljoin(self.baseUrl, resultSet[1]))
 
-        if not self.useAtom:
-            # if we put page 20, we usually get all items.
-            # url = "%s?tab=program&sida=100&antal=100" % (url, )
-            url = "%s?tab=program" % (url, )
-            # url = "%s?sida=2&tab=helaprogram&embed=true" % (url, )
-            # url = "%s?sida=100&tab=helaprogram" % (url, )
-        else:
-            url = "%s/atom.xml" % (url, )
+        if "nextPageUrl" not in resultSet:
+            return None
 
-        item = mediaitem.MediaItem(resultSet[2], url)
+        title = LanguageHelper.GetLocalizedString(LanguageHelper.MorePages)
+        url = "%s%s" % (self.baseUrl, resultSet["nextPageUrl"])
+        item = mediaitem.MediaItem(title, url)
         item.icon = self.icon
         item.thumb = self.noImage
+        item.complete = True
+        return item
+
+    def ListSomeVideos(self, data):
+        """ If there was a Lastest section in the data return those video files """
+        items = []
+
+        if not self.__showSomeVideosInListing:
+            return data, items
+
+        jsonData = JsonHelper(data)
+        sections = jsonData.GetValue("videoTitlePage", "relatedVideosTabs")
+
+        Logger.Debug("Found %s folders/tabs", len(sections))
+        if len(sections) == 1:
+            # we should exclude that tab from the folders list and show the videos here
+            self.__listedRelatedTab = sections[0]["type"]
+            # otherwise the default "RELATED_VIDEO_TABS_LATEST" is used
+        Logger.Debug("Excluded tab '%s' which will be show as videos", self.__listedRelatedTab)
+
+        for section in sections:
+            if not section["type"] == self.__listedRelatedTab:
+                continue
+
+            for videoData in section['videos']:
+                items.append(self.CreateJsonItem(videoData))
+        return data, items
+
+    def CreateJsonFolderItem(self, resultSet):
+        Logger.Trace(resultSet),
+        if resultSet["type"] == self.__listedRelatedTab and self.__showSomeVideosInListing:
+            return None
+
+        slug = resultSet["slug"]
+        title = resultSet["name"]
+        url = "%s?tab=%s" % (self.parentItem.url, slug)
+        item = mediaitem.MediaItem(title, url)
+        item.thumb = self.parentItem.thumb
+        return item
+
+    def CreateJsonGenre(self, resultSet):
+        """Creates a new MediaItem for an episode
+
+        Arguments:
+        resultSet : list[string] - the resultSet of the self.episodeItemRegex
+
+        Returns:
+        A new MediaItem of type 'folder'
+
+        This method creates a new MediaItem from the Regular Expression
+        results <resultSet>. The method should be implemented by derived classes
+        and are specific to the channel.
+
+        """
+
+        genres = []
+
+        for cluster in resultSet['clusters']:
+            Logger.Trace(cluster)
+            url = "%s%s" % (self.baseUrl, cluster['contentUrl'])
+            genre = mediaitem.MediaItem(cluster['name'], url)
+            genre.icon = self.icon
+            genre.description = cluster.get('description')
+            genre.fanart = cluster.get('backgroundImage') or self.parentItem.fanart
+            genre.fanart = self.__GetThumb(genre.fanart, thumbSize="/extralarge/")
+            genre.thumb = cluster.get('thumbnailImage') or self.noImage
+            genre.thumb = self.__GetThumb(genre.thumb)
+            genres.append(genre)
+
+        return genres
+
+    def CreateJsonItem(self, resultSet):
+        """Creates a new MediaItem for an episode
+
+        Arguments:
+        resultSet : list[string] - the resultSet of the self.episodeItemRegex
+
+        Returns:
+        A new MediaItem of type 'folder'
+
+        This method creates a new MediaItem from the Regular Expression
+        results <resultSet>. The method should be implemented by derived classes
+        and are specific to the channel.
+
+        """
+        Logger.Trace(resultSet)
+
+        # determine the title
+        programTitle = resultSet.get("programTitle", "") or ""
+        showTitle = resultSet.get("title", "") or ""
+        if showTitle == "" and programTitle != "":
+            title = programTitle
+        elif showTitle != "" and programTitle == "":
+            title = showTitle
+        elif programTitle == "" and showTitle == "":
+            Logger.Warning("Could not find title for item: %s", resultSet)
+            return None
+        elif showTitle != "" and showTitle != programTitle:
+            title = "%s - %s" % (programTitle, showTitle)
+        else:
+            # they are the same
+            title = showTitle
+
+        if "live" in resultSet and resultSet["live"]:
+            title = "%s (&middot;Live&middot;)" % (title, )
+
+        itemType = resultSet.get("contentType")
+        if "contentUrl" in resultSet:
+            url = resultSet["contentUrl"]
+        else:
+            url = resultSet["url"]
+        broadCastDate = resultSet.get("broadcastDate", None)
+
+        if itemType in ("videoEpisod", "videoKlipp"):
+            if not url.startswith("/video/") and not url.startswith("/klipp/"):
+                Logger.Warning("Found video item without a /video/ or /klipp/ url.")
+                return None
+            itemType = "video"
+            if "programVersionId" in resultSet:
+                url = "http://www.svt.se/videoplayer-api/video/%s" % (resultSet["programVersionId"], )
+            else:
+                url = "%s%s" % (self.baseUrl, url)
+        else:
+            itemType = "folder"
+            url = "%s%s" % (self.baseUrl, url)
+
+        item = mediaitem.MediaItem(title, url)
+        item.icon = self.icon
+        item.type = itemType
+        item.isGeoLocked = resultSet.get("onlyAvailableInSweden", False)
+        item.description = resultSet.get("description", "")
+
+        if "season" in resultSet and "episodeNumber" in resultSet and resultSet["episodeNumber"]:
+            season = int(resultSet["season"])
+            episode = int(resultSet["episodeNumber"])
+            if season > 0 and episode > 0:
+                item.name = "s%02de%02d - %s" % (season, episode, item.name)
+                item.SetSeasonInfo(season, episode)
+
+        # thumb = resultSet.get("imageMedium", self.noImage).replace("/medium/", "/extralarge/")
+        thumb = self.noImage
+        if self.parentItem:
+            thumb = self.parentItem.thumb
+
+        for imageKey in ("image", "imageMedium", "thumbnailMedium", "thumbnail", "poster"):
+            if imageKey in resultSet and resultSet[imageKey] is not None:
+                thumb = resultSet[imageKey]
+                break
+
+        item.thumb = self.__GetThumb(thumb or self.noImage)
+
+        if broadCastDate is not None:
+            if "+" in broadCastDate:
+                broadCastDate = broadCastDate.rsplit("+")[0]
+            timeStamp = DateHelper.GetDateFromString(broadCastDate, "%Y-%m-%dT%H:%M:%S")
+            item.SetDate(*timeStamp[0:6])
         return item
 
     def CreateCategoryItem(self, resultSet):
@@ -274,6 +594,9 @@ class Channel(chn_class.Channel):
             item.type = "video"
             videoId = url.split("/")[4]
             item.url = "http://www.svtplay.se/video/%s?type=embed&output=json" % (videoId, )
+        # else:
+        #     # make sure we get the right tab for displaying
+        #     item.url = "%s?tab=program" % (item.url, )
 
         return item
 
@@ -331,8 +654,8 @@ class Channel(chn_class.Channel):
 
         # dateFormat = "2016-03-02T19:55:00+0100"
         dateFormat = "%Y-%m-%dT%H:%M:%S"
-        startTime = time.strptime(currentSchedule["broadcastStartTime"][:-5], dateFormat)
-        endTime = time.strptime(currentSchedule["broadcastEndTime"][:-5], dateFormat)
+        startTime = DateHelper.GetDateFromString(currentSchedule["broadcastStartTime"][:-5], dateFormat)
+        endTime = DateHelper.GetDateFromString(currentSchedule["broadcastEndTime"][:-5], dateFormat)
         title = "%s (%02d:%02d - %02d:%02d)" % (title, startTime.tm_hour, startTime.tm_min, endTime.tm_hour, endTime.tm_min)
 
         # In theory we could also extract the video URL here.....
@@ -345,319 +668,50 @@ class Channel(chn_class.Channel):
         channelItem.isGeoLocked = True
         return channelItem
 
-    def PreProcessFolderList(self, data):
-        """Performs pre-process actions for data processing/
+    def UpdateVideoHtmlItem(self, item):
+        """Updates an existing MediaItem with more data.
 
         Arguments:
-        data : string - the retrieve data that was loaded for the current item and URL.
+        item : MediaItem - the MediaItem that needs to be updated
 
         Returns:
-        A tuple of the data and a list of MediaItems that were generated.
+        The original item with more data added to it's properties.
 
+        Used to update none complete MediaItems (self.complete = False). This
+        could include opening the item's URL to fetch more data and then process that
+        data or retrieve it's real media-URL.
 
-        Accepts an data from the ProcessFolderList method, BEFORE the items are
-        processed. Allows setting of parameters (like title etc) for the channel.
-        Inside this method the <data> could be changed and additional items can
-        be created.
+        The method should at least:
+        * cache the thumbnail to disk (use self.noImage if no thumb is available).
+        * set at least one MediaItemPart with a single MediaStream.
+        * set self.complete = True.
 
-        The return values should always be instantiated in at least ("", []).
-
-        """
-
-        Logger.Info("Performing Pre-Processing")
-        items = []
-
-        if "live=1" in self.parentItem.url:
-            # don't add folders, this should no longer be the case as we use AJAX pages now.
-            start = data.find('<div class="svtUnit svtNth-1">')
-            end = data.find('<div class="playBoxContainer playBroadcastItemLast">')
-            Logger.Debug("Stripping folders for live items")
-            return data[start:end], items
-
-        # if "=klipp" in self.parentItem.url:
-        # self.pageNavigationRegex = self.pageNavigationRegexBase % ("klipp", )
-        # elif "tab=news" in self.parentItem.url:
-        # self.pageNavigationRegex = self.pageNavigationRegexBase % ("news", )
-        # else:
-        #     self.pageNavigationRegex = self.pageNavigationRegexBase % ("program", )
-        # Logger.Debug("PageNav Regex set to: %s", self.pageNavigationRegex)
-
-        end = data.find('<div id="playJs-videos-in-same-category" ')
-        Logger.Debug("Stripping from position: %s", end)
-        data = data[:end]
-
-        if '<a href="?tab=klipp"' in data and self.parentItem.name != self.__klippName:
-            klippItem = mediaitem.MediaItem(self.__klippName,
-                                            self.parentItem.url.replace("tab=program", self.__klippUrlIndicator))
-            klippItem.icon = self.icon
-            klippItem.thumb = self.parentItem.thumb
-            klippItem.complete = True
-            items.append(klippItem)
-
-        Logger.Debug("Pre-Processing finished")
-        return data, items
-
-    def CreateMoreItem(self, resultSet):
-        """Creates a MediaItem of type 'folder' using the resultSet from the regex.
-
-        Arguments:
-        resultSet : tuple(strig) - the resultSet of the self.folderItemRegex
-
-        Returns:
-        A new MediaItem of type 'folder'
-
-        This method creates a new MediaItem from the Regular Expression or Json
-        results <resultSet>. The method should be implemented by derived classes
-        and are specific to the channel.
+        if the returned item does not have a MediaItemPart then the self.complete flag
+        will automatically be set back to False.
 
         """
+        data = UriHandler.Open(item.url, proxy=self.proxy)
+        # Logger.Trace(data)
+        data = self.ExtractJsonData(data)[0]
+        json = JsonHelper(data, logger=Logger.Instance())
 
-        Logger.Trace(resultSet)
+        # check for direct streams:
+        streams = json.GetValue("videoTitlePage", "video", "videoReferences")
+        subtitles = json.GetValue("videoTitlePage", "video", "subtitles")
 
-        if resultSet == "klipp" and self.__klippUrlIndicator not in self.parentItem.url:
-            return None
+        if streams:
+            Logger.Info("Found stream information within HTML data")
+            return self.__UpdateItemFromVideoReferences(item, streams, subtitles)
 
-        more = LanguageHelper.GetLocalizedString(LanguageHelper.MorePages)
+        videoId = json.GetValue("videoTitlePage", "video", "id")
+        # in case that did not work, try the old version.
+        if not videoId:
+            videoId = json.GetValue("videoTitlePage", "video", "programVersionId")
+        if videoId:
+            item.url = "http://www.svt.se/videoplayer-api/video/%s" % (videoId, )
+        return self.UpdateVideoApiItem(item)
 
-        item = mediaitem.MediaItem(more, "%s&sida=2&embed=true" % (self.parentItem.url, ))
-        item.thumb = self.parentItem.thumb
-        item.icon = self.parentItem.icon
-        item.type = 'folder'
-        item.httpHeaders = self.httpHeaders
-        item.complete = True
-        return item
-
-    def CreateVideoItemXml(self, resultSet):
-        """Creates a MediaItem of type 'video' using the resultSet from the regex.
-
-        Arguments:
-        resultSet : tuple (string) - the resultSet of the self.videoItemRegex
-
-        Returns:
-        A new MediaItem of type 'video' or 'audio' (despite the method's name)
-
-        This method creates a new MediaItem from the Regular Expression or Json
-        results <resultSet>. The method should be implemented by derived classes
-        and are specific to the channel.
-
-        If the item is completely processed an no further data needs to be fetched
-        the self.complete property should be set to True. If not set to True, the
-        self.UpdateVideoItem method is called if the item is focussed or selected
-        for playback.
-
-        """
-        Logger.Trace(resultSet)
-
-        xmlData = XmlHelper(resultSet)
-        title = xmlData.GetSingleNodeContent("title")
-        url = xmlData.GetTagAttribute("link", {"rel": "alternate"}, {"href": None})
-        description = xmlData.GetSingleNodeContent("description")
-        date = xmlData.GetSingleNodeContent("updated")
-
-        item = mediaitem.MediaItem(title, url)
-        item.type = 'video'
-        item.description = description
-        thumbUrl = xmlData.GetTagAttribute("link", {"rel": "enclosure"}, {"href": None})
-        if thumbUrl:
-            thumbUrl = thumbUrl.replace("/medium/", "/large/")  # or extralarge
-            if thumbUrl.startswith("//"):
-                thumbUrl = "http:%s" % (thumbUrl, )
-            item.thumb = thumbUrl
-        else:
-            item.thumb = self.noImage
-
-        item.complete = False
-        Logger.Trace("%s - %s - %s - %s - %s", title, description, date, thumbUrl, url)
-        return item
-
-    def CreateVideoItemExtended(self, resultSet):
-        """Creates a MediaItem of type 'video' using the resultSet from the regex.
-
-        Arguments:
-        resultSet : tuple (string) - the resultSet of the self.videoItemRegex
-
-        Returns:
-        A new MediaItem of type 'video' or 'audio' (despite the method's name)
-
-        This method creates a new MediaItem from the Regular Expression or Json
-        results <resultSet>. The method should be implemented by derived classes
-        and are specific to the channel.
-
-        If the item is completely processed an no further data needs to be fetched
-        the self.complete property should be set to True. If not set to True, the
-        self.UpdateVideoItem method is called if the item is focussed or selected
-        for playback.
-
-        """
-
-        Logger.Trace(resultSet)
-
-        year = month = day = hour = minutes = 0
-        isLive = False
-
-        url = "http://www.svtplay.se/%s?type=embed&output=json" % (resultSet[9])
-        thumb = resultSet[10]
-        thumb = thumb.replace("small", "large").replace("medium", "large").replace(" ", "%20")
-
-        name = resultSet[0].replace('\n', '')
-
-        if "/klipp/" in url and self.parentItem.name != self.__klippName:
-            # Klipp in episodes list
-            Logger.Trace("Klipp in episode list: %s", url)
-            return None
-        elif "/klipp/" not in url and self.parentItem.name == self.__klippName:
-            # Episode in klipp list
-            Logger.Trace("Episode in klipp list: %s", url)
-            return None
-
-        # if "/klipp/" in url:
-        # name = "[Klipp] %s" % (name,)
-
-        description = resultSet[1]
-        if resultSet[2] == "imorgon":
-            # no need to show future episodes
-            return None
-
-        if resultSet[2]:
-            year, month, day, hour, minutes = self.__GetDate(resultSet[2], resultSet[3], resultSet[4])
-
-        if resultSet[5]:
-            year, month, day, hour, minutes = self.__GetDate(resultSet[5], resultSet[6], resultSet[7])
-
-        geoLocked = resultSet[8] == "false"
-
-        item = mediaitem.MediaItem(name, url)
-        item.type = 'video'
-        if year > 0:
-            item.SetDate(year, month, day, hour, minutes, 0)
-
-        if not thumb:
-            item.thumb = self.noImage
-        else:
-            if thumb.startswith("//"):
-                item.thumb = "http:%s" % (thumb, )
-            elif not thumb.startswith("http"):
-                item.thumb = "%s%s" % (self.baseUrl, thumb)
-            else:
-                item.thumb = thumb
-
-        item.icon = self.icon
-        item.complete = False
-        item.description = description
-        item.isLive = isLive
-        item.isGeoLocked = geoLocked
-        return item
-
-    def CreateVideoItem(self, resultSet):
-        """Creates a MediaItem of type 'video' using the resultSet from the regex.
-
-        Arguments:
-        resultSet : tuple (string) - the resultSet of the self.videoItemRegex
-
-        Returns:
-        A new MediaItem of type 'video' or 'audio' (despite the method's name)
-
-        This method creates a new MediaItem from the Regular Expression or Json
-        results <resultSet>. The method should be implemented by derived classes
-        and are specific to the channel.
-
-        If the item is completely processed an no further data needs to be fetched
-        the self.complete property should be set to True. If not set to True, the
-        self.UpdateVideoItem method is called if the item is focussed or selected
-        for playback.
-
-        """
-
-        Logger.Trace(resultSet)
-
-        name = url = thumb = description = None
-        year = month = day = hour = minutes = 0
-        isLive = False
-        geoLocked = False
-        if resultSet[0] == 0:  # first regex match
-            geoLocked = resultSet[2] == "only-sweden"
-
-            url = "http://www.svtplay.se/%s?type=embed&output=json" % (resultSet[3])
-            # if not resultSet[11]:
-            #     thumb = resultSet[12]
-            # else:
-            thumb = resultSet[1]
-            thumb = thumb.replace("small", "large").replace("medium", "large").replace(" ", "%20")
-            if thumb.startswith("//"):
-                thumb = "http:%s" % (thumb, )
-
-            name = resultSet[4].replace('\n', '')
-
-            if "/klipp/" in url and self.__klippUrlIndicator not in self.parentItem.url:
-                # Klipp in episodes list
-                Logger.Trace("Klipp in episode list: %s", url)
-                return None
-            elif "/klipp/" not in url and self.__klippUrlIndicator in self.parentItem.url:
-                # Episode in klipp list
-                Logger.Trace("Episode in klipp list: %s", url)
-                return None
-
-            # if "/klipp/" in url:
-            # name = "[Klipp] %s" % (name,)
-
-            description = resultSet[5]
-            # if resultSet[3] == "imorgon":
-            #     # no need to show future episodes
-            #     return None
-            #
-            # if resultSet[3]:
-            #     year, month, day, hour, minutes = self.__GetDate(resultSet[3], resultSet[4], resultSet[5])
-            #
-            # if resultSet[6]:
-            #     year, month, day, hour, minutes = self.__GetDate(resultSet[6], resultSet[7], resultSet[8])
-            #
-            # geoLocked = resultSet[9] == "false"
-
-        elif resultSet[0] == 1:  # second regex match (Live items)
-            if "/live?" not in self.parentItem.url and "?tab=live" not in self.parentItem.url:
-                return None
-
-            url = "http://www.svtplay.se/%s?output=json" % (resultSet[1])
-            description = ""
-            year = resultSet[2]
-            month = resultSet[3]
-            day = resultSet[4]
-            hour = resultSet[5]
-            minutes = resultSet[6]
-            isLive = True
-
-            name = "%s - %s:%s (Live)" % (resultSet[7], hour, minutes)
-
-        item = mediaitem.MediaItem(name, url)
-        item.type = 'video'
-        if year > 0:
-            item.SetDate(year, month, day, hour, minutes, 0)
-
-        if not thumb:
-            item.thumb = self.noImage
-        else:
-            if thumb.startswith("//"):
-                item.thumb = "http:%s" % (thumb, )
-            elif not thumb.startswith("http"):
-                item.thumb = "%s%s" % (self.baseUrl, thumb)
-            else:
-                item.thumb = thumb
-
-        # set the date
-        if resultSet[0] == 1:
-            timeStamp = item.SetDate(year, month, day, hour, minutes, 0)
-            # let's limit the live items for 1 week from now
-            if timeStamp and timeStamp > datetime.datetime.now() + datetime.timedelta(7):
-                return None
-
-        item.icon = self.icon
-        item.complete = False
-        item.description = description
-        item.isLive = isLive
-        item.isGeoLocked = geoLocked
-        return item
-
-    def UpdateChannelItem(self, item):
+    def UpdateVideoApiItem(self, item):
         """ Updates an existing MediaItem with more data.
 
         Arguments:
@@ -686,8 +740,11 @@ class Channel(chn_class.Channel):
 
         json = JsonHelper(data, logger=Logger.Instance())
         videos = json.GetValue("videoReferences")
+        subtitles = json.GetValue("subtitleReferences")
         Logger.Trace(videos)
+        return self.__UpdateItemFromVideoReferences(item, videos, subtitles)
 
+    def __UpdateItemFromVideoReferences(self, item, videos, subtitles=None):
         item.MediaItemParts = []
         part = item.CreateNewEmptyMediaPart()
         spoofIp = self._GetSetting("spoof_ip", "0.0.0.0")
@@ -695,192 +752,57 @@ class Channel(chn_class.Channel):
             part.HttpHeaders["X-Forwarded-For"] = spoofIp
 
         for video in videos:
-            # bitrate = video['bitrate']
-            url = video['url']
-            # player = video['playerType']
-            # if "ios" in player:
-            #     bitrate += 1
+            videoFormat = video.get("format", "")
+            if not videoFormat:
+                videoFormat = video.get("playerType", "")
+            videoFormat = videoFormat.lower()
 
-            if "akamaihd" in url and "f4m" in url:
+            if "dash" in videoFormat or "hds" in videoFormat:
+                Logger.Debug("Skipping video format: %s", videoFormat)
                 continue
-                # these are not supported as they return a 503 error
-                #noinspection PyUnreachableCode
-                #url = url.replace("/z/", "/i/").replace("/manifest.f4m", "/master.m3u8")
+            Logger.Debug("Found video item for format: %s", videoFormat)
 
+            url = video['url']
             if len(filter(lambda s: s.Url == url, part.MediaStreams)) > 0:
                 Logger.Debug("Skippping duplicate Stream url: %s", url)
                 continue
 
             if "m3u8" in url:
+                altIndex = url.find("m3u8?")
+                # altIndex = videoUrl.find("~uri")
+                if altIndex > 0:
+                    url = url[0:altIndex + 4]
+
                 for s, b in M3u8.GetStreamsFromM3u8(url, proxy=self.proxy, headers=part.HttpHeaders):
                     part.AppendMediaStream(s, b)
+
+            elif video["url"].startswith("rtmp"):
+                # just replace some data in the URL
+                part.AppendMediaStream(self.GetVerifiableVideoUrl(video["url"]).replace("_definst_", "?slist="), video[1])
             else:
                 part.AppendMediaStream(url, 0)
 
-        item.complete = True
-        return item
-
-    #noinspection PyUnreachableCode
-    def UpdateVideoItem(self, item):
-        """Updates an existing MediaItem with more data.
-
-        Arguments:
-        item : MediaItem - the MediaItem that needs to be updated
-
-        Returns:
-        The original item with more data added to it's properties.
-
-        Used to update none complete MediaItems (self.complete = False). This
-        could include opening the item's URL to fetch more data and then process that
-        data or retrieve it's real media-URL.
-
-        The method should at least:
-        * cache the thumbnail to disk (use self.noImage if no thumb is available).
-        * set at least one MediaItemPart with a single MediaStream.
-        * set self.complete = True.
-
-        if the returned item does not have a MediaItemPart then the self.complete flag
-        will automatically be set back to False.
-
-        """
-
-        Logger.Debug('Starting UpdateVideoItem for %s (%s)', item.name, self.channelName)
-
-        data = UriHandler.Open(item.url, proxy=self.proxy)
-        Logger.Trace(data)
-
-        if 'livestart":-' in data:
-            Logger.Debug("Live item that has not yet begun.")
-            json = JsonHelper(data, Logger.Instance())
-            secondsToStart = json.GetValue("video", "livestart")
-            if secondsToStart:
-                secondsToStart = -int(secondsToStart)
-                Logger.Debug("Seconds till livestream: %s", secondsToStart)
-                timeLeft = "%s:%02d:%02d" % (secondsToStart / 3600, (secondsToStart % 3600) / 60, secondsToStart % 60)
-                Logger.Debug("Live items starts at %s", timeLeft)
-                lines = list(LanguageHelper.GetLocalizedString(LanguageHelper.NoLiveStreamId))
-                lines[-1] = "%s ETA: %s" % (lines[-1], timeLeft)
-                XbmcWrapper.ShowDialog(LanguageHelper.GetLocalizedString(LanguageHelper.NoLiveStreamTitleId),
-                                       lines)
-            else:
-                XbmcWrapper.ShowDialog(LanguageHelper.GetLocalizedString(LanguageHelper.NoLiveStreamTitleId),
-                                       LanguageHelper.GetLocalizedString(LanguageHelper.NoLiveStreamId))
-            return item
-
-        item.MediaItemParts = []
-        mediaPart = item.CreateNewEmptyMediaPart()
-        spoofIp = self._GetSetting("spoof_ip", "0.0.0.0")
-        if spoofIp is not None:
-            mediaPart.HttpHeaders["X-Forwarded-For"] = spoofIp
-
-        # mediaPart.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0"
-
-        # isLive = False
-        if '"live":true' in data or "/live/" in item.url:
-            mediaPart.AddProperty("IsLive", "true")
-            Logger.Debug("Live video item found.")
-            # isLive = True
-        else:
-            Logger.Debug("Normal (not live, or possible was live) video item found")
-
-        # replace items
-        #videos = map(lambda v: self.__ReplaceClist(v), videos)
-
-        jsonVideoData = JsonHelper(data)
-        videos = jsonVideoData.GetValue("video", "videoReferences")
-        # videos = Regexer.DoRegex(self.mediaUrlRegex, data)
-        for video in videos:
-            playerType = video.get("playerType", "")
-            if "dash" in playerType:
-                continue
-
-            if video["url"].startswith("rtmp"):
-                # just replace some data in the URL
-                mediaPart.AppendMediaStream(self.GetVerifiableVideoUrl(video["url"]).replace("_definst_", "?slist="),
-                                            video[1])
-
-            elif "m3u8" in video["url"]:
-                Logger.Info("SVTPlay.se m3u8 stream found: %s", video["url"])
-
-                # apparently the m3u8 do not work well for server www0.c91001.dna.qbrick.com
-                if "www0.c91001.dna.qbrick.com" in video["url"]:
+        if subtitles:
+            Logger.Info("Found subtitles to play")
+            for sub in subtitles:
+                subFormat = sub["format"].lower()
+                url = sub["url"]
+                if subFormat == "websrt":
+                    subUrl = url
+                # elif subFormat == "webvtt":
+                #     Logger.Info("Found M3u8 subtitle, replacing with WSRT")
+                #     start, name, index = sub[-1].rsplit("/", 2)
+                #     subUrl = "%s/%s/%s.wsrt" % (start, name, name)
+                else:
+                    # look for more
                     continue
 
-                # m3u8 we need to parse. Get more streams from this file.
-                videoUrl = video["url"]
-                altIndex = videoUrl.find("m3u8?")
-                # altIndex = videoUrl.find("~uri")
-                if altIndex > 0:
-                    videoUrl = videoUrl[0:altIndex + 4]
-                for s, b in M3u8.GetStreamsFromM3u8(videoUrl, self.proxy, headers=mediaPart.HttpHeaders):
-                    item.complete = True
-                    mediaPart.AppendMediaStream(s, b)
-
-            elif "f4m" in video["url"]:
-                Logger.Info("SVTPlay.se manifest.f4m stream found: %s", video["url"])
-
-                #if "manifest.f4m?start=" in video["url"]:
-                #    # this was a live stream, convert it to M3u8
-                #    # http://svt06-lh.akamaihd.net/z/svt06_0@77501/manifest.f4m?start=1386566700&end=1386579600
-                #    # to
-                #    # http://svt06hls-lh.akamaihd.net/i/svt06_0@77501/master.m3u8?__b__=563&start=1386566700&end=1386579600
-                #    m3u8Url = video["url"].replace("-lh.akamaihd.net/z", "hls-lh.akamaihd.net/i").replace("manifest.f4m?", "master.m3u8?__b__=563&")
-                #    Logger.Info("Found f4m stream for an old Live stream. Converting to M3U8:\n%s -to -\n%s", video["url"], m3u8Url)
-                #    videos.append((m3u8Url, 0))
-                #    continue
-
-                # for now we skip these as they do not yet work with XBMC
-                continue
-                # http://svtplay8m-f.akamaihd.net/z/se/krypterat/20120830/254218/LILYHAMMER-003A-mp4-,c,d,b,e,-v1-4bc7ecc090b19c82.mp4.csmil/manifest.f4m?hdcore=2.8.0&g=TZOMVRTEILSE
-                #videoDataUrl = video["url"]
-                # videoUrl = "%s?hdcore=2.8.0&g=TZOMVRTEILSE" % (videoDataUrl,)
-                #videoUrl = "%s?hdcore=2.10.3&g=IJGTWSVWPPKH" % (videoDataUrl,)
-
-                # metaData = UriHandler.Open(videoUrl, proxy=self.proxy, referer=self.swfUrl)
-                # Logger.Debug(metaData)
-
-                # The referer seems to be unimportant
-                # header = "referer=%s" % (urllib.quote(self.swfUrl),)
-                # videoUrl = "%s|%s" % (videoUrl, header)
-                #mediaPart.AppendMediaStream(videoUrl, video[1])
-
-            else:
-                Logger.Info("SVTPlay.se standard HTTP stream found.")
-                # else just use the URL
-                mediaPart.AppendMediaStream(video["url"], video["bitrate"])
-
-        subtitle = Regexer.DoRegex('"url":"([^"]+.wsrt)"|"url":"(http://media.svt.se/download/[^"]+.m3u8)', data)
-        for sub in subtitle:
-            if sub[-1]:
-                Logger.Info("Found M3u8 subtitle, replacing with WSRT")
-                start, name, index = sub[-1].rsplit("/", 2)
-                subUrl = "%s/%s/%s.wsrt" % (start, name, name)
-            else:
-                subUrl = sub[0]
-            mediaPart.Subtitle = subtitlehelper.SubtitleHelper.DownloadSubtitle(subUrl, format="srt", proxy=self.proxy)
+                part.Subtitle = subtitlehelper.SubtitleHelper.DownloadSubtitle(subUrl, format="srt", proxy=self.proxy)
+                # stop when finding one
+                break
 
         item.complete = True
         return item
-
-    # def __ReplaceClist(self, video):
-    #     """ Replaces HTTP Dynamic streaming urls with corresponding M3U8 Urls
-    #
-    #     Arguments:
-    #     video - Tuple - that holds the video results
-    #
-    #     """
-    #
-    #     # Logger.Trace(video)
-    #     video = list(video)
-    #
-    #     if "akamaihd" in video[0] and "f4m" in video[0]:
-    #         Logger.Info("SVTPlay.se manifest.f4m stream found: %s", video[0])
-    #
-    #         video[0] = video[0].replace("/z/", "/i/").replace("/manifest.f4m", "/master.m3u8")
-    #         # Logger.Debug("New URL: %s", video[0])
-    #
-    #     # Logger.Debug(video)
-    #     return video
 
     def __GetDate(self, first, second, third):
         """ Tries to parse formats for dates like "Today 9:00" or "mon 9 jun" or "Tonight 9.00"
@@ -931,3 +853,59 @@ class Channel(chn_class.Channel):
             year = month = day = hour = minutes = 0
 
         return year, month, day, hour, minutes
+
+    def __GetThumb(self, thumb, thumbSize="/large/"):
+        """ Converts images into the correct url format
+
+        @param thumb:       the original URL 
+        @param thumbSize:   the size to make them
+        @return:            the actual url
+        
+        """
+
+        if "<>" in thumb:
+            thumbParts = thumb.split("<>")
+            thumbIndex = int(thumbParts[1])
+            thumbStores = ["http://www.svtstatic.se/image-cms-stage/svtse",
+                           "//www.svtstatic.se/image-cms-stage/svtse",
+                           "http://www.svtstatic.se/image-cms/svtse",
+                           "//www.svtstatic.se/image-cms/svtse",
+                           "http://www.svtstatic.se/image-cms-stage/barn",
+                           "//www.svtstatic.se/image-cms-stage/barn",
+                           "http://www.svtstatic.se/image-cms/barn",
+                           "//www.svtstatic.se/image-cms/barn"]
+            thumb = "%s%s" % (thumbStores[thumbIndex], thumbParts[-1])
+
+        if thumb.startswith("//"):
+            thumb = "http:%s" % (thumb,)
+
+        thumb = thumb.replace("/{format}/", thumbSize)\
+            .replace("/medium/", thumbSize)\
+            .replace("/small/", thumbSize)
+        Logger.Trace(thumb)
+        return thumb
+
+    def __ExtractJsonData(self, data, root):
+        """Performs pre-process actions for data processing
+
+        Arguments:
+        data : string - the retrieve data that was loaded for the current item and URL.
+
+        Returns:
+        A tuple of the data and a list of MediaItems that were generated.
+
+
+        Accepts an data from the ProcessFolderList method, BEFORE the items are
+        processed. Allows setting of parameters (like title etc) for the channel.
+        Inside this method the <data> could be changed and additional items can
+        be created.
+
+        The return values should always be instantiated in at least ("", []).
+
+        """
+
+        Logger.Info("Extracting JSON data during pre-processing")
+        data = Regexer.DoRegex('root\[[\'"]%s[\'"]\] = ([\w\W]+?);\W*root\[' % (root, ), data)[-1]
+        items = []
+        Logger.Trace("JSON data found: %s", data)
+        return data, items

@@ -7,10 +7,12 @@ import chn_class
 import mediaitem
 from parserdata import ParserData
 from helpers.datehelper import DateHelper
+from helpers.htmlentityhelper import HtmlEntityHelper
+from helpers.subtitlehelper import SubtitleHelper
 from streams.m3u8 import M3u8
 from urihandler import UriHandler
 from helpers.jsonhelper import JsonHelper
-
+from regexer import Regexer
 from logger import Logger
 
 
@@ -43,9 +45,13 @@ class Channel(chn_class.Channel):
         self._AddDataParser("https://tvapi.nrk.no/v1/categories/",
                             matchType=ParserData.MatchExact, json=True,
                             parser=(), creator=self.CreateCategory)
+
         self._AddDataParser("https://tvapi.nrk.no/v1/categories/.+",
                             matchType=ParserData.MatchRegex, json=True,
                             parser=(), creator=self.CreateProgramFolder)
+        self._AddDataParser("https://tvapi.nrk.no/v1/categories/.+",
+                            matchType=ParserData.MatchRegex, json=True,
+                            parser=(), creator=self.CreateCategoryVideo)
 
         self._AddDataParser("https://tvapi.nrk.no/v1/channels", json=True,
                             parser=(),
@@ -55,12 +61,18 @@ class Channel(chn_class.Channel):
                             creator=self.CreateProgramFolder)
 
         self._AddDataParser("https://tvapi.nrk.no/v1/series/[^/]+", json=True, matchType=ParserData.MatchRegex,
+                            name="Default Series parser",
                             parser=("programs", ),
                             creator=self.CreateCategoryVideo)
 
         self._AddDataParser("https://tvapi.nrk.no/v1/categories/all-programs/", json=True,
                             parser=(),
                             creator=self.CreateCategoryVideo)
+
+        self._AddDataParser("https://tvapi.nrk.no/v1/search/indexelements", json=True,
+                            name="Main Searchable Index items",
+                            parser=(),
+                            creator=self.CreateIndexedItem)
 
         self._AddDataParser("*", updater=self.UpdateVideoItem)
 
@@ -104,6 +116,7 @@ class Channel(chn_class.Channel):
             # The other Programs url stopped working. This the next best thing.
             # "Programs": "http://m.nrk.no/tvapi/v1/series/",
             "Programs": "https://tvapi.nrk.no/v1/programs/",
+            "A - Å": "https://tvapi.nrk.no/v1/search/indexelements"
         }
         for name, url in links.iteritems():
             item = mediaitem.MediaItem(name, url)
@@ -138,15 +151,18 @@ class Channel(chn_class.Channel):
 
         Logger.Trace(resultSet)
 
+        channelId = resultSet["channelId"]
         title = resultSet["title"]
         if "mediaUrl" not in resultSet:
             Logger.Warning("Found channel without media url: %s", title)
             return None
 
-        url = resultSet["mediaUrl"]
+        # url = resultSet["mediaUrl"]
+        url = "https://psapi-ne.nrk.no/mediaelement/%s" % (channelId, )
         item = mediaitem.MediaItem(title, url)
         item.type = 'video'
         item.isLive = True
+        item.HttpHeaders = self.httpHeaders
 
         thumbId = resultSet.get("imageId", None)
         if thumbId is not None:
@@ -183,6 +199,22 @@ class Channel(chn_class.Channel):
         item.fanart = self.fanart
         return item
 
+    def CreateIndexedItem(self, resultSet):
+        if "seriesId" in resultSet:
+            return self.CreateProgramFolder(resultSet)
+
+        # elif "programId" in resultSet:
+        #     item = mediaitem.MediaItem(resultSet["title"], "https://tvapi.nrk.no/v1/programs/%s/" % (resultSet["programId"]))
+        #     item.type = "video"
+        #     imageId = resultSet.get("imageId")
+        #     if imageId:
+        #         item.thumb = "http://m.nrk.no/img?kaleidoId=%s&width=720" % (imageId,)
+        #         item.fanart = "http://m.nrk.no/img?kaleidoId=%s&width=1280" % (imageId,)
+        #     item.complete = False
+        #     item.HttpHeaders = self.httpHeaders
+        #     return item
+        return None
+
     def CreateProgramFolder(self, resultSet):
         """Creates a MediaItem of type 'folder' using the resultSet from the regex.
 
@@ -208,9 +240,10 @@ class Channel(chn_class.Channel):
         item.icon = self.icon
         item.type = 'folder'
         item.fanart = self.fanart
+        item.description = resultSet.get("description", "")
         item.HttpHeaders = self.httpHeaders
 
-        imageId = resultSet.get("imageId", None)
+        imageId = resultSet.get("seriesImageId", None)
         if imageId is not None:
             item.thumb = "http://m.nrk.no/img?kaleidoId=%s&width=720" % (imageId, )
             item.fanart = "http://m.nrk.no/img?kaleidoId=%s&width=1280" % (imageId, )
@@ -220,7 +253,7 @@ class Channel(chn_class.Channel):
             if "availableFrom" in resultSet["usageRights"]:
                 timeStamp = int(resultSet["usageRights"]["availableFrom"]) / 1000
                 if 0 < timeStamp < sys.maxint:
-                    date = datetime.datetime.fromtimestamp(timeStamp)
+                    date = DateHelper.GetDateFromPosix(timeStamp)
                     item.SetDate(date.year, date.month, date.day, date.hour, date.minute, date.second)
         return item
 
@@ -242,6 +275,11 @@ class Channel(chn_class.Channel):
         Logger.Trace(resultSet)
 
         title = resultSet["title"]
+
+        if not resultSet['isAvailable']:
+            Logger.Trace("Found unavailable video: %s", title)
+            return None
+
         episodeData = resultSet.get("episodeNumberOrDate", None)
         season = None
         episode = None
@@ -249,7 +287,7 @@ class Channel(chn_class.Channel):
             episodeData = episodeData.split(":", 1)
             season = int(episodeData[0])
             episode = int(episodeData[1])
-            title = "%s - s%02de%02d" % (title, season, episode)
+            title = "%s - %02d:%02d" % (title, season, episode)
 
         url = resultSet.get("mediaUrl", None)
         if url is None:
@@ -291,7 +329,7 @@ class Channel(chn_class.Channel):
             if not dateSet and "availableFrom" in resultSet["usageRights"]:
                 timeStamp = int(resultSet["usageRights"]["availableFrom"]) / 1000
                 if 0 < timeStamp < sys.maxint:
-                    date = datetime.datetime.fromtimestamp(timeStamp)
+                    date = DateHelper.GetDateFromPosix(timeStamp)
                     item.SetDate(date.year, date.month, date.day, date.hour, date.minute, date.second)
 
         return item
@@ -333,8 +371,23 @@ class Channel(chn_class.Channel):
             if url is None:
                 Logger.Warning("Could not find mediaUrl in %s", item.url)
                 return
+            f4mNeedle = "/manifest.f4m"
+            if f4mNeedle in url:
+                Logger.Info("Found F4m stream. Converting to M3u8.")
+                url = url[:url.index(f4mNeedle)].replace("/z/", "/i/").replace("http:", "https:")
+                url = "%s/master.m3u8" % (url, )
+
+        # are there subs? They are added as URL parameter
 
         part = item.CreateNewEmptyMediaPart()
+        subMatches = Regexer.DoRegex('https*%3a%2f%2.+master.m3u8', url)
+        if subMatches:
+            subUrl = HtmlEntityHelper.UrlDecode(subMatches[0])
+            Logger.Info("Item has subtitles: %s", subUrl)
+            subTitle = SubtitleHelper.DownloadSubtitle(subUrl, format="m3u8srt", proxy=self.proxy)
+            if subTitle:
+                part.Subtitle = subTitle
+
         for s, b in M3u8.GetStreamsFromM3u8(url, self.proxy, headers=item.HttpHeaders):
             item.complete = True
             # s = self.GetVerifiableVideoUrl(s)
@@ -393,3 +446,78 @@ class Channel(chn_class.Channel):
             year = month = day = hour = minutes = 0
 
         return year, month, day, hour, minutes
+
+#     @GET("/system/isAddressNorwegian?withIp=true")
+#     <T> IpCheck checkMyIp();
+#
+#     @GET("/search/autocomplete/{query}")
+#     <T> void getAutoComplete(@Path("query") String str, @Query("viewerAgeLimit") int i, Callback<T> callback);
+#
+#     @GET("/categories")
+#     <T> void getCategories(Callback<T> callback);
+#
+#     @GET("/channels")
+#     <T> List<Channel> getChannels();
+#
+#     @GET("/channels")
+#     <T> void getChannels(Callback<T> callback);
+#
+#     @GET("/series/{seriesId}/currentprogram")
+#     <T> void getCurrentProgramForSeries(@Path("seriesId") String str, @Query("viewerAgeLimit") int i, Callback<T> callback);
+#
+#     @GET("/series/{seriesId}/currentprogram")
+#     <T> void getCurrentProgramForSeries(@Path("seriesId") String str, Callback<T> callback);
+#
+#     @GET("/channels/epg")
+#     <T> void getEpg(@Query("date") String str, Callback<T> callback);
+#
+#     @GET("/search/{query}")
+#     <T> void getForSearchPrograms(@Path("query") String str, Callback<T> callback);
+#
+#     @GET("/search/indexelements")
+#     <T> List<ProgramTeaser> getIndexElements();
+#
+#     @POST("/series/newepisodes")
+#     <T> void getNewEpisodesForSeries(@Body SeriesLastSeen[] seriesLastSeenArr, Callback<T> callback);
+#
+#     @GET("/programs/{programId}/nextepisode")
+#     <T> void getNextEpisode(@Path("programId") String str, @Query("viewerAgeLimit") int i, Callback<T> callback);
+#
+#     @GET("/programs/{programId}")
+#     <T> void getProgram(@Path("programId") String str, @Query("viewerAgeLimit") int i, Callback<Program> callback);
+#
+#     @GET("/programs/{programId}")
+#     <T> void getProgram(@Path("programId") String str, Callback<Program> callback);
+#
+#     @GET("/categories/{categoryId}/programs")
+#     <T> void getProgramByCategoryFeed(@Path("categoryId") String str, Callback<T> callback);
+#
+#     @GET("/categories/{categoryId}/popularprograms")
+#     <T> void getProgramByCategoryPopular(@Path("categoryId") String str, Callback<T> callback);
+#
+#     @GET("/categories/{categoryId}/recentlysentprograms")
+#     <T> void getProgramByCategoryRecent(@Path("categoryId") String str, Callback<T> callback);
+#
+#     @GET("/categories/{categoryId}/recommendedprograms")
+#     <T> void getProgramByCategoryRecommended(@Path("categoryId") String str, Callback<T> callback);
+#
+#     @GET("/programs")
+#     <T> List<ProgramTeaser> getProgramFeed();
+#
+#     @GET("/programs")
+#     <T> void getProgramFeed(Callback<T> callback);
+#
+#     @GET("/programs/{programId}")
+#     <T> ProgramTeaser getProgramTeaser(@Path("programId") String str);
+#
+#     @POST("/programs")
+#     <T> List<ProgramTeaser> getProgramTeaserByIdList(@Body String[] strArr);
+#
+#     @POST("/programs")
+#     <T> void getProgramTeaserByIdList(@Body String[] strArr, Callback<T> callback);
+#
+#     @POST("/programs")
+#     List<ProgramTeaser> getProgramTeaserByIdListSynchronous(@Body String[] strArr);
+#
+#     @GET("/categories/barn/programs")
+#     <T> void getSuperFeed(Callback<T> callback);

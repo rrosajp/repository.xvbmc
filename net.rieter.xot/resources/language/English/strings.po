@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
-"POT-Creation-Date: 2016-01-10 22:53+0000\n"
+"POT-Creation-Date: 2016-09-29 20:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
@@ -90,7 +90,7 @@ msgid "Date"
 msgstr ""
 
 msgctxt "#30019"
-msgid "Show DRM warning"
+msgid "Show DRM/Paid warning before playback"
 msgstr ""
 
 msgctxt "#30020"
@@ -224,7 +224,7 @@ msgid "Appearance"
 msgstr ""
 
 msgctxt "#30054"
-msgid "Change display name (requires XBMC restart)"
+msgid "Change display name (requires Kodi restart)"
 msgstr ""
 
 msgctxt "#30055"
@@ -288,7 +288,7 @@ msgid "Channel Settings"
 msgstr ""
 
 msgctxt "#30070"
-msgid "Let XBMC determine bitrate if possible"
+msgid "Let Kodi determine bitrate if possible"
 msgstr ""
 
 msgctxt "#30071"
@@ -355,7 +355,43 @@ msgctxt "#30086"
 msgid "Hide Fanart"
 msgstr ""
 
-#empty strings from id 30087 to 30099
+msgctxt "#30087"
+msgid "Mix folders and streams while sorting"
+msgstr ""
+
+msgctxt "#30088"
+msgid "Finnish"
+msgstr ""
+
+msgctxt "#30089"
+msgid "Password Vault"
+msgstr ""
+
+msgctxt "#30090"
+msgid "The 'Password Vault' protects stored password with encryption using a PIN."
+msgstr ""
+
+msgctxt "#30091"
+msgid "Change Vault Pin"
+msgstr ""
+
+msgctxt "#30092"
+msgid "Reset Vault"
+msgstr ""
+
+msgctxt "#30093"
+msgid "Password"
+msgstr ""
+
+msgctxt "#30094"
+msgid "Username"
+msgstr ""
+
+msgctxt "#30095"
+msgid "Show Cloaked Items"
+msgstr ""
+
+#empty strings from id 30096 to 30099
 
 msgctxt "#30100"
 msgid "None"
@@ -394,7 +430,11 @@ msgid "Other"
 msgstr ""
 
 #used for list limits
-#empty strings from id 30109 to 30199
+#empty strings from id 30109 to 30198
+
+msgctxt "#30199"
+msgid "10"
+msgstr ""
 
 msgctxt "#30200"
 msgid "50"
@@ -631,7 +671,7 @@ msgid "Today"
 msgstr ""
 
 msgctxt "#30552"
-msgid "Yesterdat"
+msgid "Yesterday"
 msgstr ""
 
 msgctxt "#30553"
@@ -643,7 +683,7 @@ msgid "DRM Protection"
 msgstr ""
 
 msgctxt "#30555"
-msgid "The selected item is DRM protected and might not|play on Kodi."
+msgid "The selected item is DRM protected and might not play on Kodi."
 msgstr ""
 
 msgctxt "#30556"
@@ -660,4 +700,66 @@ msgstr ""
 
 msgctxt "#30559"
 msgid "Fetching missing textures. This could take some time depending on the internet and system speed."
+msgstr ""
+
+msgctxt "#30560"
+msgid "Paid video"
+msgstr ""
+
+msgctxt "#30561"
+msgid "The selected item is not free and might not play on Kodi."
+msgstr ""
+
+msgctxt "#30562"
+msgid "Username and/or password not set in Add-on settings"
+msgstr ""
+
+msgctxt "#30563"
+msgid "Cloak Item"
+msgstr ""
+
+msgctxt "#30564"
+msgid "Un-Cloak Item"
+msgstr ""
+
+msgctxt "#30565"
+msgid "(Un-)Cloaking items"
+msgstr ""
+
+msgctxt "#30566"
+msgid "To un-cloak an item, configure Retrospect to show cloaked items first. Then un-cloak them via the context menu."
+msgstr ""
+
+#empty strings from id 30567 to 30589
+
+msgctxt "#30590"
+msgid "Set a new Retrospect PIN"
+msgstr ""
+
+msgctxt "#30591"
+msgid "No Retrospect PIN specified"
+msgstr ""
+
+msgctxt "#30592"
+msgid "Repeat the new Retrospect PIN"
+msgstr ""
+
+msgctxt "#30593"
+msgid "PINs don't match"
+msgstr ""
+
+msgctxt "#30594"
+msgid "Specify value for setting: '%s'"
+msgstr ""
+
+msgctxt "#30595"
+msgid "Input Retrospect PIN"
+msgstr ""
+
+msgctxt "#30596"
+msgid "Incorrect Retrospect PIN specified"
+msgstr ""
+
+msgctxt "#30597"
+msgid "Resetting the vault will invalidate all existing encrypted values. Are you sure?"
 msgstr ""

@@ -12,15 +12,35 @@ import os
 
 from regexer import Regexer
 from config import Config
-from helpers import htmlentityhelper
-from helpers import encodinghelper
-from helpers import jsonhelper
 from logger import Logger
 from urihandler import UriHandler
+from helpers.jsonhelper import JsonHelper
+from helpers.htmlentityhelper import HtmlEntityHelper
+from helpers.encodinghelper import EncodingHelper
 
 
 class SubtitleHelper:
     """Helper class that is used for handling subtitle files."""
+
+    # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+    ANSIColours = {
+        "<30>": '<font color="#000000">',  # Black
+        "<31>": '<font color="#ff0000">',  # Red
+        "<32>": '<font color="#00ff00">',  # Green
+        "<33>": '<font color="#ffff00">',  # Brown/Yellow
+        "<34>": '<font color="#0000ff">',  # Blue
+        "<35>": '<font color="#ff00ff">',  # Magenta
+        "<36>": '<font color="#00ffff">',  # Cyan
+        "<37>": '<font color="#ffffff">',  # Gray
+        "</30>": "</font>",
+        "</31>": "</font>",
+        "</32>": "</font>",
+        "</33>": "</font>",
+        "</34>": "</font>",
+        "</35>": "</font>",
+        "</36>": "</font>",
+        "</37>": "</font>",
+    }
 
     def __init__(self):
         """Create a class instance. This is not allowed, due to only static
@@ -33,7 +53,7 @@ class SubtitleHelper:
 
     # noinspection PyShadowingBuiltins
     @staticmethod
-    def DownloadSubtitle(url, fileName="", format='sami', proxy=None):
+    def DownloadSubtitle(url, fileName="", format='sami', proxy=None, replace=None):
         """Downloads a SAMI and stores the SRT in the cache folder
 
         Arguments:
@@ -52,7 +72,7 @@ class SubtitleHelper:
 
         if fileName == "":
             Logger.Debug("No filename present, generating filename using MD5 hash of url.")
-            fileName = "%s.srt" % (encodinghelper.EncodingHelper.EncodeMD5(url),)
+            fileName = "%s.srt" % (EncodingHelper.EncodeMD5(url),)
         elif not fileName.endswith(".srt"):
             Logger.Debug("No SRT extension present, appending it.")
             fileName = "%s.srt" % (fileName, )
@@ -83,15 +103,24 @@ class SubtitleHelper:
                 srt = SubtitleHelper.__ConvertSamiToSrt(raw)
             elif format.lower() == 'srt':
                 srt = raw
+            elif format.lower() == 'webvtt':
+                srt = SubtitleHelper.__ConvertWebVttToSrt(raw)
             elif format.lower() == 'ttml':
                 srt = SubtitleHelper.__ConvertTtmlToSrt(raw)
             elif format.lower() == 'dcsubtitle':
                 srt = SubtitleHelper.__ConvertDCSubtitleToSrt(raw)
             elif format.lower() == 'json':
                 srt = SubtitleHelper.__ConvertJsonSubtitleToSrt(raw)
+            elif format.lower() == 'm3u8srt':
+                srt = SubtitleHelper.__ConvertM3u8SrtToSubtitleToSrt(raw, url, proxy)
             else:
                 error = "Uknown subtitle format: %s" % (format,)
                 raise NotImplementedError(error)
+
+            if replace:
+                Logger.Debug("Replacing SRT data: %s", replace)
+                for needle in replace:
+                    srt = srt.replace(needle, replace[needle])
 
             f = open(localCompletePath, 'w')
             f.write(srt)
@@ -139,8 +168,8 @@ class SubtitleHelper:
                 end = SubtitleHelper.__ConvertToTime(sub[1])
 
                 text = sub[2].replace('\"', '"')
-                text = jsonhelper.JsonHelper.ConvertSpecialChars(text)
-                text = htmlentityhelper.HtmlEntityHelper.ConvertHTMLEntities(text)
+                text = JsonHelper.ConvertSpecialChars(text)
+                text = HtmlEntityHelper.ConvertHTMLEntities(text)
                 srt = "%s\n%s\n%s --> %s\n%s\n" % (srt, i, start, end, text.strip())
                 i += 1
             except:
@@ -203,17 +232,56 @@ class SubtitleHelper:
                     # new start of a sub
                     if text and start and end:
                         # if we have a complete old one, save it
-                        text = htmlentityhelper.HtmlEntityHelper.ConvertHTMLEntities(text)
+                        text = HtmlEntityHelper.ConvertHTMLEntities(text)
                         srt = "%s\n%s\n%s --> %s\n%s\n" % (srt, i, start, end, text.strip())
                         i += 1
-                    start = "%s,%03d" % (sub[1], int(sub[2]) * 4)
-                    end = "%s,%03d" % (sub[3], int(sub[4]) * 4)
+                    start = "%s,%03d" % (sub[1], int(sub[2]))
+                    end = "%s,%03d" % (sub[3], int(sub[4]))
                     text = ""
                 else:
                     text = "%s\n%s" % (text, sub[5].replace("<br />", "\n"))
             except:
                 Logger.Error("Error parsing subtitle: %s", sub, exc_info=True)
         return srt
+
+    @staticmethod
+    def __ConvertWebVttToSrt(webvvt):
+        """Converts sami format into SRT format:
+
+        Arguments:
+        ttml : string - TTML (Timed Text Markup Language) subtitle format
+
+        Returns:
+        SRT formatted subtitle:
+
+        Example:
+            1
+            00:00:20,000 --> 00:00:24,400
+            text
+
+        """
+
+        count = 0
+        result = ""
+        for line in webvvt.split("\n"):
+            line = line.strip()
+            if line.endswith("WEBVTT"):
+                continue
+            if not line:
+                continue
+
+            if " --> " in line:
+                count += 1
+                start, end = line.split(" --> ")
+                result = "%s\n\n%s" % (result, count)
+                if start.count(":") == 1:
+                    result = "%s\n00:%s --> 00:%s" % (result, start.replace(".", ","), end.replace(".", ","))
+                else:
+                    result = "%s\n%s --> %s" % (result, start.replace(".", ","), end.replace(".", ","))
+            else:
+                result = "%s\n%s" % (result, line)
+
+        return result
 
     @staticmethod
     def __ConvertTtmlToSrt(ttml):
@@ -245,7 +313,7 @@ class SubtitleHelper:
                 end = "%s,%03d" % (sub[2], int(sub[3]))
                 text = sub[4].replace("<br />", "\n")
                 # text = sub[4].replace("<br />", "\n")
-                text = htmlentityhelper.HtmlEntityHelper.ConvertHTMLEntities(text)
+                text = HtmlEntityHelper.ConvertHTMLEntities(text)
                 text = text.replace("\r\n", "")
                 srt = "%s\n%s\n%s --> %s\n%s\n" % (srt, i, start, end, text.strip())
                 i += 1
@@ -286,7 +354,7 @@ class SubtitleHelper:
                 start = SubtitleHelper.__ConvertToTime(sub[0])
                 end = SubtitleHelper.__ConvertToTime(sub[2])
                 text = sub[1]
-                text = htmlentityhelper.HtmlEntityHelper.ConvertHTMLEntities(text)
+                text = HtmlEntityHelper.ConvertHTMLEntities(text)
                 # text = sub[1]
                 srt = "%s\n%s\n%s --> %s\n%s\n" % (srt, i, start, end, text)
                 i += 1
@@ -295,6 +363,49 @@ class SubtitleHelper:
 
         # re-encode to be able to write it
         return srt
+
+    @staticmethod
+    def __ConvertM3u8SrtToSubtitleToSrt(raw, url, proxy):
+        # Find the VTT line in the subtitle
+        lines = raw.split("\n")
+        subUrl = None
+        for line in lines:
+            if ".vtt" in line:
+                subUrl = line
+                break
+
+        if not subUrl:
+            return ""
+
+        if not subUrl.startswith("http"):
+            subUrl = "%s/%s" % (url.rsplit("/", 1)[0], subUrl)
+
+        # Now we know the subtitle, it would be wise to just use the existing converters to just
+        # convert the data, but now now
+        result = ""
+        m3u8Sub = UriHandler.Open(subUrl, proxy=proxy)
+        # Again decode the data
+        try:
+            m3u8Sub = m3u8Sub.decode()
+        except:
+            Logger.Warning("Converting input to UTF-8 using 'unicode_escape'")
+            m3u8Sub = m3u8Sub.decode('unicode_escape')
+
+        for line in m3u8Sub.split("\n"):
+            line = line.strip()
+            if line.endswith("WEBVTT") or line.startswith("X-TIMESTAMP"):
+                continue
+
+            if " --> " in line:
+                start, end = line.split(" --> ")
+                if start.count(":") == 1:
+                    result = "%s\n00:%s --> 00:%s" % (result, start.replace(".", ","), end.replace(".", ","))
+                else:
+                    result = "%s\n%s --> %s" % (result, start.replace(".", ","), end.replace(".", ","))
+            else:
+                result = "%s\n%s" % (result, line)
+
+        return result
 
     @staticmethod
     def __ConvertToTime(timestamp):

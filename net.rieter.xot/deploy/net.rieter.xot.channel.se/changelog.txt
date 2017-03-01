@@ -1,8 +1,40 @@
 ﻿[B]Changelog[/B]
+Fixed: Some fanart did now show for SVT
+Fixed: SVT did not play due to API changes (Fixes #828)
+
+
+[I]Previous changes[/I]N
+Fixed: Some thumbnails did not show for SVT (Fixes #813)
+Added: SVT and Oppet Arkiv genres (Fixes #624)
+Fixed: SVT Update their API (Fixes #811)
+Fixed: removed video files from main listing (Fixes #800)
+Changed: SVT Play shows Geo Block information from main list now (See #800)
+Fixed: SVT upgraded some of their genres (Barn, Sport) to the new format (Fixes #787)
+Fixed: UR Play changed subtitle formats (Fixes #784)
+Fixed: SVT Search(Fixes #782)
+Fixed: TV4 Play updated their Video API (Fixes #779)
+Fixed: SVT updated their API again :sigh: (Fixes #776)
+Fixed: Don't show Oppet Arkiv in SVT (Fixes #774)
+Fixed: SVT updated a typoo in their API (And left the biggest one in there) (Fixes #769)
+Fixed: MTG (Kanal 5) subtitle issue (Fixes #770)
+Fixed: UR Play broke (Fixes #771)
+Fixed: SVT changed API location - part #2 (Fixes #767)
+Fixed: SVT changed API location (Fixes #757)
+Fixed: Kanal 5 'recent' videos did not work
+Fixed: SVT special folders did not work
+Added: URPlay Kategorier (Fixes #749)
+Fixed: UR Play broke (Fixes #743)
+Added: *live* indicator to videos that are live at the moment (Fixes #741)
+Added: sXXeXX if Season and Episode data is present
+Fixed: SVT changed more layouts (Fixes #738)
+Fixed: Categories in TV4Play only showed the first 25 items (Fixes #732)
+Added: Langfilm i SVT (Fixes #730)
+Fixed: TV4 would not play streams (Fixes #726)
+Fixed: SVT is moving to a JSON embed data set which is breaking the SVT channel every now and then.
+Fixed: The paging broke for SVT listings (Fixes #719)
+Fixed: SVT updated their main show listing (Fixes #715)
 Fixed: Kanal5 'recent' streams broke
 Fixed: Video stream parsing for some  SVT streams (Fixes #712)
-
-[I]Previous changes[/I]
 Fixed: UR Play updated their site
 Fixed: SVT changed their Live channel format (Fixes #708)
 Fixed: TV4play.se Live stream did not work (Fixed 697)

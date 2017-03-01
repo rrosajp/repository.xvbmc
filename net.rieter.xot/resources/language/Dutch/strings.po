@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
-"POT-Creation-Date: 2016-01-10 22:53+0000\n"
+"POT-Creation-Date: 2016-09-29 20:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
@@ -90,8 +90,8 @@ msgid "Date"
 msgstr "Datum"
 
 msgctxt "#30019"
-msgid "Show DRM warning"
-msgstr "Toon DRM waarschuwing"
+msgid "Show DRM/Paid warning before playback"
+msgstr "Toon DRM waarschuwing voor afspelen"
 
 msgctxt "#30020"
 msgid "Maximum stream bitrate"
@@ -222,8 +222,8 @@ msgid "Appearance"
 msgstr "Weergaven"
 
 msgctxt "#30054"
-msgid "Change display name (requires XBMC restart)"
-msgstr "Pas weergave naam aan (active na XBMC herstart)"
+msgid "Change display name (requires Kodi restart)"
+msgstr "Pas weergave naam aan (active na Kodi herstart)"
 
 msgctxt "#30055"
 msgid "Advanced"
@@ -286,8 +286,8 @@ msgid "Channel Settings"
 msgstr "Kanaal instellingen"
 
 msgctxt "#30070"
-msgid "Let XBMC determine bitrate if possible"
-msgstr "Laat XBMC de beste bitrate selecteren"
+msgid "Let Kodi determine bitrate if possible"
+msgstr "Laat Kodi de beste bitrate selecteren"
 
 msgctxt "#30071"
 msgid "Proxy Configuration"
@@ -353,6 +353,42 @@ msgctxt "#30086"
 msgid "Hide Fanart"
 msgstr "Fanart niet tonen"
 
+msgctxt "#30087"
+msgid "Mix folders and streams while sorting"
+msgstr "Mix folders en streams bij het sorteren"
+
+msgctxt "#30088"
+msgid "Finnish"
+msgstr "Fins"
+
+msgctxt "#30089"
+msgid "Password Vault"
+msgstr "Wachtwoord Kluis"
+
+msgctxt "#30090"
+msgid "The 'Password Vault' protects stored password with encryption using a PIN."
+msgstr "De 'Wachtwoord Kluis' beschermt wachtwoorden door middel van encryptie en een PIN."
+
+msgctxt "#30091"
+msgid "Change Vault Pin"
+msgstr "Verander Kluis PIN"
+
+msgctxt "#30092"
+msgid "Reset Vault"
+msgstr "Reset de Kluis"
+
+msgctxt "#30093"
+msgid "Password"
+msgstr "Wachtwoord"
+
+msgctxt "#30094"
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgctxt "#30095"
+msgid "Show Cloaked Items"
+msgstr "Verborgen items weergeven"
+
 msgctxt "#30100"
 msgid "None"
 msgstr "Geen"
@@ -388,6 +424,10 @@ msgstr "Techniek"
 msgctxt "#30108"
 msgid "Other"
 msgstr "Overig"
+
+msgctxt "#30199"
+msgid "10"
+msgstr "10"
 
 msgctxt "#30200"
 msgid "50"
@@ -622,7 +662,7 @@ msgid "Today"
 msgstr "Vandaag"
 
 msgctxt "#30552"
-msgid "Yesterdat"
+msgid "Yesterday"
 msgstr "Gisteren"
 
 msgctxt "#30553"
@@ -634,8 +674,8 @@ msgid "DRM Protection"
 msgstr "DRM Bescherming"
 
 msgctxt "#30555"
-msgid "The selected item is DRM protected and might not|play on Kodi."
-msgstr "Het geselecteerde item is DRM bescherm en|werkt wellicht niet in Kodi."
+msgid "The selected item is DRM protected and might not play on Kodi."
+msgstr "Het geselecteerde item is DRM bescherm en werkt wellicht niet in Kodi."
 
 msgctxt "#30556"
 msgid "Initialising channel(s)."
@@ -652,3 +692,63 @@ msgstr "Textures worden bijgewerkt"
 msgctxt "#30559"
 msgid "Fetching missing textures. This could take some time depending on the internet and system speed."
 msgstr "Ontbrekende textures worden opgehaald. Dit kan enige tijd duren afhankelijk van het systeem en internet snelheid."
+
+msgctxt "#30560"
+msgid "Paid video"
+msgstr "Betaalde video"
+
+msgctxt "#30561"
+msgid "The selected item is not free and might not play on Kodi."
+msgstr "Het geselecteerde item is niet gratis en werkt wellicht niet in Kodi."
+
+msgctxt "#30562"
+msgid "Username and/or password not set in Add-on settings"
+msgstr "Gebruikersnaam en/of wachtwoord niet ingesteld in de Add-on instellingen."
+
+msgctxt "#30563"
+msgid "Cloak Item"
+msgstr "Verberg item"
+
+msgctxt "#30564"
+msgid "Un-Cloak Item"
+msgstr "Maak item zichtbaar"
+
+msgctxt "#30565"
+msgid "(Un-)Cloaking items"
+msgstr "Items verbergen/tonen"
+
+msgctxt "#30566"
+msgid "To un-cloak an item, configure Retrospect to show cloaked items first. Then un-cloak them via the context menu."
+msgstr "Om een item weer te tonen zal Retrospect eerst geconfigureerd moeten worden om verborgen items te tonen. Daarna kan het context menu gebruikt worden om een item weer te tonen."
+
+msgctxt "#30590"
+msgid "Set a new Retrospect PIN"
+msgstr "Stel een nieuwe Retrospect PIN in"
+
+msgctxt "#30591"
+msgid "No Retrospect PIN specified"
+msgstr "Geen Retrospect PIN ingevoerd"
+
+msgctxt "#30592"
+msgid "Repeat the new Retrospect PIN"
+msgstr "Herhaal de nieuwe Retrospect PIN"
+
+msgctxt "#30593"
+msgid "PINs don't match"
+msgstr "PIN's komen niet overeen"
+
+msgctxt "#30594"
+msgid "Specify value for setting: '%s'"
+msgstr "Voer de waarde in voor instelling: '%s'"
+
+msgctxt "#30595"
+msgid "Input Retrospect PIN"
+msgstr "Voer de Retrospect PIN in"
+
+msgctxt "#30596"
+msgid "Incorrect Retrospect PIN specified"
+msgstr "Foutieve Retrospect PIN ingevoerd"
+
+msgctxt "#30597"
+msgid "Resetting the vault will invalidate all existing encrypted values. Are you sure?"
+msgstr "Het resetten van de kluis zal alle bestaande versleutelde instellingen onleesbaar maken. Doorgaan met resetten?"

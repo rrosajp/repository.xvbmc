@@ -3,8 +3,8 @@ import contextmenu
 import chn_class
 
 from regexer import Regexer
-from helpers import htmlentityhelper
 from logger import Logger
+from helpers.htmlentityhelper import HtmlEntityHelper
 
 
 class Channel(chn_class.Channel):
@@ -27,12 +27,6 @@ class Channel(chn_class.Channel):
 
         # set context menu items
         self.contextMenuItems.append(contextmenu.ContextMenuItem("Download Item", "CtMnDownloadItem", itemTypes="video"))
-
-        # configure login stuff
-        self.passWord = ""
-        self.userName = ""
-        self.logonUrl = ""
-        self.requiresLogon = False
 
         # setup the urls
         self.mainListUri = "http://www.myvideo.nl/"
@@ -145,7 +139,7 @@ class Channel(chn_class.Channel):
         
         #<a class='nArrow' href='([^']+)' title='[^']*'>([^<]+)</a>
         #                            0                     1                                
-        item = mediaitem.MediaItem(resultSet[1], htmlentityhelper.HtmlEntityHelper.StripAmp("%s%s" % (self.baseUrl, resultSet[0])))
+        item = mediaitem.MediaItem(resultSet[1], HtmlEntityHelper.StripAmp("%s%s" % (self.baseUrl, resultSet[0])))
         item.icon = self.icon
         Logger.Trace("%s (%s)", item.name, item.url)
         return item
@@ -174,7 +168,7 @@ class Channel(chn_class.Channel):
         #<img id='([^']+)' src='([^']+)' class='vThumb' alt='[^']*'/></a></div></div><div class='sCenter vTitle'><span class='title'><a[^>]+title='([^']+)'>
         #            0            1                                                                                                                    2
         name = resultSet[2]
-        item = mediaitem.MediaItem(name, htmlentityhelper.HtmlEntityHelper.StripAmp("%s%s" % (self.baseUrl, resultSet[0])))
+        item = mediaitem.MediaItem(name, HtmlEntityHelper.StripAmp("%s%s" % (self.baseUrl, resultSet[0])))
         
         item.description = "%s\n%s" % (self.categoryName, resultSet[2])
         item.icon = self.icon

@@ -16,10 +16,10 @@ import random
 import xbmc
 import xbmcgui
 
-from helpers import htmlentityhelper
-from helpers import encodinghelper
 from addonsettings import AddonSettings
 from logger import Logger
+from helpers.htmlentityhelper import HtmlEntityHelper
+from helpers.encodinghelper import EncodingHelper
 
 
 class MediaItem:
@@ -39,6 +39,8 @@ class MediaItem:
 
     """
 
+    LabelTrackNumber = "TrackNumber"
+
     def __dir__(self):
         """ Required in order for the Pickler.Validate to work! """
         return ["name",
@@ -57,7 +59,6 @@ class MediaItem:
                 "isGeoLocked",
                 "isDrmProtected",
                 "isPaid",
-                "parent",
                 "complete",
                 "downloaded",
                 "downloadable",
@@ -69,7 +70,7 @@ class MediaItem:
                 "channels"]
 
     #noinspection PyShadowingBuiltins
-    def __init__(self, title, url, type="folder", parent=None):
+    def __init__(self, title, url, type="folder"):
         """Creates a new MediaItem
 
         Arguments:
@@ -113,7 +114,6 @@ class MediaItem:
         self.isPaid = False                       # : if set to True, the item is a Paid item and cannot be played (*)
         self.__infoLabels = dict()                # : Additional Kodi InfoLabels
 
-        self.parent = parent
         self.complete = False
         self.downloaded = False
         self.downloadable = False
@@ -121,10 +121,14 @@ class MediaItem:
         self.HttpHeaders = dict()                 # : http headers for the item data retrieval
         self.rating = None
 
+        # Items that are not essential for pickled
+        self.isCloaked = False
+        self.metaData = dict()                    # : Additional data that is for internal / routing use only
+
         # GUID used for identifcation of the object. Do not set from script, MD5 needed
         # to prevent UTF8 issues
         try:
-            self.guid = "%s%s" % (encodinghelper.EncodingHelper.EncodeMD5(title), encodinghelper.EncodingHelper.EncodeMD5(url or ""))
+            self.guid = "%s%s" % (EncodingHelper.EncodeMD5(title), EncodingHelper.EncodeMD5(url or ""))
             # self.guid = ("%s-%s" % (encodinghelper.EncodingHelper.EncodeMD5(title), url)).replace(" ", "")
         except:
             Logger.Error("Error setting GUID for title:'%s' and url:'%s'. Falling back to UUID", title, url, exc_info=True)
@@ -205,6 +209,13 @@ class MediaItem:
 
         return self.type.lower() in ('video', 'audio')
 
+    def HasTrack(self):
+        """
+        @return: if the track was set
+        """
+
+        return MediaItem.LabelTrackNumber in self.__infoLabels
+
     def HasDate(self):
         """Returns if a date was set """
 
@@ -214,6 +225,19 @@ class MediaItem:
         """ Resets the date (used for favourites for example). """
         self.__timestamp = datetime.datetime.min
         self.__date = ""
+
+    # noinspection PyUnresolvedReferences
+    def SetInfoLabel(self, label, value):
+        # type: (str, Any) -> None
+        """
+        @param label: the name of the label
+        @param value: the value to assign
+
+        See http://kodi.wiki/view/InfoLabels
+
+        """
+
+        self.__infoLabels[label] = value
 
     def SetSeasonInfo(self, season, episode):
         """ Set season and episode information
@@ -346,14 +370,15 @@ class MediaItem:
         # Get all the info labels starting with the ones set and then add the specific ones
         infoLabels = self.__infoLabels.copy()
         infoLabels["Label"] = name
+        infoLabels["Title"] = name
         if xbmcDate:
             infoLabels["Date"] = xbmcDate
             infoLabels["Year"] = xbmcYear
-        if self.type != "Audio":
+        if self.type != "audio":
             # infoLabels["PlotOutline"] = description
             infoLabels["Plot"] = description
-        if descriptionPostFix:
-            infoLabels["Tagline"] = descriptionPostFix.lstrip()
+        # if descriptionPostFix:
+        #     infoLabels["Tagline"] = descriptionPostFix.lstrip()
 
         # now create the XBMC item
         item = xbmcgui.ListItem(name or "<unknown>", self.__date)
@@ -366,6 +391,7 @@ class MediaItem:
             item.setProperty("IsPlayable", "true")
 
         # specific items
+        Logger.Trace("Setting InfoLabels: %s", infoLabels)
         if self.type == "audio":
             item.setInfo(type="Audio", infoLabels=infoLabels)
         else:
@@ -386,14 +412,23 @@ class MediaItem:
         # for l in ("thumb", "poster", "banner", "fanart", "clearart", "clearlogo", "landscape"):
         #     art[l] = self.thumb
         # item.setArt(art)
+
+        # We never set the content resolving, Retrospect does this. And if we do, then the custom
+        # headers are removed from the URL when opening the resolved URL.
+        try:
+            item.setContentLookup(False)
+        except:
+            # apparently not yet supported on this Kodi version3
+            pass
         return item
 
-    def GetXBMCPlayList(self, bitrate=None, updateItemUrls=False, proxy=None):
+    def GetXBMCPlayList(self, bitrate, updateItemUrls=False, proxy=None):
         """ Creates a XBMC Playlist containing the MediaItemParts in this MediaItem
 
         Keyword Arguments:
-        bitrate        : [opt] integer   - The bitrate of the streams that should be in
+        bitrate        : integer         - The bitrate of the streams that should be in
                                            the playlist. Given in kbps
+
         updateItemUrls : [opt] boolean   - If specified, the Playlist items will
                                            have a path pointing to the actual stream
         proxy          : [opt] ProxyInfo - The proxy to set
@@ -441,7 +476,7 @@ class MediaItem:
                 continue
 
             # get the playlist item
-            (stream, xbmcItem) = part.GetXBMCPlayListItem(self, bitrate=bitrate, updateItemUrls=updateItemUrls)
+            (stream, xbmcItem) = part.GetXBMCPlayListItem(self, bitrate, updateItemUrls=updateItemUrls)
             logText = "%s\n + %s" % (logText, stream)
 
             streamUrl = stream.Url
@@ -456,17 +491,23 @@ class MediaItem:
                 elif not proxy.UseProxyForUrl(streamUrl):
                     logText = "%s\n    + Not adding proxy due to filter mismatch" % (logText, )
                 else:
-                    if True:
-                        xbmcParams["HttpProxy"] = proxy.GetProxyAddress()
-                        logText = "%s\n    + Adding %s" % (logText, proxy)
+                    if AddonSettings.IsMinVersion(17):
+                        # See ffmpeg proxy in https://github.com/xbmc/xbmc/commit/60b21973060488febfdc562a415e11cb23eb9764
+                        xbmcItem.setProperty("proxy.host", proxy.Proxy)
+                        xbmcItem.setProperty("proxy.port", str(proxy.Port))
+                        xbmcItem.setProperty("proxy.type", proxy.Scheme)
+                        if proxy.Username:
+                            xbmcItem.setProperty("proxy.user", proxy.Username)
+                        if proxy.Password:
+                            xbmcItem.setProperty("proxy.password", proxy.Password)
+                        logText = "%s\n    + Adding (Krypton) %s" % (logText, proxy)
                     else:
-                        Logger.Warning("Not adding HTTP proxy due to Kodi proxy support issues "
-                                       "(See https://github.com/xbmc/xbmc/pull/8434)")
-                        logText = "%s\n    + NOT adding %s" % (logText, proxy)
+                        xbmcParams["HttpProxy"] = proxy.GetProxyAddress()
+                        logText = "%s\n    + Adding (Pre-Krypton) %s" % (logText, proxy)
 
             # Now add the actual HTTP headers
             for k in part.HttpHeaders:
-                xbmcParams[k] = htmlentityhelper.HtmlEntityHelper.UrlEncode(part.HttpHeaders[k])
+                xbmcParams[k] = HtmlEntityHelper.UrlEncode(part.HttpHeaders[k])
 
             if xbmcParams:
                 xbmcQueryString = reduce(lambda x, y: "%s&%s=%s" %
@@ -505,7 +546,7 @@ class MediaItem:
         r = long(random.random() * 100000000000000000L)
         a = random.random() * 100000000000000000L
         data = str(t) + ' ' + str(r) + ' ' + str(a)
-        data = encodinghelper.EncodingHelper.EncodeMD5(data)
+        data = EncodingHelper.EncodeMD5(data)
         return data
 
     def __FullDecodeText(self, stringValue):
@@ -529,7 +570,7 @@ class MediaItem:
             return ""
 
         # then get rid of the HTML entities
-        stringValue = htmlentityhelper.HtmlEntityHelper.ConvertHTMLEntities(stringValue)
+        stringValue = HtmlEntityHelper.ConvertHTMLEntities(stringValue)
         return stringValue
 
     def __str__(self):
@@ -550,8 +591,8 @@ class MediaItem:
                         % (value, self.type, self.complete, self.isLive, self.__date,
                            self.downloadable, self.isGeoLocked, self.isDrmProtected)
         else:
-            value = "%s [Type=%s, Url=%s, Date=%s, Geo/DRM=%s/%s]" \
-                    % (value, self.type, self.url, self.__date, self.isGeoLocked, self.isDrmProtected)
+            value = "%s [Type=%s, Url=%s, Date=%s, IsLive=%s, Geo/DRM=%s/%s]" \
+                    % (value, self.type, self.url, self.__date, self.isLive, self.isGeoLocked, self.isDrmProtected)
 
         return value
 
@@ -579,57 +620,6 @@ class MediaItem:
         """
 
         return not self.Equals(item)
-
-    def __cmp__(self, other):
-        """ Compares 2 items based on their appearance order
-
-        Arguments:
-        other : MediaItem - The item to compare to
-
-        Returns:
-         * -1 : If the item is lower than the current one
-         *  0 : If the item is order is equal
-         *  1 : If the item is higher than the current one
-
-        The comparison is done base on:
-         * the type of the item. Non-playable items appear first.
-         * the defined sorting algorithm. This is a Add-on setting retrieved
-           using the AddonSettings method. Options are: Name or Timestamp.
-
-        """
-
-        if other is None:
-            return -1
-
-        if self.type == other.type:
-            # Logger.Debug("Comparing :: same types")
-            sortMethod = AddonSettings.GetSortAlgorithm()
-
-            # date sorting
-            if sortMethod == "date":
-                # Logger.Debug("Comparing :: Settings: Sorting by date")
-
-                # at this point both have timestamps or dates, so we can compare
-                if self.__timestamp == other.__timestamp:
-                    # same timestamps, compare names
-                    return cmp(self.name, other.name)
-                else:
-                    # compare timestamps
-                    return cmp(other.__timestamp, self.__timestamp)
-
-            # name sorting
-            elif sortMethod == "name":
-                # Logger.Debug("Comparing :: Settings: Sorting by name")
-                return cmp(self.name, other.name)
-            else:
-                return 0
-        else:
-            # one is folder other one is playable. Folders are always sorted first
-            # Logger.Debug("Comparing :: different types, none playable first")
-            if self.IsPlayable():
-                return -1
-            else:
-                return 1
 
     def __hash__(self):
         """ returns the hash value """
@@ -660,9 +650,10 @@ class MediaItem:
         @return:            (tuple) name postfix, description postfix
         """
 
-        geoLock = "º"
-        drmLock = "^"
-        paid = "ª"
+        geoLock = "&ordm;"  # º
+        drmLock = "^"       # ^
+        paid = "&ordf;"     # ª
+        cloaked = "&uml;"   # ¨
         descriptionAddition = []
         titlePostfix = []
 
@@ -678,6 +669,9 @@ class MediaItem:
         if self.isPaid:
             titlePostfix.append(paid)
             descriptionAddition.append("Premium/Paid")
+        if self.isCloaked:
+            titlePostfix.append(cloaked)
+            descriptionAddition.append("Cloaked")
         # actually update it
         if descriptionAddition:
             descriptionAddition = " / ".join(descriptionAddition)
@@ -712,6 +706,23 @@ class MediaItem:
             name = "%s %s" % (folderPrefix, name)
 
         return name
+
+    def __setstate__(self, state):
+        """ Sets the current MediaItem's state based on the pickled value. However, it also adds
+        newly added class variables so old items won't brake.
+
+        @param state: a default Pickle __dict__
+        """
+
+        # creating a new MediaItem here should not cause too much performance issues, as not very many
+        # will be depickled.
+
+        m = MediaItem("", "")
+        self.__dict__ = m.__dict__
+        self.__dict__.update(state)
+
+    # def __getstate__(self):
+    #     return self.__dict__
 
 
 class MediaItemPart:
@@ -793,18 +804,17 @@ class MediaItemPart:
         Logger.Debug("Adding property: %s = %s", name, value)
         self.Properties.append((name, value))
 
-    def GetXBMCPlayListItem(self, parent, bitrate=None, name=None, updateItemUrls=False):
+    def GetXBMCPlayListItem(self, parent, bitrate, updateItemUrls=False):
         """Returns a XBMC List Item than can be played or added to an XBMC
         PlayList.
 
         Arguments:
         parent : MediaItem - the parent MediaItem
+        bitrate: integer   - the bitrate for the list items
 
         Keyword Arguments:
         quality        : [opt] integer - The quality of the requested XBMC
                                          PlayListItem streams.
-        name           : [opt] string  - If set, it overrides the original
-                                         name of the MediaItem.
         updateItemUrls : [opt] boolean - If set, the xbmc items will have a path
                                          that corresponds with the actual stream.
 
@@ -818,14 +828,15 @@ class MediaItemPart:
 
         """
 
-        if not name:
+        if self.Name:
             Logger.Debug("Creating XBMC ListItem '%s'", self.Name)
+            item = parent.GetXBMCItem(name=self.Name)
         else:
-            Logger.Debug("Creating XBMC ListItem '%s'", name)
-        item = parent.GetXBMCItem(name=name)
+            Logger.Debug("Creating XBMC ListItem '%s'", parent.name)
+            item = parent.GetXBMCItem()
 
         if not bitrate:
-            bitrate = AddonSettings.GetMaxStreamBitrate()
+            raise ValueError("Bitrate not specified")
 
         for prop in self.Properties:
             Logger.Trace("Adding property: %s", prop)

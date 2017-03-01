@@ -34,7 +34,8 @@ class UriHandler:
     __error = "UriHandler not initialized. Use UriHandler.CreateUriHandler ======="
 
     @staticmethod
-    def CreateUriHandler(cacheDir=None, useCompression=True, webTimeOut=30, maxFileNameLength=None, blockSize=4096):
+    def CreateUriHandler(cacheDir=None, useCompression=True, webTimeOut=30, maxFileNameLength=None,
+                         blockSize=4096, cookieJar=None):
         """Initialises the UriHandler class
 
         Keyword Arguments:
@@ -43,11 +44,13 @@ class UriHandler:
         @param useCompression:    boolean - Indicates whether compression is supported or not.
         @param webTimeOut:        integer - timeout for requests in seconds
         @param maxFileNameLength: integer - the max filename length (should be 42 on Xbox)
+        @param cookieJar:         string  - the path to the cookie jar (in case of file storage)
 
         """
 
         if UriHandler.__handler is None:
-            UriHandler.__handler = UriHandler.CustomUriHandler(cacheDir, useCompression, webTimeOut, maxFileNameLength, blockSize)
+            UriHandler.__handler = UriHandler.CustomUriHandler(cacheDir, useCompression, webTimeOut,
+                                                               maxFileNameLength, blockSize, cookieJar)
 
             # hook up all the methods to pass to the actual UriHandler
             UriHandler.Download = UriHandler.__handler.Download
@@ -56,6 +59,9 @@ class UriHandler:
             UriHandler.CookieCheck = UriHandler.__handler.CookieCheck
             UriHandler.CookiePrint = UriHandler.__handler.CookiePrint
             UriHandler.CorrectFileName = UriHandler.__handler.CorrectFileName
+            UriHandler.GetCookie = UriHandler.__handler.GetCookie
+            UriHandler.SetCookie = UriHandler.__handler.SetCookie
+
         else:
             Logger.Warning("Cannot create a second UriHandler instance!")
         return UriHandler.__handler
@@ -122,6 +128,28 @@ class UriHandler:
         pass
 
     @staticmethod
+    def SetCookie(version=0, name='', value='',
+                  port=None,  # port_specified=False,
+                  domain='',  # domain_specified=True,
+                  domain_initial_dot=False,
+                  path='/',  # path_specified=True,
+                  secure=False,
+                  expires=4102444555,
+                  # discard=False,
+                  # comment=None,
+                  # comment_url=None,
+                  # rest=None,
+                  # rfc2109=False
+                  ):
+        # type: (int, str, str, str, str, bool, str, bool, int) -> cookielib.Cookie
+        pass
+
+    @staticmethod
+    def GetCookie(name, domain, path="/", matchStart=False):
+        # type: (str, str, str, bool) -> cookielib.Cookie
+        pass
+
+    @staticmethod
     def CookieCheck(cookieName):
         pass
 
@@ -159,7 +187,8 @@ class UriHandler:
     class CustomUriHandler:
         """Class that handles all the URL downloads"""
 
-        def __init__(self, cacheDir=None, useCompression=True, webTimeOut=30, maxFileNameLength=None, blockSize=4096):
+        def __init__(self, cacheDir=None, useCompression=True, webTimeOut=30,
+                     maxFileNameLength=None, blockSize=4096, cookieJar=None):
             """Initialises the UriHandler class
 
             Keyword Arguments:
@@ -168,9 +197,20 @@ class UriHandler:
             @param cacheDir:          string  - a path for http caching. If specified, caching will be used.
             @param useCompression:    boolean - Indicates whether compression is supported or not.
             @param webTimeOut:        integer - timeout for requests in seconds
+            @param cookieJar:         string  - the path to the cookie jar (in case of file storage)
 
             """
-            self.cookieJar = cookielib.CookieJar()
+            if cookieJar:
+                self.cookieJar = cookielib.MozillaCookieJar(cookieJar)
+                if not os.path.isfile(cookieJar):
+                    # noinspection PyUnresolvedReferences
+                    self.cookieJar.save()
+                # noinspection PyUnresolvedReferences
+                self.cookieJar.load()
+                self.cookieJarFile = True
+            else:
+                self.cookieJar = cookielib.CookieJar()
+                self.cookieJarFile = False
 
             # set caching stuff
             if cacheDir:
@@ -327,6 +367,74 @@ class UriHandler:
             except:
                 Logger.Critical("Header info not retreived", exc_info=True)
                 return "", ""
+
+        def SetCookie(self, version=0, name='', value='',
+                      port=None,  # port_specified=False,
+                      domain='',  # domain_specified=True,
+                      domain_initial_dot=False,
+                      path='/',  # path_specified=True,
+                      secure=False,
+                      expires=4102444555,
+                      # discard=False,
+                      # comment=None,
+                      # comment_url=None,
+                      # rest=None,
+                      # rfc2109=False
+                      ):
+            # type: (int, str, str, str, str, bool, str, bool, int) -> cookielib.Cookie
+
+            """ Sets a cookie in the UriHandler cookie jar
+
+            @param version:             the cookie version
+            @param name:                the name of the cookie
+            @param value:               the value of the cookie
+            @param port:                String representing a port or a set of ports (eg. '80', or '80,8080'), or None
+            @param domain:              the domain for which the cookie should be valid
+            @param domain_initial_dot:  if the domain explicitly specified by the server began with a dot ('.').
+            @param path:                the path the cookie is valid for
+            @param secure:              if cookie should only be returned over a secure connection
+            @param expires:             Integer expiry date in seconds since epoch, or None.
+            """
+
+            Logger.Debug("Setting a cookie with this data:\n"
+                         "name:   '%s'\n"
+                         "value:  '%s'\n"
+                         "domain: '%s'\n"
+                         "path:   '%s'",
+                         name, value, domain, path)
+            c = cookielib.Cookie(version=version, name=name, value=value,
+                                 port=port, port_specified=port is not None,
+                                 domain=domain, domain_specified=domain is not None,
+                                 domain_initial_dot=domain_initial_dot,
+                                 path=path, path_specified=path is not None,
+                                 secure=secure,
+                                 expires=expires,
+                                 discard=False,
+                                 comment=None,
+                                 comment_url=None,
+                                 rest={'HttpOnly': None})  # rfc2109=False)
+            # the rfc2109 parameters is not valid in Python 2.4 (Xbox), so we ommit it.
+            self.cookieJar.set_cookie(c)
+            return c
+
+        # noinspection PyProtectedMember,PyTypeChecker
+        def GetCookie(self, name, domain, path="/", matchStart=False):
+            # type: (str, str, str, bool) -> Optional[cookielib.Cookie]
+            if domain not in self.cookieJar._cookies or path not in self.cookieJar._cookies[domain]:
+                return None
+
+            cookies = self.cookieJar._cookies[domain][path]
+            if not matchStart:
+                if name in cookies:
+                    return cookies[name]
+                return None
+
+            # do a startswith search
+            cookies = filter(lambda c: c.name.startswith(name), cookies.itervalues())
+            if not cookies:
+                return None
+            else:
+                return cookies[0]
 
         def CookieCheck(self, cookieName):
             """Checks if a cookie exists in the CookieJar
@@ -485,7 +593,11 @@ class UriHandler:
                         charSetNeedle = 'charset='
                         charSetIndex = contentType.rfind(charSetNeedle)
                         if charSetIndex > 0:
-                            charSet = contentType[charSetIndex + len(charSetNeedle):]
+                            charSetEndIndex = contentType.find(";", charSetIndex)
+                            if charSetEndIndex > 0:
+                                charSet = contentType[charSetIndex + len(charSetNeedle):charSetEndIndex]
+                            else:
+                                charSet = contentType[charSetIndex + len(charSetNeedle):]
                             Logger.Trace("Found Charset HTML Header: %s", charSet)
                 except:
                     charSet = None
@@ -542,6 +654,9 @@ class UriHandler:
             elif not error:
                 Logger.Info("Url %s was opened successfully", uri)
 
+            if self.cookieJarFile:
+                # noinspection PyUnresolvedReferences
+                self.cookieJar.save()
             return error, canceled, charSet
 
         def __DoCallback(self, progressCallback, blocks, blockSize, totalSize, completed):
@@ -650,6 +765,9 @@ class UriHandler:
             if headOnly:
                 uriOpener.add_handler(headHandler)
 
+            if "Content-Type" in additionalHeaders:
+                uriOpener.add_handler(HttpContentTypeFixHandler(additionalHeaders["Content-Type"]))
+
             # add the compression handler before the cache in the
             # chain. That way we store decompressed data and save
             # cpu time.
@@ -727,6 +845,26 @@ class DnsHTTPSHandler(urllib2.HTTPSHandler):
         """
 
         return self.do_open(DnsHTTPSConnection, req)
+
+
+class HttpContentTypeFixHandler(urllib2.BaseHandler):
+    def __init__(self, contentType):
+        self.contentType = contentType
+        return
+
+    def default_open(self, request):
+        """H andles requests and replaces the Content-Type: application/x-www-form-urlencoded in
+        case we specifed a content-type in the headers
+
+        Returns None
+        """
+
+        # just set the head
+        Logger.Debug("Setting request content type: %s", self.contentType)
+        # headers are .capitalize()-ed in the end
+        request.add_unredirected_header("Content-type", self.contentType)
+        # request.unredirected_hdrs.pop("Content-type", None)
+        return None
 
 
 class HttpHeadHandler(urllib2.BaseHandler):
@@ -969,6 +1107,7 @@ if __name__ == "__main__":
     p = ProxyInfo("8.8.8.8", 8888, "dns")
     p = ProxyInfo("185.37.37.37", 8888, "dns")    # http://unlocator.com/
     p = ProxyInfo("204.12.225.226", 8888, "dns")  # http://proxydns.co/
+    p = ProxyInfo("127.0.0.1", 8888, "http")  # http://proxydns.co/
 
     from helpers.stopwatch import StopWatch
     s = StopWatch("Downloader", logger)
@@ -979,14 +1118,28 @@ if __name__ == "__main__":
     # noinspection PyArgumentEqualDefault
     # handler = UriHandler.CreateUriHandler(cacheDir="c:\\temp\\cache\\", useCompression=True, webTimeOut=30, maxFileNameLength=None)
     handler = UriHandler.CreateUriHandler(useCompression=True, webTimeOut=30, maxFileNameLength=None)
+    handler.SetCookie(name="test", domain=".google.com", value="test")
+    handler.SetCookie(name="test2", domain=".google.com", value="test")
     s.Lap("Created")
-    url = "http://www.google.com"
-    url = "http://www.bbc.co.uk/mediaselector/4/mtis/stream/b043bpcn"
+    url = "https://www.google.com"
+    # url = "http://www.bbc.co.uk/mediaselector/4/mtis/stream/b043bpcn"
     # data = handler.Open("http://download.thinkbroadband.com/5MB.zip", progressCallback=CallBack, proxy=None, bytes=0, params="", referer=None, additionalHeaders=None, noCache=False)
     # data = handler.Download("http://www.google.nl/", "google.html", "c:\\temp", CallBack, proxy=p, params="", referer=None, additionalHeaders=None)
     # print data
     s.Lap("Downloaded")
     data = handler.Open(url, progressCallback=CallBack, proxy=p, maxBytes=0, params="", referer=None, additionalHeaders=None, noCache=False)
     s.Lap("Opened")
+    cs = handler.GetCookie("test", ".google.com")
+    if cs is None:
+        raise Exception("Should not be null")
+    cs = handler.GetCookie("test", ".google.com", matchStart=True)
+    if cs is None:
+        raise Exception("Should not be null")
+    cs = handler.GetCookie("test", ".google.com", path='/test/')
+    if cs is not None:
+        raise Exception("Should not null")
+    cs = handler.GetCookie("test3", ".google.com")
+    if cs is not None:
+        raise Exception("Should be null")
     print data
     logger.CloseLog()

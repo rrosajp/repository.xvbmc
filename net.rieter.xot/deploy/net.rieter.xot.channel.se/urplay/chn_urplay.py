@@ -34,45 +34,78 @@ class Channel(chn_class.Channel):
         self.swfUrl = "http://urplay.se/assets/jwplayer-6.12-17973009ab259c1dea1258b04bde6e53.swf"
 
         # programs
-        programReg = '<a[^>]*data-id="(?<id>\d+)"[^>]*href="/(?<url>[^"]+)"[^>]*>[\w\W]{0,2000}?' \
-                     '<span class="(?<class>\w+)">[\w\W]{0,500}?<h3>(?<title>[^<]+)</h3>\W+' \
-                     '<p[^>]*>(?<description>[^<]+)<'
+        programReg = 'href="/(?<url>[^"]+)"[^>]*>[^<]+</a>\W+<div[^>]+data-id="(?<id>\d+)"[^>]*>' \
+                     '[\w\W]{0,2000}?<span class="(?<class>\w+)">[\w\W]{0,500}?<h3>' \
+                     '(?<title>[^<]+)</h3>\W+<p[^>]*>(?<description>[^<]+)<'
         programReg = Regexer.FromExpresso(programReg)
-        self._AddDataParser(self.mainListUri, matchType=ParserData.MatchExact,
+        self._AddDataParser(self.mainListUri,
+                            name="Show parser with categories",
+                            matchType=ParserData.MatchExact,
                             preprocessor=self.AddCategories,
                             parser=programReg, creator=self.CreateEpisodeItem)
 
+        categoryProgramReg = '<article class="program">\W*<a[^>]*href="/(?<url>[^"]+/' \
+                             '(?<id>\d+)-[^"]+)"[^>]*>[\w\W]{0,2000}?<span class="(?<class>\w+)">' \
+                             '[\w\W]{0,500}?<h3>(?<title>[^<]+)</h3>\W+<p[^>]*>(?<subtitle>[^<]*)' \
+                             '</p>\W*<p[^>]*>(?<description>[^<]*)</p>'
+        categoryProgramReg = Regexer.FromExpresso(categoryProgramReg)
+        self._AddDataParser("http://urplay.se/sok?play_category=",
+                            name="Category show parser",
+                            matchType=ParserData.MatchStart,
+                            parser=categoryProgramReg,
+                            creator=self.CreateEpisodeItem)
+
+        # Categories
+        catReg = '<a[^>]+href="(?<url>[^"]+)">\W*<img[^>]+data-src="(?<thumburl>[^"]+)' \
+                 '"[^>]*>\W*<span>(?<title>[^<]+)<'
+        catReg = Regexer.FromExpresso(catReg)
+        self._AddDataParser("http://urplay.se/", name="Category parser",
+                            matchType=ParserData.MatchExact,
+                            parser=catReg,
+                            creator=self.CreateCategory)
+
         # videos
-        videoItemRegex = '<li[^>]*>\W+<a[^>]*(?:data-id="(?<id2>\d+)")?[^>]*href="/(?<url>\w+/' \
-                         '(?<id>\d+)[^"]+)"[^>]*>[\w\W]{0,2000}?<h3>(?<title>[^<]+)</h3>\W+' \
-                         '<p[^>]*>(?<serie>[^<]+)</p>\W+<p[^>]*>(?<description>[^<]+)<'
+        videoItemRegex = 'href="/(?<url>\w+/(?<id>\d+)[^"]+)[^>]*>[^<]+</a>\W*<div[^>]*>\W*' \
+                         '<figure[^>]*>\W+<span[^<]+[^>]*>\W+<img[^>]+data-src="(?<thumb>[^"]+)"' \
+                         '\W+<span[^>]*class="(?<type>[^"]+)"[^>]*>[\w\W]{0,500}?<h3>' \
+                         '(?<title>[^<]+)</h3>\W+<p[^>]*>(?<serie>[^<]+)</p>\W*<p[^>]+>' \
+                         '(?<description>[^<]+)'
         videoItemRegex = Regexer.FromExpresso(videoItemRegex)
+        singleVideoRegex = '<figure[^>]*>\W+<meta \w+="name" content="(?:[^:]+: )?(?<title>[^"]+)' \
+                           '"[^>]*>\W*<meta \w+="description" content="(?<description>[^"]+)"' \
+                           '[^>]*>\W*<meta \w+="url" content="(?:[^"]+/(?<url>\w+/' \
+                           '(?<id>\d+)[^"]+))"[^>]*>\W*<meta \w+="thumbnailURL[^"]+" ' \
+                           'content="(?<thumbnail>[^"]+)"[^>]*>\W+<meta \w+="uploadDate" ' \
+                           'content="(?<date>[^"]+)"'
+        singleVideoRegex = Regexer.FromExpresso(singleVideoRegex)
         self._AddDataParser("http://urplay.se/sok?product_type=program",
                             parser=videoItemRegex, preprocessor=self.GetVideoSection,
                             creator=self.CreateVideoItemWithSerie, updater=self.UpdateVideoItem)
+
         self._AddDataParser("*", parser=videoItemRegex, preprocessor=self.GetVideoSection,
                             creator=self.CreateVideoItem, updater=self.UpdateVideoItem)
-
-        # pages
-        self.pageNavigationRegex = '<a href="([^"]+page=)(\d+)"[^>]*>\d+</a>'
-        self.pageNavigationRegexIndex = 1
-        self._AddDataParser("*", parser=self.pageNavigationRegex, creator=self.CreatePageItem)
+        self._AddDataParser("*", parser=singleVideoRegex, preprocessor=self.GetVideoSection,
+                            creator=self.CreateSingleVideoItem, updater=self.UpdateVideoItem)
 
         self.mediaUrlRegex = "urPlayer.init\(([^<]+)\);"
 
         #===============================================================================================================
         # non standard items
-        self.categoryName = ""
-        self.currentUrlPart = ""
-        self.currentPageUrlPart = ""
+        self.__videoItemFound = False
 
         #===============================================================================================================
         # Test cases:
         #   Anaconda Auf Deutch : RTMP, Subtitles
-        #   Kunskapsdokumentar: folders, pages
 
         # ====================================== Actual channel setup STOPS here =======================================
         return
+
+    def CreateCategory(self, resultSet):
+        if not resultSet['thumburl'].startswith("http"):
+            resultSet['thumburl'] = "%s/%s" % (self.baseUrl, resultSet["thumburl"])
+
+        resultSet["url"] = "%s&rows=1000&start=0" % (resultSet["url"],)
+        return self.CreateFolderItem(resultSet)
 
     def AddCategories(self, data):
         """Performs pre-process actions for data processing
@@ -100,7 +133,8 @@ class Channel(chn_class.Channel):
             # "\a.: Mest spelade :.": "http://urplay.se/Mest-spelade",
             "\a.: Mest delade :.": "http://urplay.se/sok?product_type=program&query=&view=most_viewed&rows=%s&start=0" % (maxItems, ),
             "\a.: Senaste :.": "http://urplay.se/sok?product_type=program&query=&view=latest&rows=%s&start=0" % (maxItems, ),
-            "\a.: Sista chansen :.": "http://urplay.se/sok?product_type=program&query=&view=default&rows=%s&start=0" % (maxItems, )
+            "\a.: Sista chansen :.": "http://urplay.se/sok?product_type=program&query=&view=default&rows=%s&start=0" % (maxItems, ),
+            "\a.: Kategorier :.": "http://urplay.se/"
         }
 
         for cat in categories:
@@ -155,7 +189,7 @@ class Channel(chn_class.Channel):
         Logger.Info("Performing Pre-Processing")
         items = []
 
-        data = data[:data.find('<section id="related">')]
+        data = data[:data.find('<h2>Relaterade</h2>')]
         Logger.Debug("Pre-Processing finished")
         return data, items
 
@@ -186,6 +220,13 @@ class Channel(chn_class.Channel):
             item.name = "%s - %s" % (resultSet["serie"], item.name)
         return item
 
+    def CreateSingleVideoItem(self, resultSet):
+        """ If no items were found, we should find the main item on the page. """
+
+        if self.__videoItemFound:
+            return None
+        return self.CreateVideoItem(resultSet)
+
     def CreateVideoItem(self, resultSet):
         """Creates a MediaItem of type 'video' using the resultSet from the regex.
 
@@ -209,7 +250,6 @@ class Channel(chn_class.Channel):
         # Logger.Trace(resultSet)
 
         title = resultSet["title"]
-        serie = resultSet["serie"]
         url = "%s/%s" % (self.baseUrl, resultSet["url"])
         thumb = "http://assets.ur.se/id/%(id)s/images/1_l.jpg" % resultSet
         item = mediaitem.MediaItem(title, url)
@@ -219,6 +259,8 @@ class Channel(chn_class.Channel):
         item.fanart = self.parentItem.fanart
         item.icon = self.icon
         item.complete = False
+
+        self.__videoItemFound = True
         return item
 
     def UpdateVideoItem(self, item):
@@ -347,12 +389,17 @@ class Channel(chn_class.Channel):
             language = caption["label"]
             default = caption["default"]
             url = caption["file"]
+            if url.startswith("//"):
+                url = "http:%s" % (url, )
             Logger.Debug("Found subtitle language: %s [Default=%s]", language, default)
             if "Svenska" in language:
                 Logger.Debug("Selected subtitle language: %s", language)
                 fileName = caption["file"]
                 fileName = fileName[fileName.rindex("/") + 1:] + ".srt"
-                subtitle = subtitlehelper.SubtitleHelper.DownloadSubtitle(url, fileName, "ttml", proxy=self.proxy)
+                if url.endswith("vtt"):
+                    subtitle = subtitlehelper.SubtitleHelper.DownloadSubtitle(url, fileName, "webvtt", proxy=self.proxy)
+                else:
+                    subtitle = subtitlehelper.SubtitleHelper.DownloadSubtitle(url, fileName, "ttml", proxy=self.proxy)
                 break
         part.Subtitle = subtitle
 
