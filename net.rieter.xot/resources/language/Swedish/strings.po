@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
-"POT-Creation-Date: 2016-01-10 22:53+0000\n"
+"POT-Creation-Date: 2016-12-16 21:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
@@ -59,7 +59,7 @@ msgstr "Kanaler"
 
 msgctxt "#30011"
 msgid "Requires restart of Retrospect to take effect."
-msgstr "Omstart av Retrospect krävs."
+msgstr "Omstart av Retrospect krävs"
 
 msgctxt "#30012"
 msgid "Other"
@@ -90,12 +90,12 @@ msgid "Date"
 msgstr "Datum"
 
 msgctxt "#30019"
-msgid "Show DRM warning"
-msgstr "Show DRM Warning"
+msgid "Show DRM/Paid warning before playback"
+msgstr "Visa DRM-varningar"
 
 msgctxt "#30020"
 msgid "Maximum stream bitrate"
-msgstr "Högsta strömbits-hastighet"
+msgstr "Högsta strömbitshastighet"
 
 msgctxt "#30021"
 msgid "Subtitle mode"
@@ -171,7 +171,7 @@ msgstr "Kanaler"
 
 msgctxt "#30041"
 msgid "Available after running Retrospect for the first time."
-msgstr "Tillgängligt efter du startat Retrospect för första gången."
+msgstr "Tillgängligt efter att du startat Retrospect för första gången."
 
 msgctxt "#30042"
 msgid "Enabled"
@@ -191,7 +191,7 @@ msgstr "Danska"
 
 msgctxt "#30046"
 msgid "DRM/Geo Location/Premium filters"
-msgstr "DRM/Geo Location/Premium filters"
+msgstr "DRM/Geo Plats/Premium-filter"
 
 msgctxt "#30047"
 msgid "German"
@@ -207,11 +207,11 @@ msgstr "Uitzendinggemist.nl-inställningar"
 
 msgctxt "#30050"
 msgid "Cache path"
-msgstr "Buffert-sökväg"
+msgstr "Sökväg för buffert"
 
 msgctxt "#30051"
 msgid "Cleanup cache after # days (0=Streaming Playback)"
-msgstr "Töm bufferten efter # dagar (0=Ingen buffert)"
+msgstr "Töm bufferten efter # dagar (0=ingen buffert)"
 
 msgctxt "#30052"
 msgid "Send usage statistics"
@@ -222,8 +222,8 @@ msgid "Appearance"
 msgstr "Utseende"
 
 msgctxt "#30054"
-msgid "Change display name (requires XBMC restart)"
-msgstr "Ändra visningsnamn (omstart av XBMC krävs)"
+msgid "Change display name (requires Kodi restart)"
+msgstr "Ändra visningsnamn (omstart av Kodi krävs)"
 
 msgctxt "#30055"
 msgid "Advanced"
@@ -286,8 +286,8 @@ msgid "Channel Settings"
 msgstr "Kanalinställningar"
 
 msgctxt "#30070"
-msgid "Let XBMC determine bitrate if possible"
-msgstr "Låt XBMC välja bästa strömbits-hastighet"
+msgid "Let Kodi determine bitrate if possible"
+msgstr "Låt Kodi välja bästa strömbitshastighet"
 
 msgctxt "#30071"
 msgid "Proxy Configuration"
@@ -299,7 +299,7 @@ msgstr "- Typ"
 
 msgctxt "#30073"
 msgid "- Geo-Locked = º, DRM protected = ^ and Premium = ª."
-msgstr "- Geo-låsta = º, DRM-skyddade = ^ and Premium = ª."
+msgstr "- Geo-låsta = º, DRM-skyddade = ^ och Premium = ª."
 
 msgctxt "#30074"
 msgid "Disabled"
@@ -327,23 +327,23 @@ msgstr "Lokalt IP (0.0.0.0=inaktiverad)"
 
 msgctxt "#30080"
 msgid "Filter DRM protected items"
-msgstr "Filter DRM protected items"
+msgstr "Filtrera DRM-skyddade objekt"
 
 msgctxt "#30081"
 msgid "Filter Premium/Paid items"
-msgstr "Filter Premium/Paid items"
+msgstr "Filtrera premium/betalda objekt"
 
 msgctxt "#30082"
 msgid "Apply filter to"
-msgstr "Apply filter to"
+msgstr "Tilldela filter till"
 
 msgctxt "#30083"
 msgid "Folders & Streams"
-msgstr "Folders & Streams"
+msgstr "Mappar & strömmar"
 
 msgctxt "#30084"
 msgid "Streams Only"
-msgstr "Streams Only"
+msgstr "Endast strömmar"
 
 msgctxt "#30085"
 msgid "Geo Location"
@@ -351,7 +351,43 @@ msgstr "GEO-låsta"
 
 msgctxt "#30086"
 msgid "Hide Fanart"
-msgstr "Göm Fanart"
+msgstr "Dölj fanart"
+
+msgctxt "#30087"
+msgid "Mix folders and streams while sorting"
+msgstr "Blanda mappar och strömmar vid sorteringen"
+
+msgctxt "#30088"
+msgid "Finnish"
+msgstr "Finska"
+
+msgctxt "#30089"
+msgid "Password Vault"
+msgstr "Lösenordsskydd"
+
+msgctxt "#30090"
+msgid "The 'Password Vault' protects stored password with encryption using a PIN."
+msgstr "Lösenordet skyddar lagrade lösenord krypterat med hjälp av en kod."
+
+msgctxt "#30091"
+msgid "Change Vault Pin"
+msgstr "Ändra koden"
+
+msgctxt "#30092"
+msgid "Reset Vault"
+msgstr "Återställ alla koder"
+
+msgctxt "#30093"
+msgid "Password"
+msgstr "Lösenord"
+
+msgctxt "#30094"
+msgid "Username"
+msgstr "Användarnamn"
+
+msgctxt "#30095"
+msgid "Show Cloaked Items"
+msgstr "Visa dolda objekt"
 
 msgctxt "#30100"
 msgid "None"
@@ -388,6 +424,10 @@ msgstr "Teknik"
 msgctxt "#30108"
 msgid "Other"
 msgstr "Andra"
+
+msgctxt "#30199"
+msgid "10"
+msgstr "10"
 
 msgctxt "#30200"
 msgid "50"
@@ -435,7 +475,7 @@ msgstr "Lägg till"
 
 msgctxt "#30505"
 msgid "Hide"
-msgstr "Göm"
+msgstr "Dölj"
 
 msgctxt "#30506"
 msgid "Remove"
@@ -567,11 +607,11 @@ msgstr "Rensar buffertmappen"
 
 msgctxt "#30538"
 msgid "The selected live stream has not yet|begun."
-msgstr "Den valda LIVE-strömmen gick inte|att spela upp."
+msgstr "Den valda live-strömmen gick inte|att spela upp."
 
 msgctxt "#30539"
 msgid "Live stream"
-msgstr "LIVE-sändning"
+msgstr "Live-sändning"
 
 msgctxt "#30540"
 msgid "Geo-Locked"
@@ -615,40 +655,100 @@ msgstr "Kunde inte ta emot programlistan."
 
 msgctxt "#30550"
 msgid "No episodes found for the selected item."
-msgstr "Det valda avsnittet gick inte att spela upp."
+msgstr "Hittade inga program eller avsnitt."
 
 msgctxt "#30551"
 msgid "Today"
 msgstr "Idag"
 
 msgctxt "#30552"
-msgid "Yesterdat"
+msgid "Yesterday"
 msgstr "Igår"
 
 msgctxt "#30553"
 msgid "Day before yesterday"
-msgstr "Dagen före igår"
+msgstr "I förrgår"
 
 msgctxt "#30554"
 msgid "DRM Protection"
-msgstr "DRM Protection"
+msgstr "DRM-skydd"
 
 msgctxt "#30555"
-msgid "The selected item is DRM protected and might not|play on Kodi."
-msgstr "The selected item is DRM protected and|might not play on Kodi."
+msgid "The selected item is DRM protected and might not play on Kodi."
+msgstr "Valt objekt är DRM-skyddat och|kanske inte går att spela upp|i Kodi."
 
 msgctxt "#30556"
 msgid "Initialising channel(s)."
-msgstr "Initialising channel(s)"
+msgstr "Initierar kanal(er)"
 
 msgctxt "#30557"
 msgid "Channels have been updated or installed. Performing first time actions. This could take some time."
-msgstr "Channels have been updated or installed. Performing first time actions. This could take some time."
+msgstr "Kanaler har blivit uppdaterade eller installerade. Utför|förstagångsåtgärder. Detta kan ta en stund."
 
 msgctxt "#30558"
 msgid "Fetching Textures"
-msgstr "Fetching Textures"
+msgstr "Hämtar texturer"
 
 msgctxt "#30559"
 msgid "Fetching missing textures. This could take some time depending on the internet and system speed."
-msgstr "Fetching missing textures. This could take some time depending on the internet and system speed."
+msgstr "Hämtar saknade texturer. Detta kan ta en stund beroende på internet och systemets hastighet."
+
+msgctxt "#30560"
+msgid "Paid video"
+msgstr "Betalvideo"
+
+msgctxt "#30561"
+msgid "The selected item is not free and might not play on Kodi."
+msgstr "Valt objekt är inte gratis och kanske inte går att spela upp i Kodi."
+
+msgctxt "#30562"
+msgid "Username and/or password not set in Add-on settings"
+msgstr "Användarnamn och/eller lösenord har inte angivits i tilläggsinställningarna"
+
+msgctxt "#30563"
+msgid "Cloak Item"
+msgstr "Dölj objekt"
+
+msgctxt "#30564"
+msgid "Un-Cloak Item"
+msgstr "Visa dolt objekt"
+
+msgctxt "#30565"
+msgid "(Un-)Cloaking items"
+msgstr "Dolda objekt"
+
+msgctxt "#30566"
+msgid "To un-cloak an item, configure Retrospect to show cloaked items first. Then un-cloak them via the context menu."
+msgstr "För att visa dolda objekt igen, ställ in Retrospect att först visa dolda objekt. Använd sedan innehållsmenyn för att visa dolda objekt."
+
+msgctxt "#30590"
+msgid "Set a new Retrospect PIN"
+msgstr "Ange en ny kod för Retrospect"
+
+msgctxt "#30591"
+msgid "No Retrospect PIN specified"
+msgstr "Ingen kod angiven för Retrospect"
+
+msgctxt "#30592"
+msgid "Repeat the new Retrospect PIN"
+msgstr "Repetera den nya koden för Retrospect"
+
+msgctxt "#30593"
+msgid "PINs don't match"
+msgstr "Koderna matchade inte"
+
+msgctxt "#30594"
+msgid "Specify value for setting: '%s'"
+msgstr "Ange ett värde för inställning: '%s'"
+
+msgctxt "#30595"
+msgid "Input Retrospect PIN"
+msgstr "Ange koden för Retrospect"
+
+msgctxt "#30596"
+msgid "Incorrect Retrospect PIN specified"
+msgstr "Felaktig kod angiven för Retrospect"
+
+msgctxt "#30597"
+msgid "Resetting the vault will invalidate all existing encrypted values. Are you sure?"
+msgstr "Om du återställer koden går alla sparade inloggningar förlorade. Är du säker?"

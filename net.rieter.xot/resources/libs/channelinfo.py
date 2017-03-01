@@ -49,7 +49,9 @@ class ChannelInfo:
 
         # set the path info
         self.path = os.path.dirname(path)
-        self.moduleName = os.path.splitext(os.path.basename(path))[0]
+        pathParts = path.split(os.sep)
+        self.moduleName = os.path.splitext(pathParts[-1])[0]
+        self.id = "%s.%s" % (pathParts[-3], pathParts[-2])
 
         self.channelName = name
         self.channelCode = channelCode
@@ -71,6 +73,7 @@ class ChannelInfo:
 
         self.icon = icon
         self.fanart = fanart
+        self.version = "x.x.x.x"
         return
 
     def GetChannel(self):
@@ -135,11 +138,13 @@ class ChannelInfo:
         """Returns a string representation of the current channel."""
 
         if self.channelCode is None:
-            return "%s [%s, %s, %s] (Order: %s)" % (self.channelName, self.language, self.category,
-                                                    self.guid, self.sortOrderPerCountry)
+            return "%s [%s-%s, %s, %s, %s] (Order: %s)" % (
+                self.channelName, self.id, self.version, self.language, self.category,
+                self.guid, self.sortOrderPerCountry
+            )
         else:
-            return "%s (%s) [%s, %s, %s] (Order: %s)" % (
-                self.channelName, self.channelCode, self.language,
+            return "%s (%s) [%s-%s, %s, %s, %s] (Order: %s)" % (
+                self.channelName, self.channelCode, self.id, self.version, self.language,
                 self.category, self.guid, self.sortOrderPerCountry
             )
 
@@ -204,7 +209,7 @@ class ChannelInfo:
         return TextureHandler.Instance().GetTextureUri(self, image)
 
     @staticmethod
-    def FromJson(path):
+    def FromJson(path, version="x.x.x.x"):
         channelInfos = []
         # Logger.Trace("Using JSON reader for %s", path)
 
@@ -219,7 +224,7 @@ class ChannelInfo:
             settings = json.GetValue("settings")
         else:
             settings = []
-        Logger.Debug("Found %s channels and %s settings", len(channels), len(settings))
+        Logger.Debug("Found %s channels and %s settings in %s", len(channels), len(settings), path)
 
         for channel in channels:
             channelInfo = ChannelInfo(channel["guid"],
@@ -237,6 +242,7 @@ class ChannelInfo:
                                       channel.get("fanart", None))
             channelInfo.firstTimeMessage = channel.get("message", None)
             channelInfo.settings = settings
+            channelInfo.version = version
 
             # validate a bit
             if channelInfo.channelCode == "None":

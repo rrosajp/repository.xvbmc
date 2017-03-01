@@ -67,6 +67,13 @@ class LanguageHelper:
     ErrorNoEpisodes = 30550
     DrmTitle = 30554
     DrmText = 30555
+    PaidTitle = 30560
+    PaidText = 30561
+    MissingCredentials = 30562
+    CloakItem = 30563
+    UnCloakItem = 30564
+    CloakFirstTime = 30565
+    CloakMessage = 30566
 
     Active = 30068
     ShowChannelSettings = 30069
@@ -74,6 +81,16 @@ class LanguageHelper:
     InitChannelText = 30557
     FetchTexturesTitle = 30558
     FetchTexturesText = 30559
+
+    VaultNewPin = 30590
+    VaultNoPin = 30591
+    VaultRepeatPin = 30592
+    VaultPinsDontMatch = 30593
+    VaultSpecifySetting = 30594
+    VaultInputPin = 30595
+    VaultIncorrectPin = 30596
+    VaultResetConfirm = 30597
+    VaultReset = 30092
 
     __Categories = {"None": 30100,
                     "Regional": 30101,

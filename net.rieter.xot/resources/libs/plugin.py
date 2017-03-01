@@ -1,3 +1,4 @@
+# coding=utf-8
 #===============================================================================
 # LICENSE Retrospect-Framework - CC BY-NC-ND
 #===============================================================================
@@ -33,13 +34,12 @@ try:
     from xbmcwrapper import XbmcWrapper, XbmcDialogProgressWrapper, XbmcDialogProgressBgWrapper
     from environments import Environments
     from initializer import Initializer
-    from updater import Updater
     from favourites import Favourites
     from mediaitem import MediaItem
-    from helpers.channelimporter import ChannelImporter
+    from helpers.channelimporter import ChannelIndex
     from helpers.languagehelper import LanguageHelper
     from helpers.htmlentityhelper import HtmlEntityHelper
-    from helpers import stopwatch
+    from helpers.stopwatch import StopWatch
     from helpers.statistics import Statistics
     from helpers.sessionhelper import SessionHelper
     from textures import TextureHandler
@@ -74,6 +74,11 @@ class Plugin:
         self.actionListFolder = "listfolder".lower()                    # : Action used to list a folder
         self.actionListCategory = "listcategory"                        # : Action used to show the channels from a category
         self.actionConfigureChannel = "configurechannel"                # : Action used to configure a channel
+        self.actionSetEncryptionPin = "changepin"                       # : Action used for setting an application pin
+        self.actionSetEncryptedValue = "encryptsetting"                 # : Action used for setting an application pin
+        self.actionResetVault = "resetvault"                            # : Action used for resetting the vault
+        self.actionCloak = "cloak"                                      # : Action used for cloaking
+        self.actionUnCloak = "uncloak"                                  # : Action used for uncloaking
 
         self.keywordPickle = "pickle".lower()                           # : Keyword used for the pickle item
         self.keywordAction = "action".lower()                           # : Keyword used for the action item
@@ -81,6 +86,11 @@ class Plugin:
         self.keywordChannelCode = "channelcode".lower()                 # : Keyword used for the channelcode
         self.keywordCategory = "category"                               # : Keyword used for the category
         self.keywordRandomLive = "rnd"                                  # : Keyword used for randomizing live items
+        self.keywordSettingId = "settingid"                             # : Keyword used for setting an encrypted setting
+        self.keywordSettingActionId = "settingactionid"                 # : Keyword used for passing the actionid for the encryption
+        self.keywordSettingName = "settingname"                         # : Keyword used for setting an encrypted settings display name
+        self.keywordSettingTabFocus = "tabfocus"                        # : Keyword used for setting the tabcontrol to focus after changing a setting
+        self.keywordSettingSettingFocus = "settingfocus"                # : Keyword used for setting the setting control to focus after changing a setting
 
         self.pluginName = pluginName
         self.handle = int(handle)
@@ -97,7 +107,10 @@ class Plugin:
         self.params = self.__GetParameters(params)
 
         Logger.Info("*********** Starting %s add-on version %s ***********", Config.appName, Config.version)
-        Logger.Debug("Plugin Params: %s (%s) [handle=%s, name=%s, query=%s]", self.params, len(self.params),
+        Logger.Debug("Plugin Params: %s (%s)\n"
+                     "Handle:      %s\n"
+                     "Name:        %s\n"
+                     "Query:       %s", self.params, len(self.params),
                      self.handle, self.pluginName, params)
 
         # are we in session?
@@ -121,6 +134,7 @@ class Plugin:
 
             # check for updates
             if envCtrl.IsPlatform(Environments.Xbox):
+                from updater import Updater
                 Updater().AutoUpdate()
 
             # check if the repository is available
@@ -163,8 +177,8 @@ class Plugin:
                                  self.channelCode)
 
                     # import the channel
-                    channelRegister = ChannelImporter.GetRegister()
-                    channel = channelRegister.GetSingleChannel(self.channelFile, self.channelCode)
+                    channelRegister = ChannelIndex.GetRegister()
+                    channel = channelRegister.GetChannel(self.channelFile, self.channelCode)
 
                     if channel is not None:
                         self.channelObject = channel
@@ -186,6 +200,42 @@ class Plugin:
                     # no channel needed for these favourites actions.
                     pass
 
+                # ===============================================================================
+                # Vault Actions
+                # ===============================================================================
+                elif self.keywordAction in self.params and \
+                        self.params[self.keywordAction] in \
+                        (
+                            self.actionSetEncryptedValue,
+                            self.actionSetEncryptionPin,
+                            self.actionResetVault
+                        ):
+                    try:
+                        # Import vault here, as it is only used here or in a channel
+                        # that supports it
+                        from vault import Vault
+
+                        action = self.params[self.keywordAction]
+                        if action == self.actionResetVault:
+                            Vault.Reset()
+                            return
+
+                        v = Vault()
+                        if action == self.actionSetEncryptionPin:
+                            v.ChangePin()
+                        elif action == self.actionSetEncryptedValue:
+                            v.SetSetting(self.params[self.keywordSettingId],
+                                         self.params.get(self.keywordSettingName, ""),
+                                         self.params.get(self.keywordSettingActionId, None))
+                            # value = v.GetSetting(self.params[self.keywordSettingId])
+                            # Logger.Critical(value)
+                    finally:
+                        if self.keywordSettingTabFocus in self.params:
+                            AddonSettings.ShowSettings(self.params[self.keywordSettingTabFocus],
+                                                       self.params.get(
+                                                           self.keywordSettingSettingFocus, None))
+                    return
+
                 else:
                     Logger.Critical("Error determining Plugin action")
                     return
@@ -197,7 +247,13 @@ class Plugin:
                     Logger.Critical("Action parameters missing from request. Parameters=%s", self.params)
                     return
 
-                if self.params[self.keywordAction] == self.actionListCategory:
+                if self.params[self.keywordAction] == self.actionCloak:
+                    self.__CloakItem()
+
+                elif self.params[self.keywordAction] == self.actionUnCloak:
+                    self.__UnCloakItem()
+
+                elif self.params[self.keywordAction] == self.actionListCategory:
                     self.ShowChannelList(self.params[self.keywordCategory])
 
                 elif self.params[self.keywordAction] == self.actionConfigureChannel:
@@ -244,7 +300,7 @@ class Plugin:
         """
 
         Logger.Info("Plugin::ShowCategories")
-        channelRegister = ChannelImporter.GetRegister()
+        channelRegister = ChannelIndex.GetRegister()
         categories = channelRegister.GetCategories()
 
         xbmcItems = []
@@ -267,7 +323,7 @@ class Plugin:
             url = self.__CreateActionUrl(None, action=self.actionListCategory, category=category)
             xbmcItems.append((url, xbmcItem, True))
 
-        Logger.Trace(xbmcItems)
+        # Logger.Trace(xbmcItems)
         ok = xbmcplugin.addDirectoryItems(self.handle, xbmcItems, len(xbmcItems))
         xbmcplugin.addSortMethod(handle=self.handle, sortMethod=xbmcplugin.SORT_METHOD_LABEL)
         xbmcplugin.endOfDirectory(self.handle, ok)
@@ -288,7 +344,7 @@ class Plugin:
             Logger.Info("Plugin::ShowChannelList")
         try:
             # only display channels
-            channelRegister = ChannelImporter.GetRegister()
+            channelRegister = ChannelIndex.GetRegister()
             channels = channelRegister.GetChannels(infoOnly=True)
 
             xbmcItems = []
@@ -337,7 +393,7 @@ class Plugin:
             Logger.Info("Showing all favourites")
         else:
             Logger.Info("Showing favourites for: %s", channel)
-        stopWatch = stopwatch.StopWatch("Plugin Favourites timer", Logger.Instance())
+        stopWatch = StopWatch("Plugin Favourites timer", Logger.Instance())
 
         try:
             ok = True
@@ -387,7 +443,7 @@ class Plugin:
             if self.keywordPickle in self.params:
                 selectedItem = Pickler.DePickleMediaItem(self.params[self.keywordPickle])
 
-            watcher = stopwatch.StopWatch("Plugin ProcessFolderList", Logger.Instance())
+            watcher = StopWatch("Plugin ProcessFolderList", Logger.Instance())
             episodeItems = self.channelObject.ProcessFolderList(selectedItem)
             watcher.Lap("Class ProcessFolderList finished")
 
@@ -498,13 +554,17 @@ class Plugin:
         try:
             item = Pickler.DePickleMediaItem(self.params[self.keywordPickle])
 
-            if item.isDrmProtected and AddonSettings.ShowDrmWarning():
-                Logger.Debug("Showing DRM Warning message")
-                title = LanguageHelper.GetLocalizedString(LanguageHelper.DrmTitle)
-                message = LanguageHelper.GetLocalizedString(LanguageHelper.DrmText)
-                XbmcWrapper.ShowDialog(title, message)
-            elif item.isDrmProtected:
-                Logger.Debug("DRM Warning message disabled by settings")
+            if (item.isDrmProtected or item.isPaid) and AddonSettings.ShowDrmPaidWarning():
+                if item.isDrmProtected:
+                    Logger.Debug("Showing DRM Warning message")
+                    title = LanguageHelper.GetLocalizedString(LanguageHelper.DrmTitle)
+                    message = LanguageHelper.GetLocalizedString(LanguageHelper.DrmText)
+                    XbmcWrapper.ShowDialog(title, message)
+                elif item.isPaid:
+                    Logger.Debug("Showing Paid Warning message")
+                    title = LanguageHelper.GetLocalizedString(LanguageHelper.PaidTitle)
+                    message = LanguageHelper.GetLocalizedString(LanguageHelper.PaidText)
+                    XbmcWrapper.ShowDialog(title, message)
 
             if not item.complete:
                 item = self.channelObject.ProcessVideoItem(item)
@@ -690,37 +750,35 @@ class Plugin:
 
         """
 
-        sortAlgorthim = AddonSettings.GetSortAlgorithm()
-
-        if sortAlgorthim == "date":
-            # if we had a list, check it for dates. Else assume that there are no dates!
-            if items is not None:
-                hasDates = len(filter(lambda i: i.HasDate(), items)) > 0
-            else:
-                hasDates = True
-
-            if hasDates:
-                Logger.Debug("Sorting method default: Dates")
-                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_DATE)
-                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_LABEL)
-                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_UNSORTED)
-            else:
-                Logger.Debug("Sorting method default: Dates, but no dates are available, sorting by name")
-                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_LABEL)
-                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_DATE)
-                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_UNSORTED)
-
-        elif sortAlgorthim == "name":
-            Logger.Debug("Sorting method default: Names")
-            xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_LABEL)
-            xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_DATE)
-            xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_UNSORTED)
-
+        if AddonSettings.MixFoldersAndVideos():
+            labelSortMethod = xbmcplugin.SORT_METHOD_LABEL_IGNORE_FOLDERS
         else:
-            Logger.Debug("Sorting method default: None")
-            xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_UNSORTED)
-            xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_LABEL)
-            xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_DATE)
+            labelSortMethod = xbmcplugin.SORT_METHOD_LABEL
+
+        if items:
+            hasDates = len(filter(lambda i: i.HasDate(), items)) > 0
+            if hasDates:
+                Logger.Debug("Sorting method: Dates")
+                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_DATE)
+                xbmcplugin.addSortMethod(handle=handle, sortMethod=labelSortMethod)
+                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_TRACKNUM)
+                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_UNSORTED)
+                return
+
+            hasTracks = len(filter(lambda i: i.HasTrack(), items)) > 0
+            if hasTracks:
+                Logger.Debug("Sorting method: Tracks")
+                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_TRACKNUM)
+                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_DATE)
+                xbmcplugin.addSortMethod(handle=handle, sortMethod=labelSortMethod)
+                xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_UNSORTED)
+                return
+
+        Logger.Debug("Sorting method: Default (Label)")
+        xbmcplugin.addSortMethod(handle=handle, sortMethod=labelSortMethod)
+        xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_DATE)
+        xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_TRACKNUM)
+        xbmcplugin.addSortMethod(handle=handle, sortMethod=xbmcplugin.SORT_METHOD_UNSORTED)
         return
 
     def __CreateActionUrl(self, channel, action, item=None, category=None):
@@ -831,9 +889,23 @@ class Plugin:
             cmdUrl = self.__CreateActionUrl(channel, action=self.actionAddFavourite, item=item)
             # cmd = "XBMC.RunPlugin(%s)" % (cmdUrl,)
             cmd = "XBMC.Container.Update(%s)" % (cmdUrl,)
-            # Logger.Trace("Adding command: %s", cmd)
+            Logger.Trace("Adding command: %s", cmd)
             addTo = LanguageHelper.GetLocalizedString(LanguageHelper.AddToId)
             contextMenuItems.append(("Retro: %s %s" % (addTo, favs), cmd))
+
+        # Cloaking?
+        if item.type == "folder" and item.url is not None and item.url.startswith("http"):
+            if item.isCloaked:
+                cmdUrl = self.__CreateActionUrl(channel, action=self.actionUnCloak, item=item)
+                cmd = "XBMC.Container.Update(%s)" % (cmdUrl,)
+                Logger.Trace("Adding command: %s", cmd)
+                title = LanguageHelper.GetLocalizedString(LanguageHelper.UnCloakItem)
+            else:
+                cmdUrl = self.__CreateActionUrl(channel, action=self.actionCloak, item=item)
+                cmd = "XBMC.Container.Update(%s)" % (cmdUrl,)
+                Logger.Trace("Adding command: %s", cmd)
+                title = LanguageHelper.GetLocalizedString(LanguageHelper.CloakItem)
+            contextMenuItems.append(("Retro: %s" % (title,), cmd))
 
         # if it was a favourites list, don't add the channel methods as they might be from a different channel
         if channel is None:
@@ -958,3 +1030,22 @@ class Plugin:
         XbmcWrapper.ShowNotification(LanguageHelper.GetLocalizedString(LanguageHelper.ErrorId),
                                      title, XbmcWrapper.Error, 2500)
         return ok
+
+    def __CloakItem(self):
+        from cloaker import Cloaker
+
+        item = Pickler.DePickleMediaItem(self.params[self.keywordPickle])
+        Logger.Info("Cloaking current item: %s", item)
+        c = Cloaker(Config.profileDir, self.channelObject.guid, logger=Logger.Instance())
+        firstTime = c.Cloak(item.url)
+        if firstTime:
+            XbmcWrapper.ShowDialog(LanguageHelper.GetLocalizedString(LanguageHelper.CloakFirstTime),
+                                   LanguageHelper.GetLocalizedString(LanguageHelper.CloakMessage))
+
+    def __UnCloakItem(self):
+        from cloaker import Cloaker
+
+        item = Pickler.DePickleMediaItem(self.params[self.keywordPickle])
+        Logger.Info("Un-Cloaking current item: %s", item)
+        c = Cloaker(Config.profileDir, self.channelObject.guid, logger=Logger.Instance())
+        c.UnCloak(item.url)
