@@ -51,6 +51,42 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
+<addon id="plugin.audio.partyvibe" name="Party Vibe" version="1.0.0" provider-name="XvBMC">
+	<requires>
+		<import addon="xbmc.python" version="2.1.0"/>
+		<import addon="script.module.addon.common" version="2.0.0"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="startaudio.py">
+		<provides>audio</provides>
+	</extension>
+	<extension  point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<summary lang="nl">Party Vibe</summary>
+		<description lang="nl">Party Vibe Radio Addon, several high quality streams.</description>
+		<disclaimer>None</disclaimer>
+		<language>nl</language>
+		<platform>all</platform>
+	</extension>
+</addon>
+
+<addon id="plugin.audio.slam" name="Slam!" version="1.2.0" provider-name="XvBMC">
+	<requires>
+		<import addon="xbmc.python" version="2.1.0"/>
+		<import addon="script.module.addon.common" version="2.0.0"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="startaudio.py">
+		<provides>audio</provides>
+	</extension>
+	<extension  point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<summary lang="nl">Slam!</summary>
+		<description lang="nl">Slam! Addon</description>
+		<disclaimer>None</disclaimer>
+		<language>nl</language>
+		<platform>all</platform>
+	</extension>
+</addon>
+
 <addon id="plugin.program.totalinstaller" name=" [COLOR=dodgerblue]C[/COLOR][COLOR ghostwhite]ommunity[/COLOR] [COLOR=dodgerblue]P[/COLOR][COLOR ghostwhite]ortal[/COLOR]" version="3.2.1" provider-name="noobsandnerds.com">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
