@@ -640,6 +640,26 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
     </extension>
 </addon>
 
+<addon id="plugin.video.voetbal"
+	name="Voetbal"
+	version="1.0.2"
+	provider-name="XvBMC">
+  <requires>
+    <import addon="repository.xvbmc" version="4.0.1"/>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.3.8x"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">XvBMC VOETBAL COLLECTIE</summary>
+    <description lang="en">Voetjebal YouTube Streams</description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon id="plugin.video.wildhitz"
        name="WildHitz"
        version="1.0.2"
