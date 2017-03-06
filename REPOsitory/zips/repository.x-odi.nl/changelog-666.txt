@@ -1,3 +1,2 @@
 [B]Version 666[/B]
-- ONLY MARKED AS BROKEN IN XvBMC REPOsitory -
 + DON'T LIKE IT? Just *remove* our REPOsitory.
