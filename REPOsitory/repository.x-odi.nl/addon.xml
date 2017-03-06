@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.x-odi.nl" name="Xodi Repo (opensource)" version="666" provider-name="Xodi opensource MOD">
+    <extension point="xbmc.addon.repository" name="Kijkalles Repository (opensource)">
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>ONLY MARKED AS USELESS IN XvBMC REPOsitory</summary>
+        <description>ONLY MARKED AS USELESS IN XvBMC REPOsitory: DON'T LIKE IT? Just *remove* our REPOsitory.</description>
+		<disclaimer>ONLY MARKED AS USELESS IN XvBMC REPOsitory: DON'T LIKE IT? Just *remove* our REPOsitory.</disclaimer>
+        <platform>all</platform>
+		<broken>ONLY MARKED AS BROKEN IN XvBMC REPOsitory: DON'T LIKE IT? Just *remove* our REPOsitory.</broken>
+    </extension>
+</addon>

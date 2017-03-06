@@ -103,31 +103,6 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="plugin.video.Allesin1NL!"
-	   name="Alles in [COLOR orange][B]1[/B][/COLOR] NL"
-	   version="1.0.6"
-       provider-name="XvBMC-NL">
-  <requires>
-    <import addon="repository.xvbmc" version="4.0.1"/>
-    <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.addon.common" version="2.0.0"/>
-    <import addon="plugin.video.youtube" version="5.3.8x"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary>diverse (nl) streams</summary>
-    <description>Diverse youtube Streams muziek, NL series/films/docu's, Nl kids, NL Cabaret, XvBMC handleidingen, Vlaams, Nl sport, .:C.T.R.L:. Gaming Room, Cirque Du Soleil, Nl racing, DanceTrippin TV, Van Alles Wat NL, Muziek uit Limburg. Door en Voor de XvBMC community, Heb je zelf een Youtube stream gespot die hier wel in zou passen, meld het ons dan even op onze FB pagina Films/series/muziek chat by XvBMC Nederland© (xbmc nl Dutch)</description>
-	<disclaimer>Alles-in-1-NL more info @ http://bit.ly/XvBMC-NL (USE AT YOUR OWN! RISK)</disclaimer>
-    <platform>all</platform>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-    <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
-    <website>http://bit.ly/XvBMC-NL</website>
-    <source>https://www.facebook.com/groups/XvBMCnederland/</source>
-  </extension>
-</addon>
-
 <addon id="plugin.video.arrowtv"
        name="ARROW.TV"
        version="1.0.2"
@@ -261,31 +236,6 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 	<summary lang="en">Dutch Sport Streams</summary>
     <description lang="en">Dutch Sport Streams</description>
     <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="plugin.video.epicjijbuis"
-	   name=" [COLOR white][B]EPiC[/B][/COLOR] JijBuis [COLOR dimgray]C.B.S.[/COLOR] [COLOR red][8bit][/COLOR]"
-	   version="1.0.4"
-       provider-name="EPiC XvBMC-NL">
-  <requires>
-    <import addon="repository.xvbmc" version="4.0.1"/>
-    <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.addon.common" version="2.0.0"/>
-    <import addon="plugin.video.youtube" version="5.3.8x"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary>[B]EPiC[/B] JijBuis [COLOR white][B]C[/B][/COLOR]an't [COLOR white][B]B[/B][/COLOR]e [COLOR white][B]S[/B][/COLOR]topped</summary>
-    <description>[B]EPiC[/B] JijBuis [COLOR white][B]C[/B][/COLOR]an't [COLOR white][B]B[/B][/COLOR]e [COLOR white][B]S[/B][/COLOR]topped [COLOR red][8bit][/COLOR] [COLOR dimgray]the[B] nr.1 [/B]Kodi music add-on[/COLOR]</description>
-	<disclaimer>[B]EPiC[/B] JijBuis [COLOR white]C.B.S.[/COLOR] [B]-[/B]info @ http://bit.ly/XvBMC-NL (USE AT YOUR OWN! RISK)</disclaimer>
-    <platform>all</platform>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-    <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
-    <website>http://bit.ly/XvBMC-NL</website>
-    <source>http://bit.ly/XvBMC-Pi</source>
   </extension>
 </addon>
 
