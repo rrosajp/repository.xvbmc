@@ -103,6 +103,37 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
+<addon id="plugin.video.Allesin1NL!"
+	   name="Alles in [COLOR orange][B]1[/B][/COLOR] NL [COLOR dimgray](by[/COLOR] [COLOR lime]X[/COLOR][COLOR dimgray]v[/COLOR][COLOR white]BMC[/COLOR] [COLOR dimgray][B]NL[/B])[/COLOR]"
+	   version="1.0.8"
+       provider-name="XvBMC-NL">
+  <requires>
+    <import addon="repository.xvbmc" version="4.0.1"/>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <!--<import addon="script.module.addon.common" version="2.0.0"/>-->
+    <import addon="plugin.video.youtube" version="5.3.8x"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary>diverse (nl) streams</summary>
+    <description>Diverse youtube Streams muziek, NL series/films/docu's, Nl kids, NL Cabaret, XvBMC handleidingen, Vlaams, .:C.T.R.L:. Gaming Room, Cirque Du Soleil, Nl racing, DanceTrippin TV, Van Alles Wat NL, Muziek uit Limburg. Door en Voor de XvBMC community, Heb je zelf een Youtube stream gespot die hier wel in zou passen, meld het ons dan even op onze FB pagina Films/series/muziek chat by XvBMC Nederland (xbmc nl Dutch)</description>
+	<disclaimer>Alles-in-1-NL more info @ http://bit.ly/XvBMC-NL (USE_AT_YOUR_OWN!_RISK!) WAARSCHUWING: PROJECT STOPT DEFINITIEF BIJ OPNIEUW 'COPY/PASTE'.</disclaimer>
+    <platform>all</platform>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
+    <website>http://bit.ly/XvBMC-NL</website>
+    <source>https://www.facebook.com/groups/XvBMCnederland/</source>
+    <news>[B]Version 1.0.8[/B]: +CodeCosmetics +VoOdOo</news>
+    <assets>
+        <icon>icon.png</icon>
+        <fanart>fanart.jpg</fanart>
+        <screenshot></screenshot>
+    </assets>
+  </extension>
+</addon>
+
 <addon id="plugin.video.arrowtv"
        name="ARROW.TV"
        version="1.0.2"
@@ -453,6 +484,26 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
     </extension>
 </addon>
 
+<addon id="plugin.video.sport"
+	name="Sport"
+	version="1.0.3"
+	provider-name="XvBMC">
+  <requires>
+    <import addon="repository.xvbmc" version="4.0.1"/>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="5.3.8x"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">XvBMC SPORT COLLECTIE</summary>
+    <description lang="en">Youtube (Sport) Streams</description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon
   id="plugin.video.SportsDevil"
   version="2017.02.18.NL2"
@@ -480,41 +531,6 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
     <summary>Play videos of different sports streaming sites</summary>
     <description>Play videos of different sports streaming sites</description>
     <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon
-  id="plugin.video.SportsDevilNL"
-  version="2017.02.06.NL"
-  name="SportsDevilNL (no more support)"
-  provider-name="Hubbab3, Jairox, Sattekop, XvBMC, MaxMustermann, Al101">
-  <requires>
-   <import addon="xbmc.python" version="2.14.0"/>
-   <import addon="repository.xvbmc" version="4.0.1"/>
-   <import addon="repository.unofficialsportsdevil" version="1.0.0" optional="true"/>
-   <import addon="script.module.simplejson" />
-   <import addon="script.module.six" />
-   <import addon="script.module.requests" />
-   <import addon="script.module.livestreamer" />
-   <import addon="script.module.pydevd" version="4.4.0" optional="true"/>
-   <import addon="plugin.video.SportsDevil" version="2016.12.31"/>
-  </requires>
-  <extension
-    point="xbmc.python.pluginsource"
-    library="default.py">
-   <provides>video</provides>
-  </extension>
-<!-- <extension											-->
-<!--	point="xbmc.python.script"						-->
-<!--	library="lib/livestreamerXBMCLocalProxy.py" />	-->
-  <extension point="xbmc.addon.metadata">
-    <summary>*No more support SportsDevilNL* use the official addon: https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp.html</summary>
-    <description>*No more support SportsDevilNL* use the official addon: https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp.html (ALL ORIGINAL CREDiTS -2- Hubbab3, Jairox, Sattekop, MaxMustermann, Al101); Unofficial Repo @ https://seo-michael.co.uk/how-to-install-unofficial-sportsdevil-repo/</description>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-	<forum>https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp-57.html</forum>
-	<source>https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp-57.html</source>
-	<website>https://forums.tvaddons.ag/sportsdevil-addon-for-kodi/32238-sportsdevil-plugin-info-librtmp-57.html</website>
     <platform>all</platform>
   </extension>
 </addon>
@@ -590,26 +606,6 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
     </extension>
 </addon>
 
-<addon id="plugin.video.voetbal"
-	name="Voetbal"
-	version="1.0.2"
-	provider-name="XvBMC">
-  <requires>
-    <import addon="repository.xvbmc" version="4.0.1"/>
-    <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.addon.common" version="2.0.0"/>
-    <import addon="plugin.video.youtube" version="5.3.8x"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC VOETBAL COLLECTIE</summary>
-    <description lang="en">Voetjebal YouTube Streams</description>
-    <platform>all</platform>
-  </extension>
-</addon>
-
 <addon id="plugin.video.wildhitz"
        name="WildHitz"
        version="1.0.2"
@@ -678,7 +674,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
   </extension>
 </addon>
 
-<addon id="plugin.video.youtube" name="YouTube" version="5.3.11~alpha4" provider-name="jdf76, bromix">
+<addon id="plugin.video.youtube" name="YouTube" version="5.3.12" provider-name="jdf76, bromix">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0"/>
         <import addon="script.module.requests" version="2.12.4"/>
@@ -690,6 +686,8 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 	<extension point="xbmc.addon.metadata">
         <news>
 [fix/upd] replace custom simple_requests with script.module.requests to resolve ssl and cross-platform issues
+[add] 'Reset access manager' added to Maintenance section, sign out process(available when logged out) to clean up tokens in settings.xml
+[upd] set default for SSL certificate verification to 'true'
         </news>
         <assets>
             <icon>icon.png</icon>
