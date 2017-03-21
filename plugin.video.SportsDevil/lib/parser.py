@@ -21,7 +21,6 @@ import customConversions as cc
 from utils import decryptionUtils as crypt
 from utils import datetimeUtils as dt
 from utils import rowbalance as rb
-#from utils import wasteg as getsaw
 
 from utils.fileUtils import findInSubdirectory, getFileContent, getFileExtension
 from utils.scrapingUtils import findVideoFrameLink, findContentRefreshLink, findRTMP, findJS, findPHP, getHostName, findEmbedPHPLink
@@ -189,7 +188,6 @@ class Parser(object):
                         return False
 
                     msg = 'Remote URL ' + inputList.curr_url + ' opened'
-                    #common.log("JairoXparserPY: " + data)
                     if demystify:
                         msg += ' (demystified)'
                     common.log(msg)
@@ -207,7 +205,6 @@ class Parser(object):
                     items = self.__parseHtml(inputList.curr_url, data, inputList.rules, inputList.skill, inputList.cfg, lItem)
                     count = len(items)
                     common.log('    -> ' + str(count) + ' item(s) found')
-                    
 
                 # find rtmp stream
                 #common.log('Find rtmp stream')
@@ -613,10 +610,7 @@ class Parser(object):
 
             elif command == 'decodeRawUnicode':
                 src = cc.decodeRawUnicode(src)
-
-            elif command == 'decodeHex':
-                src = cc.hex2ascii(src)
-                                
+                
             elif command == 'resolve':
                 src = cc.resolve(src)
             
@@ -627,12 +621,9 @@ class Parser(object):
                 if 'stkey' in item.infos:
                     src = src.replace(item.infos['stkey'],'')
                 src = cc.decodeXppod_hls(src)
-            
-            elif command == 'decodeBCast':
-                src = cc.bcast64(src)
 
             elif command == 'replace':
-                src = cc.replace(params, src)
+                src = cc.replace(item, params, src)
 
             elif command == 'replaceRegex':
                 src = cc.replaceRegex(params, src)
@@ -649,9 +640,6 @@ class Parser(object):
             elif command == 'ifExists':
                 src = cc.ifExists(item, params, src)
 
-            elif command == 'encryptJimey':
-                src = crypt.encryptJimey(params.strip("'").replace('%s', src))
-
             elif command == 'gAesDec':
                 src = crypt.gAesDec(src,item.infos[params])
                 
@@ -661,35 +649,23 @@ class Parser(object):
             elif command == 'm3u8AesDec':
                 src = crypt.m3u8AesDec(src,item.infos[params])
 
-            
             elif command == 'drenchDec':
                 src = crypt.drenchDec(src,item.infos[params])
                 
             elif command == 'onetv':
                 src = crypt.onetv(src)
-            
+
             elif command == 'getCookies':
                 src = cc.getCookies(params, src)
-
-            elif command == 'destreamer':
-                src = crypt.destreamer(params.strip("'").replace('%s', src))
 
             elif command == 'unixTimestamp':
                 src = dt.getUnixTimestamp()
                 
             elif command == 'rowbalance':
                 src = rb.get(src)
-
+                
             elif command == 'simpleToken':
                 src = cc.simpleToken(src)
-
-            #elif command == 'wasteg':
-            #    paramArr = params.split(',')
-            #    ref = str(paramArr[1])
-            #    src = getsaw.compose(ref, src)
-
-            elif command == 'saurusDec':
-                src = crypt.decryptSaurus(src)
 
             elif command == 'urlMerge':
                 src = cc.urlMerge(params, src)
