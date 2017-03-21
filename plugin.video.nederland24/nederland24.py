@@ -32,7 +32,7 @@ addon = xbmcaddon.Addon()
 addonId = addon.getAddonInfo('id')
 
 pluginhandle = int(sys.argv[1])
-settings = xbmcaddon.Addon(id='plugin.video.nederland24')
+settings = xbmcaddon.Addon()
 xbmcplugin.setContent(pluginhandle, 'episodes')
 # xbmcplugin.addSortMethod(pluginhandle, xbmcplugin.SORT_METHOD_EPISODE)  #enable for alphabetic listing
 IMG_DIR = os.path.join(settings.getAddonInfo("path"), "resources", "media")
@@ -40,13 +40,13 @@ IMG_DIR = os.path.join(settings.getAddonInfo("path"), "resources", "media")
 ###
 API_URL = 'http://ida.omroep.nl/app.php/'
 BASE_URL = 'http://livestreams.omroep.nl/live/npo/'
-#USER_AGENT = 'Mozilla/5.0 (iPad; CPU OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B410 Safari/600.1.4'
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12'
+#USER_AGENT = 'Mozilla/5.0 (iPad; CPU OS 10_0 like Mac OS X) AppleWebKit/602.1.38 (KHTML, like Gecko) Version/10.0 Mobile/14A300 Safari/602.1'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8'
 REF_URL = 'http://www.npo.nl'
 TOKEN_URL = 'http://ida.omroep.nl/app.php/auth'
 
 CHANNELS = [
-  
+
   ["NPO 1", "npo_1.png", "LI_NL1_4188102", "Televisiekijken begint op NPO 1. Van nieuws en actualiteiten tot consumentenprogramma's en kwaliteitsdrama. Programma's die over jou en jouw wereld gaan. Met verhalen die je herkent over mensen die zomaar in je straat kunnen wonen. Ook als er iets belangrijks gebeurt, in Nederland of in de wereld, kijk je NPO 1."],
   ["NPO 2", "npo_2.png", "LI_NL2_4188105", "NPO 2 zet je aan het denken. Met programma's die verdiepen en inspireren. Als je wilt weten wat het verhaal achter de actualiteit is. Of als je het eens van een andere kant wilt bekijken. NPO 2 biedt het mooiste van Nederlandse en internationale kunst en cultuur, literatuur, documentaires, art-house films en kwaliteitsdrama."],
   ["NPO 3", "npo_3.png", "LI_NL3_4188107", "Op NPO 3 vind je programma's waar jong Nederland zich in herkent en die je uitdagen een eigen mening te vormen. Met veel aandacht voor nieuwe media en experimentele vernieuwing brengt NPO 3 een gevarieerd aanbod van de dagelijkse actualiteit tot muziek, reizen, human interest, talkshows en documentaires."],
@@ -69,9 +69,9 @@ CHANNELS = [
 
 EVENTCHANNELS = [
 
-  ["NPO Event 1", "npo_placeholder.png", "tvlive/mcr1/mcr1.isml/mcr1.m3u8", "NPO Evenementkanaal 1."], 
-  ["NPO Event 2", "npo_placeholder.png", "tvlive/mcr2/mcr2.isml/mcr2.m3u8", "NPO Evenementkanaal 2."],
-  ["NPO Event 3", "npo_placeholder.png", "tvlive/mcr3/mcr3.isml/mcr3.m3u8", "NPO Evenementkanaal 3."],
+  ["NPO Event 1", "npo_placeholder.png", "LI_NEDERLAND1_221709", "NPO Evenementkanaal 1."],
+  ["NPO Event 2", "npo_placeholder.png", "LI_NEDERLAND2_221711", "NPO Evenementkanaal 2."],
+  ["NPO Event 3", "npo_placeholder.png", "LI_NEDERLAND3_221713", "NPO Evenementkanaal 3."],
 ]
 
 def index():
@@ -103,11 +103,11 @@ def prefer_clca():
     if settings.getSetting("CLCA") == 'true':
         for channel in CHANNELS:
             if channel[0] == "NPO 1":
-                channel[2] = "tvlive/npo1cc/npo1cc.isml/npo1cc.m3u8"
+                channel[2] = "LI_NL1_824154"
             elif channel[0] == "NPO 2":
-                channel[2] = "tvlive/npo2cc/npo2cc.isml/npo2cc.m3u8"
+                channel[2] = "LI_NL2_824153"
             elif channel[0] == "NPO 3":
-                channel[2] = "tvlive/npo3cc/npo3cc.isml/npo3cc.m3u8"
+                channel[2] = "LI_NL3_824151"
 
 
 def resolve_http_redirect(url, depth=0):
@@ -154,15 +154,13 @@ def collect_token():
 def addLink(name, url, mode, iconimage, description):
     u = sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+urllib.quote_plus(mode)
     ok = True
-    liz = xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
-    liz.setInfo(type="Video", infoLabels={"Title": name,
-    	                                  "Plot":description,
-    	                                  "TVShowTitle":name,
-    	                                  "Playcount": 0,
-    	                                  })
-    
-    liz.setProperty("fanart_image", os.path.join(IMG_DIR, "fanart.png"))
+    #liz = xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
+    liz = xbmcgui.ListItem(name)
+    liz.setArt({"thumb":os.path.join(IMG_DIR, iconimage), "fanart":os.path.join(IMG_DIR, "fanart.png")})
+    liz.setInfo('video', {'title': name, 'plot': description, 'tvshowtitle': name,
+                          'playcount': 0})
     liz.setProperty('IsPlayable', 'true')
+
     ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz)
     return ok
 
@@ -196,24 +194,25 @@ def playVideo(url):
         req.add_header('HTTP_NPOPLAYER_VERSION', '7.2.4')
         response = urllib2.urlopen(req)
         page = response.read()
+        xbmc.log("plugin.video.nederland24:: intermediate URL %s" % str(page))
         response.close()
-        videopre = re.search(r'http:(.*?)url', page).group()
+        videopre = re.search(r'(http.*?)\"', page).group(1)
         prostream = (videopre.replace('\/', '/'))
-	intermediateURL=resolve_http_redirect(prostream)
-	xbmc.log("plugin.video.nederland24:: intermediate URL %s" % str(intermediateURL))
-	req = urllib2.Request(intermediateURL)
+        intermediateURL=resolve_http_redirect(prostream)
+        req = urllib2.Request(intermediateURL)
         req.add_header('User-Agent', USER_AGENT)
         req.add_header('Referer', REF_URL)
         req.add_header('HTTP_NPOPLAYER_VERSION', '7.2.4')
         response = urllib2.urlopen(req)
         page = response.read()
-	xbmc.log("plugin.video.nederland24:: Videopage %s" % str(page))
         response.close()
-        videopre = re.search(r'http:(.*?)m3u8', page).group()
+        videopre = re.search(r'(http.*?)\"', page).group(1)
         prostream = (videopre.replace('\/', '/'))
-	xbmc.log("plugin.video.nederland24:: final URL %s" % str(prostream))	
-	
-        finalUrl = resolve_http_redirect(prostream)
+        xbmc.log("plugin.video.nederland24:: final URL %s" % str(prostream))
+        #no longer required
+        #finalUrl = resolve_http_redirect(prostream)
+        #TODO: this is a workaround for unplayable https urls (might be due to some sort of kodi bug on linux, on osx these play fine)
+        finalUrl = (prostream.replace('https', 'http'))
     if finalUrl:
         listitem = xbmcgui.ListItem(path=finalUrl)
         xbmcplugin.setResolvedUrl(pluginhandle, True, listitem)
