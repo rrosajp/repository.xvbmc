@@ -1,7 +1,7 @@
-[B]Version 1.0.8[/B]
+[B]Version 1.0.9[/B]
  + CodeCosmetics+VoOdOo
- !! project stopt definitief indien 'xodi rob' weer gaat kopieren...
- -- klachten en "bedankjes" kan je dan ook daar kwijt...
+ !! HINT !! aan bepaald persoon, bedenk zelf wat ipv 'COPY/PASTE'
+ -- (zelf playlists beheren is toch even wat anders dan kopieren)
 
 [B]Version 1.0.6[/B]
 CodeCosmetics VoOdOo
