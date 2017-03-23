@@ -29,10 +29,9 @@ import downloader, extract
 import sqlite3
 import common as Common
 
-# import xbmcaddon
-# Set the addon environment ##################
-# addon = xbmcaddon.Addon('script.schoonmaak')
-
+AddonID       = 'script.schoonmaak'
+addon_id      = 'script.schoonmaak'
+ADDON         = xbmcaddon.Addon(id=addon_id)
 
 #############   ProgTitle ="XvBMC-NL-Maintenance"          ############
 thumbnailPath = xbmc.translatePath('special://thumbnails');
@@ -80,6 +79,7 @@ def mainMenu():
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]A[/B]bout [COLOR dimgray](over xvbmc & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)[/COLOR]', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]B[/B]uild [COLOR red][B]P[/B]urge[/COLOR] [COLOR dimgray](crap clean your image)[/COLOR]', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]C[/B]onvert Physical (\'home\') Paths to Special', 'url', 15,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]L[/B]og viewer [COLOR dimgray](show \'kodi.log\')[/COLOR]', 'url', 16,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]R[/B]aspberry [COLOR white]Pi[/COLOR] [B]E[/B]xtreme [B]C[/B]rap[B]C[/B]leaner [COLOR dimgray]([B]no[/B] factory reset)[/COLOR]', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC UPDATER(r) [B]&[/B] Development [COLOR darkgreen][I](kodi dev.tools)[/I][/COLOR]', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[COLOR white][B]Back[/B][/COLOR]', 'url', 14,os.path.join(mediaPath, "kmbroom.png"))
@@ -697,6 +697,63 @@ def Fix_Special(url):
 
 
 #######################################################################
+#						ViEWER
+#######################################################################
+
+def xvbmcLog():
+	kodilog = xbmc.translatePath('special://logpath/kodi.log')
+	spmclog = xbmc.translatePath('special://logpath/spmc.log')
+	dbmclog = xbmc.translatePath('special://logpath/spmc.log')
+	kodiold = xbmc.translatePath('special://logpath/kodi.old.log')
+	spmcold = xbmc.translatePath('special://logpath/spmc.old.log')
+	dbmcold = xbmc.translatePath('special://logpath/kodi.old.log')
+				
+	if os.path.exists(spmclog):
+		if os.path.exists(spmclog) and os.path.exists(spmcold):
+			choice = xbmcgui.Dialog().yesno(MainTitle,"[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.","Which \'log file\' would you like to view?","NL: wilt u de oude/vorige- OF actuele log file bekijken?",yeslabel='old/oud',nolabel='current/recent')
+			if choice == 0:
+				f = open(spmclog,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - spmc.log" % "[COLOR white]" + msg + "[/COLOR]")
+			else:
+				f = open(spmcold,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - spmc.old.log" % "[COLOR white]" + msg + "[/COLOR]")
+		else:
+			f = open(spmclog,mode='r'); msg = f.read(); f.close()
+			Common.TextBoxes("%s - spmc.log" % "[COLOR white]" + msg + "[/COLOR]")
+			
+	if os.path.exists(kodilog):
+		if os.path.exists(kodilog) and os.path.exists(kodiold):
+			choice = xbmcgui.Dialog().yesno(MainTitle,"[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.","Which \'log file\' would you like to view?","NL: wilt u de oude/vorige- OF actuele log file bekijken?",yeslabel='old/oud',nolabel='current/recent')
+			if choice == 0:
+				f = open(kodilog,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - kodi.log" % "[COLOR white]" + msg + "[/COLOR]")
+			else:
+				f = open(kodiold,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - kodi.old.log" % "[COLOR white]" + msg + "[/COLOR]")
+		else:
+			f = open(kodilog,mode='r'); msg = f.read(); f.close()
+			Common.TextBoxes("%s - kodi.log" % "[COLOR white]" + msg + "[/COLOR]")
+			
+	if os.path.exists(dbmclog):
+		if os.path.exists(dbmclog) and os.path.exists(dbmcold):
+			choice = xbmcgui.Dialog().yesno(MainTitle,"[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.","Which \'log file\' would you like to view?","NL: wilt u de oude/vorige- OF actuele log file bekijken?",yeslabel='old/oud',nolabel='current/recent')
+			if choice == 0:
+				f = open(dbmclog,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - dbmc.log" % "[COLOR white]" + msg + "[/COLOR]")
+			else:
+				f = open(dbmcold,mode='r'); msg = f.read(); f.close()
+				Common.TextBoxes("%s - dbmc.old.log" % "[COLOR white]" + msg + "[/COLOR]")
+		else:
+			f = open(dbmclog,mode='r'); msg = f.read(); f.close()
+			Common.TextBoxes("%s - dbmc.log" % "[COLOR white]" + msg + "[/COLOR]")
+			
+	if os.path.isfile(kodilog) or os.path.isfile(spmclog) or os.path.isfile(dbmclog):
+		return True
+	else:
+		dialog.ok(MainTitle,'Sorry, No log file was found.','','[COLOR yellow]Sorry, er was geen log file gevonden.[/COLOR]')
+
+
+#######################################################################
 #						GOBACK
 #######################################################################
 
@@ -790,6 +847,9 @@ elif mode==14:
 
 elif mode==15:
 	Fix_Special(url)
+
+elif mode==16:	
+	xvbmcLog()
 
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

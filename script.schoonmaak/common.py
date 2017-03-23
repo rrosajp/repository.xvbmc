@@ -25,9 +25,6 @@
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 import os, sys, time
 
-#addon_id = 'script.schoonmaak'
-#ADDON    = xbmcaddon.Addon(id=addon_id)
-#AddonID  = 'script.schoonmaak'
 HOME      = xbmc.translatePath('special://home/')
 dialog    = xbmcgui.Dialog()
 
