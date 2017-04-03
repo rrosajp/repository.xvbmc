@@ -1,10 +1,10 @@
 #!/usr/bin/python
  
 """
-	IF you copy/paste 'script.schoonmaak' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
+	IF you copy/paste XvBMC's -common.py- please keep the credits -2- (EPiC) XvBMC-NL, Thx.
 """
 
-#   script.schoonmaak (EPiC Kodi Schoonmaak XvBMC Nederland)
+#   EPiC 'common.py script' -4- XvBMC Nederland (XvBMC-NL).
 #
 #   Copyright (C) 2016
 #
@@ -25,8 +25,10 @@
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 import os, sys, time
 
-HOME      = xbmc.translatePath('special://home/')
-dialog    = xbmcgui.Dialog()
+addon    = xbmcaddon.Addon()
+addon_id = addon.getAddonInfo('id')
+dialog   = xbmcgui.Dialog()
+HOME     = xbmc.translatePath('special://home/')
 
 waarschuwing   = '[COLOR=red][B]!!!  WARNING  !!![/B][/COLOR]'
 readme         = 'if you\'re seeing this message read this first[B]:[/B]'
@@ -48,14 +50,20 @@ def killKodi():
     print "Platform: " + str(myplatform)
     if myplatform == 'osx': # OSX
         print "############   try osx force close  #################"
+        try: os._exit(1)
+        except: pass
         try: os.system('killall -9 XBMC')
         except: pass
         try: os.system('killall -9 Kodi')
         except: pass
-        dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'If you\'re seeing this message it means the force close', 'was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.','')
+        dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'If you\'re seeing this message it means the force close', 'was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.','(trying \'reboot\' after OK, else pull power cable.)')
+        try: xbmc.executebuiltin("Reboot")
+        except: pass
     elif myplatform == 'linux': #Linux
         print "############   try linux force close  #################"
-        try: xbmc.executebuiltin("Reboot")
+    #   try: xbmc.executebuiltin("Reboot")
+    #   except: pass
+        try: os._exit(1)
         except: pass
         try: os.system('killall XBMC')
         except: pass
@@ -65,9 +73,13 @@ def killKodi():
         except: pass
         try: os.system('killall -9 kodi.bin')
         except: pass
-        dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'If you\'re seeing this message it means the force close', 'was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.','')
+        dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'If you\'re seeing this message it means the force close', 'was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.','(trying \'reboot\' after OK, else pull power cable.)')
+        try: xbmc.executebuiltin("Reboot")
+        except: pass
     elif myplatform == 'android': # Android  
         print "############   try android force close  #################"
+        try: os._exit(1)
+        except: pass
         try: os.system('adb shell am force-stop org.xbmc.kodi')
         except: pass
         try: os.system('adb shell am force-stop org.kodi')
@@ -86,9 +98,29 @@ def killKodi():
         except : pass
         try : os . system ( 'Process.killProcess(android.os.Process.org.fire,guru());' )
         except : pass
+        try: os.system('adb shell am force-stop com.semperpax.spmc16')
+        except: pass
+        try: os.system('adb shell am force-stop com.spmc16')
+        except: pass            
+        try: os.system('adb shell am force-stop com.semperpax.spmc')
+        except: pass
+        try: os.system('adb shell am force-stop com.spmc')
+        except: pass    
+        try: os.system('adb shell am force-stop uk.droidbox.dbmc')
+        except: pass
+        try: os.system('adb shell am force-stop uk.dbmc')
+        except: pass   
+        try: os.system('adb shell am force-stop com.perfectzoneproductions.jesusboxmedia')
+        except: pass
+        try: os.system('adb shell am force-stop com.jesusboxmedia')
+        except: pass 
         dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'Your system has been detected as Android, you ', '[COLOR=yellow][B]MUST[/COLOR][/B] force close XBMC/Kodi. [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.','Either close using Task Manager (If unsure pull the plug).')
+        try: xbmc.executebuiltin("Reboot")
+        except: pass
     elif myplatform == 'windows': # Windows
         print "############   try windows force close  #################"
+        try: os._exit(1)
+        except: pass
         try:
             os.system('@ECHO off')
             os.system('tskill XBMC.exe')
@@ -106,8 +138,10 @@ def killKodi():
             os.system('TASKKILL /im XBMC.exe /f')
         except: pass
         dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'If you\'re seeing this message it means the force close', 'was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit cleanly via the menu.','Use task manager and NOT ALT F4')
-    else: #ATV
-        print "############   try atv force close  #################"
+    else: #OTHER
+        print "############   try atv force close  #################" #ATV
+        try: os._exit(1)
+        except: pass
         try: os.system('killall AppleTV')
         except: pass
         print "############   try raspbmc force close  #################" #OSMC / Raspbmc
@@ -115,7 +149,9 @@ def killKodi():
         except: pass
         try: os.system('sudo initctl stop xbmc')
         except: pass
-        dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'If you\'re seeing this message it means the force close', 'was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit via the menu.','Your platform could not be detected so just pull the power cable.')    
+        dialog.ok('[COLOR=red][B]WARNING  !!![/COLOR][/B]', 'If you\'re seeing this message it means the force close', 'was unsuccessful. Please force close XBMC/Kodi [COLOR=lime]DO NOT[/COLOR] exit via the menu.','(trying \'reboot\' after OK, else pull power cable.)') 
+        try: xbmc.executebuiltin("Reboot")
+        except: pass		
 
 		
 ##########################
