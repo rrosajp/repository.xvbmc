@@ -25,8 +25,6 @@
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 import os, sys, time
 
-addon    = xbmcaddon.Addon()
-addon_id = addon.getAddonInfo('id')
 dialog   = xbmcgui.Dialog()
 HOME     = xbmc.translatePath('special://home/')
 

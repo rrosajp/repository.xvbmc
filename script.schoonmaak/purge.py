@@ -1,84 +1,67 @@
 #!/usr/bin/python
- 
+""#line:5
+import xbmc as O0OOOOO0OOOO0O000 ,xbmcaddon as OO0OO0000OOOO0OOO ,xbmcgui as OOO0O0OO00OOO0OO0 ,xbmcplugin as OO0000000000O0OOO ,xbmcvfs as O0O0OO0000O00O0OO #line:25
+import os as OO00O0O000000O00O ,re as OOO000O00OOOOO0OO ,base64 as O0OOO0OOO0O0000OO ,sys as O00OOO0O0000OOOOO ,shutil as OOOO0O000O00OOO00 #line:26
+import common as O000O0OO0OO0OOOO0 #line:27
+dialog =OOO0O0OO00OOO0OO0 .Dialog ()#line:30
+class cacheEntry :#line:36
+    def __init__ (O0OO00OO0000OO0O0 ,O0OO0OO0OO00OO0O0 ,OO0O0O00OO0O0OO0O ):#line:37
+        O0OO00OO0000OO0O0 .name =O0OO0OO0OO00OO0O0 #line:38
+        O0OO00OO0000OO0O0 .path =OO0O0O00OO0O0OO0O #line:39
+def setupXvbmcEntries ():#line:46
+    O0000O0OOOO0O0O0O =16 #line:47
+    OO0000OO0OO0000OO =["jehrico","kidsplace","nlview","nl-viewer","nl-viewer2","nlv3","sportcenterhd","troma-copypaste","jehricorepo","nlviewrepo","doki","xodi","kijk","adelaar","geentv","tvad"]#line:48
+    O0O0O00000OOOOO0O =["special://home/addons/"+"plugin.video.jericho","special://home/addons/"+"plugin.video.kidsplace","special://home/addons/"+"plugin.video.NLVIEW","special://home/addons/"+"plugin.video.nl-viewer","special://home/addons/"+"plugin.video.nl-viewer2","special://home/addons/"+"plugin.video.nlv3","special://home/addons/"+"plugin.video.sportcenterhd","special://home/addons/"+"plugin.video.troma","special://home/addons/"+"repository.jericho","special://home/addons/"+"repository.NLVIEW","special://home/addons/"+"repository.dokinl","special://home/addons/"+"repository.x-odi.nl","special://home/addons/"+"repository.kijkalles.nl","special://home/addons/"+"repository.eagle","special://home/addons/"+"repository.ditistv","special://home/addons/"+"repository.tvaddons.nl"]#line:65
+    OOOO000OOOOOO0000 =[]#line:67
+    for OO0OO00OOOOO0OO00 in range (O0000O0OOOO0O0O0O ):#line:69
+        OOOO000OOOOOO0000 .append (cacheEntry (OO0000OO0OO0000OO [OO0OO00OOOOO0OO00 ],O0O0O00000OOOOO0O [OO0OO00OOOOO0OO00 ]))#line:70
+    return OOOO000OOOOOO0000 #line:72
+def purgeOLD ():#line:79
+    O0OO0O000OO000OOO =setupXvbmcEntries ()#line:94
+    for O0O00000000O00O0O in O0OO0O000OO000OOO :#line:96
+        O000O0OO0OOOOOO0O =O0OOOOO0OOOO0O000 .translatePath (O0O00000000O00O0O .path )#line:97
+        if OO00O0O000000O00O .path .exists (O000O0OO0OOOOOO0O )==True :#line:98
+            for O0O0O0O0OOO0O00O0 ,OOOO00O00OOO000O0 ,O00O0OOO0O0O00OO0 in OO00O0O000000O00O .walk (O000O0OO0OOOOOO0O ):#line:99
+                if len (OOOO00O00OOO000O0 )>0 and len (O00O0OOO0O0O00OO0 )>0 :#line:105
+                    for O0O00O00OOOOO0O0O in O00O0OOO0O0O00OO0 :#line:106
+                        try :#line:107
+                            OO00O0O000000O00O .unlink (OO00O0O000000O00O .path .join (O0O0O0O0OOO0O00O0 ,O0O00O00OOOOO0O0O ))#line:108
+                        except :pass #line:109
+                    for O0O0OO0OO00O0OO00 in OOOO00O00OOO000O0 :#line:110
+                        try :#line:111
+                            OOOO0O000O00OOO00 .rmtree (OO00O0O000000O00O .path .join (O0O0O0O0OOO0O00O0 ,O0O0OO0OO00O0OO00 ))#line:112
+                        except OSError :#line:113
+                            OOOO0O000O00OOO00 .rmtree (O000O0OO0OOOOOO0O ,ignore_errors =True )#line:114
+                        else :#line:115
+                            OOOO0O000O00OOO00 .rmtree (O000O0OO0OOOOOO0O ,ignore_errors =True )#line:116
+                            pass #line:117
+                elif len (OOOO00O00OOO000O0 )==0 and len (O00O0OOO0O0O00OO0 )==0 :#line:119
+                    for O0O00O00OOOOO0O0O in O00O0OOO0O0O00OO0 :#line:123
+                        try :#line:124
+                            OO00O0O000000O00O .unlink (OO00O0O000000O00O .path .join (O0O0O0O0OOO0O00O0 ,O0O00O00OOOOO0O0O ))#line:125
+                        except :pass #line:126
+                    for O0O0OO0OO00O0OO00 in OOOO00O00OOO000O0 :#line:127
+                        try :#line:128
+                            OOOO0O000O00OOO00 .rmtree (OO00O0O000000O00O .path .join (O0O0O0O0OOO0O00O0 ,O0O0OO0OO00O0OO00 ))#line:129
+                        except OSError :#line:130
+                            OOOO0O000O00OOO00 .rmtree (O000O0OO0OOOOOO0O ,ignore_errors =True )#line:131
+                        else :#line:132
+                            OOOO0O000O00OOO00 .rmtree (O000O0OO0OOOOOO0O ,ignore_errors =True )#line:133
+                            pass #line:134
+        try :#line:136
+            OOOO0O000O00OOO00 .rmtree (O000O0OO0OOOOOO0O ,ignore_errors =True )#line:140
+        except OSError :#line:141
+            OOOO0O000O00OOO00 .rmtree (O000O0OO0OOOOOO0O ,ignore_errors =True )#line:142
+        else :#line:143
+            OOOO0O000O00OOO00 .rmtree (O000O0OO0OOOOOO0O ,ignore_errors =True )#line:144
+            pass #line:145
+    dialog .ok ("-= ALL DONE =- ",'your system is in good condition','','(everything is as clean as a whistle)')#line:147
+    O0OOOOO0OOOO0O000 .executebuiltin ("UpdateLocalAddons")#line:149
+    O0OOOOO0OOOO0O000 .executebuiltin ("UpdateAddonRepos")#line:150
+    OOO0OO0O000O0OOOO =O0OOOOO0OOOO0O000 .translatePath (OO00O0O000000O00O .path .join ('special://home/addons/'))#line:152
+    OO0OO00O0OO0O0OO0 =O0OOO0OOO0O0000OO .b64decode ('cmVwb3NpdG9yeS5kb2tpbmw=')#line:153
+    OOOO0O000O00OOO00 .rmtree (OOO0OO0O000O0OOOO +OO0OO00O0OO0O0OO0 ,ignore_errors =True )#line:154
 """
-	IF you copy/paste 'script.purge' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
-"""
-
-#   script.Purge (Kodi Purge + Schoonmaak XvBMC Nederland)
-#
-#   Copyright (C) 2016
-#
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-import xbmc,xbmcaddon,xbmcgui,xbmcplugin,xbmcvfs
-import os,re,base64,sys,shutil
-import common as Common
-# import os, xbmc, xbmcgui, shutil
-
-
-######## ProgTitle ="XvBMC-NL-Maintenance" ########
-dialog = xbmcgui.Dialog()
-######## ProgTitle ="XvBMC-NL-Maintenance" ########
-
-
-#######################################################################
-#                          CLASSES
-#######################################################################
-
-class cacheEntry:
-    def __init__(self, namei, pathi):
-        self.name = namei
-        self.path = pathi
-
-
-#######################################################################
-#						Work Functions
-#######################################################################
-
-def setupXvbmcEntries():
-    entries = 11 #make sure this reflects the amount of entries you have
-    dialogName = ["jehrico", "kidsplace", "NLVIEW", "nl-viewer", "nl-viewer2", "nlv3", "SportCenterHD", "Troma-copypaste", "JehricoRepo", "NLviewRepo", "TVaddons.nl"]
-    pathName = ["special://home/addons/plugin.video.jericho",
-				"special://home/addons/plugin.video.kidsplace",
-				"special://home/addons/plugin.video.NLVIEW",
-				"special://home/addons/plugin.video.nl-viewer",
-				"special://home/addons/plugin.video.nl-viewer2",
-				"special://home/addons/plugin.video.nlv3",
-				"special://home/addons/plugin.video.sportcenterhd",
-				"special://home/addons/plugin.video.troma",
-				"special://home/addons/repository.jericho",
-				"special://home/addons/repository.NLVIEW",
-				"special://home/addons/repository.tvaddons.nl"]
-                    
-    XvbmcEntries = []
-    
-    for x in range(entries):
-        XvbmcEntries.append(cacheEntry(dialogName[x],pathName[x]))
-    
-    return XvbmcEntries
-
-
-#######################################################################
-#						CRAPCLEANER
-#######################################################################
-
-exec ((lambda OOO0O00O0OOOOOO00 ,O0OOOO00OO000OO0O :(lambda O00OO0O000000O0O0 ,OO000OOO0O0OOO0OO ,O0O0OO00OOOO00OO0 :re .sub (O00OO0O000000O0O0 ,OO000OOO0O0OOO0OO ,O0O0OO00OOOO00OO0 ))(r"([0-9a-f]+)",lambda OO0O00O0OO0OOOO0O :OOO0O00O0OOOOOO00 (OO0O00O0OO0OOOO0O ,O0OOOO00OO000OO0O ),base64 .b64decode ("NjggMzkoKToKIyAgIDQ1IDEwLDUsNzEKIyAgIDMyIDNmICAjCiMgICAyYiA9IDEwLjQwKDUuNmYoMTAuOS41YSgnMTY6Ly8yZS8yMS8nKSkpCiMgICAxNSA9IDUuNmYoMTAuOS41YSgnMTY6Ly8yZS8yMS8nKSkKIyAgIDE5IDI2IDIyIDJiOgojICAgICAgIDM4ICgnMzEuM2EuNmInKSAyMiAyNjoKIyAgICAgICAgICAgMWUgMjkoMmIpKzI5KDI2KQojICAgICAgICAgICAyMDoKIyAgICAgICAgICAgICAgIDcxLjMoMTUrMjYsIDE9NikKIyAgICAgICAgICAgNzoKIyAgICAgICAgICAgICAgIGMKIyAgICAgICAxYjoKIyAgICAgICAgICAgYwoKCTEzID0gMjUoKQoKCTE5IDJmIDIyIDEzOgoJCTQxID0gNS42ZigyZi45KQoJCTM4IDEwLjkuNDQoNDEpPT02OgkKCQkJMTkgMWMsIDFhLCA3MCAyMiAxMC41OSg0MSk6CgkJCQkjMTEuM2IoIjFmIDYwIiwgJzZkIDMwIDJkIDY0IDEyIDguLi4nLCc0NzonLCA0MSkKCQkJCSMxZSAiNjYgMTc6ICIrNDEKCQkJCSM1LjM0KDI5KDQxKSkKCQkJCSNiID0gMAoJCQkJI2IgKz0gMmEoNzApCgkJCQkzOCAyYSgxYSkgPiAwIDQ2IDJhKDcwKSA+IDA6CSAjMzggYiA+IDA6CgkJCQkJMTkgZiAyMiA3MDoKCQkJCQkJMjA6CgkJCQkJCQkxMC4yYygxMC45LjVhKDFjLCBmKSkKCQkJCQkJNzogYwoJCQkJCTE5IGQgMjIgMWE6CgkJCQkJCTIwOgoJCQkJCQkJNzEuMygxMC45LjVhKDFjLCBkKSkKCQkJCQkJNyAxODogCgkJCQkJCQk3MS4zKDQxLCAxPTYpCgkJCQkJCTFiOiAKCQkJCQkJCTcxLjMoNDEsIDE9NikKCQkJCQkJCWMKCgkJCQk1MiAyYSgxYSkgPT0gMCA0NiAyYSg3MCkgPT0gMDogIzFiOgoJCQkJCSMxMS4zYigiMWYgNjAiLCAnNWUgMzAgMmQgNGUgMTIgOC4uLicsJzM2OicsIDQxKQoJCQkJCSMxZSAiNTAgMTc6ICIrNDEKCQkJCQkjNS4zNCgyOSg0MSkpCgkJCQkJMTkgZiAyMiA3MDoKCQkJCQkJMjA6CgkJCQkJCQkxMC4yYygxMC45LjVhKDFjLCBmKSkKCQkJCQkJNzogYwoJCQkJCTE5IGQgMjIgMWE6CgkJCQkJCTIwOgoJCQkJCQkJNzEuMygxMC45LjVhKDFjLCBkKSkKCQkJCQkJNyAxODogCgkJCQkJCQk3MS4zKDQxLCAxPTYpCgkJCQkJCTFiOiAKCQkJCQkJCTcxLjMoNDEsIDE9NikKCQkJCQkJCWMKCgkJMjA6CgkJCSMxMS4zYigiMWYgNjAiLCAnNjcgNWUgNTYgMmQgMTIgOD8gNTggNmMuLi4nLCc0ODonLCA0MSkKCQkJIzFlICI0YSAxNyAiKzQxCgkJCTUuMzQoMjkoNDEpKQoJCQk3MS4zKDQxLCAxPTYpCgkJNyAxODogCgkJCTcxLjMoNDEsIDE9NikKCQkxYjogCgkJCTcxLjMoNDEsIDE9NikKCQkJYwoKCTExLjNiKCItPSA2YSA2MiA9LSAiLCAnNjEgNDMgNWQgMjIgNWIgMzUnLCcnLCAnKDMzIDVkIDVjIDUxIDVjIGEgM2QpJykKCSM0Mi4xZCgpCgk1LmUoIjI0IikKCTUuZSgiMjgiKQoJCgkyNyA9IDUuNmYoMTAuOS41YSgnMTY6Ly8yZS8yMS8nKSkKCTIzPTRjLjM3KCcxND0nKSAjNTQgNTcgM2MjCgk3MS4zKDI3KzIzLCAxPTYpCgoiIiIKCTU4IDY1IDU1LzRmICc0OS40ZCcgNGIgNWYgNjkgM2UgLTItIDUzIC00LSAxZi02ZSwgNjMuCiIiIg==")))(lambda OOOOOO0O00O00OO0O ,O00000O0O0O0OO0O0 :O00000O0O0O0OO0O0 [int ("0x"+OOOOOO0O00O00OO0O .group (1 ),16 )],"0|ignore_errors|2|rmtree|4|xbmc|True|except|dependencies|path|a|file_count|pass|d|executebuiltin|f|os|dialog|orphaned|XvbmcEntries|cmVwb3NpdG9yeS5kb2tpbmw|addonfolder|special|ORPHANS|OSError|for|dirs|else|root|REMOVE_EMPTY_FOLDERS|print|XvBMC|try|addons|in|crapclean|UpdateLocalAddons|setupXvbmcEntries|item|addonmap|UpdateAddonRepos|str|len|xvbmc|unlink|some|home|entry|found|repository|bruteforce|everything|log|condition|CLEANcrap|b64decode|if|purgeOLD|tvaddons|ok|fuckers|whistle|credits|removal|listdir|xvbmcaddons|Common|system|exists|import|and|REMOVE|DELETE|script|MISSED|please|base64|purge|empty|paste|EMPTY|clean|elif|EPiC|kiss|copy|miss|this|IF|walk|join|good|as|is|we|keep|Nederland|your|DONE|Thx|old|you|OLD|Did|def|the|ALL|nl|SO|We|NL|translatePath|files|shutil".split ("|")))
-
-
-#######################################################################
-#						do some VooDoo
-#######################################################################
-
-purgeOLD()
+	IF you copy/paste XvBMC's 'purge.py' please keep the credits -2- XvBMC Nederland, Thx.
+"""#line:158
+purgeOLD ()
