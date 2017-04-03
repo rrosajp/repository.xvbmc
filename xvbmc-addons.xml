@@ -851,7 +851,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 
 <addon id="script.schoonmaak"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red][B]S[/B][/COLOR]choonmaak/[COLOR red][B]M[/B][/COLOR]aintenance [I][COLOR darkgreen] (kodi schoonmaak)[/COLOR][/I]"
-       version="1.10.21"
+       version="1.10.22"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
@@ -870,7 +870,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
     <forum>http://bit.ly/XvBMC-Pi</forum>
     <website>http://bit.ly/XvBMC-NL</website>
     <source>https://www.fb.com/groups/XvBMCnederland/</source>
-    <news>Krypton improvements v1.10.21</news>
+    <news>Krypton improvements v1.10.22</news>
     <assets>
         <icon>icon.png</icon>
         <fanart>fanart.jpg</fanart>

@@ -77,7 +77,7 @@ def mainMenu():
 	addItem('[B]R[/B]efresh [B]A[/B]ddons[COLOR white]+[/COLOR][B]R[/B]epos', 'url', 7,os.path.join(mediaPath, "kmbroom.png"))
 	addItem('[B]R[/B]emove addons.db', 'url', 8,os.path.join(mediaPath, "thumbs.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]A[/B]bout [COLOR dimgray](over xvbmc & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)[/COLOR]', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
-	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]B[/B]uild [COLOR red][B]P[/B]urge[/COLOR] [COLOR dimgray](crap clean your image)[/COLOR]', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
+	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]B[/B]uild [COLOR red][B]P[/B]urge[/COLOR] [COLOR dimgray]([B]crap clean[/B] your build)[/COLOR]', 'url', 10,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]C[/B]onvert Physical (\'home\') Paths to Special', 'url', 15,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]L[/B]og viewer [COLOR dimgray](show \'kodi.log\')[/COLOR]', 'url', 16,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('[B][COLOR lime]X[/COLOR][/B]vBMC [B]R[/B]aspberry [COLOR white]Pi[/COLOR] [B]E[/B]xtreme [B]C[/B]rap[B]C[/B]leaner [COLOR dimgray]([B]no[/B] factory reset)[/COLOR]', 'url', 6,os.path.join(mediaPath, "xvbmc.png"))
