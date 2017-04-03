@@ -154,24 +154,27 @@ def clearCache():
             file_count = 0
             file_count += len(files)
             if file_count > 0:
-
                 #  dialog = xbmcgui.Dialog()
                 if dialog.yesno("Delete Cache Files", str(file_count) + " files found", "Do you want to delete them?"):
-                
                     for f in files:
                         try:
-                            if (f == "xbmc.log" or f == "xbmc.old.log"): continue
+                        #   if (f == "xbmc.log" or f == "xbmc.old.log"): continue
+                            if (f.endswith(".log")): continue
                             os.unlink(os.path.join(root, f))
                         except:
                             pass
                     for d in dirs:
                         try:
-                            shutil.rmtree(os.path.join(root, d))
+                        #   shutil.rmtree(os.path.join(root, d))
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
                         except:
                             pass
                         
             else:
                 pass
+
     if os.path.exists(tempPath)==True:    
         for root, dirs, files in os.walk(tempPath):
             file_count = 0
@@ -181,58 +184,77 @@ def clearCache():
                 if dialog.yesno("Delete Temp Files", str(file_count) + " files found", "Do you want to delete them?"):
                     for f in files:
                         try:
-                            if (f == "xbmc.log" or f == "xbmc.old.log"): continue
+                        #   if (f == "xbmc.log" or f == "xbmc.old.log"): continue
+                            if (f.endswith(".log")): continue
                             os.unlink(os.path.join(root, f))
                         except:
                             pass
                     for d in dirs:
                         try:
-                            shutil.rmtree(os.path.join(root, d))
+                        #   shutil.rmtree(os.path.join(root, d))
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
                         except:
                             pass
                         
             else:
                 pass
+
     if xbmc.getCondVisibility('system.platform.ATV2'):
         atv2_cache_a = os.path.join('/private/var/mobile/Library/Caches/AppleTV/Video/', 'Other')
-        
         for root, dirs, files in os.walk(atv2_cache_a):
             file_count = 0
             file_count += len(files)
-        
             if file_count > 0:
-
                 #  dialog = xbmcgui.Dialog()
                 if dialog.yesno("Delete ATV2 Cache Files", str(file_count) + " files found in 'Other'", "Do you want to delete them?"):
-                
                     for f in files:
-                        os.unlink(os.path.join(root, f))
+                    #   os.unlink(os.path.join(root, f))
+                        try:
+                            if (f.endswith(".log")): continue
+                            os.unlink(os.path.join(root, f))
+                        except:
+                            pass
                     for d in dirs:
-                        shutil.rmtree(os.path.join(root, d))
+                    #   shutil.rmtree(os.path.join(root, d))
+                        try:
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
+                        except:
+                            pass
                         
             else:
                 pass
-        atv2_cache_b = os.path.join('/private/var/mobile/Library/Caches/AppleTV/Video/', 'LocalAndRental')
-        
+
+        atv2_cache_b = os.path.join('/private/var/mobile/Library/Caches/AppleTV/Video/', 'LocalAndRental')        
         for root, dirs, files in os.walk(atv2_cache_b):
             file_count = 0
             file_count += len(files)
-        
             if file_count > 0:
-
                 #  dialog = xbmcgui.Dialog()
                 if dialog.yesno("Delete ATV2 Cache Files", str(file_count) + " files found in 'LocalAndRental'", "Do you want to delete them?"):
-                
                     for f in files:
-                        os.unlink(os.path.join(root, f))
+                    #   os.unlink(os.path.join(root, f))
+                        try:
+                            if (f.endswith(".log")): continue
+                            os.unlink(os.path.join(root, f))
+                        except:
+                            pass
                     for d in dirs:
-                        shutil.rmtree(os.path.join(root, d))
+                    #   shutil.rmtree(os.path.join(root, d))
+                        try:
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
+                        except:
+                            pass
                         
             else:
                 pass    
                 
     cacheEntries = setupCacheEntries()
-                                         
     for entry in cacheEntries:
         clear_cache_path = xbmc.translatePath(entry.path)
         if os.path.exists(clear_cache_path)==True:    
@@ -240,21 +262,30 @@ def clearCache():
                 file_count = 0
                 file_count += len(files)
                 if file_count > 0:
-
                    #   dialog = xbmcgui.Dialog()
                    #if dialog.yesno(MainTitle,str(file_count) + "%s cache files found"%(entry.name), "Do you want to delete them?"):
                     if dialog.yesno(MainTitle,"%s cache files found"%(entry.name), "Do you want to delete them?"):
                         for f in files:
-                            os.unlink(os.path.join(root, f))
+                        #   os.unlink(os.path.join(root, f))
+                            try:
+                                if (f.endswith(".log")): continue
+                                os.unlink(os.path.join(root, f))
+                            except:
+                                pass
                         for d in dirs:
-                            shutil.rmtree(os.path.join(root, d))
+                        #   shutil.rmtree(os.path.join(root, d))
+                            try:
+                                checker = (os.path.join(root, d))
+                                if not "archive_cache" in str(checker):
+                                    shutil.rmtree(os.path.join(root, d))
+                            except:
+                                pass
                             
                 else:
                     pass
-                
 
-    
-    dialog.ok(MainTitle, "Done Clearing Cache files")
+    dialog.ok(MainTitle,'Done Clearing Cache files')
+    xbmc.executebuiltin("Container.Refresh")
 
 
 #######################################################################
@@ -273,7 +304,8 @@ def deleteThumbnails():
                             try:
                                 os.unlink(os.path.join(root, f))
                             except:
-                                pass                
+                                pass
+
     else:
         pass
     
@@ -305,7 +337,8 @@ def deleteThumbnails():
         except:
             pass
 
-    dialog.ok(MainTitle, "Please reboot your system to rebuild thumbnail folder...")
+    dialog.ok(MainTitle,"Please reboot your system to rebuild thumbnail folder...")
+    xbmc.executebuiltin("Container.Refresh")
 
 
 #######################################################################
@@ -314,7 +347,7 @@ def deleteThumbnails():
 
 def forceRefresh():
 	xbmc.executebuiltin('UpdateLocalAddons')
-	dialog.ok(MainTitle, "Force Refresh Repos and Update LocalAddons")
+	dialog.ok(MainTitle,"Force Refresh Repos and Update LocalAddons")
 	xbmc.executebuiltin("UpdateAddonRepos")
 	xbmc.executebuiltin("ReloadSkin()")
 
@@ -334,7 +367,7 @@ def PiCCleaner():
         if dialog.yesno('XvBMC-Pi-Maintenance','about to do some extreme CrapCleaner voodoo...','[I]this will take a few seconds to complete, be patient![/I]', '[B]are you sure[COLOR white]?[/COLOR][/B]'):
             bashCommand = "/bin/bash /storage/.kodi/addons/script.schoonmaak/xvbmc-piecc.sh"
 	    os.system(bashCommand)
-	    dialog.ok(MainTitle, '[B]Pi[/B] CrapCleaner finished!','', 'Press OK to reboot...')
+	    dialog.ok(MainTitle,'[B]Pi[/B] CrapCleaner finished!','', 'Press OK to reboot...')
 	    xbmc.executebuiltin("Reboot")
 
 	
@@ -353,20 +386,25 @@ def purgePackages():
             file_count = 0
             file_count += len(files)
             if file_count > 0:            
-                for f in files:
-                    os.unlink(os.path.join(root, f))
-                for d in dirs:
-                    shutil.rmtree(os.path.join(root, d))
-                
-                dialog.ok(MainTitle, "Deleting Packages all done")
+                try:
+                    for f in files:
+                        os.unlink(os.path.join(root, f))
+                    for d in dirs:
+                        shutil.rmtree(os.path.join(root, d))
+                except: pass
+                dialog.ok(MainTitle,"Deleting Packages all done")
+            #   xbmc.executebuiltin("Container.Refresh")
             else:
-                dialog.ok(MainTitle, "No Packages to Purge")
+                dialog.ok(MainTitle,"No Packages to Purge")
+
+    xbmc.executebuiltin("Container.Refresh")
+
 
 #######################################################################
 #						WHOAMI/WHOIS
 #######################################################################
 
-def KODIVERSION(url): xbmc_version=xbmc.getInfoLabel("System.BuildVersion"); version=xbmc_version[:4]; print version; dialog.ok(MainTitle, "Your Kodi Version : [COLOR lime][B]%s[/B][/COLOR]" % version)
+def KODIVERSION(url): xbmc_version=xbmc.getInfoLabel("System.BuildVersion"); version=xbmc_version[:4]; print version; dialog.ok(MainTitle,"Your Kodi Version : [COLOR lime][B]%s[/B][/COLOR]" % version)
 
 
 #######################################################################
@@ -401,10 +439,10 @@ def AddonsDatabaseRemoval():
                 except:
                     removed = False
             if removed:
-                dialog.ok(MainTitle, "Your system will reboot to rebuild addons.db...")
+                dialog.ok(MainTitle,"Your system will reboot to rebuild addons.db...")
                 Common.killKodi
             else:
-                dialog.ok(MainTitle, "Removal failed!", "try manual remove, see: http://kodi.wiki/view/Database_version")
+                dialog.ok(MainTitle,"Removal failed!", "try manual remove, see: http://kodi.wiki/view/Database_version")
         except:
             pass
     else:
@@ -420,11 +458,11 @@ def xvbmcupdater(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.xvbmc.update')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.xvbmc.update)")
     else:
-        url=base64.b64decode(base)+'script.xvbmc.update/script.xvbmc.update-4.0.4.zip'
+        url=base64.b64decode(base)+'script.xvbmc.update/script.xvbmc.update-4.0.10.zip' #latest_version#
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.xvbmc.update-4.0.4.zip')
+        lib=os.path.join(path, 'script.xvbmc.update-4.0.10.zip') #laatste_versie#
         try:
             os.remove(lib)
         except:
@@ -491,7 +529,7 @@ def infoTXT(heading, text):
 
 def autocleanask():
     
-	choice = xbmcgui.Dialog().yesno(MainTitle, 'Select [COLOR green]YES[/COLOR] to delete your:','cache, crashlogs, packages & thumbnails all at once.','[I][COLOR white]Do you wish to continue?[/I][/COLOR]', yeslabel='[B][COLOR green]YES[/COLOR][/B]',nolabel='[B][COLOR red]NO[/COLOR][/B]')
+	choice = xbmcgui.Dialog().yesno(MainTitle,'Select [COLOR green]YES[/COLOR] to delete your:','cache, crashlogs, packages & thumbnails all at once.','[I][COLOR white]Do you wish to continue?[/I][/COLOR]', yeslabel='[B][COLOR green]YES[/COLOR][/B]',nolabel='[B][COLOR red]NO[/COLOR][/B]')
 	if choice == 1:
 		autocleannow()
 	
@@ -505,13 +543,15 @@ def autocleannow():
             if file_count > 0:
                     for f in files:
                         try:
-							if (f.endswith(".log")): continue
-							os.unlink(os.path.join(root, f))
+                            if (f.endswith(".log")): continue
+                            os.unlink(os.path.join(root, f))
                         except:
                             pass
                     for d in dirs:
                         try:
-                            shutil.rmtree(os.path.join(root, d))
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
                         except:
                             pass
                         
@@ -531,44 +571,63 @@ def autocleannow():
                             pass
                     for d in dirs:
                         try:
-                            shutil.rmtree(os.path.join(root, d))
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
                         except:
                             pass
                         
             else:
                 pass
+
     if xbmc.getCondVisibility('system.platform.ATV2'):
         atv2_cache_a = os.path.join('/private/var/mobile/Library/Caches/AppleTV/Video/', 'Other')
-        
         for root, dirs, files in os.walk(atv2_cache_a):
             file_count = 0
             file_count += len(files)
         
             if file_count > 0:                
                     for f in files:
-                        os.unlink(os.path.join(root, f))
+                        try:
+                            if (f.endswith(".log")): continue
+                            os.unlink(os.path.join(root, f))
+                        except:
+                            pass
                     for d in dirs:
-                        shutil.rmtree(os.path.join(root, d))
+                        try:
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
+                        except:
+                            pass
                         
             else:
                 pass
-        atv2_cache_b = os.path.join('/private/var/mobile/Library/Caches/AppleTV/Video/', 'LocalAndRental')
-        
+
+        atv2_cache_b = os.path.join('/private/var/mobile/Library/Caches/AppleTV/Video/', 'LocalAndRental')        
         for root, dirs, files in os.walk(atv2_cache_b):
             file_count = 0
             file_count += len(files)
         
             if file_count > 0:
                     for f in files:
-                        os.unlink(os.path.join(root, f))
+                        try:
+                            if (f.endswith(".log")): continue
+                            os.unlink(os.path.join(root, f))
+                        except:
+                            pass
                     for d in dirs:
-                        shutil.rmtree(os.path.join(root, d))
+                        try:
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
+                        except:
+                            pass
                         
             else:
                 pass    
                 
     cacheEntries = setupCacheEntries()
-                                         
     for entry in cacheEntries:
         clear_cache_path = xbmc.translatePath(entry.path)
         if os.path.exists(clear_cache_path)==True:    
@@ -576,10 +635,19 @@ def autocleannow():
                 file_count = 0
                 file_count += len(files)
                 if file_count > 0:
-                        for f in files:
+                    for f in files:
+                        try:
+                            if (f.endswith(".log")): continue
                             os.unlink(os.path.join(root, f))
-                        for d in dirs:
-                            shutil.rmtree(os.path.join(root, d))
+                        except:
+                            pass
+                    for d in dirs:
+                        try:
+                            checker = (os.path.join(root, d))
+                            if not "archive_cache" in str(checker):
+                                shutil.rmtree(os.path.join(root, d))
+                        except:
+                            pass
                             
                 else:
                     pass
@@ -594,17 +662,17 @@ def autocleannow():
                                 os.unlink(os.path.join(root, f))
                             except:
 								pass
+
     else:
         pass
     
     text13 = os.path.join(databasePath,"Textures13.db")
     try:
 		os.unlink(text13)
-    except OSError:
+    except:
         pass
 		
     purgePath = xbmc.translatePath('special://home/addons/packages')
-    dialog = xbmcgui.Dialog()
     for root, dirs, files in os.walk(purgePath):
             file_count = 0
             file_count += len(files)
@@ -612,16 +680,19 @@ def autocleannow():
             file_count = 0
             file_count += len(files)
             if file_count > 0:            
-                for f in files:
-                    os.unlink(os.path.join(root, f))
-                for d in dirs:
-                    shutil.rmtree(os.path.join(root, d))
+                try:
+                    for f in files:
+                        os.unlink(os.path.join(root, f))
+                    for d in dirs:
+                        shutil.rmtree(os.path.join(root, d))
+                except:
+                    pass
 
     if AutoClean==True:
-        #dialog.ok(MainTitle, "Auto.Remove Crash Log Files...")
+        #dialog.ok(MainTitle,"Auto.Remove Crash Log Files...")
         AutoCrash()
     else:
-        #dialog.ok(MainTitle, "Skip auto.remove crash log files...")
+        #dialog.ok(MainTitle,"Skip auto.remove crash log files...")
         xbmc.log(str(AutoClean))
 
     choice = xbmcgui.Dialog().yesno(MainTitle,"[COLOR white][B]A[/B]uto [B]C[/B]lean finished:[/COLOR]","[I]cache, crashlogs, packages & thumbnails are removed.[/I]","Reboot your device now to finish the process?", yeslabel='[B][COLOR green]YES[/COLOR][/B]',nolabel='[B][COLOR red]NO[/COLOR][/B]')
@@ -632,7 +703,7 @@ def AutoCrash():
 
 	HomeDir = xbmc.translatePath('special://home')
 	WindowsCache = os.path.join(xbmc.translatePath('special://home'), 'cache')
-	OtherCache = xbmc.translatePath('special://temp')
+	OtherCache = os.path.join(xbmc.translatePath('special://home'), 'temp')
 	
 	if os.path.exists(HomeDir)==True:   
 		path=Windows
@@ -692,7 +763,7 @@ def Fix_Special(url):
                  f.write(str(b))
                  f.close()
 				 
-    dialog.ok(MainTitle, "All physical (home) paths have been converted to special","To complete this process Kodi will force close now!")
+    dialog.ok(MainTitle,"All physical (home) paths have been converted to special","To complete this process Kodi will force close now!")
     Common.killKodi()
 
 
