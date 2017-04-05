@@ -9,10 +9,11 @@ import os
 import sys
 import plugintools
 import xbmc,xbmcaddon
-from addon.common.addon import Addon
+#from addon.common.addon import Addon
 
 addonID = 'plugin.video.sport'
-addon = Addon(addonID, sys.argv)
+addon_id   = 'plugin.video.Allesin1NL!'#plugintools.py
+#addon = Addon(addonID, sys.argv)
 local = xbmcaddon.Addon(id=addonID)
 icon = local.getAddonInfo('icon')
 
@@ -100,8 +101,7 @@ channellist=[
         ("[COLOR darkorange]Vissen NL >>[/COLOR] J en R CARPFISHING", "channel/UCQL0CwksH2E4d1toom_0kZg", "https://yt3.ggpht.com/-lifoXOCBtFI/AAAAAAAAAAI/AAAAAAAAAAA/ZNHm-IkFDWc/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
         ("[COLOR darkorange]Vissen NL >>[/COLOR] BOEZEM BAITS", "channel/UCVvLWQ5qfGnqgLvYXSnjomQ", "https://yt3.ggpht.com/-oCLoLp6l1OQ/AAAAAAAAAAI/AAAAAAAAAAA/fbTat15wAuM/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
 		
-        ("[COLOR red]Cycling NL >>[/COLOR] CAS2001", "channel/UC3DWYiqOzFKKYR_eosSBn8A", "https://yt3.ggpht.com/-STON5pd5GiY/AAAAAAAAAAI/AAAAAAAAAAA/1cu3QcUZr_o/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
-        ("[COLOR red]Cycling NL >>[/COLOR] CYCLING VIDS", "channel/UCl92NodlwKSVnGxEYYP3qGw", "https://yt3.ggpht.com/-6wqmlmBoP2Y/AAAAAAAAAAI/AAAAAAAAAAA/MnEr6LKhngc/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
+        ("[COLOR red]Cycling NL >>[/COLOR] CAS2001", "channel/UC3DWYiqOzFKKYR_eosSBn8A", "https://yt3.ggpht.com/-STON5pd5GiY/AAAAAAAAAAI/AAAAAAAAAAA/1cu3QcUZr_o/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),			
         ("[COLOR red]Cycling NL >>[/COLOR] CYCLOCROSSABLE", "user/cyclocrossable", "https://yt3.ggpht.com/-oyk2dVISWXU/AAAAAAAAAAI/AAAAAAAAAAA/bLpEvGUDMLs/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
         ("[COLOR red]Cycling NL >>[/COLOR] HERMAN", "channel/UC5eo2uEFTSIUTZlnZ3bBJPQ", "https://yt3.ggpht.com/-MJOQM7ferrU/AAAAAAAAAAI/AAAAAAAAAAA/tGGmVQqMDMs/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
         ("[COLOR red]Cycling NL >>[/COLOR] WESLEY", "user/TheMrCyclocross", "https://yt3.ggpht.com/-mu-FZkiPDhE/AAAAAAAAAAI/AAAAAAAAAAA/7K30KNiNRoQ/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),				
@@ -127,9 +127,29 @@ channellist=[
 		
         ("[COLOR orange]Basketbal >>[/COLOR] COLLEGE HOOPS", "channel/UCxuIRL5p9OD2FjNBlV9yXpQ", "https://yt3.ggpht.com/-2zYVChISFCU/AAAAAAAAAAI/AAAAAAAAAAA/F3cGKWaQhfc/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
         ("[COLOR orange]Basketbal >>[/COLOR] NBA FULL MATCHES", "channel/UCS9mcmat7nxitymN5HbG-RQ", "https://yt3.ggpht.com/-hlU2FyXqorY/AAAAAAAAAAI/AAAAAAAAAAA/XcHVvEpm9WU/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
-        ("[COLOR orange]Basketbal >>[/COLOR] NBA FULL RECAP", "channel/UC0rDNVMafPWtpY63vFbxC3A", "https://yt3.ggpht.com/-YLtosy9kV3o/AAAAAAAAAAI/AAAAAAAAAAA/ZjYoS_dRFlc/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),						
-]
+        ("[COLOR orange]Basketbal >>[/COLOR] NBA FULL RECAP", "channel/UC0rDNVMafPWtpY63vFbxC3A", "https://yt3.ggpht.com/-YLtosy9kV3o/AAAAAAAAAAI/AAAAAAAAAAA/ZjYoS_dRFlc/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
 
+        ("[COLOR yellow]Zaalvoetbal NL >>[/COLOR] EREDIVISIE ZAAlVOETBAL", "channel/UCometyU3FwtCFLh6u4_xRBg", "https://yt3.ggpht.com/-BL7wpF2OohA/AAAAAAAAAAI/AAAAAAAAAAA/vDNzWEMuFjo/s88-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+        ("[COLOR yellow]Zaalvoetbal NL >>[/COLOR] FC EINDHOVEN FUTSAL", "user/ClubFutsalEindhoven", "https://yt3.ggpht.com/-MMbyBaBp5us/AAAAAAAAAAI/AAAAAAAAAAA/Wk4Qg5-SEUA/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+		
+        ("[COLOR red]Boten NL >>[/COLOR] KEMPERS WATERSPORT", "user/Kemperswatersport", "https://yt3.ggpht.com/-UXUCJivKxlY/AAAAAAAAAAI/AAAAAAAAAAA/9vF7GkhW9Es/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+        ("[COLOR red]Boten >>[/COLOR] MARINEMAX", "user/MarineMaxOnline", "https://yt3.ggpht.com/-ScIbiiNJk2A/AAAAAAAAAAI/AAAAAAAAAAA/6iwUUZyxsCM/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+		
+        ("[COLOR darkorange]Racing >>[/COLOR] SPEEDWEEK", "channel/UCB5Cjqfmk_afX29t_6UqniQ", "https://yt3.ggpht.com/-iD2KUOWeqbI/AAAAAAAAAAI/AAAAAAAAAAA/HGEwEN0kV1A/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+        ("[COLOR darkorange]Motors >>[/COLOR] MOTOR BRAIN", "user/TheMotorbrain", "https://yt3.ggpht.com/-DGXCiH7Se-M/AAAAAAAAAAI/AAAAAAAAAAA/61wkpuge1tw/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+		
+        ("[COLOR orange]Sport >>[/COLOR] BT SPORT", "user/BTSportOfficial", "https://yt3.ggpht.com/-zLLqi4rqrBw/AAAAAAAAAAI/AAAAAAAAAAA/_73BhShNrT4/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+        ("[COLOR orange]Sport >>[/COLOR] FATV", "user/fatv", "https://yt3.ggpht.com/-85wjjwedsu0/AAAAAAAAAAI/AAAAAAAAAAA/81VVr2J4Ytc/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
+		
+        ("[COLOR blue]Trainen NL >>[/COLOR] FIT", "user/fitnesstipsnl", "https://yt3.ggpht.com/-JWk8v0K6vOs/AAAAAAAAAAI/AAAAAAAAAAA/x2ArrsAC8n4/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
+        ("[COLOR blue]Trainen >>[/COLOR] SIX PACK WORKOUT", "channel/UCasUV4PifL3gn4ykPqLxI9Q", "https://yt3.ggpht.com/-QcgK8pXQmfQ/AAAAAAAAAAI/AAAAAAAAAAA/4XUD-G0z5mw/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
+
+        ("[COLOR yellow]Auto's NL >>[/COLOR] AUTOWEEK", "user/AutoWeek", "https://yt3.ggpht.com/-DXj4TGIukLc/AAAAAAAAAAI/AAAAAAAAAAA/Je1LOxVwwXI/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
+        ("[COLOR yellow]Auto's NL >>[/COLOR] AUTOVISIE", "user/Autovisie", "https://yt3.ggpht.com/-xtmrOQeiRdw/AAAAAAAAAAI/AAAAAAAAAAA/hGpAjguklEw/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+        ("[COLOR yellow]Auto's NL >>[/COLOR] AUTOBLOG", "user/autoblogger", "https://yt3.ggpht.com/-MrPjGwLdcCg/AAAAAAAAAAI/AAAAAAAAAAA/PyzyjjSvt4g/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+        ("[COLOR yellow]Auto's NL >>[/COLOR] AUTOTOP", "user/AutoTopnl", "https://yt3.ggpht.com/-0o62qG53FZE/AAAAAAAAAAI/AAAAAAAAAAA/z947wdK8a8o/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),
+        ("[COLOR yellow]Auto's >>[/COLOR] RALLYMEDIA", "user/rallymedia", "https://yt3.ggpht.com/--_iiABkmlZI/AAAAAAAAAAI/AAAAAAAAAAA/gr8YqJRO9uU/s900-c-k-no-mo-rj-c0xffffff/photo.jpg"),		
+]
 
 
 # Entry point
@@ -153,7 +173,6 @@ def main_list(params):
 
 for name, id, icon in channellist:
 	plugintools.add_item(title=name,url="plugin://plugin.video.youtube/"+id+"/",thumbnail=icon,folder=True )
-
 
 
 run()
