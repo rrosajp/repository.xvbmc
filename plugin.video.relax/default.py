@@ -9,12 +9,13 @@ import os
 import sys
 import plugintools
 import xbmc,xbmcaddon
-from addon.common.addon import Addon
+#from addon.common.addon import Addon
 
-addonID = 'plugin.video.relax'
-addon = Addon(addonID, sys.argv)
-local = xbmcaddon.Addon(id=addonID)
-icon = local.getAddonInfo('icon')
+addonID  = 'plugin.video.relax'
+addon_id = 'plugin.video.relax'#plugintools.py
+#addon   = Addon(addonID, sys.argv)
+local    = xbmcaddon.Addon(id=addonID)
+icon     = local.getAddonInfo('icon')
 
 
 channellist=[
@@ -56,10 +57,9 @@ channellist=[
 ]
 
 
-
 # Entry point
 def run():
-    plugintools.log("Relax.run")
+    plugintools.log("RELAX.run")
     
     # Get params
     params = plugintools.get_params()
@@ -68,17 +68,16 @@ def run():
         main_list(params)
     else:
         action = params.get("action")
-        exec action+"(params)"
+    #   exec action+"(params)" ###### SEE: http://forum.kodi.tv/showthread.php?tid=254207&pid=2465855#pid2465855
     
     plugintools.close_item_list()
 
 # Main menu
 def main_list(params):
-    plugintools.log("Relax.main_list "+repr(params))
+    plugintools.log("RELAX.main_list "+repr(params))
 
 for name, id, icon in channellist:
 	plugintools.add_item(title=name,url="plugin://plugin.video.youtube/"+id+"/",thumbnail=icon,folder=True )
-
 
 
 run()
