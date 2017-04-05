@@ -360,22 +360,33 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 </addon>
 
 <addon id="plugin.video.poker"
-	name="POKER"
-	version="1.0.2"
-	provider-name="XvBMC">
+	   name="Poker"
+	   version="1.0.2"
+	   provider-name="XvBMC-NL">
   <requires>
     <import addon="repository.xvbmc" version="4.0.1"/>
     <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.addon.common" version="2.0.0"/>
-    <import addon="plugin.video.youtube" version="5.3.8x"/>
+    <!--<import addon="script.module.addon.common" version="2.0.0"/>-->
+    <import addon="plugin.video.youtube" version="5.3.12"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XVBMC POKER COLLECTIE</summary>
-    <description lang="en">Youtube Streams</description>
+    <summary>XvBMC POKER COLLECTIE</summary>
+    <description>Youtube (Poker) Streams</description>
+    <disclaimer>XvBMC Nederland Youtube POKER COLLECTIE Streams (USE_AT_YOUR!_OWN!_RISK!) ---> more info @ http://bit.ly/XvBMC-NL</disclaimer>
     <platform>all</platform>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
+    <website>http://bit.ly/XvBMC-NL</website>
+    <source>https://www.facebook.com/groups/XvBMCnederland/</source>
+    <news>[B]Version 1.0.2[/B]: Updates</news>
+    <assets>
+        <icon>icon.png</icon>
+        <fanart>fanart.jpg</fanart>
+        <screenshot></screenshot>
+    </assets>
   </extension>
 </addon>
 
@@ -403,22 +414,33 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 </addon>
 
 <addon id="plugin.video.relax"
-	name="Relax"
-	version="1.0.3"
-	provider-name="XvBMC">
+	   name="Relax"
+	   version="1.0.3"
+	   provider-name="XvBMC-NL">
   <requires>
     <import addon="repository.xvbmc" version="4.0.1"/>
     <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.addon.common" version="2.0.0"/>
-    <import addon="plugin.video.youtube" version="5.3.8x"/>
+    <!--<import addon="script.module.addon.common" version="2.0.0"/>-->
+    <import addon="plugin.video.youtube" version="5.3.12"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Xvbmc Relax collectie</summary>
-    <description lang="en">Ontspan</description>
+    <summary>XvBMC RELAX COLLECTIE</summary>
+    <description>Youtube (Relax) Streams</description>
+    <disclaimer>XvBMC Nederland Youtube RELAX COLLECTIE Streams (USE_AT_YOUR!_OWN!_RISK!) ---> more info @ http://bit.ly/XvBMC-NL</disclaimer>
     <platform>all</platform>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
+    <website>http://bit.ly/XvBMC-NL</website>
+    <source>https://www.facebook.com/groups/XvBMCnederland/</source>
+    <news>[B]Version 1.0.3[/B]: Updates</news>
+    <assets>
+        <icon>icon.png</icon>
+        <fanart>fanart.jpg</fanart>
+        <screenshot></screenshot>
+    </assets>
   </extension>
 </addon>
 
@@ -487,7 +509,7 @@ Internet [COLOR red]adult TV and videos [COLOR white]from various sources.
 
 <addon id="plugin.video.sport"
 	   name="Sport"
-	   version="1.0.4"
+	   version="1.0.4x"
 	   provider-name="XvBMC-NL">
   <requires>
     <import addon="repository.xvbmc" version="4.0.1"/>
