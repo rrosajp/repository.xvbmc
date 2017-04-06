@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import threading
 import json
 from sqlite3 import dbapi2 as db_lib
 
@@ -27,8 +28,7 @@ class DBCache(object):
     def __init__(self, db_path=None):
         self.db_path = '../tmdb_cache.db' if db_path is None else db_path
         self.db_type = DB_TYPES.SQLITE
-        self.db = db_lib.connect(self.db_path)
-        self.db.text_factory = str
+        self.db = None
         self.__execute('CREATE TABLE IF NOT EXISTS api_cache (tmdb_id INTEGER NOT NULL, object_type CHAR(1) NOT NULL, data VARCHAR(255), PRIMARY KEY(tmdb_id, object_type))')
         self.__execute('CREATE TABLE IF NOT EXISTS db_info (setting VARCHAR(255), value TEXT, PRIMARY KEY(setting))')
         
@@ -77,17 +77,27 @@ class DBCache(object):
     def execute(self, sql, params=None):
         return self.__execute(sql, params)
     
+    def __get_db_connection(self):
+        worker_id = threading.current_thread().ident
+        # create a connection if we don't have one or it was created in a different worker
+        if self.db is None or self.worker_id != worker_id:
+            self.db = db_lib.connect(self.db_path)
+            self.db.text_factory = str
+            self.worker_id = worker_id
+        return self.db
+
     def __execute(self, sql, params=None):
         if params is None: params = []
         rows = None
         sql = self.__format(sql)
         is_read = self.__is_read(sql)
-        cur = self.db.cursor()
+        db_con = self.__get_db_connection()
+        cur = db_con.cursor()
         cur.execute(sql, params)
         if is_read:
             rows = cur.fetchall()
         cur.close()
-        self.db.commit()
+        db_con.commit()
         return rows
 
     # apply formatting changes to make sql work with a particular db driver

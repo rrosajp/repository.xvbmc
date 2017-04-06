@@ -72,6 +72,29 @@
   </extension>
 </addon>
 
+<addon id="script.module.arrow"
+       name="arrow"
+       version="0.6.0"
+       provider-name="crsmithdev, Razzeee">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+	<import addon="script.module.dateutil" version="2.4.2"/>
+  </requires>
+  <extension point="xbmc.python.module"
+             library="lib" />
+  <extension point="xbmc.addon.metadata">
+    <summary>Arrow: better dates and times for Python</summary>
+    <description>Packed for Kodi from https://github.com/crsmithdev/arrow</description>
+    <platform>all</platform>
+    <language></language>
+    <license>Apache2</license>
+    <forum></forum>
+    <website>http://crsmithdev.com/arrow/</website>
+    <source>https://github.com/Razzeee/script.module.arrow</source>
+    <email>beenje AT gmail.com</email>
+  </extension>
+</addon>
+
 <addon id="script.module.beautifulsoup"
        name="BeautifulSoup"
        version="3.2.1"
@@ -109,6 +132,29 @@
   </extension>
 </addon>
 
+<addon id="script.module.dateutil"
+       name="dateutil"
+       version="2.4.2"
+       provider-name="Gustavo Niemeyer, Tomi Pieviläinen, Yaron de Leeuw, Razzeee">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.six" version="1.9.0"/>
+  </requires>
+  <extension point="xbmc.python.module"
+             library="lib" />
+  <extension point="xbmc.addon.metadata">
+    <summary>dateutil - powerful extensions to datetime</summary>
+    <description>Packed for Kodi from https://github.com/dateutil/dateutil</description>
+    <platform>all</platform>
+    <language></language>
+    <license>Revised BSD License</license>
+    <forum></forum>
+    <website>https://dateutil.readthedocs.org/en/latest/</website>
+    <source>https://github.com/Razzeee/script.module.dateutil</source>
+    <email></email>
+  </extension>
+</addon>
+
 <addon id="script.module.httplib2" name="httplib2" provider-name=" Joe Gregorio" version="0.8.0">
   <requires>
     <import addon="xbmc.python" version="2.1.0" />
@@ -128,9 +174,10 @@
    </extension>
 </addon>
 
-<addon id="script.module.image_cache" name="TMDB Image API Cache" version="0.0.5" provider-name="tvaddons.ag, tknorris">
+<addon id="script.module.image_cache" name="TMDB Image API Cache" version="0.0.8" provider-name="tvaddons.ag, tknorris">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
+        <import addon="script.module.tknorris.shared" version="0.0.12"/>
 	</requires>
 	<extension point="xbmc.python.module" library="lib" />
 	<extension point="xbmc.addon.metadata">
@@ -387,7 +434,7 @@
   </extension>
 </addon>
 
-<addon id="script.module.tknorris.shared" name="TKNorris Common Libraries" version="0.0.13" provider-name="tknorris">
+<addon id="script.module.tknorris.shared" name="TKNorris Common Libraries" version="0.0.21" provider-name="tknorris">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 	</requires>
@@ -429,7 +476,7 @@
     </extension>
 </addon>
 
-<addon id="script.module.urlresolver" name="URLResolver" version="3.0.26" provider-name="tvaddons.ag, Eldorado">
+<addon id="script.module.urlresolver" name="URLResolver" version="3.0.29" provider-name="tvaddons.ag, Eldorado">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 	</requires>
@@ -628,8 +675,8 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="service.subtitles.addic7ed"
        name="Addic7ed.com"
-       version="5.0.1"
-       provider-name="CFlannagan">
+       version="5.0.1C"
+       provider-name="CFlannagan (Amelandbor)">
     <requires>
         <import addon="xbmc.python" version="2.14.0"/>
         <import addon="script.module.beautifulsoup" version="3.2.1"/>
@@ -773,8 +820,8 @@ v5.0.15 (2016-11-26) by amet
 
 <addon id="service.subtitles.opensubtitles_by_opensubtitles"
        name="OpenSubtitles.org by OpenSubtitles"
-       version="5.1.14"
-       provider-name="opensubtitles">
+       version="5.2.14"
+       provider-name="amet, opensubtitles">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -824,8 +871,9 @@ v5.0.15 (2016-11-26) by amet
     <disclaimer>Works without log-in</disclaimer>
 	<news>
 Improved add-on by OpenSubtitles.org
-v5.1.14 (2016-11-20)
+v5.2.14 (2017-01-23)
 - Users are able to download subtitles as anonymous without authentication. Added localized descriptions, media files
+- New feature: Users are able to check for subtitles when Kodi is not playing, by using the manual search or by standing on an item and opening the subtitles search dialog (By key or by an external addon)  | @burekas
 	</news>
     <platform>all</platform>
 	<language></language>
@@ -868,7 +916,7 @@ v5.1.14 (2016-11-20)
 
 <addon id="service.subtitles.subscene"
        name="Subscene.com"
-       version="1.7.0"
+       version="1.7.1"
        provider-name="CrowleyAJ">
     <requires>
         <import addon="xbmc.python" version="2.14.0"/>

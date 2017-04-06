@@ -41,11 +41,12 @@ class OSDBServer:
                                                 int(item['episode']),)
                                               ).replace(" ","+")      
       else:
-        if str(item['year']) == "":
+        if str(item['year']) == "" and xbmc.Player().isPlaying():
           item['title'], item['year'] = xbmc.getCleanMovieTitle( item['title'] )
     
         OS_search_string = item['title'].replace(" ","+")
     
+
       log( __name__ , "Search String [ %s ]" % (OS_search_string,))
 
       if not item['temp']:
@@ -59,7 +60,10 @@ class OSDBServer:
         except:
           pass
             
-        imdb = str(xbmc.Player().getVideoInfoTag().getIMDBNumber().replace('tt',''))
+        if xbmc.Player().isPlaying():
+            imdb = str(xbmc.Player().getVideoInfoTag().getIMDBNumber().replace('tt',''))
+        else:
+            imdb = str(xbmc.getInfoLabel("ListItem.IMDBNumber").replace('tt',''))
         
         if ((not item['tvshow']) and imdb != ""):
           searchlist.append({'sublanguageid' :",".join(item['3let_language']),

@@ -1,7 +1,7 @@
 service.subtitles.addic7ed
 ==========================
 
-Addic7ed.com subtitle service plugin for XBMC/Kodi
+Addic7ed.com subtitle service plugin for XvBMC/Kodi
 
 Will not work with Frodo or previous versions of XBMC.
 
