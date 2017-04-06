@@ -6,16 +6,9 @@
 			<checksum>https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml.md5</checksum>
 			<datadir zip="true">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/zips/</datadir>
 		</dir>
-		<dir>
-			<info compressed="false">http://kodi.filmkodi.com/addons.xml</info>
-			<checksum>http://kodi.filmkodi.com/addons.xml.md5</checksum>
-			<datadir zip="true">http://kodi.filmkodi.com/</datadir>
-		</dir>
-		<dir>
-			<info compressed="false">https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/zips/addons.xml</info>
-			<checksum>https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/zips/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/zips/</datadir>
-		</dir>
+		<info compressed="false">https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/zips/addons.xml</info>
+		<checksum>https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/zips/addons.xml.md5</checksum>
+		<datadir zip="true">https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/zips/</datadir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary>Home of The Community Portal</summary>
