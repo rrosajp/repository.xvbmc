@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import os
 import time
 import datetime
 import xbmc
@@ -47,6 +48,7 @@ def make_info(item, show=None, people=None):
     # log_utils.log('Making Info: Item: %s' % (item), log_utils.LOGDEBUG)
     info = {}
     info['originaltitle'] = info['title'] = item['title']
+    if 'originaltitle' in item: info['originaltitle'] = item['originaltitle']
     info['mediatype'] = 'tvshow' if 'aired_episodes' in item else 'movie'
     if 'overview' in item: info['plot'] = info['plotoutline'] = item['overview']
     if 'runtime' in item and item['runtime'] is not None: info['duration'] = item['runtime'] * 60
@@ -179,6 +181,7 @@ def parallel_get_sources(scraper, video):
     if hosters is None: hosters = []
     if kodi.get_setting('filter_direct') == 'true':
         hosters = [hoster for hoster in hosters if not hoster['direct'] or utils2.test_stream(hoster)]
+
     found = False
     for hoster in hosters:
         if hoster['host'] is None:
@@ -186,6 +189,8 @@ def parallel_get_sources(scraper, video):
             found = True
         elif not hoster['direct']:
             hoster['host'] = hoster['host'].lower().strip()
+            if isinstance(hoster['host'], unicode):
+                hoster['host'] = hoster['host'].encode('utf-8')
     
     if found:
         hosters = [hoster for hoster in hosters if hoster['host'] is not None]
@@ -316,15 +321,14 @@ def url_exists(video):
 def do_disable_check():
     auto_disable = kodi.get_setting('auto-disable')
     disable_limit = int(kodi.get_setting('disable-limit'))
+    cur_failures = utils2.get_failures()
     for cls in relevant_scrapers():
-        setting = '%s_last_results' % (cls.get_name())
-        fails = kodi.get_setting(setting)
-        fails = int(fails) if fails else 0
+        fails = cur_failures.get(cls.get_name(), 0)
         if fails >= disable_limit:
             if auto_disable == DISABLE_SETTINGS.ON:
                 kodi.set_setting('%s-enable' % (cls.get_name()), 'false')
                 kodi.notify(msg='[COLOR blue]%s[/COLOR] %s' % (cls.get_name(), utils2.i18n('scraper_disabled')), duration=5000)
-                kodi.set_setting(setting, '0')
+                cur_failures[cls.get_name()] = 0
             elif auto_disable == DISABLE_SETTINGS.PROMPT:
                 dialog = xbmcgui.Dialog()
                 line1 = utils2.i18n('disable_line1') % (cls.get_name(), fails)
@@ -333,9 +337,10 @@ def do_disable_check():
                 ret = dialog.yesno('SALTS', line1, line2, line3, utils2.i18n('keep_enabled'), utils2.i18n('disable_it'))
                 if ret:
                     kodi.set_setting('%s-enable' % (cls.get_name()), 'false')
-                    kodi.set_setting(setting, '0')
+                    cur_failures[cls.get_name()] = 0
                 else:
-                    kodi.set_setting(setting, '-1')
+                    cur_failures[cls.get_name()] = -1
+    utils2.store_failures(cur_failures)
 
 def record_sru_failures(fails, total_scrapers, related_list):
     utils2.record_failures(fails)
@@ -369,3 +374,23 @@ def is_salts():
         return True
     else:
         return False
+
+def clear_thumbnails(images):
+    for url in images.itervalues():
+        crc = utils2.crc32(url)
+        for ext in ['jpg', 'png']:
+            file_name = crc + '.' + ext
+            file_path = os.path.join('special://thumbnails', file_name[0], file_name)
+            if xbmcvfs.delete(file_path):
+                break
+            else:
+                try:
+                    file_path = kodi.translate_path(file_path)
+                    os.remove(file_path)
+                    break
+                except OSError:
+                    pass
+        else:
+            continue
+        
+        log_utils.log('Removed thumbnail: %s' % (file_path))

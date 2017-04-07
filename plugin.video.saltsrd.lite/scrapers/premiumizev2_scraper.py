@@ -60,17 +60,17 @@ class Scraper(scraper.Scraper):
     def get_sources(self, video):
         hosters = []
         source_url = self.get_url(video)
-        if source_url and source_url != FORCE_NO_MATCH:
-            norm_title = scraper_utils.normalize_title(video.title)
-            for stream in self.__get_videos(source_url, video):
-                if video.video_type == VIDEO_TYPES.EPISODE and not self.__match_episode(video, norm_title, stream['name']):
-                    continue
+        if not source_url or source_url == FORCE_NO_MATCH: return hosters
+        norm_title = scraper_utils.normalize_title(video.title)
+        for stream in self.__get_videos(source_url, video):
+            if video.video_type == VIDEO_TYPES.EPISODE and not self.__match_episode(video, norm_title, stream['name']):
+                continue
 
-                host = self._get_direct_hostname(stream['url'])
-                hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream['url'], 'rating': None, 'host': host, 'quality': stream['quality'], 'direct': True}
-                if 'size' in stream: hoster['size'] = scraper_utils.format_size(stream['size'])
-                if 'name' in stream: hoster['extra'] = stream['name']
-                hosters.append(hoster)
+            host = scraper_utils.get_direct_hostname(self, stream['url'])
+            hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream['url'], 'rating': None, 'host': host, 'quality': stream['quality'], 'direct': True}
+            if 'size' in stream: hoster['size'] = scraper_utils.format_size(stream['size'])
+            if 'name' in stream: hoster['extra'] = stream['name']
+            hosters.append(hoster)
                          
         return hosters
     
@@ -225,7 +225,6 @@ class Scraper(scraper.Scraper):
         settings = [
             '         <setting id="%s-enable" type="bool" label="%s %s" default="true" visible="true"/>' % (name, name, i18n('enabled')),
             '         <setting id="%s-sub_check" type="bool" label="    %s" default="false" visible="eq(-1,true)"/>' % (name, i18n('page_existence')),
-            '         <setting id="%s_last_results" type="number" default="0" visible="false"/>' % (name)
         ]
         return settings
 

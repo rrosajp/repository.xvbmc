@@ -2,12 +2,12 @@
 # Addon id: plugin.video.saltsrd.lite
 # Addon Provider: TV Addons
 # Translators:
-# tknorris, 2015-2016
+# tknorris, 2015-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2016-12-14 01:03+0000\n"
+"PO-Revision-Date: 2017-03-28 19:56+0000\n"
 "Last-Translator: tknorris\n"
 "Language-Team: English (United States) (http://www.transifex.com/tv-addons/salts/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -931,8 +931,8 @@ msgid "Remove Unusable Indirect sources from results"
 msgstr "Remove Unusable Indirect sources from results"
 
 msgctxt "#30239"
-msgid "Show Debrid sources in Green"
-msgstr "Show Debrid sources in Green"
+msgid "Highlight Debrid Sources in results"
+msgstr "Highlight Debrid Sources in results"
 
 msgctxt "#30240"
 msgid "No Limit on Maximum Source Results"
@@ -1190,6 +1190,18 @@ msgstr "Reset Torba Authorization"
 msgctxt "#30303"
 msgid "Torba Authorization Reset"
 msgstr "Torba Authorization Reset"
+
+msgctxt "#30304"
+msgid "Repair URLResolver"
+msgstr "Repair URLResolver"
+
+msgctxt "#30305"
+msgid "Restart Kodi and then Run Repair URLResolver again"
+msgstr "Restart Kodi and then Run Repair URLResolver again"
+
+msgctxt "#30306"
+msgid "URLResolver failed to load. Try Settings->Repair URLResolver"
+msgstr "URLResolver failed to load. Try Settings->Repair URLResolver"
 
 msgctxt "#30500"
 msgid "Addon Theme"
@@ -1788,8 +1800,8 @@ msgid "All"
 msgstr "All"
 
 msgctxt "#30652"
-msgid "Show Debrid Supported Sources in Green"
-msgstr "Show Debrid Supported Sources in Green"
+msgid "Show Debrid Supported Sources in ..."
+msgstr "Show Debrid Supported Sources in ..."
 
 msgctxt "#30653"
 msgid "6th Sort Key"
@@ -2090,4 +2102,20 @@ msgstr "Enable Cast Thumbnails"
 msgctxt "#30728"
 msgid "    *** Install TMDB API Cache ***"
 msgstr "    *** Install TMDB API Cache ***"
+
+msgctxt "#30729"
+msgid "    Debrid Highlight Color"
+msgstr "    Debrid Highlight Color"
+
+msgctxt "#30730"
+msgid "Image Proxy [COLOR red][B](Experimental)[/B][/COLOR]"
+msgstr "Image Proxy [COLOR red][B](Experimental)[/B][/COLOR]"
+
+msgctxt "#30731"
+msgid "Enable Image Proxy"
+msgstr "Enable Image Proxy"
+
+msgctxt "#30732"
+msgid "Image Proxy Port"
+msgstr "Image Proxy Port"
 

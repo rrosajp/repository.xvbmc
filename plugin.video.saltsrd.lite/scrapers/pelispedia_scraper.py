@@ -22,8 +22,9 @@ import urllib
 import base64
 import kodi
 import log_utils  # @UnusedImport
-import dom_parser
+import dom_parser2
 from salts_lib import scraper_utils
+from salts_lib import jsunpack
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -51,39 +52,46 @@ class Scraper(scraper.Scraper):
         return 'PelisPedia'
 
     def get_sources(self, video):
-        source_url = self.get_url(video)
         hosters = []
-        if source_url and source_url != FORCE_NO_MATCH:
-            url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=.5)
-            fragment = dom_parser.parse_dom(html, 'div', {'class': 'repro'})
-            if fragment:
-                iframe_url = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
-                if iframe_url:
-                    html = self._http_get(iframe_url[0], cache_limit=.5)
-                    fragment = dom_parser.parse_dom(html, 'div', {'id': 'botones'})
-                    if fragment:
-                        for media_url in dom_parser.parse_dom(fragment[0], 'a', ret='href'):
-                            media_url = media_url.replace(' ', '')
-                            if any([media_url for u in (self.base_url, 'pelispedia.biz', 'pelispedia.vip') if u in media_url]):
-                                headers = {'Referer': iframe_url[0]}
-                                html = self._http_get(media_url, headers=headers, cache_limit=.5)
-                                hosters += self.__get_page_links(html)
-                                hosters += self.__get_pk_links(html)
-                                hosters += self.__get_gk_links(html, url)
-                            else:
-                                host = urlparse.urlparse(media_url).hostname
-                                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': QUALITIES.HD720, 'views': None, 'rating': None, 'url': media_url, 'direct': False}
-                                hosters.append(hoster)
+        source_url = self.get_url(video)
+        if not source_url or source_url == FORCE_NO_MATCH: return hosters
+        url = urlparse.urljoin(self.base_url, source_url)
+        html = self._http_get(url, cache_limit=.5)
+        fragment = dom_parser2.parse_dom(html, 'div', {'class': 'repro'})
+        if not fragment: return hosters
+        
+        iframe_url = dom_parser2.parse_dom(fragment[0].content, 'iframe', req='src')
+        if not iframe_url: return hosters
+        
+        html = self._http_get(iframe_url[0].attrs['src'], cache_limit=.5)
+        for _attrs, fragment in dom_parser2.parse_dom(html, 'div', {'id': 'botones'}):
+            for attrs, _content in dom_parser2.parse_dom(fragment, 'a', req='href'):
+                media_url = attrs['href']
+                media_url = media_url.replace(' ', '')
+                if self.get_name().lower() in media_url:
+                    headers = {'Referer': iframe_url[0]}
+                    html = self._http_get(media_url, headers=headers, cache_limit=.5)
+                    hosters += self.__get_page_links(html)
+                    hosters += self.__get_pk_links(html)
+                    hosters += self.__get_gk_links(html, url)
+                else:
+                    host = urlparse.urlparse(media_url).hostname
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': QUALITIES.HD720, 'views': None, 'rating': None, 'url': media_url, 'direct': False}
+                    hosters.append(hoster)
             
         return hosters
 
     def __get_page_links(self, html):
         hosters = []
-        sources = self._parse_sources_list(html)
+        for match in re.finditer('(eval\(function\(.*?)</script>', html, re.DOTALL):
+            js_data = jsunpack.unpack(match.group(1))
+            js_data = js_data.replace('\\', '')
+            html += js_data
+
+        sources = scraper_utils.parse_sources_list(self, html)
         for source in sources:
             quality = sources[source]['quality']
-            hoster = {'multi-part': False, 'url': source, 'class': self, 'quality': quality, 'host': self._get_direct_hostname(source), 'rating': None, 'views': None, 'direct': True}
+            hoster = {'multi-part': False, 'url': source, 'class': self, 'quality': quality, 'host': scraper_utils.get_direct_hostname(self, source), 'rating': None, 'views': None, 'direct': True}
             hosters.append(hoster)
         return hosters
 
@@ -106,7 +114,7 @@ class Scraper(scraper.Scraper):
                         else:
                             quality = QUALITIES.HD720
                         stream_url = item['url'] + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua()})
-                        hoster = {'multi-part': False, 'url': stream_url, 'class': self, 'quality': quality, 'host': self._get_direct_hostname(item['url']), 'rating': None, 'views': None, 'direct': True}
+                        hoster = {'multi-part': False, 'url': stream_url, 'class': self, 'quality': quality, 'host': scraper_utils.get_direct_hostname(self, item['url']), 'rating': None, 'views': None, 'direct': True}
                         hosters.append(hoster)
         return hosters
     
@@ -127,7 +135,7 @@ class Scraper(scraper.Scraper):
                 
                 for source in sources:
                     if source:
-                        hoster = {'multi-part': False, 'url': source, 'class': self, 'quality': sources[source], 'host': self._get_direct_hostname(source), 'rating': None, 'views': None, 'direct': True}
+                        hoster = {'multi-part': False, 'url': source, 'class': self, 'quality': sources[source], 'host': scraper_utils.get_direct_hostname(self, source), 'rating': None, 'views': None, 'direct': True}
                         hosters.append(hoster)
         return hosters
         
@@ -185,13 +193,13 @@ class Scraper(scraper.Scraper):
         url = urlparse.urljoin(self.base_url, url)
         html = self._http_get(url, cache_limit=48)
         norm_title = scraper_utils.normalize_title(title)
-        for item in dom_parser.parse_dom(html, 'li', {'class': '[^"]*bpM12[^"]*'}):
-            title_frag = dom_parser.parse_dom(item, 'h2')
-            year_frag = dom_parser.parse_dom(item, 'div', {'class': '[^"]*sectionDetail[^"]*'})
-            match_url = dom_parser.parse_dom(item, 'a', ret='href')
+        for _attrs, item in dom_parser2.parse_dom(html, 'li', {'class': 'bpM12'}):
+            title_frag = dom_parser2.parse_dom(item, 'h2')
+            year_frag = dom_parser2.parse_dom(item, 'div', {'class': 'sectionDetail'})
+            match_url = dom_parser2.parse_dom(item, 'a', req='href')
             if title_frag and match_url:
-                match_url = match_url[0]
-                match = re.search('(.*?)<br>', title_frag[0])
+                match_url = match_url[0].attrs['href']
+                match = re.search('(.*?)<br>', title_frag[0].content)
                 if match:
                     match_title = match.group(1)
                 else:
@@ -199,7 +207,7 @@ class Scraper(scraper.Scraper):
                     
                 match_year = ''
                 if year_frag:
-                    match = re.search('(\d{4})', year_frag[0])
+                    match = re.search('(\d{4})', year_frag[0].content)
                     if match:
                         match_year = match.group(1)
 

@@ -19,7 +19,7 @@ import re
 import urlparse
 import kodi
 import log_utils  # @UnusedImport
-import dom_parser
+import dom_parser2
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -54,30 +54,27 @@ class Scraper(scraper.Scraper):
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
-        if source_url and source_url != FORCE_NO_MATCH:
-            page_url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(page_url, cache_limit=1)
-            for item in dom_parser.parse_dom(html, 'a', {'class': 'full-torrent1'}):
-                stream_url = dom_parser.parse_dom(item, 'span', ret='onclick')
-                host = dom_parser.parse_dom(item, 'div', {'class': 'small_server'})
-                
-                match = re.search('Views:\s*(?:</[^>]*>)?\s*(\d+)', item, re.I)
-                views = match.group(1) if match else None
-                
-                match = re.search('Size:\s*(?:</[^>]*>)?\s*(\d+)', item, re.I)
-                size = int(match.group(1)) * 1024 * 1024 if match else None
-                
-                if stream_url and host:
-                    stream_url = stream_url[0]
-                    host = host[0].lower()
-                    host = host.replace('stream server: ', '')
-                    match = re.search("'(/redirect/[^']+)", stream_url)
-                    if match:
-                        stream_url = match.group(1)
-                    quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
-                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': False}
-                    if size is not None: hoster['size'] = scraper_utils.format_size(size, 'B')
-                    hosters.append(hoster)
+        if not source_url or source_url == FORCE_NO_MATCH: return hosters
+        page_url = urlparse.urljoin(self.base_url, source_url)
+        html = self._http_get(page_url, cache_limit=1)
+        for _attrs, item in dom_parser2.parse_dom(html, 'a', {'class': 'full-torrent1'}):
+            stream_url = dom_parser2.parse_dom(item, 'span', req='onclick')
+            host = dom_parser2.parse_dom(item, 'div', {'class': 'small_server'})
+            match = re.search('Views:\s*(?:</[^>]*>)?\s*(\d+)', item, re.I)
+            views = match.group(1) if match else None
+            match = re.search('Size:\s*(?:</[^>]*>)?\s*(\d+)', item, re.I)
+            size = int(match.group(1)) * 1024 * 1024 if match else None
+            if not stream_url or not host: continue
+            
+            stream_url = stream_url[0].attrs['onclick']
+            host = host[0].content.lower()
+            host = host.replace('stream server: ', '')
+            match = re.search("'(/redirect/[^']+)", stream_url)
+            if match: stream_url = match.group(1)
+            quality = scraper_utils.get_quality(video, host, QUALITIES.HIGH)
+            hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': views, 'rating': None, 'url': stream_url, 'direct': False}
+            if size is not None: hoster['size'] = scraper_utils.format_size(size, 'B')
+            hosters.append(hoster)
         return hosters
 
     def _get_episode_url(self, show_url, video):
@@ -87,19 +84,19 @@ class Scraper(scraper.Scraper):
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         search_url = urlparse.urljoin(self.base_url, '/search')
-        html = self._http_get(search_url, params={'query': title.lower()}, cache_limit=8)
-        for item in dom_parser.parse_dom(html, 'div', {'class': 'one_movie-item'}):
-            match_url = dom_parser.parse_dom(item, 'a', ret='href')
-            match_title = dom_parser.parse_dom(item, 'img', ret='alt')
-            media_type = dom_parser.parse_dom(item, 'div', {'class': 'movie-series'})
+        html = self._http_get(search_url, params={'query': title.lower()}, cache_limit=0)
+        for _attrs, item in dom_parser2.parse_dom(html, 'div', {'class': 'one_movie-item'}):
+            match_url = dom_parser2.parse_dom(item, 'a', req='href')
+            match_title = dom_parser2.parse_dom(item, 'img', req='alt')
+            media_type = dom_parser2.parse_dom(item, 'div', {'class': 'movie-series'})
             if not media_type:
                 media_type = VIDEO_TYPES.MOVIE
-            elif media_type[0] == 'TV SERIE':
+            elif media_type[0].content == 'TV SERIE':
                 media_type = VIDEO_TYPES.TVSHOW
                 
             if match_url and match_title and video_type == media_type:
-                match_url = match_url[0]
-                match_title = match_title[0]
+                match_url = match_url[0].attrs['href']
+                match_title = match_title[0].attrs['alt']
                 
                 match_year = re.search('-(\d{4})-', match_url)
                 if match_year:
