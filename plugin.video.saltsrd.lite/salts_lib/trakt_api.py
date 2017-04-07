@@ -45,7 +45,7 @@ class TraktNotFoundError(Exception):
 class TransientTraktError(Exception):
     pass
 
-BASE_URL = 'api-v2launch.trakt.tv'
+BASE_URL = 'api.trakt.tv'
 V2_API_KEY = 'eb41e95243d8c95152ed72a1fc0394c93cb785cb33aed609fdde1a07454584b4'
 CLIENT_SECRET = '96611f3e712a37bd8d3cac9316c4643e0e5fd0a0c02b4eaf4bba8fd57024c72e'
 REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
@@ -95,10 +95,10 @@ class Trakt_API():
         list_data = self.__call_trakt(url, params=params, auth=auth, cache_limit=cache_limit, cached=cached)
         return [item[item['type']] for item in list_data if item['type'] == TRAKT_SECTIONS[section][:-1]]
 
-    def show_watchlist(self, section):
+    def show_watchlist(self, section, cached=True):
         url = '/users/me/watchlist/%s' % (TRAKT_SECTIONS[section])
         params = {'extended': 'full'}
-        cache_limit = self.__get_cache_limit('lists', 'updated_at', cached=True)
+        cache_limit = self.__get_cache_limit('lists', 'updated_at', cached=cached)
         response = self.__call_trakt(url, params=params, cache_limit=cache_limit)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
 
@@ -150,7 +150,7 @@ class Trakt_API():
     def get_trending(self, section, page=None, filters=None):
         if filters is None: filters = {}
         url = '/%s/trending' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full', 'limit': 59}
+        params = {'extended': 'full', 'limit': self.list_size}
         params.update(filters)
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
@@ -159,7 +159,7 @@ class Trakt_API():
     def get_anticipated(self, section, page=None, filters=None):
         if filters is None: filters = {}
         url = '/%s/anticipated' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full', 'limit': 59}
+        params = {'extended': 'full', 'limit': self.list_size}
         params.update(filters)
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
@@ -168,14 +168,14 @@ class Trakt_API():
     def get_popular(self, section, page=None, filters=None):
         if filters is None: filters = {}
         url = '/%s/popular' % (TRAKT_SECTIONS[section])
-        params = {'extended': 'full', 'limit': 59}
+        params = {'extended': 'full', 'limit': self.list_size}
         params.update(filters)
         if page: params['page'] = page
         return self.__call_trakt(url, params=params)
 
     def get_recent(self, section, date, page=None):
         url = '/%s/updates/%s' % (TRAKT_SECTIONS[section], date)
-        params = {'extended': 'full', 'limit': 59}
+        params = {'extended': 'full', 'limit': self.list_size}
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
         return [item[TRAKT_SECTIONS[section][:-1]] for item in response]
@@ -192,7 +192,7 @@ class Trakt_API():
     def __get_most(self, category, section, period, page, filters):
         if filters is None: filters = {}
         url = '/%s/%s/%s' % (TRAKT_SECTIONS[section], category, period)
-        params = {'extended': 'full', 'limit': 59}
+        params = {'extended': 'full', 'limit': self.list_size}
         params.update(filters)
         if page: params['page'] = page
         response = self.__call_trakt(url, params=params)
@@ -319,7 +319,8 @@ class Trakt_API():
         length = -1
         result = []
         while length != 0 or length == HIDDEN_SIZE:
-            hidden = self.__call_trakt(url, params=params, cache_limit=7 * 24, cached=cached)
+            cache_limit = self.__get_cache_limit('shows', 'hidden_at', cached)
+            hidden = self.__call_trakt(url, params=params, cache_limit=cache_limit, cached=cached)
             length = len(hidden)
             result += hidden
             params['page'] += 1
@@ -449,7 +450,7 @@ class Trakt_API():
             else:
                 db_cache_limit = 8
         json_data = json.dumps(data) if data else None
-        headers = {'Content-Type': 'application/json', 'trakt-api-key': V2_API_KEY, 'trakt-api-version': 2}
+        headers = {'Content-Type': 'application/json', 'trakt-api-key': V2_API_KEY, 'trakt-api-version': 2, 'Accept-Encoding': 'gzip'}
         url = '%s%s%s' % (self.protocol, BASE_URL, url)
         if params: url += '?' + urllib.urlencode(params)
 
@@ -473,7 +474,10 @@ class Trakt_API():
                         data = response.read()
                         if not data: break
                         result += data
+
                     res_headers = dict(response.info().items())
+                    if res_headers.get('content-encoding') == 'gzip':
+                        result = utils2.ungz(result)
 
                     db_connection.cache_url(url, result, json_data, response.info().items())
                     break

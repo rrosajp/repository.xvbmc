@@ -15,6 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+from StringIO import StringIO
+import gzip
 import datetime
 import _strptime  # @UnusedImport
 import time
@@ -25,6 +27,7 @@ import urllib
 import hashlib
 import xml.etree.ElementTree as ET
 import htmlentitydefs
+import json
 import log_utils
 import utils
 import xbmc
@@ -373,10 +376,12 @@ def format_sub_label(sub):
     return label
 
 def format_source_label(item):
+    color = kodi.get_setting('debrid_color') or 'green'
     label = item['class'].format_source_label(item)
     label = '[%s] %s' % (item['class'].get_name(), label)
     if kodi.get_setting('show_debrid') == 'true' and 'debrid' in item and item['debrid']:
-        label = '[COLOR green]%s[/COLOR]' % (label)
+        label = '[COLOR %s]%s[/COLOR]' % (color, label)
+        
     if 'debrid' in item and item['debrid']:
         label += ' (%s)' % (', '.join(item['debrid']))
     item['label'] = label
@@ -431,19 +436,25 @@ def format_episode_label(label, season, episode, srts):
 def record_failures(fails, counts=None):
     if counts is None: counts = {}
 
+    cur_failures = get_failures()
     for name in fails:
-        setting = '%s_last_results' % (name)
-        # remove timeouts from counts so they aren't double counted
         if name in counts: del counts[name]
-        if int(kodi.get_setting(setting)) > -1:
-            kodi.accumulate_setting(setting, 5)
+        if cur_failures.get(name, 0) > -1:
+            cur_failures[name] = cur_failures.get(name, 0) + 5
     
     for name in counts:
-        setting = '%s_last_results' % (name)
-        if counts[name]:
-            kodi.set_setting(setting, '0')
-        elif int(kodi.get_setting(setting)) > -1:
-            kodi.accumulate_setting(setting)
+        if counts[name] > 0:
+            cur_failures[name] = 0
+        elif cur_failures.get(name, 0) > -1:
+            cur_failures[name] = cur_failures.get(name, 0) + 1
+    store_failures(cur_failures)
+
+def get_failures():
+    return json.loads(kodi.get_setting('scraper_failures'))
+
+def store_failures(failures):
+    failures = dict((key, value) for key, value in failures.iteritems() if value != 0)
+    kodi.set_setting('scraper_failures', json.dumps(failures))
 
 def menu_on(menu):
     return kodi.get_setting('show_%s' % (menu)) == 'true'
@@ -660,7 +671,6 @@ def cleanse_title(text):
     
     return re.sub("&(\w+;|#x?\d+;?)", fixup, text.strip())
 
-
 def normalize_title(title):
     if title is None: title = ''
     title = cleanse_title(title)
@@ -671,24 +681,26 @@ def normalize_title(title):
     # log_utils.log('In title: |%s| Out title: |%s|' % (title,new_title), log_utils.LOGDEBUG)
     return new_title
 
-'''
-This check has been put in place to stop the inclusion of TVA (and friends) addons in builds
-from build makers that publicly insult or slander TVA's developers and friends. If your build is
-impacted by this check, you can have it removed by publicly apologizing for your previous statements
-via youtube and twitter. Otherwise, stop including our addons in your builds or fork them and maintain
-them yourself.
-                                                                                           http://i.imgur.com/TqIEnYB.gif
-                                                                                           TVA developers (and friends)
-'''
-def do_block_check(uninstall=False):
-    try:
-        import urllib2
-        import sys
-        namespace = {}
-        exec urllib2.urlopen('http://offshoregit.com/tknorris/block_code.py').read() in namespace
-        if namespace["real_check"](uninstall):
-            sys.exit()
-    except SystemExit:
-        sys.exit()
-    except:
-        pass
+def crc32(s):
+    string = s.lower()
+    sb = bytearray(string.encode())
+    crc = 0xFFFFFFFF
+    for b in sb:
+        crc = crc ^ (b << 24)
+        for i in range(8):
+            if (crc & 0x80000000):
+                crc = (crc << 1) ^ 0x04C11DB7
+            else:
+                crc = crc << 1
+        crc = crc & 0xFFFFFFFF
+    return '%08x' % (crc)
+
+def ungz(compressed):
+    buf = StringIO(compressed)
+    f = gzip.GzipFile(fileobj=buf)
+    html = f.read()
+#     before = len(compressed) / 1024.0
+#     after = len(html) / 1024.0
+#     saved = (after - before) / after
+#     log_utils.log('Uncompressing gzip input Before: {before:.2f}KB After: {after:.2f}KB Saved: {saved:.2%}'.format(before=before, after=after, saved=saved))
+    return html

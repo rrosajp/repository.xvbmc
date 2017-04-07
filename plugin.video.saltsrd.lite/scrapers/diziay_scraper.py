@@ -20,7 +20,7 @@ import re
 import urlparse
 import kodi
 import log_utils  # @UnusedImport
-import dom_parser
+import dom_parser2
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
@@ -50,24 +50,26 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         hosters = []
         sources = []
-        if source_url and source_url != FORCE_NO_MATCH:
-            page_url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(page_url, cache_limit=1)
-            fragment = dom_parser.parse_dom(html, 'div', {'class': 'player'})
-            if fragment:
-                iframe_url = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
-                if iframe_url:
-                    html = self._http_get(iframe_url[0], cache_limit=.5)
-                    sources.append(self.__get_embedded_sources(html))
-                    sources.append(self.__get_linked_sources(html))
-                    for source in sources:
-                        for stream_url in source['sources']:
-                            host = self._get_direct_hostname(stream_url)
-                            if host == 'gvideo':
-                                quality = scraper_utils.gv_get_quality(stream_url)
-                                hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                                hoster['subs'] = source.get('subs', True)
-                                hosters.append(hoster)
+        if not source_url or source_url == FORCE_NO_MATCH: return hosters
+        page_url = urlparse.urljoin(self.base_url, source_url)
+        html = self._http_get(page_url, cache_limit=1)
+        fragment = dom_parser2.parse_dom(html, 'div', {'class': 'player'})
+        if not fragment: return hosters
+        
+        iframe_url = dom_parser2.parse_dom(fragment[0].content, 'iframe', req='src')
+        if not iframe_url: return hosters
+        
+        html = self._http_get(iframe_url[0].attrs['src'], cache_limit=.5)
+        sources.append(self.__get_embedded_sources(html))
+        sources.append(self.__get_linked_sources(html))
+        for source in sources:
+            for stream_url in source['sources']:
+                host = scraper_utils.get_direct_hostname(self, stream_url)
+                if host == 'gvideo':
+                    quality = scraper_utils.gv_get_quality(stream_url)
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                    hoster['subs'] = source.get('subs', True)
+                    hosters.append(hoster)
     
         return hosters
 
@@ -75,8 +77,8 @@ class Scraper(scraper.Scraper):
         sources = []
         # if captions exist, then they aren't hardcoded
         subs = '' if re.search('''"?kind"?\s*:\s*"?captions"?''', html) else 'Turkish subtitles'
-        for stream_url in dom_parser.parse_dom(html, 'source', {'type': 'video/mp4'}, ret='src'):
-            sources.append(stream_url)
+        for attrs, _content in dom_parser2.parse_dom(html, 'source', {'type': 'video/mp4'}, req='src'):
+            sources.append(attrs['src'])
         return {'sources': sources, 'subs': subs}
         
     def __get_linked_sources(self, html):
@@ -97,23 +99,25 @@ class Scraper(scraper.Scraper):
     def _get_episode_url(self, show_url, video):
         url = urlparse.urljoin(self.base_url, show_url)
         html = self._http_get(url, cache_limit=24)
-        show_id = dom_parser.parse_dom(html, 'div', {'id': 'icerikid'}, ret='value')
+        show_id = dom_parser2.parse_dom(html, 'div', {'id': 'icerikid'}, req='value')
         if show_id:
-            data = {'sezon_id': video.season, 'dizi_id': show_id[0], 'tip': 'dizi', 'bolumid': ''}
+            data = {'sezon_id': video.season, 'dizi_id': show_id[0].attrs['value'], 'tip': 'dizi', 'bolumid': ''}
             episode_pattern = 'href="([^"]+/[^"]*%s-sezon-%s-bolum[^"]*)"' % (video.season, video.episode)
             title_pattern = 'href="(?P<url>[^"]*-\d+-sezon-\d+-bolum[^"]*)[^>]*>.*?class="realcuf">(?P<title>[^<]*)'
             return self._default_get_episode_url(SEASON_URL, video, episode_pattern, title_pattern, data=data, headers=XHR)
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
-        html = self._http_get(self.base_url, cache_limit=8)
         results = []
-        fragment = dom_parser.parse_dom(html, 'div', {'class': '[^"]*dizis[^"]*'})
+        html = self._http_get(self.base_url, cache_limit=8)
+        fragment = dom_parser2.parse_dom(html, 'div', {'class': 'dizis'})
+        if not fragment: return results
+
         norm_title = scraper_utils.normalize_title(title)
-        if fragment:
-            for match in re.finditer('href="([^"]+)[^>]*>([^<]+)', fragment[0]):
-                url, match_title = match.groups()
-                if norm_title in scraper_utils.normalize_title(match_title):
-                    result = {'url': scraper_utils.pathify_url(url), 'title': scraper_utils.cleanse_title(match_title), 'year': ''}
-                    results.append(result)
+        for attrs, match_title in dom_parser2.parse_dom(fragment[0].content, 'a', req='href'):
+            match_url = attrs['href']
+            if norm_title in scraper_utils.normalize_title(match_title):
+                match_title = re.sub('<div[^>]*>.*?</div>', '', match_title)
+                result = {'url': scraper_utils.pathify_url(match_url), 'title': scraper_utils.cleanse_title(match_title), 'year': ''}
+                results.append(result)
 
         return results

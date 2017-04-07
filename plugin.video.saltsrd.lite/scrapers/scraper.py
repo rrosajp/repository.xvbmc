@@ -15,18 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-from StringIO import StringIO
 import abc
 import cookielib
 import datetime
-import gzip
 import os
 import re
 import urllib
 import urllib2
 import urlparse
-import xbmcgui
-import urlresolver
 from salts_lib import cloudflare
 from salts_lib import cf_captcha
 import kodi
@@ -36,15 +32,23 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import Q_ORDER
 from salts_lib.constants import SHORT_MONS
 from salts_lib.constants import VIDEO_TYPES
+from salts_lib.constants import DEFAULT_TIMEOUT
 from salts_lib.db_utils import DB_Connection
-from salts_lib.utils2 import i18n
+from salts_lib.utils2 import i18n, ungz
+
+try:
+    import urlresolver
+except:
+    kodi.notify(msg=i18n('smu_failed'), duration=5000)
 
 BASE_URL = ''
-CAPTCHA_BASE_URL = 'http://www.google.com/recaptcha/api'
 COOKIEPATH = kodi.translate_path(kodi.get_profile())
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 MAX_RESPONSE = 1024 * 1024 * 5
 CF_CAPCHA_ENABLED = kodi.get_setting('cf_captcha') == 'true'
+
+class ScrapeError(Exception):
+    pass
 
 class NoRedirection(urllib2.HTTPErrorProcessor):
     def http_response(self, request, response):  # @UnusedVariable
@@ -62,7 +66,6 @@ class abstractclassmethod(classmethod):
         callable.__isabstractmethod__ = True
         super(abstractclassmethod, self).__init__(callable)
 
-DEFAULT_TIMEOUT = 30
 
 class Scraper(object):
     __metaclass__ = abc.ABCMeta
@@ -215,7 +218,6 @@ class Scraper(object):
             '         <setting id="%s-enable" type="bool" label="%s %s" default="true" visible="true"/>' % (name, name, i18n('enabled')),
             '         <setting id="%s-base_url" type="text" label="    %s" default="%s" visible="eq(-1,true)"/>' % (name, i18n('base_url'), cls.base_url),
             '         <setting id="%s-sub_check" type="bool" label="    %s" default="true" visible="eq(-2,true)"/>' % (name, i18n('page_existence')),
-            '         <setting id="%s_last_results" type="number" default="0" visible="false"/>' % (name),
         ]
 
     @classmethod
@@ -317,6 +319,7 @@ class Scraper(object):
             request = urllib2.Request(url, data=data)
             request.add_header('User-Agent', scraper_utils.get_ua())
             request.add_header('Accept', '*/*')
+            request.add_header('Accept-Encoding', 'gzip')
             request.add_unredirected_header('Host', request.get_host())
             request.add_unredirected_header('Referer', referer)
             for key in headers: request.add_header(key, headers[key])
@@ -355,13 +358,15 @@ class Scraper(object):
                 return ''
             else:
                 if response.info().get('Content-Encoding') == 'gzip':
-                    buf = StringIO(response.read(MAX_RESPONSE))
-                    f = gzip.GzipFile(fileobj=buf)
-                    html = f.read()
+                    html = ungz(response.read(MAX_RESPONSE))
                 else:
                     html = response.read(MAX_RESPONSE)
         except urllib2.HTTPError as e:
-            html = e.read()
+            if e.info().get('Content-Encoding') == 'gzip':
+                html = ungz(e.read(MAX_RESPONSE))
+            else:
+                html = e.read(MAX_RESPONSE)
+                
             if CF_CAPCHA_ENABLED and e.code == 403 and 'cf-captcha-bookmark' in html:
                 html = cf_captcha.solve(url, self.cj, scraper_utils.get_ua(), self.get_name())
                 if not html:
@@ -398,24 +403,6 @@ class Scraper(object):
         if kodi.get_setting('cookie_debug') == 'true':
             log_utils.log('After Cookies: %s - %s' % (self, scraper_utils.cookies_as_str(cj)), log_utils.LOGDEBUG)
         return cj
-
-    def _do_recaptcha(self, key, tries=None, max_tries=None):
-        challenge_url = CAPTCHA_BASE_URL + '/challenge?k=%s' % (key)
-        html = self._cached_http_get(challenge_url, CAPTCHA_BASE_URL, timeout=DEFAULT_TIMEOUT, cache_limit=0)
-        match = re.search("challenge\s+\:\s+'([^']+)", html)
-        captchaimg = 'http://www.google.com/recaptcha/api/image?c=%s' % (match.group(1))
-        img = xbmcgui.ControlImage(450, 0, 400, 130, captchaimg)
-        wdlg = xbmcgui.WindowDialog()
-        wdlg.addControl(img)
-        wdlg.show()
-        header = 'Type the words in the image'
-        if tries and max_tries:
-            header += ' (Try: %s/%s)' % (tries, max_tries)
-        solution = kodi.get_keyboard(header)
-        if not solution:
-            raise Exception('You must enter text in the image to access video')
-        wdlg.close()
-        return {'recaptcha_challenge_field': match.group(1), 'recaptcha_response_field': solution}
 
     def _default_get_episode_url(self, show_url, video, episode_pattern, title_pattern='', airdate_pattern='', data=None, headers=None, method=None):
         if isinstance(show_url, unicode): show_url = show_url.encode('utf-8')
@@ -522,7 +509,8 @@ class Scraper(object):
                            search_date, match_date, date_match, search_sxe, match_sxe, sxe_match, self.get_name()),
                           log_utils.LOGDEBUG)
             if title_match and year_match and date_match and sxe_match:
-                result = {'url': scraper_utils.pathify_url(post_data['url']), 'title': scraper_utils.cleanse_title(full_title), 'year': match_year}
+                quality = scraper_utils.height_get_quality(meta['height'])
+                result = {'url': scraper_utils.pathify_url(post_data['url']), 'title': scraper_utils.cleanse_title(full_title), 'year': match_year, 'quality': quality}
                 results.append(result)
         return results
     
@@ -561,112 +549,31 @@ class Scraper(object):
                 if select != 0:
                     best_qorder = 0
                     for result in results:
-                        match = re.search('\[(.*)\]$', result['title'])
-                        if match:
-                            q_str = match.group(1)
-                            quality = scraper_utils.blog_get_quality(video, q_str, '')
-                            log_utils.log('result: |%s|%s|%s|%s|' % (result, q_str, quality, Q_ORDER[quality]), log_utils.LOGDEBUG)
-                            if Q_ORDER[quality] > best_qorder:
-                                log_utils.log('Setting best as: |%s|%s|%s|%s|' % (result, q_str, quality, Q_ORDER[quality]), log_utils.LOGDEBUG)
-                                best_result = result
-                                best_qorder = Q_ORDER[quality]
+                        if 'quality' in result:
+                            quality = result['quality']
+                        else:
+                            match = re.search('\((\d+p)\)', result['title'])
+                            if match:
+                                quality = scraper_utils.height_get_quality(match.group(1))
+                            else:
+                                match = re.search('\[(.*)\]$', result['title'])
+                                q_str = match.group(1) if match else ''
+                                quality = scraper_utils.blog_get_quality(video, q_str, '')
+                                
+                        log_utils.log('result: |%s|%s|%s|' % (result, quality, Q_ORDER[quality]), log_utils.LOGDEBUG)
+                        if Q_ORDER[quality] > best_qorder:
+                            log_utils.log('Setting best as: |%s|%s|%s|' % (result, quality, Q_ORDER[quality]), log_utils.LOGDEBUG)
+                            best_result = result
+                            best_qorder = Q_ORDER[quality]
 
                 url = best_result['url']
                 self.db_connection().set_related_url(video.video_type, video.title, video.year, self.get_name(), url, video.season, video.episode)
         return url
 
-    def _get_direct_hostname(self, link):
-        host = urlparse.urlparse(link).hostname
-        if host and any([h for h in ['google', 'picasa', 'blogspot'] if h in host]):
-            return 'gvideo'
-        else:
-            return self.get_name()
-    
-    def _parse_google(self, link):
-        sources = []
-        html = self._http_get(link, cache_limit=.25)
-        match = re.search('pid=([^&]+)', link)
-        if match:
-            vid_id = match.group(1)
-            sources = self.__parse_gplus(vid_id, html, link)
-        else:
-            if 'drive.google' in link or 'docs.google' in link:
-                sources = self._parse_gdocs(link)
-            if 'picasaweb' in link:
-                i = link.rfind('#')
-                if i > -1:
-                    link_id = link[i + 1:]
-                else:
-                    link_id = ''
-                match = re.search('feedPreload:\s*(.*}]}})},', html, re.DOTALL)
-                if match:
-                    js = scraper_utils.parse_json(match.group(1), link)
-                    for item in js['feed']['entry']:
-                        if not link_id or item['gphoto$id'] == link_id:
-                            for media in item['media']['content']:
-                                if media['type'].startswith('video'):
-                                    sources.append(media['url'].replace('%3D', '='))
-                else:
-                    match = re.search('preload\'?:\s*(.*}})},', html, re.DOTALL)
-                    if match:
-                        js = scraper_utils.parse_json(match.group(1), link)
-                        for media in js['feed']['media']['content']:
-                            if media['type'].startswith('video'):
-                                sources.append(media['url'].replace('%3D', '='))
-
-        sources = list(set(sources))
-        return sources
-
-    def __parse_gplus(self, vid_id, html, link=''):
-        sources = []
-        match = re.search('return\s+(\[\[.*?)\s*}}', html, re.DOTALL)
-        if match:
-            try:
-                js = scraper_utils.parse_json(match.group(1), link)
-                for top_item in js:
-                    if isinstance(top_item, list):
-                        for item in top_item:
-                            if isinstance(item, list):
-                                for item2 in item:
-                                    if isinstance(item2, list):
-                                        for item3 in item2:
-                                            if item3 == vid_id:
-                                                sources = self.__extract_video(item2)
-            except Exception as e:
-                log_utils.log('Google Plus Parse failure: %s - %s' % (link, e), log_utils.LOGWARNING)
-        return sources
-
-    def __extract_video(self, item):
-        sources = []
-        for e in item:
-            if isinstance(e, dict):
-                for key in e:
-                    for item2 in e[key]:
-                        if isinstance(item2, list):
-                            for item3 in item2:
-                                if isinstance(item3, list):
-                                    for item4 in item3:
-                                        if isinstance(item4, basestring):
-                                            s = urllib.unquote(item4).replace('\\0026', '&').replace('\\003D', '=')
-                                            for match in re.finditer('url=([^&]+)', s):
-                                                sources.append(match.group(1))
-        return sources
-        
-    def _parse_gdocs(self, link):
-        urls = []
-        html = self._http_get(link, cache_limit=.5)
-        for match in re.finditer('\[\s*"([^"]+)"\s*,\s*"([^"]+)"\s*\]', html):
-            key, value = match.groups()
-            if key == 'fmt_stream_map':
-                items = value.split(',')
-                for item in items:
-                    _source_fmt, source_url = item.split('|')
-                    source_url = source_url.replace('\\u003d', '=').replace('\\u0026', '&')
-                    source_url = urllib.unquote(source_url)
-                    source_url += '|Cookie=%s' % (self._get_stream_cookies())
-                    urls.append(source_url)
-                    
-        return urls
+    def db_connection(self):
+        if self.__db_connection is None:
+            self.__db_connection = DB_Connection()
+        return self.__db_connection
 
     def _get_cookies(self):
         cj = self._set_cookies(self.base_url, {})
@@ -674,49 +581,5 @@ class Scraper(object):
         return cookies
         
     def _get_stream_cookies(self):
-        cookies = ['%s=%s' % (key, value) for key, value in self._get_cookies().items()]
+        cookies = ['%s=%s' % (key, value) for key, value in self._get_cookies().iteritems()]
         return urllib.quote('; '.join(cookies))
-
-    def db_connection(self):
-        if self.__db_connection is None:
-            self.__db_connection = DB_Connection()
-        return self.__db_connection
-
-    def _parse_sources_list(self, html):
-        sources = {}
-        match = re.search('sources\s*:\s*\[(.*?)\]', html, re.DOTALL)
-        if not match:
-            match = re.search('sources\s*:\s*\{(.*?)\}', html, re.DOTALL)
-            
-        if match:
-            for match in re.finditer('''['"]?file['"]?\s*:\s*['"]([^'"]+)['"][^}]*['"]?label['"]?\s*:\s*['"]([^'"]*)''', match.group(1), re.DOTALL):
-                stream_url, label = match.groups()
-                stream_url = stream_url.replace('\/', '/')
-                if self._get_direct_hostname(stream_url) == 'gvideo':
-                    sources[stream_url] = {'quality': scraper_utils.gv_get_quality(stream_url), 'direct': True}
-                elif re.search('\d+p?', label, re.I):
-                    sources[stream_url] = {'quality': scraper_utils.height_get_quality(label), 'direct': True}
-                else:
-                    sources[stream_url] = {'quality': label, 'direct': True}
-        return sources
-
-    def _get_files(self, url, headers=None, cache_limit=.5):
-        sources = []
-        for row in self._parse_directory(self._http_get(url, headers=headers, cache_limit=cache_limit)):
-            source_url = scraper_utils.urljoin(url, row['link'])
-            if row['directory'] and not row['link'].startswith('..'):
-                sources += self._get_files(source_url, headers={'Referer': url}, cache_limit=cache_limit)
-            else:
-                row['url'] = source_url
-                sources.append(row)
-        return sources
-    
-    def _parse_directory(self, html):
-        rows = []
-        for match in re.finditer(self.row_pattern, html):
-            row = match.groupdict()
-            if row['title'].endswith('/'): row['title'] = row['title'][:-1]
-            row['directory'] = True if row['link'].endswith('/') else False
-            if row['size'] == '-': row['size'] = None
-            rows.append(row)
-        return rows

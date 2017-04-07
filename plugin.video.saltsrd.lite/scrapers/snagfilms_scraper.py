@@ -20,7 +20,7 @@ import urllib
 import urlparse
 import kodi
 import log_utils  # @UnusedImport
-import dom_parser
+import dom_parser2
 import json
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
@@ -54,26 +54,26 @@ class Scraper(scraper.Scraper):
     def get_sources(self, video):
         source_url = self.get_url(video)
         hosters = []
-        if source_url and source_url != FORCE_NO_MATCH:
-            page_url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(page_url, cache_limit=.5)
-            fragment = dom_parser.parse_dom(html, 'div', {'class': 'film-container'})
-            if fragment:
-                iframe_url = dom_parser.parse_dom(fragment[0], 'iframe', ret='src')
-                if iframe_url:
-                    iframe_url = urlparse.urljoin(self.base_url, iframe_url[0])
-                    headers = {'Referer': page_url}
-                    html = self._http_get(iframe_url, headers=headers, cache_limit=.5)
-                    sources = self._parse_sources_list(html)
-                    for source in sources:
-                        quality = sources[source]['quality']
-                        host = self._get_direct_hostname(source)
-                        stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua(), 'Referer': iframe_url})
-                        hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
-                        match = re.search('(\d+[a-z]bps)', source)
-                        if match:
-                            hoster['extra'] = match.group(1)
-                        hosters.append(hoster)
+        if not source_url or source_url == FORCE_NO_MATCH: return hosters
+        page_url = urlparse.urljoin(self.base_url, source_url)
+        html = self._http_get(page_url, cache_limit=.5)
+        fragment = dom_parser2.parse_dom(html, 'div', {'class': 'film-container'})
+        if fragment:
+            iframe_url = dom_parser2.parse_dom(fragment[0].content, 'iframe', req='src')
+            if iframe_url:
+                iframe_url = urlparse.urljoin(self.base_url, iframe_url[0].attrs['src'])
+                headers = {'Referer': page_url}
+                html = self._http_get(iframe_url, headers=headers, cache_limit=.5)
+                sources = scraper_utils.parse_sources_list(self, html)
+                for source in sources:
+                    quality = sources[source]['quality']
+                    host = scraper_utils.get_direct_hostname(self, source)
+                    stream_url = source + scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua(), 'Referer': iframe_url})
+                    hoster = {'multi-part': False, 'host': host, 'class': self, 'quality': quality, 'views': None, 'rating': None, 'url': stream_url, 'direct': True}
+                    match = re.search('(\d+[a-z]bps)', source)
+                    if match:
+                        hoster['extra'] = match.group(1)
+                    hosters.append(hoster)
                         
         hosters.sort(key=lambda x: x.get('extra', ''), reverse=True)
         return hosters
@@ -107,8 +107,8 @@ class Scraper(scraper.Scraper):
     def get_settings(cls):
         settings = super(cls, cls).get_settings()
         name = cls.get_name()
-        settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-4,true)"/>' % (name, i18n('username')))
-        settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-5,true)"/>' % (name, i18n('password')))
+        settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-3,true)"/>' % (name, i18n('username')))
+        settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-4,true)"/>' % (name, i18n('password')))
         return settings
 
     def _http_get(self, url, params=None, data=None, headers=None, auth=True, method=None, cache_limit=8):
@@ -117,7 +117,7 @@ class Scraper(scraper.Scraper):
             return ''
 
         html = super(self.__class__, self)._http_get(url, params=params, data=data, headers=headers, method=method, cache_limit=cache_limit)
-        if auth and not dom_parser.parse_dom(html, 'span', {'class': 'user-name'}):
+        if auth and not dom_parser2.parse_dom(html, 'span', {'class': 'user-name'}):
             log_utils.log('Logging in for url (%s)' % (url), log_utils.LOGDEBUG)
             self.__login()
             html = super(self.__class__, self)._http_get(url, params=params, data=data, headers=headers, method=method, cache_limit=0)

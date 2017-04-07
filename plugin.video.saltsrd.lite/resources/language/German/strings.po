@@ -2,15 +2,16 @@
 # Addon id: plugin.video.saltsrd.lite
 # Addon Provider: TV Addons
 # Translators:
-# Viper2k4, 2016
+# breaksrmine, 2017
+# Viper2k4, 2016-2017
 # eidermar, 2016
 # eidermar, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2016-12-09 23:43+0000\n"
-"Last-Translator: Viper2k4\n"
+"PO-Revision-Date: 2017-03-28 19:56+0000\n"
+"Last-Translator: tknorris\n"
 "Language-Team: German (http://www.transifex.com/tv-addons/salts/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "Einstellungen"
 
 msgctxt "#30005"
 msgid "Scraper Sort Order"
-msgstr "Sortierung Index Seiten"
+msgstr "Sortierung Indexseiten"
 
 msgctxt "#30006"
 msgid "Url Resolver Settings"
@@ -933,8 +934,8 @@ msgid "Remove Unusable Indirect sources from results"
 msgstr "Unbrauchbare indirekte Quellen von den Ergebnissen entfernen"
 
 msgctxt "#30239"
-msgid "Show Debrid sources in Green"
-msgstr "Debrid Quellen in Grün anzeigen"
+msgid "Highlight Debrid Sources in results"
+msgstr "Debrid-Quellen in Ergebnissen hervorheben"
 
 msgctxt "#30240"
 msgid "No Limit on Maximum Source Results"
@@ -1132,6 +1133,14 @@ msgstr "Einträge zum Verzeichnis hinzufügen"
 msgctxt "#30288"
 msgid "Working..."
 msgstr "Arbeite..."
+
+msgctxt "#30289"
+msgid "Re-Scrape All"
+msgstr "Alles erneut auslesen"
+
+msgctxt "#30290"
+msgid "Manual Search (All Unmatched Only)"
+msgstr "Manuelle Suche (nur alle nicht übereinstimmenden)"
 
 msgctxt "#30291"
 msgid "Torba Account Authorization"
@@ -1782,8 +1791,8 @@ msgid "All"
 msgstr "Alles"
 
 msgctxt "#30652"
-msgid "Show Debrid Supported Sources in Green"
-msgstr "Debrid unterstützte Quellen in Grün anzeigen"
+msgid "Show Debrid Supported Sources in ..."
+msgstr "Zeige Debrid unterstützte Quellen in ..."
 
 msgctxt "#30653"
 msgid "6th Sort Key"
@@ -2061,9 +2070,17 @@ msgctxt "#30722"
 msgid "Enable Clearart"
 msgstr "Clearart aktivieren"
 
+msgctxt "#30723"
+msgid "Artwork Scraping"
+msgstr "Artwork auslesen"
+
 msgctxt "#30724"
 msgid "Enable Thumbnails"
 msgstr "Aktiviere Miniaturansichten"
+
+msgctxt "#30725"
+msgid "Artwork Types"
+msgstr " Artwort Typen"
 
 msgctxt "#30726"
 msgid "    Use animated posters when available"
@@ -2076,4 +2093,8 @@ msgstr "Aktiviere Besetzung Miniaturansichten"
 msgctxt "#30728"
 msgid "    *** Install TMDB API Cache ***"
 msgstr "*** Installiere TMDB API Cache ***"
+
+msgctxt "#30729"
+msgid "    Debrid Highlight Color"
+msgstr "Hervorhebungsfarbe für Debrid"
 

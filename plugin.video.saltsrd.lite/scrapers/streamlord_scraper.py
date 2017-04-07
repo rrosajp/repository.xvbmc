@@ -20,7 +20,7 @@ from string import capwords
 import urlparse
 import kodi
 import log_utils  # @UnusedImport
-import dom_parser
+import dom_parser2
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
@@ -49,23 +49,23 @@ class Scraper(scraper.Scraper):
         return 'StreamLord'
 
     def get_sources(self, video):
-        source_url = self.get_url(video)
         hosters = []
-        if source_url and source_url != FORCE_NO_MATCH:
-            url = urlparse.urljoin(self.base_url, source_url)
-            html = self._http_get(url, cache_limit=1)
-            match = re.search('''["']sources['"]\s*:\s*\[(.*?)\]''', html, re.DOTALL)
-            if match:
-                for match in re.finditer('''['"]*file['"]*\s*:\s*([^\(]+)''', match.group(1), re.DOTALL):
-                    stream_url = self.__decode(match.group(1), html)
-                    if stream_url:
-                        if video.video_type == VIDEO_TYPES.MOVIE:
-                            quality = QUALITIES.HD720
-                        else:
-                            quality = QUALITIES.HIGH
-                        stream_url += scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua(), 'Referer': url, 'Cookie': self._get_stream_cookies()})
-                        hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'url': stream_url, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
-                        hosters.append(hoster)
+        source_url = self.get_url(video)
+        if not source_url or source_url == FORCE_NO_MATCH: return hosters
+        url = urlparse.urljoin(self.base_url, source_url)
+        html = self._http_get(url, cache_limit=1)
+        match = re.search('''["']sources['"]\s*:\s*\[(.*?)\]''', html, re.DOTALL)
+        if match:
+            for match in re.finditer('''['"]*file['"]*\s*:\s*([^\(]+)''', match.group(1), re.DOTALL):
+                stream_url = self.__decode(match.group(1), html)
+                if stream_url:
+                    if video.video_type == VIDEO_TYPES.MOVIE:
+                        quality = QUALITIES.HD720
+                    else:
+                        quality = QUALITIES.HIGH
+                    stream_url += scraper_utils.append_headers({'User-Agent': scraper_utils.get_ua(), 'Referer': url, 'Cookie': self._get_stream_cookies()})
+                    hoster = {'multi-part': False, 'host': scraper_utils.get_direct_hostname(self, stream_url), 'class': self, 'url': stream_url, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
+                    hosters.append(hoster)
 
         return hosters
 
@@ -94,9 +94,9 @@ class Scraper(scraper.Scraper):
             return self.__do_join(match.group(1))
     
     def __get_fragment(self, span, html):
-        fragment = dom_parser.parse_dom(html, 'span', {'id': span})
+        fragment = dom_parser2.parse_dom(html, 'span', {'id': span})
         if fragment:
-            return fragment[0]
+            return fragment[0].content
     
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="(episode[^"]*-[Ss]%02d[Ee]%02d-[^"]+)' % (int(video.season), int(video.episode))
@@ -107,8 +107,8 @@ class Scraper(scraper.Scraper):
     def get_settings(cls):
         settings = super(cls, cls).get_settings()
         name = cls.get_name()
-        settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-4,true)"/>' % (name, i18n('username')))
-        settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-5,true)"/>' % (name, i18n('password')))
+        settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-3,true)"/>' % (name, i18n('username')))
+        settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-4,true)"/>' % (name, i18n('password')))
         return settings
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
@@ -123,7 +123,7 @@ class Scraper(scraper.Scraper):
             query_type = 'watch-tvshow-'
 
         norm_title = scraper_utils.normalize_title(title)
-        for item in dom_parser.parse_dom(html, 'a', {'href': '#'}):
+        for _attrs, item in dom_parser2.parse_dom(html, 'a', {'href': '#'}):
             match = re.search('href="(%s[^"]+)' % (query_type), item)
             if match:
                 link = match.group(1)

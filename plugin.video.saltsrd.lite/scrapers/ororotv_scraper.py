@@ -47,19 +47,19 @@ class Scraper(scraper.Scraper):
         return 'ororo.tv'
 
     def get_sources(self, video):
-        source_url = self.get_url(video)
         hosters = []
-        if source_url and source_url != FORCE_NO_MATCH:
-            query = urlparse.parse_qs(urlparse.urlparse(source_url).query)
-            if 'id' in query:
-                vid_type = 'movies' if video.video_type == VIDEO_TYPES.MOVIE else 'episodes'
-                url = urlparse.urljoin(self.base_url, '/api/v2/%s/%s' % (vid_type, query['id'][0]))
-                js_data = self._http_get(url, cache_limit=.5)
-                if 'url' in js_data:
-                    stream_url = js_data['url']
-                    quality = QUALITIES.HD720
-                    hoster = {'multi-part': False, 'host': self._get_direct_hostname(stream_url), 'class': self, 'url': stream_url, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
-                    hosters.append(hoster)
+        source_url = self.get_url(video)
+        if not source_url or source_url == FORCE_NO_MATCH: return hosters
+        query = urlparse.parse_qs(urlparse.urlparse(source_url).query)
+        if 'id' in query:
+            vid_type = 'movies' if video.video_type == VIDEO_TYPES.MOVIE else 'episodes'
+            url = urlparse.urljoin(self.base_url, '/api/v2/%s/%s' % (vid_type, query['id'][0]))
+            js_data = self._http_get(url, cache_limit=.5)
+            if 'url' in js_data:
+                stream_url = js_data['url']
+                quality = QUALITIES.HD720
+                hoster = {'multi-part': False, 'host': scraper_utils.get_direct_hostname(self, stream_url), 'class': self, 'url': stream_url, 'quality': quality, 'views': None, 'rating': None, 'direct': True}
+                hosters.append(hoster)
         return hosters
 
     def _get_episode_url(self, show_url, video):
@@ -115,8 +115,8 @@ class Scraper(scraper.Scraper):
     def get_settings(cls):
         settings = super(cls, cls).get_settings()
         name = cls.get_name()
-        settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-4,true)"/>' % (name, i18n('username')))
-        settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-5,true)"/>' % (name, i18n('password')))
+        settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-3,true)"/>' % (name, i18n('username')))
+        settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-4,true)"/>' % (name, i18n('password')))
         return settings
 
     def _http_get(self, url, data=None, headers=None, cookies=None, cache_limit=8):

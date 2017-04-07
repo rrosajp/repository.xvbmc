@@ -58,26 +58,26 @@ class Scraper(scraper.Scraper):
     def get_sources(self, video):
         hosters = []
         source_url = self.get_url(video)
-        if source_url and source_url != FORCE_NO_MATCH:
-            params = urlparse.parse_qs(urlparse.urlparse(source_url).query)
-            if 'title' in params:
-                query = params['title'][0].replace("'", "")
-                if video.video_type == VIDEO_TYPES.MOVIE:
-                    if 'year' in params: query += ' %s' % (params['year'][0])
-                else:
-                    sxe = ''
-                    if 'season' in params:
-                        sxe = 'S%02d' % (int(params['season'][0]))
-                    if 'episode' in params:
-                        sxe += 'E%02d' % (int(params['episode'][0]))
-                    if sxe: query = '%s %s' % (query, sxe)
-                query = urllib.quote_plus(query)
+        if not source_url or source_url == FORCE_NO_MATCH: return hosters
+        params = urlparse.parse_qs(urlparse.urlparse(source_url).query)
+        if 'title' in params:
+            query = params['title'][0].replace("'", "")
+            if video.video_type == VIDEO_TYPES.MOVIE:
+                if 'year' in params: query += ' %s' % (params['year'][0])
+            else:
+                sxe = ''
+                if 'season' in params:
+                    sxe = 'S%02d' % (int(params['season'][0]))
+                if 'episode' in params:
+                    sxe += 'E%02d' % (int(params['episode'][0]))
+                if sxe: query = '%s %s' % (query, sxe)
+            query = urllib.quote_plus(query)
+            query_url = '/search?query=%s' % (query)
+            hosters = self.__get_links(query_url, video)
+            if not hosters and video.video_type == VIDEO_TYPES.EPISODE and params['air_date'][0]:
+                query = urllib.quote_plus('%s %s' % (params['title'][0], params['air_date'][0].replace('-', '.')))
                 query_url = '/search?query=%s' % (query)
                 hosters = self.__get_links(query_url, video)
-                if not hosters and video.video_type == VIDEO_TYPES.EPISODE and params['air_date'][0]:
-                    query = urllib.quote_plus('%s %s' % (params['title'][0], params['air_date'][0].replace('-', '.')))
-                    query_url = '/search?query=%s' % (query)
-                    hosters = self.__get_links(query_url, video)
 
         return hosters
     
@@ -104,7 +104,7 @@ class Scraper(scraper.Scraper):
             
             stream_url = down_url + urllib.quote('/%s/%s/%s%s/%s%s' % (dl_farm, dl_port, post_hash, ext, post_title, ext))
             stream_url = stream_url + '|Authorization=%s' % (urllib.quote(self.auth))
-            host = self._get_direct_hostname(stream_url)
+            host = scraper_utils.get_direct_hostname(self, stream_url)
             quality = None
             if 'width' in item:
                 try: width = int(item['width'])
@@ -157,10 +157,10 @@ class Scraper(scraper.Scraper):
         settings = super(cls, cls).get_settings()
         settings = scraper_utils.disable_sub_check(settings)
         name = cls.get_name()
-        settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-4,true)"/>' % (name, i18n('username')))
-        settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-5,true)"/>' % (name, i18n('password')))
-        settings.append('         <setting id="%s-result_limit" label="     %s" type="slider" default="10" range="10,100" option="int" visible="eq(-6,true)"/>' % (name, i18n('result_limit')))
-        settings.append('         <setting id="%s-size_limit" label="     %s" type="slider" default="0" range="0,50" option="int" visible="eq(-7,true)"/>' % (name, i18n('size_limit')))
+        settings.append('         <setting id="%s-username" type="text" label="     %s" default="" visible="eq(-3,true)"/>' % (name, i18n('username')))
+        settings.append('         <setting id="%s-password" type="text" label="     %s" option="hidden" default="" visible="eq(-4,true)"/>' % (name, i18n('password')))
+        settings.append('         <setting id="%s-result_limit" label="     %s" type="slider" default="10" range="10,100" option="int" visible="eq(-5,true)"/>' % (name, i18n('result_limit')))
+        settings.append('         <setting id="%s-size_limit" label="     %s" type="slider" default="0" range="0,50" option="int" visible="eq(-6,true)"/>' % (name, i18n('size_limit')))
         return settings
 
     def _http_get(self, url, params=None, cache_limit=8):
