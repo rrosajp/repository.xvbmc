@@ -25,10 +25,11 @@
 import re,base64,urllib,urllib2,uuid
 import xbmc,xbmcaddon,xbmcgui,xbmcplugin
 import os,shutil,time
-import downloader,extract
 import sqlite3
-import common as Common
+from libs import downloader,extract
+from libs import common as Common
 
+from libs import addon_able
 
 ################ ProgTitle="XvBMC Update+Development" #################
 AddonID        = 'script.xvbmc.update'
@@ -102,6 +103,7 @@ def mainMenu():
 	addItem('XvBMC [COLOR white]#DEV#[/COLOR] Corner [COLOR dimgray](firmware, OS, etc.)[/COLOR]', 'url', 8,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [B]A[/B]dvancedsettings Unlocker [COLOR dimgray](reset)[/COLOR]', 'url', 12,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [B]E[/B]nable Kodi [COLOR white]Addons[/COLOR] [COLOR dimgray](v[COLOR white]17[/COLOR] Krypton)[/COLOR]', 'url', 14,os.path.join(mediaPath, "dev.png"))
+	addItem('XvBMC [B]E[/B]nable Kodi [COLOR white]RTMP[/COLOR] [COLOR dimgray](v[COLOR white]17[/COLOR] Krypton)[/COLOR]', 'url', 15,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [COLOR white]O[/COLOR]ver[COLOR white]C[/COLOR]lock [COLOR dimgray] (raspberry pi **only**)[/COLOR]', 'url', 7,os.path.join(mediaPath, "dev.png"))
 	addItem('XvBMC [B]S[/B]choonmaak/[B]M[/B]aintenance [COLOR darkgreen][I](kodi schoonmaak)[/I][/COLOR]', 'url', 11,os.path.join(mediaPath, "xvbmc.png"))
 	addItem('XvBMC [B]W[/B]hois & about [COLOR dimgray](over xvbmc & [COLOR dodgerblue][B]i[/B][/COLOR]nfo)[/COLOR]', 'url', 9,os.path.join(mediaPath, "xvbmc.png"))
@@ -548,11 +550,11 @@ def xvbmcMaintenance(url):
     pluginpath=os.path.exists(xbmc.translatePath(os.path.join('special://home','addons','script.schoonmaak')))
     if pluginpath: xbmc.executebuiltin("RunAddon(script.schoonmaak)")
     else:
-        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.19.zip'
+        url=base64.b64decode(base)+'script.schoonmaak/script.schoonmaak-1.10.22.zip'
         path = xbmc.translatePath(os.path.join('special://home','addons','packages'))
         if not os.path.exists(path):
             os.makedirs(path)
-        lib=os.path.join(path, 'script.schoonmaak-1.10.19.zip')
+        lib=os.path.join(path, 'script.schoonmaak-1.10.22.zip')
         try:
             os.remove(lib)
         except:
@@ -590,6 +592,19 @@ def AddonsEnable():
         else: pass
     else:
         dialog.ok(MainTitle +' : add-ons enabler', '[COLOR=red][B]!!!  NOPE  !!![/B][/COLOR]','[US] you\'re not running Kodi v17 Krypton.','[NL] dit is geen Kodi v17 Krypton.')
+
+def EnableRTMP():
+		dialog = xbmcgui.Dialog()
+		try: addon_able.set_enabled("inputstream.adaptive")
+		except: pass
+		time.sleep(0.5)
+		try: addon_able.set_enabled("inputstream.rtmp")
+		except: pass
+		time.sleep(0.5)
+		xbmc.executebuiltin("XBMC.UpdateLocalAddons()")
+		#xbmc.executebuiltin("UpdateLocalAddons")
+		dialog.ok("Operation Complete!", "Live Streaming has been Enabled!",
+		"    Brought To You By %s " % MainTitle)
 
 
 def OPEN_URL(url):
@@ -783,6 +798,9 @@ elif mode==13:
 
 elif mode==14:
 	AddonsEnable()
+
+elif mode==15:
+	EnableRTMP()
 
 
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
