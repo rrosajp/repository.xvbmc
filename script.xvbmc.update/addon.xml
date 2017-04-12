@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.xvbmc.update"
        name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; [COLOR white]DEV[/COLOR]elopment [COLOR darkgreen] [I](v4+)[/I][/COLOR]"
-       version="4.0.10"
+       version="4.0.11"
        provider-name="EPiC XvBMC-NL">
   <requires>
     <import addon="repository.xvbmc"  version="4.0.1"/>
@@ -22,5 +22,11 @@
     <forum>http://bit.ly/XvBMC-Pi</forum>
     <website>http://bit.ly/XvBMC-NL</website>
     <source>https://www.fb.com/groups/XvBMCnederland/</source>
+    <news>Code Cosmetics v4.0.11</news>
+    <assets>
+        <icon>icon.png</icon>
+        <fanart>fanart.jpg</fanart>
+        <screenshot></screenshot>
+    </assets>
   </extension>
 </addon>

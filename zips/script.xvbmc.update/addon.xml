@@ -22,5 +22,11 @@
     <forum>http://bit.ly/XvBMC-Pi</forum>
     <website>http://bit.ly/XvBMC-NL</website>
     <source>https://www.fb.com/groups/XvBMCnederland/</source>
+    <news>Code Cosmetics v4.0.11</news>
+    <assets>
+        <icon>icon.png</icon>
+        <fanart>fanart.jpg</fanart>
+        <screenshot></screenshot>
+    </assets>
   </extension>
 </addon>
