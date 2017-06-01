@@ -447,6 +447,7 @@ class TSDownloader():
             if self.proxy and len(self.proxy)==0:
                 self.proxy=None
             self.out_stream=out_stream
+            if g_stopEvent: g_stopEvent.clear()
             self.g_stopEvent=g_stopEvent
             if '|' in url:
                 sp = url.split('|')
@@ -457,12 +458,13 @@ class TSDownloader():
             #print 'header recieved now url and headers are',url, self.clientHeader 
             self.status='init done'
             self.url=url
-            return self.downloadInternal(testurl=True)
+            return True #disable for time being
+            #return self.downloadInternal(testurl=True)
             
             #os.remove(self.outputfile)
         except: 
             traceback.print_exc()
-            self.status='finished'
+        self.status='finished'
         return False
      
         
@@ -473,6 +475,7 @@ class TSDownloader():
         except: 
             traceback.print_exc()
         self.status='finished'
+            
 
             
         
@@ -490,7 +493,7 @@ class TSDownloader():
             fixpid=256
             ignoredblock=None
             sleeptime=0
-            firsttimeurl=True
+            firsttimeurl=False
             while True:
                 if sleeptime>0: 
                     xbmc.sleep(sleeptime)
@@ -504,17 +507,20 @@ class TSDownloader():
                 wrotesomething=False
                 currentduration=0
                 limit=1024*188
+                if testurl: limit=1024
                 lastdataread=limit
                 
                 
                 #print 'starting.............. new url',wrotesomething
                 try:
                     if self.g_stopEvent and self.g_stopEvent.isSet():
-                        return
+                        print 'event set'
+                        return False
                     while (buf != None and len(buf) > 0 and lastdataread>0):
                         
                         if self.g_stopEvent and self.g_stopEvent.isSet():
-                            return
+                            print 'event set'
+                            return False
                         try:
                             
                             buf = response.read(limit)##500 * 1024)
@@ -522,11 +528,19 @@ class TSDownloader():
                             byteread+=lastdataread
                             #print 'got data',len(buf)
                             if lastdataread==0: print 1/0
-                            if testurl: return True
+                            if testurl: 
+                                print 'test complete true'
+                                response.close()
+                                return True
                         except:
-                            if testurl: return False
-                            buf=None
                             traceback.print_exc(file=sys.stdout)
+                            print 'testurl',testurl,lost
+                            if testurl and lost>10: 
+                                print 'test complete false'
+                                response.close()
+                                return False
+                            buf=None
+                            
                             lost+=1
                             
                             if lost>10 or firsttimeurl:
@@ -600,7 +614,7 @@ class TSDownloader():
                                     else:
                                         #if lastforcurrent==None:
                                         #    print 'NONE ISSUE', buf.encode("hex")
-                                        print 'problembytes','diff',lastpts-lastforcurrent, lastpts, lastforcurrent
+                                        print 'problembytes','diff',lastpts,lastforcurrent, lastpts, lastforcurrent
                                         #buf.encode("hex")
                                         ignoredblock=writebuf
                                         ignorefind+=1#same or old data?
@@ -710,7 +724,7 @@ class TSDownloader():
                     traceback.print_exc(file=sys.stdout)
                     response.close()
                     fileout.close()
-                    return
+                    return False
                 
 
         except:

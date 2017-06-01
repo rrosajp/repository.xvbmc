@@ -114,10 +114,9 @@ class HostedMediaFile:
         elements = urlparse.urlparse(url)
         domain = elements.netloc or elements.path
         domain = domain.split('@')[-1].split(':')[0]
-        regex = "(\w{2,}\.\w{2,3}\.\w{2}|\w{2,}\.\w{2,3})$"
+        regex = "(?:www\.)?([\w\-]*\.[\w\-]{2,3}(?:\.[\w\-]{2,3})?)$"
         res = re.search(regex, domain)
-        if res:
-            domain = res.group(1)
+        if res: domain = res.group(1)
         domain = domain.lower()
         return domain
 
@@ -179,6 +178,7 @@ class HostedMediaFile:
                         resolver.login()
                         self._host, self._media_id = resolver.get_host_and_id(self._url)
                         stream_url = resolver.get_media_url(self._host, self._media_id)
+                        if stream_url.startswith("//"): stream_url = 'http:%s' % stream_url
                         if stream_url and self.__test_stream(stream_url):
                             self.__resolvers = [resolver]  # Found a working resolver, throw out the others
                             self._valid_url = True

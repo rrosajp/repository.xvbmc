@@ -231,11 +231,6 @@ def doMenu(mode):
 
     utils.log('Capture window\t: %d' % window)
 
-    #active = [0, 1, 2, 3, 25, 40, 500, 501, 502, 601, 2005]
-    #if window-10000 not in active:
-    #    doStandard(useScript=False)
-    #    return
-
     if window > 12999:
         doStandard(useScript=False)
         return
@@ -257,13 +252,15 @@ def doMenu(mode):
         doStandard(useScript=False)
         return
 
-    params = menuUtils.getCurrentParams()
-    try:    meta = menuUtils.getCurrentMeta()
-    except: meta = {}
+    try:    params = menuUtils.getCurrentParams()
+    except: params = None
 
     if params == None:
         doStandard(useScript=False)
         return
+
+    try:    meta = menuUtils.getCurrentMeta()
+    except: meta = {}
 
     utils.outputDict(params, 'Capture Parameters')
     utils.outputDict(meta,   'Capture Metadata')
@@ -343,7 +340,8 @@ def doMenu(mode):
             doStandard(useScript=False)
             return 
   
-        menu.append((xbmc.getLocalizedString(31040), _PLAYLIST)) #Now Playing
+        nowPlaying = GETTEXT(30220)
+        menu.append((nowPlaying, _PLAYLIST))
         
                     
     if len(menu) == 0 or (len(menu) == 1 and stdMenu):
@@ -487,8 +485,8 @@ def main():
 
         if sys.argv[-1].lower() == 'launchsfmenu':
             mode = 2 #launched via LaunchSFMenu script
-    
-    try:      
+
+    try:   
         menu(mode)
     except Exception, e:
         utils.log('Exception in capture.py %s' % str(e))

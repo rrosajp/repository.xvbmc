@@ -87,7 +87,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<addon id="plugin.program.super.favourites" name="Super Favourites" version="1.0.56" provider-name="spoyser">
+<addon id="plugin.program.super.favourites" name="Super Favourites" version="1.0.59" provider-name="spoyser">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
     <import addon="script.module.metahandler" optional="true" />
@@ -114,15 +114,8 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <email>seanpoyser at gmail.com</email>
 
     <news>
-1.0.56: 19th February 2017
-    - added optional initial path, and include play folder parameters to quicklaunch script
-        usage: xbmc.runscript(special://home/addons/plugin.program.super.favourites/quicklaunch.py,folder1/folder2,True)
-    - fixed playlist parsing
-    - fixed quicklaunch in Krypton
-    - fixed launching ExecuteBuiltin types from the quick launch dialog
-    - fixed launching playable items added from FileManager
-    - fixed launching playable items from widgets
-    - various other fixes due to changes in Krypton
+1.0.59: 29th May 2017
+    - 'Now playing' text now defined by SF due to skin variations
     </news>
 
   </extension>
@@ -169,7 +162,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 
 <addon id="plugin.video.Allesin1NL!"
 	   name="Alles in [COLOR orange][B]1[/B][/COLOR] NL [COLOR dimgray](by[/COLOR] [COLOR lime]X[/COLOR][COLOR dimgray]v[/COLOR][COLOR white]BMC[/COLOR] [COLOR dimgray][B]NL[/B])[/COLOR]"
-	   version="1.0.9"
+	   version="1.0.10"
        provider-name="XvBMC-NL">
   <requires>
     <import addon="repository.xvbmc" version="4.0.1"/>
@@ -189,7 +182,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
     <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
     <website>http://bit.ly/XvBMC-NL</website>
     <source>https://www.facebook.com/groups/XvBMCnederland/</source>
-    <news>[B]Version 1.0.9[/B]: +CodeCosmetics +VoOdOo</news>
+    <news>[B]Version 1.0.10[/B]: +CodeCosmetics +VoOdOo</news>
     <assets>
         <icon>icon.png</icon>
         <fanart>fanart.jpg</fanart>

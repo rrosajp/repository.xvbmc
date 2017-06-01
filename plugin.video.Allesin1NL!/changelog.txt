@@ -1,3 +1,8 @@
+[B]Version 1.0.10[/B]
+ + VoOdOo+CodeCosmetics
+ !! HINT !! aan bepaald persoon, bedenk zelf wat ipv 'COPY/PASTE'
+ -- (zelf playlists beheren is toch even wat anders dan kopieren)
+
 [B]Version 1.0.9[/B]
  + CodeCosmetics+VoOdOo
  !! HINT !! aan bepaald persoon, bedenk zelf wat ipv 'COPY/PASTE'

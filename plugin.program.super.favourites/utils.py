@@ -82,6 +82,7 @@ PLAYMEDIA_MODE      = 1
 ACTIVATEWINDOW_MODE = 2
 RUNPLUGIN_MODE      = 3
 ACTION_MODE         = 4
+SHOWPICTURE_MODE    = 5
 
 
 HOMESPECIAL = 'special://home/'
@@ -100,6 +101,11 @@ GOTHAM       = (MAJOR == 13) or (MAJOR == 12 and MINOR == 9)
 HELIX        = (MAJOR == 14) or (MAJOR == 13 and MINOR == 9)
 ISENGARD     = (MAJOR == 15) or (MAJOR == 14 and MINOR == 9)
 KRYPTON      = (MAJOR == 17) or (MAJOR == 16 and MINOR == 9)
+
+
+skin         = xbmc.getSkinDir()
+installed    = xbmc.getCondVisibility('System.HasAddon(%s)' % skin) == 1
+ESTUARY_SKIN = skin.lower() == 'skin.estuary' or not installed
 
 
 FILENAME     = 'favourites.xml'
