@@ -476,9 +476,10 @@
     </extension>
 </addon>
 
-<addon id="script.module.urlresolver" name="URLResolver" version="3.0.29" provider-name="tvaddons.ag, Eldorado">
+<addon id="script.module.urlresolver" name="URLResolver" version="3.0.31" provider-name="tvaddons.ag, Eldorado">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
+		<import addon="plugin.video.youtube" optional="true" />
 	</requires>
 	<extension point="xbmc.python.module" library="lib" />
 	<extension point="xbmc.python.pluginsource" library="lib/default.py" />
@@ -630,7 +631,7 @@ For more information on setting up this addon see http://brianhornsby.com/xbmc_p
 
 <addon id="script.video.F4mProxy"
 	     name="F4mProxy"
-	     version="2.6.9"
+	     version="2.8.7"
 	     provider-name="Shani">
   <requires>
     <import addon="xbmc.python" version="2.1.0" />
