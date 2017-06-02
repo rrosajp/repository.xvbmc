@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urlparse
 import kodi
 import dom_parser2
 import log_utils  # @UnusedImport
@@ -26,6 +25,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
+logger = log_utils.Logger.get_logger(__name__)
 BASE_URL = 'http://geektv.ma'
 
 class Scraper(scraper.Scraper):
@@ -59,7 +59,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        url = urlparse.urljoin(self.base_url, source_url)
+        url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(url, cache_limit=.5)
 
         fragment = dom_parser2.parse_dom(html, 'tbody')
@@ -78,11 +78,14 @@ class Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+[sS]%s-?[eE]%s(?!\d)[^"]*)"' % (video.season, video.episode)
-        title_pattern = 'href="(?P<url>[^"]+[sS]\d+-?[eE]\d+[^"]*).*?Episode\s+\d+\s*:(?P<title>[^<]+)'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
+        title_pattern = 'href="(?P<url>[^"]+)(?:[^>]*>){3}\s*S\d+\s+Episode\s+\d+\s*:\s*(?P<title>[^<]+)'
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, cache_limit=2)
+        fragment = dom_parser2.parse_dom(html, 'div', {'id': 'accordion'})
+        return self._default_get_episode_url(fragment, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
-        search_url = urlparse.urljoin(self.base_url, '/search')
+        search_url = scraper_utils.urljoin(self.base_url, '/search')
         html = self._http_get(search_url, params={'q': title}, cache_limit=8)
         results = []
         for _attrs, item in dom_parser2.parse_dom(html, 'td', {'class': 'col-md-10'}):

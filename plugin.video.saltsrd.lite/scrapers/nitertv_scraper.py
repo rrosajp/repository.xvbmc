@@ -26,6 +26,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.utils2 import i18n
 import scraper
 
+logger = log_utils.Logger.get_logger()
 BASE_URL = 'http://niter.co'
 PHP_URL = BASE_URL + '/player/pk/pk/plugins/player_p2.php'
 DIR_URL = BASE_URL + '/player/getVideo.php'
@@ -52,7 +53,7 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         hosters = []
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        url = urlparse.urljoin(self.base_url, source_url)
+        url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(url, cache_limit=.5)
 
         match = re.search('((?:pic|emb|vb|dir|emb2)=[^<]+)', html)
@@ -101,7 +102,7 @@ class Scraper(scraper.Scraper):
         return hosters
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
-        search_url = urlparse.urljoin(self.base_url, '/search')
+        search_url = scraper_utils.urljoin(self.base_url, '/search')
         html = self._http_get(search_url, params={'q': title}, cache_limit=.25)
         results = []
         pattern = 'data-name="([^"]+).*?href="([^"]+)'
@@ -126,14 +127,14 @@ class Scraper(scraper.Scraper):
 
         html = super(self.__class__, self)._http_get(url, params=params, data=data, headers=headers, allow_redirect=allow_redirect, cache_limit=cache_limit)
         if auth and not re.search('href="[^"]+/logout"', html):
-            log_utils.log('Logging in for url (%s)' % (url), log_utils.LOGDEBUG)
+            logger.log('Logging in for url (%s)' % (url), log_utils.LOGDEBUG)
             self.__login()
             html = super(self.__class__, self)._http_get(url, params=params, data=data, headers=headers, allow_redirect=allow_redirect, cache_limit=0)
 
         return html
 
     def __login(self):
-        url = urlparse.urljoin(self.base_url, '/sessions')
+        url = scraper_utils.urljoin(self.base_url, '/sessions')
         data = {'username': self.username, 'password': self.password, 'remember': 1}
         html = super(self.__class__, self)._http_get(url, data=data, allow_redirect=False, cache_limit=0)
         if html != self.base_url:

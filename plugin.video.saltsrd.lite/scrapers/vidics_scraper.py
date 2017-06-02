@@ -18,7 +18,6 @@
 import urllib
 import re
 import urllib2
-import urlparse
 import kodi
 import log_utils  # @UnusedImport
 import dom_parser2
@@ -28,7 +27,9 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://www.vidics.ch'
+logger = log_utils.Logger.get_logger(__name__)
+
+BASE_URL = 'https://www.vidics.to'
 FRAGMENTS = {VIDEO_TYPES.MOVIE: '/film/', VIDEO_TYPES.TVSHOW: '/serie/'}
 
 class Scraper(scraper.Scraper):
@@ -47,7 +48,7 @@ class Scraper(scraper.Scraper):
         return 'vidics.ch'
 
     def resolve_link(self, link):
-        url = urlparse.urljoin(self.base_url, link)
+        url = scraper_utils.urljoin(self.base_url, link)
         request = urllib2.Request(url)
         request.add_header('User-Agent', scraper_utils.get_ua())
         request.add_unredirected_header('Host', request.get_host())
@@ -59,7 +60,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        url = urlparse.urljoin(self.base_url, source_url)
+        url = scraper_utils.urljoin(self.base_url, source_url)
         headers = {'Referer': self.base_url}
         html = self._http_get(url, headers=headers, cache_limit=.5)
         for _attrs, fragment in dom_parser2.parse_dom(html, 'div', {'class': 'lang'}):
@@ -91,7 +92,7 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         search_url = '/Category-FilmsAndTV/Genre-Any/Letter-Any/ByPopularity/1/Search-%s.htm' % (urllib.quote(title))
-        search_url = urlparse.urljoin(self.base_url, search_url)
+        search_url = scraper_utils.urljoin(self.base_url, search_url)
         html = self._http_get(search_url, cache_limit=8)
 
         results = []
@@ -110,8 +111,11 @@ class Scraper(scraper.Scraper):
         return results
 
     def _get_episode_url(self, show_url, video):
-        episode_pattern = 'href="(/Serie/[^"]+-Season-%s-Episode-%s)' % (video.season, video.episode)
-        title_pattern = 'class="episode"\s+href="(?P<url>[^"]+).*?class="episode_title">\s*-\s*(?P<title>.*?) \('
-        airdate_pattern = 'class="episode"\s+(?:style="[^"]+")?\s+href="([^"]+)(?:[^>]+>){2}[^<]+\s+\({year} {month_name} {p_day}\)'
-        headers = {'Referer': self.base_url}
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern, airdate_pattern, headers=headers)
+        episode_pattern = 'href="([^"]+-Season-%s-Episode-%s)' % (video.season, video.episode)
+        title_pattern = 'href="(?P<url>[^"]+).*?class="episode_title">\s*-\s*(?P<title>.*?)\s+\('
+        airdate_pattern = 'href="([^"]+)(?:[^>]+>){2}[^<][^<]+\({year} {month_name} {p_day}\)'
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, headers={'Referer': self.base_url}, cache_limit=2)
+        parts = dom_parser2.parse_dom(html, 'div', {'class': 'season'})
+        fragment = '\n'.join(part.content for part in parts)
+        return self._default_get_episode_url(fragment, video, episode_pattern, title_pattern, airdate_pattern)

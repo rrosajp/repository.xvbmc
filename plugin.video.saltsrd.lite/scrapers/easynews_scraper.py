@@ -17,7 +17,6 @@
 """
 import re
 import urllib
-import urlparse
 import base64
 import kodi
 import log_utils  # @UnusedImport
@@ -27,7 +26,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.utils2 import i18n
 import scraper
 
-
+logger = log_utils.Logger.get_logger()
 BASE_URL = 'https://members.easynews.com'
 SEARCH_URL = '/2.0/search/solr-search/advanced'
 SORT = {'s1': 'relevance', 's1d': '-', 's2': 'dsize', 's2d': '-', 's3': 'dtime', 's3d': '-'}
@@ -59,23 +58,23 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        params = urlparse.parse_qs(urlparse.urlparse(source_url).query)
+        params = scraper_utils.parse_query(source_url)
         if 'title' in params:
-            query = params['title'][0].replace("'", "")
+            query = params['title'].replace("'", "")
             if video.video_type == VIDEO_TYPES.MOVIE:
-                if 'year' in params: query += ' %s' % (params['year'][0])
+                if 'year' in params: query += ' %s' % (params['year'])
             else:
                 sxe = ''
                 if 'season' in params:
-                    sxe = 'S%02d' % (int(params['season'][0]))
+                    sxe = 'S%02d' % (int(params['season']))
                 if 'episode' in params:
-                    sxe += 'E%02d' % (int(params['episode'][0]))
+                    sxe += 'E%02d' % (int(params['episode']))
                 if sxe: query = '%s %s' % (query, sxe)
             query = urllib.quote_plus(query)
             query_url = '/search?query=%s' % (query)
             hosters = self.__get_links(query_url, video)
-            if not hosters and video.video_type == VIDEO_TYPES.EPISODE and params['air_date'][0]:
-                query = urllib.quote_plus('%s %s' % (params['title'][0], params['air_date'][0].replace('-', '.')))
+            if not hosters and video.video_type == VIDEO_TYPES.EPISODE and params['air_date']:
+                query = urllib.quote_plus('%s %s' % (params['title'], params['air_date'].replace('-', '.')))
                 query_url = '/search?query=%s' % (query)
                 hosters = self.__get_links(query_url, video)
 
@@ -99,7 +98,7 @@ class Scraper(scraper.Scraper):
             if 'virus' in item and item['virus']: checks[4] = True
             if 'type' in item and item['type'].upper() != 'VIDEO': checks[5] = True
             if any(checks):
-                log_utils.log('EasyNews Post excluded: %s - |%s|' % (checks, item), log_utils.LOGDEBUG)
+                logger.log('EasyNews Post excluded: %s - |%s|' % (checks, item), log_utils.LOGDEBUG)
                 continue
             
             stream_url = down_url + urllib.quote('/%s/%s/%s%s/%s%s' % (dl_farm, dl_port, post_hash, ext, post_title, ext))
@@ -124,7 +123,7 @@ class Scraper(scraper.Scraper):
                 if match:
                     size_bytes = scraper_utils.to_bytes(*match.groups())
                     if size_bytes > self.max_bytes:
-                        log_utils.log('Result skipped, Too big: |%s| - %s (%s) > %s (%s GB)' % (post_title, size_bytes, size, self.max_bytes, self.max_gb))
+                        logger.log('Result skipped, Too big: |%s| - %s (%s) > %s (%s GB)' % (post_title, size_bytes, size, self.max_bytes, self.max_gb))
                         continue
 
             hoster = {'multi-part': False, 'class': self, 'views': None, 'url': stream_url, 'rating': None, 'host': host, 'quality': quality, 'direct': True}
@@ -139,7 +138,7 @@ class Scraper(scraper.Scraper):
         result = self.db_connection().get_related_url(video.video_type, video.title, video.year, self.get_name(), video.season, video.episode)
         if result:
             url = result[0][0]
-            log_utils.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url), log_utils.LOGDEBUG)
+            logger.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url), log_utils.LOGDEBUG)
         else:
             if video.video_type == VIDEO_TYPES.MOVIE:
                 query = 'title=%s&year=%s' % (urllib.quote_plus(video.title), video.year)
@@ -173,6 +172,6 @@ class Scraper(scraper.Scraper):
     def __translate_search(self, url):
         params = SEARCH_PARAMS
         params['pby'] = self.max_results
-        params['gps'] = params['sbj'] = urlparse.parse_qs(urlparse.urlparse(url).query)['query'][0]
-        url = urlparse.urljoin(self.base_url, SEARCH_URL)
+        params['gps'] = params['sbj'] = scraper_utils.parse_query(url)['query']
+        url = scraper_utils.urljoin(self.base_url, SEARCH_URL)
         return url, params

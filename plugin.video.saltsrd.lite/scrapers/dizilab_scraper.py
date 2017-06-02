@@ -28,6 +28,8 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import XHR
 import scraper
 
+logger = log_utils.Logger.get_logger(__name__)
+
 BASE_URL = 'http://dizilab.net'
 AJAX_URL = '/request/php/'
 ICONS = {'icon-tr': 'Turkish Subtitles', 'icon-en': 'English Subtitles', 'icon-orj': ''}
@@ -52,12 +54,12 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        page_url = urlparse.urljoin(self.base_url, source_url)
+        page_url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(page_url, cache_limit=.5)
         videos = re.findall('''onclick\s*=\s*"loadVideo\('([^']+)''', html)
         subs = self.__get_subs(html)
         for v_id, icon in map(None, videos, subs):
-            ajax_url = urlparse.urljoin(self.base_url, AJAX_URL)
+            ajax_url = scraper_utils.urljoin(self.base_url, AJAX_URL)
             data = {'vid': v_id, 'tip': 1, 'type': 'loadVideo'}
             headers = {'Referer': page_url}
             headers.update(XHR)
@@ -161,13 +163,16 @@ class Scraper(scraper.Scraper):
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'class="episode"\s+href="([^"]+/sezon-%s/bolum-%s)"' % (video.season, video.episode)
         title_pattern = 'class="episode-name"\s+href="(?P<url>[^"]+)">\s*(?P<title>[^<]+)'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, cache_limit=2)
+        fragment = dom_parser2.parse_dom(html, 'div', {'class': 'tv-series-episodes'})
+        return self._default_get_episode_url(fragment or html, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        url = urlparse.urljoin(self.base_url, AJAX_URL)
+        url = scraper_utils.urljoin(self.base_url, AJAX_URL)
         data = {'type': 'getDizi'}
-        headers = {'Referer': urlparse.urljoin(self.base_url, '/arsiv')}
+        headers = {'Referer': scraper_utils.urljoin(self.base_url, '/arsiv')}
         headers.update(XHR)
         html = self._http_get(url, data=data, headers=headers, cache_limit=48)
         norm_title = scraper_utils.normalize_title(title)

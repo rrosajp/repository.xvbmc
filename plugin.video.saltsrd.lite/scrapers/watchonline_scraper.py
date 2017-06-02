@@ -46,7 +46,7 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         hosters = []
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        page_url = urlparse.urljoin(self.base_url, source_url)
+        page_url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(page_url, cache_limit=.5)
 
         sources = {}
@@ -94,14 +94,19 @@ class Scraper(scraper.Scraper):
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+s0*%se0*%s(?!\d)[^"]*)' % (video.season, video.episode)
         title_pattern = 'class="episodiotitle">\s*<a[^>]+href="(?P<url>[^"]+)[^>]*>(?P<title>.*?)</a>'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, cache_limit=2)
+        parts = dom_parser2.parse_dom(html, 'ul', {'class': 'episodios'})
+        fragment = '\n'.join(part.content for part in parts)
+        return self._default_get_episode_url(fragment, video, episode_pattern, title_pattern)
                 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/advanced-search/')
+        search_url = scraper_utils.urljoin(self.base_url, '/advanced-search/')
         headers = {'Referer': self.base_url}
         params = {'search_query': title, 'orderby': '', 'order': '', 'wpas': 1}
         html = self._http_get(search_url, params=params, headers=headers, cache_limit=8)
+        norm_title = scraper_utils.normalize_title(title)
         for _attrs, item in dom_parser2.parse_dom(html, 'div', {'class': 'datos'}):
             match = dom_parser2.parse_dom(item, 'a', req='href')
             if not match: continue
@@ -113,7 +118,7 @@ class Scraper(scraper.Scraper):
             
             match_title = match[0].content
             match_title, match_year = scraper_utils.extra_year(match_title)
-            if not year or not match_year or year == match_year:
+            if scraper_utils.normalize_title(match_title) in norm_title and (not year or not match_year or year == match_year):
                 result = {'title': scraper_utils.cleanse_title(match_title), 'year': match_year, 'url': scraper_utils.pathify_url(match_url)}
                 results.append(result)
             

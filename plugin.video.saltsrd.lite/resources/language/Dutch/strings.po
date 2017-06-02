@@ -3,10 +3,11 @@
 # Addon Provider: TV Addons
 # Translators:
 # Jan Schouten, 2016
-# Mike Bike, 2015-2016
+# Mike Bike, 2015-2017
 # Rodrigo, 2015
 # tknorris, 2015
 # Youko van der Blom, 2017
+# EPiC, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: SALTS\n"
@@ -2045,7 +2046,7 @@ msgstr "Inschakelen TVMaze Afbeeldingen"
 
 msgctxt "#30716"
 msgid "Flush Image Cache..."
-msgstr "Afbeeldingen Cache Legen..."
+msgstr "Afbeeldingen Cache Legen...(doe maar NIET)"
 
 msgctxt "#30717"
 msgid "Enable Fanart.tv Images"

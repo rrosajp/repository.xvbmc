@@ -29,7 +29,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-
+logger = log_utils.Logger.get_logger()
 QUALITY_MAP = {'HD720P': QUALITIES.HD720, 'HD720P+': QUALITIES.HD720, 'DVDRIP/STANDARDDEF': QUALITIES.HIGH,
                'SD/DVD480P': QUALITIES.HIGH, 'DVDSCREENER': QUALITIES.HIGH, 'FASTSTREAM/LOWQUALITY': QUALITIES.HIGH}
 BASE_URL = 'http://www.icefilms.info'
@@ -54,7 +54,7 @@ class Scraper(scraper.Scraper):
     def resolve_link(self, link):
         parts = urlparse.urlparse(link)
         data = urlparse.parse_qs(parts.query, True)
-        url = urlparse.urljoin(self.base_url, parts.path)
+        url = scraper_utils.urljoin(self.base_url, parts.path)
         params = {'s': data['id'][0], 't': data['t'][0], 'app_id': 'SALTS'}
         headers = {'Referer': LIST_URL.format(vid_id=data['t'][0])}
         html = self._http_get(url, params=params, data=data, headers=headers, cache_limit=0)
@@ -67,12 +67,12 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return sources
         try:
-            url = urlparse.urljoin(self.base_url, source_url)
+            url = scraper_utils.urljoin(self.base_url, source_url)
             html = self._http_get(url, cache_limit=2)
 
             pattern = '<iframe id="videoframe" src="([^"]+)'
             match = re.search(pattern, html)
-            url = urlparse.urljoin(self.base_url, match.group(1))
+            url = scraper_utils.urljoin(self.base_url, match.group(1))
             html = self._http_get(url, cache_limit=0)
 
             match = re.search('lastChild\.value="([^"]+)"(?:\s*\+\s*"([^"]+))?', html)
@@ -110,16 +110,16 @@ class Scraper(scraper.Scraper):
                     sources.append(source)
                     
         except Exception as e:
-            log_utils.log('Failure (%s) during icefilms get sources: |%s|' % (str(e), video), log_utils.LOGWARNING)
+            logger.log('Failure (%s) during icefilms get sources: |%s|' % (str(e), video), log_utils.LOGWARNING)
             
         return sources
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         if video_type == VIDEO_TYPES.MOVIE:
-            url = urlparse.urljoin(self.base_url, '/movies/a-z/')
+            url = scraper_utils.urljoin(self.base_url, '/movies/a-z/')
         else:
-            url = urlparse.urljoin(self.base_url, '/tv/a-z/')
+            url = scraper_utils.urljoin(self.base_url, '/tv/a-z/')
 
         if title.upper().startswith('THE '):
             search_title = title[4:5]
@@ -146,6 +146,9 @@ class Scraper(scraper.Scraper):
         return results
 
     def _get_episode_url(self, show_url, video):
-        episode_pattern = 'href=(/ip\.php[^>]+)>%sx0?%s\s+' % (video.season, video.episode)
-        title_pattern = 'class=star>\s*<a href=(?P<url>[^>]+)>(?:\d+x\d+\s+)+(?P<title>[^<]+)'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
+        episode_pattern = 'href=([^>]+)>0*%sx0*%s\s+' % (video.season, video.episode)
+        title_pattern = 'href=(?P<url>[^>]+)>(?:\d+x\d+\s+)+(?P<title>[^<]+)'
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, cache_limit=2)
+        fragment = dom_parser2.parse_dom(html, 'span', {'class': 'list'})
+        return self._default_get_episode_url(fragment, video, episode_pattern, title_pattern)

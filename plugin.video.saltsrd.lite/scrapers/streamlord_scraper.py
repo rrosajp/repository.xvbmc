@@ -17,7 +17,6 @@
 """
 import re
 from string import capwords
-import urlparse
 import kodi
 import log_utils  # @UnusedImport
 import dom_parser2
@@ -27,6 +26,8 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 from salts_lib.utils2 import i18n
 import scraper
+
+logger = log_utils.Logger.get_logger()
 
 BASE_URL = 'http://www.streamlord.com'
 LOGIN_URL = '/login.html'
@@ -52,7 +53,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        url = urlparse.urljoin(self.base_url, source_url)
+        url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(url, cache_limit=1)
         match = re.search('''["']sources['"]\s*:\s*\[(.*?)\]''', html, re.DOTALL)
         if match:
@@ -99,9 +100,12 @@ class Scraper(scraper.Scraper):
             return fragment[0].content
     
     def _get_episode_url(self, show_url, video):
-        episode_pattern = 'href="(episode[^"]*-[Ss]%02d[Ee]%02d-[^"]+)' % (int(video.season), int(video.episode))
+        episode_pattern = 'href="([^"]*-[Ss]0*%s[Ee]0*%s-[^"]+)' % (video.season, video.episode)
         title_pattern = 'class="head".*?</span>(?P<title>.*?)</a>.*?href="(?P<url>[^"]+)'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, cache_limit=2)
+        fragment = dom_parser2.parse_dom(html, 'div', {'id': 'season-wrapper'})
+        return self._default_get_episode_url(fragment, video, episode_pattern, title_pattern)
         
     @classmethod
     def get_settings(cls):
@@ -113,7 +117,7 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        url = urlparse.urljoin(self.base_url, '/search2.php')
+        url = scraper_utils.urljoin(self.base_url, '/search2.php')
         data = {'searchapi': title}
         headers = {'Referer': self.base_url}
         html = self._http_get(url, data=data, headers=headers, cache_limit=2)
@@ -149,7 +153,7 @@ class Scraper(scraper.Scraper):
 
         html = super(self.__class__, self)._http_get(url, data=data, headers=headers, allow_redirect=allow_redirect, method=method, cache_limit=cache_limit)
         if auth and LOGIN_URL in html:
-            log_utils.log('Logging in for url (%s)' % (url), log_utils.LOGDEBUG)
+            logger.log('Logging in for url (%s)' % (url), log_utils.LOGDEBUG)
             self.__login()
             html = super(self.__class__, self)._http_get(url, data=data, headers=headers, method=method, cache_limit=0)
 
@@ -157,7 +161,7 @@ class Scraper(scraper.Scraper):
 
     def __login(self):
         data = {'username': self.username, 'password': self.password, 'submit': 'Login'}
-        url = urlparse.urljoin(self.base_url, LOGIN_URL)
+        url = scraper_utils.urljoin(self.base_url, LOGIN_URL)
         html = self._http_get(url, auth=False, data=data, allow_redirect=False, cache_limit=0)
         if html != 'index.html':
             raise Exception('StreamLord login failed: %s' % (html))
