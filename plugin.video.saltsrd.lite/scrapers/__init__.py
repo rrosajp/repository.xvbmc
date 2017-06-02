@@ -11,7 +11,7 @@ from salts_lib.constants import VIDEO_TYPES
 __all__ = ['scraper', 
  'proxy', 
  'local_scraper', 
- '2ddl_scraper', 
+#'2ddl_scraper', 
 #'afdah_scraper', 
 #'afdahorg_scraper', 
 #'alluc_scraper', 
@@ -22,10 +22,10 @@ __all__ = ['scraper',
  'directdl_scraper', 
  'dizigold_scraper', 
 #'dizimag_scraper', 
- 'downloadtube_scraper', 
+#'downloadtube_scraper', 
  'emoviespro_scraper', 
 #'farda_scraper', 
- 'filmikz_scraper', 
+#'filmikz_scraper', 
  'filmovizjia_scraper', 
 #'fmovie_scraper', 
 #'hdflix_scraper', 
@@ -34,15 +34,15 @@ __all__ = ['scraper',
  'hevcbluray_scraper', 
 #'heydl_scraper', 
  'icefilms_scraper', 
-#'iwatch_scraper', 
+ 'iwatch_scraper', 
 #'kohi_scraper', 
- 'm4ufree_scraper', 
+#'m4ufree_scraper', 
  'mintmovies_scraper', 
 #'miradetodo_scraper', 
  'movie25_scraper', 
 #'movieflix_scraper', 
  'moviego_scraper', 
-#'moviehubs_scraper', 
+ 'moviehubs_scraper', 
 #'moviepool_scraper', 
 #'movieshd_scraper', 
 #'moviestorm_scraper', 
@@ -51,7 +51,7 @@ __all__ = ['scraper',
  'moviewatcher_scraper', 
 #'moviexk_scraper', 
 #'moviezone_scraper', 
- 'movytvy_scraper', 
+#'movytvy_scraper', 
 #'myvideolinks_scraper', 
 #'oneclicktvshows_scraper', 
 #'ororotv_scraper', 
@@ -59,42 +59,44 @@ __all__ = ['scraper',
  'pelispedia_scraper', 
  'pftv_scraper', 
  'piratejunkies_scraper', 
- 'pubfilm_scraper', 
- 'putlocker_scraper', 
+#'pubfilm_scraper', 
+#'putlocker_scraper', 
  'putmv_scraper', 
  'pw_scraper', 
  'quikr_scraper', 
 #'rainierland_scraper', 
- 'real_scraper', 
+#'real_scraper', 
  'rlsbb_scraper', 
 #'rlssource_scraper', 
-#'scenedown_scraper', 
+ 'scenedown_scraper', 
  'scenerls_scraper', 
  'serieswatch_scraper', 
  'sezonlukdizi_scraper', 
 #'solar_scraper', 
- 'spacemov_scraper', 
+#'spacemov_scraper', 
 #'tunemovie_scraper', 
  'tvonline_scraper', 
  'tvrush_scraper', 
- 'vebup_scraper', 
+#'vebup_scraper', 
 #'ventures_scraper', 
  'vidics_scraper', 
  'viooz_scraper', 
  'vivoto_scraper', 
 #'vu45_scraper', 
- 'watch5s_scraper', 
+#'watch5s_scraper', 
  'watchfree_scraper', 
  'watchitvideos_scraper', 
- 'watchonline_scraper', 
+#'watchonline_scraper', 
  'watchseries_scraper', 
-#'xmovies8_scraper', 
+ 'xmovies8_scraper', 
  'xmovies8v2_scraper', 
  'yesmovies_scraper']
 #'yshows_scraper']
 
 from . import *
-    
+
+logger = log_utils.Logger.get_logger()
+  
 class ScraperVideo:
     def __init__(self, video_type, title, year, trakt_id, season='', episode='', ep_title='', ep_airdate=''):
         assert(video_type in (VIDEO_TYPES.__dict__[k] for k in VIDEO_TYPES.__dict__ if not k.startswith('__')))
@@ -122,7 +124,7 @@ def update_xml(xml, new_settings, cat_count):
         if old_settings != new_settings:
             xml = xml.replace(old_settings, new_settings)
     else:
-        log_utils.log('Unable to match category: %s' % (cat_count), log_utils.LOGWARNING)
+        logger.log('Unable to match category: %s' % (cat_count), log_utils.LOGWARNING)
     return xml
 
 def update_settings():
@@ -133,7 +135,7 @@ def update_settings():
         with open(full_path, 'a') as f:
             pass
     except Exception as e:
-        log_utils.log('Dynamic settings update skipped: %s' % (e), log_utils.LOGWARNING)
+        logger.log('Dynamic settings update skipped: %s' % (e), log_utils.LOGWARNING)
     else:
         with open(full_path, 'r') as f:
             xml = f.read()
@@ -158,7 +160,7 @@ def update_settings():
             with open(full_path, 'w') as f:
                 f.write(xml)
         else:
-            log_utils.log('No Settings Update Needed', log_utils.LOGDEBUG)
+            logger.log('No Settings Update Needed', log_utils.LOGDEBUG)
 
 
 def update_all_scrapers():
@@ -185,7 +187,7 @@ def update_all_scrapers():
                             if scraper_url.startswith('http'):
                                 update_scraper(filename, scraper_url)
                 except Exception as e:
-                    log_utils.log('Exception during scraper update: %s' % (e), log_utils.LOGWARNING)
+                    logger.log('Exception during scraper update: %s' % (e), log_utils.LOGWARNING)
     
 def update_scraper(filename, scraper_url):
     try:
@@ -205,7 +207,7 @@ def update_scraper(filename, scraper_url):
 
             new_etag, new_py = utils2.get_and_decrypt(scraper_url, scraper_password, old_etag)
             if new_py:
-                log_utils.log('%s path: %s, new_py: %s, match: %s' % (filename, py_path, bool(new_py), new_py == old_py), log_utils.LOGDEBUG)
+                logger.log('%s path: %s, new_py: %s, match: %s' % (filename, py_path, bool(new_py), new_py == old_py), log_utils.LOGDEBUG)
                 if old_py != new_py:
                     with open(py_path, 'w') as f:
                         f.write('# Etag: %s\n' % (new_etag))
@@ -213,7 +215,7 @@ def update_scraper(filename, scraper_url):
                     kodi.notify(msg=utils2.i18n('scraper_updated') + filename)
                         
     except Exception as e:
-        log_utils.log('Failure during %s scraper update: %s' % (filename, e), log_utils.LOGWARNING)
+        logger.log('Failure during %s scraper update: %s' % (filename, e), log_utils.LOGWARNING)
 
 update_settings()
 update_all_scrapers()

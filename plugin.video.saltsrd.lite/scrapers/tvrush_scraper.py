@@ -15,7 +15,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import urlparse
 import kodi
 import log_utils  # @UnusedImport
 import dom_parser2
@@ -43,7 +42,7 @@ class Scraper(scraper.Scraper):
         return 'tvrush'
 
     def resolve_link(self, link):
-        url = urlparse.urljoin(self.base_url, link)
+        url = scraper_utils.urljoin(self.base_url, link)
         html = self._http_get(url, cache_limit=.5)
         stream = dom_parser2.parse_dom(html, 'a', {'class': 'hostLink'}, req='href')
         if stream:
@@ -55,7 +54,7 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         hosters = []
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        page_url = urlparse.urljoin(self.base_url, source_url)
+        page_url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(page_url, cache_limit=.5)
         fragment = dom_parser2.parse_dom(html, 'div', {'class': 'embeds'})
         if fragment:
@@ -70,10 +69,13 @@ class Scraper(scraper.Scraper):
         return hosters
 
     def _get_episode_url(self, show_url, video):
-        episode_pattern = '''href=['"]([^'"]+season-%s-episode-%s(?!\d)[^'"]*)''' % (video.season, video.episode)
-        title_pattern = '''<a\s+title="[^"]+Episode\s+\d+\s*-\s*(?P<title>[^"]+)"\s+href="(?P<url>[^"]+)'''
-        airdate_pattern = '''class="episode">\s*<a[^>]+href=['"]([^'"]+)[^>]+>{short_month}\s+{p_day}\s*,\s+{year}'''
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern, airdate_pattern)
+        episode_pattern = '''href=['"]([^'"]+season-0*%s-episode-0*%s(?!\d)[^'"]*)''' % (video.season, video.episode)
+        title_pattern = '''title="[^"]+\s*-\s*(?P<title>[^"]+)"[^>]+href="(?P<url>[^"]+)'''
+        airdate_pattern = '''href=['"]([^'"]+)[^>]+>{short_month}\s+{p_day}\s*,\s+{year}'''
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, cache_limit=2)
+        fragment = dom_parser2.parse_dom(html, 'div', {'id': 'season%s' % (video.season)})
+        return self._default_get_episode_url(fragment, video, episode_pattern, title_pattern, airdate_pattern)
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []

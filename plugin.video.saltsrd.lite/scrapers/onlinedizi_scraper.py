@@ -49,7 +49,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        page_url = urlparse.urljoin(self.base_url, source_url)
+        page_url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(page_url, cache_limit=.25)
         fragment = dom_parser2.parse_dom(html, 'ul', {'class': 'dropdown-menu'})
         if not fragment: return hosters
@@ -57,7 +57,7 @@ class Scraper(scraper.Scraper):
         for match in re.finditer('''href=['"]([^'"]+)[^>]*>(Altyaz.{1,3}s.{1,3}z|ok\.ru|openload)<''', fragment[0].content, re.I):
             sources = []
             subs = True if not match.group(2).startswith('Altyaz') else False
-            option_url = urlparse.urljoin(self.base_url, match.group(1))
+            option_url = scraper_utils.urljoin(self.base_url, match.group(1))
             html = self._http_get(option_url, cache_limit=2)
             fragment = dom_parser2.parse_dom(html, 'div', {'class': 'video-player'})
             if not fragment: continue
@@ -95,7 +95,7 @@ class Scraper(scraper.Scraper):
     def _get_episode_url(self, show_url, video):
         season_url = show_url
         if video.season != 1:
-            show_url = urlparse.urljoin(self.base_url, show_url)
+            show_url = scraper_utils.urljoin(self.base_url, show_url)
             html = self._http_get(show_url, cache_limit=24)
             fragment = dom_parser2.parse_dom(html, 'div', {'class': 'page-numbers'})
             if fragment:
@@ -104,12 +104,15 @@ class Scraper(scraper.Scraper):
                     season_url = match.group(1)
             
         episode_pattern = '''href=['"]([^'"]+-%s-sezon-%s-bolum[^'"]*)''' % (video.season, video.episode)
-        return self._default_get_episode_url(season_url, video, episode_pattern)
+        season_url = scraper_utils.urljoin(self.base_url, season_url)
+        html = self._http_get(season_url, cache_limit=2)
+        fragment = dom_parser2.parse_dom(html, 'ul', {'class': 'posts-list'})
+        return self._default_get_episode_url(fragment or html, video, episode_pattern)
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
         seen_urls = set()
-        search_url = urlparse.urljoin(self.base_url, '/yabanci-diziler/')
+        search_url = scraper_utils.urljoin(self.base_url, '/yabanci-diziler/')
         html = self._http_get(search_url, cache_limit=48)
         norm_title = scraper_utils.normalize_title(title)
         for _attrs, item in dom_parser2.parse_dom(html, 'div', {'class': 'category-post'}):

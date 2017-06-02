@@ -28,6 +28,7 @@ from salts_lib.constants import Q_ORDER
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
+logger = log_utils.Logger.get_logger()
 BASE_URL = 'https://directdownload.tv'
 SEARCH_URL = '/api?key=%s&%s&keyword=%s'
 API_KEY = 'AFBF8E33A19787D1'
@@ -59,11 +60,11 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         hosters = []
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        url = urlparse.urljoin(self.base_url, source_url)
+        url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(url, cache_limit=.5)
         js_result = scraper_utils.parse_json(html, url)
         if 'error' in js_result:
-            log_utils.log('DD.tv API error: "%s" @ %s' % (js_result['error'], url), log_utils.LOGWARNING)
+            logger.log('DD.tv API error: "%s" @ %s' % (js_result['error'], url), log_utils.LOGWARNING)
             return hosters
 
         for result in js_result:
@@ -87,7 +88,7 @@ class Scraper(scraper.Scraper):
         result = self.db_connection().get_related_url(video.video_type, video.title, video.year, self.get_name(), video.season, video.episode)
         if result:
             url = result[0][0]
-            log_utils.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url), log_utils.LOGDEBUG)
+            logger.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url), log_utils.LOGDEBUG)
         else:
             date_match = False
             search_title = '%s S%02dE%02d' % (video.title, int(video.season), int(video.episode))
@@ -116,12 +117,12 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search?query=')
+        search_url = scraper_utils.urljoin(self.base_url, '/search?query=')
         search_url += title.replace("'", "")
         html = self._http_get(search_url, cache_limit=.25)
         js_result = scraper_utils.parse_json(html, search_url)
         if 'error' in js_result:
-            log_utils.log('DD.tv API error: "%s" @ %s' % (js_result['error'], search_url), log_utils.LOGWARNING)
+            logger.log('DD.tv API error: "%s" @ %s' % (js_result['error'], search_url), log_utils.LOGWARNING)
             return results
         
         for match in js_result:
@@ -132,17 +133,17 @@ class Scraper(scraper.Scraper):
 
     def _http_get(self, url, data=None, cache_limit=8):
         if 'search?query' in url:
-            log_utils.log('Translating Search Url: %s' % (url), log_utils.LOGDEBUG)
+            logger.log('Translating Search Url: %s' % (url), log_utils.LOGDEBUG)
             url = self.__translate_search(url)
 
         return super(self.__class__, self)._http_get(url, data=data, require_debrid=True, cache_limit=cache_limit)
 
     def __translate_search(self, url):
-        query = urlparse.parse_qs(urlparse.urlparse(url).query)
+        query = scraper_utils.parse_query(url)
         if 'quality' in query:
-            q_index = Q_DICT[query['quality'][0]]
+            q_index = Q_DICT[query['quality']]
             q_list = [dd_qual for dd_qual in DD_QUALITIES if Q_DICT[dd_qual] <= q_index]
         else:
             q_list = self.q_order
         quality = '&'.join(['quality[]=%s' % (q) for q in q_list])
-        return urlparse.urljoin(self.base_url, (SEARCH_URL % (API_KEY, quality, urllib.quote_plus(query['query'][0]))))
+        return scraper_utils.urljoin(self.base_url, (SEARCH_URL % (API_KEY, quality, urllib.quote_plus(query['query']))))

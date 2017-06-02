@@ -1,5 +1,5 @@
 # Addon Name: SALTS
-# Addon id: plugin.video.saltsrd.lite
+# Addon id: plugin.video.salts
 # Addon Provider: TV Addons
 msgid ""
 msgstr ""
@@ -2128,7 +2128,7 @@ msgid "    Debrid Highlight Color"
 msgstr ""
 
 msgctxt "#30730"
-msgid "Image Proxy [COLOR red][B](Experimental)[/B][/COLOR]"
+msgid "Image Proxy"
 msgstr ""
 
 msgctxt "#30731"

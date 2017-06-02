@@ -16,15 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import re
-import urlparse
 import kodi
 import log_utils  # @UnusedImport
+import dom_parser2
 from salts_lib import scraper_utils
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
+logger = log_utils.Logger.get_logger()
 QUALITY_MAP = {'DVD': QUALITIES.HIGH, 'TS': QUALITIES.MEDIUM, 'CAM': QUALITIES.LOW}
 BASE_URL = 'http://www.primewire.ag'
 
@@ -52,7 +53,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        url = urlparse.urljoin(self.base_url, source_url)
+        url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(url, cache_limit=.5)
 
         container_pattern = r'<table[^>]+class="movie_version[ "][^>]*>(.*?)</table>'
@@ -97,7 +98,7 @@ class Scraper(scraper.Scraper):
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/index.php')
+        search_url = scraper_utils.urljoin(self.base_url, '/index.php')
         params = {'search_keywords': title, 'year': year}
         params['search_section'] = 2 if video_type == VIDEO_TYPES.TVSHOW else 1
         html = self. _http_get(self.base_url, cache_limit=8)
@@ -112,11 +113,14 @@ class Scraper(scraper.Scraper):
                 result = {'url': scraper_utils.pathify_url(url), 'title': scraper_utils.cleanse_title(title), 'year': year}
                 results.append(result)
         else:
-            log_utils.log('Unable to locate PW search key', log_utils.LOGWARNING)
+            logger.log('Unable to locate PW search key', log_utils.LOGWARNING)
         return results
 
     def _get_episode_url(self, show_url, video):
-        episode_pattern = '"tv_episode_item">[^>]+href="([^"]+/season-%s-episode-%s)">' % (video.season, video.episode)
-        title_pattern = 'class="tv_episode_item".*?href="(?P<url>[^"]+).*?class="tv_episode_name">\s+-\s+(?P<title>[^<]+)'
-        airdate_pattern = 'class="tv_episode_item">\s*<a\s+href="([^"]+)(?:[^<]+<){3}span\s+class="tv_episode_airdate">\s+-\s+{year}-{p_month}-{p_day}'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern, airdate_pattern)
+        episode_pattern = '"href="([^"]+/season-%s-episode-%s)">' % (video.season, video.episode)
+        title_pattern = 'href="(?P<url>[^"]+).*?class="tv_episode_name">\s+-\s+(?P<title>[^<]+)'
+        airdate_pattern = 'href="([^"]+)(?:[^<]+<){3}span\s+class="tv_episode_airdate">\s+-\s+{year}-{p_month}-{p_day}'
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, cache_limit=2)
+        fragment = dom_parser2.parse_dom(html, 'div', {'data-id': video.season, 'class': 'show_season'})
+        return self._default_get_episode_url(fragment or html, video, episode_pattern, title_pattern, airdate_pattern)

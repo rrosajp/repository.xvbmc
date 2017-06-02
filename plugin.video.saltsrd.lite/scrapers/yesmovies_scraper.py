@@ -32,6 +32,8 @@ from salts_lib.constants import XHR
 import scraper
 import xml.etree.ElementTree as ET
 
+logger = log_utils.Logger.get_logger()
+
 BASE_URL = 'https://yesmovies.to'
 QP_URL = '/ajax/v2_movie_quick_play/{slug}/{movie_id}/{vid_type}.html'
 SL_URL = '/ajax/v4_movie_episodes/{movie_id}'
@@ -80,7 +82,7 @@ class Scraper(scraper.Scraper):
         sources = {}
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        page_url = urlparse.urljoin(self.base_url, source_url)
+        page_url = scraper_utils.urljoin(self.base_url, source_url)
         movie_id, watching_url, html = self.__get_source_page(video.video_type, page_url)
         
         links = []
@@ -93,10 +95,10 @@ class Scraper(scraper.Scraper):
             
         for link_type, link_id in links:
             if link_type in ['12', '13', '14', '15']:
-                url = urlparse.urljoin(self.base_url, PLAYLIST_URL1.format(ep_id=link_id))
+                url = scraper_utils.urljoin(self.base_url, PLAYLIST_URL1.format(ep_id=link_id))
                 sources.update(self.__get_link_from_json(url))
             elif kodi.get_setting('scraper_url'):
-                url = urlparse.urljoin(self.base_url, PLAYLIST_URL2.format(ep_id=link_id))
+                url = scraper_utils.urljoin(self.base_url, PLAYLIST_URL2.format(ep_id=link_id))
                 params = self.__get_params(movie_id, link_id, watching_url)
                 if params is not None:
                     url += '?' + urllib.urlencode(params)
@@ -147,9 +149,9 @@ class Scraper(scraper.Scraper):
                         meta = scraper_utils.parse_episode_link(stream_url)
                     quality = scraper_utils.height_get_quality(meta['height'])
                 sources[stream_url] = {'quality': quality, 'direct': True}
-                log_utils.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
+                logger.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
         except Exception as e:
-            log_utils.log('Exception during yesmovies extract: %s' % (e), log_utils.LOGDEBUG)
+            logger.log('Exception during yesmovies extract: %s' % (e), log_utils.LOGDEBUG)
         return sources
     
     def __get_links_from_xml(self, url, video, page_url, cookies):
@@ -173,9 +175,9 @@ class Scraper(scraper.Scraper):
                     else:
                         quality = scraper_utils.blog_get_quality(video, stream_url, '')
                     sources[stream_url] = {'quality': quality, 'direct': True}
-                    log_utils.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
+                    logger.log('Adding stream: %s Quality: %s' % (stream_url, quality), log_utils.LOGDEBUG)
         except Exception as e:
-            log_utils.log('Exception during YesMovies XML Parse: %s' % (e), log_utils.LOGWARNING)
+            logger.log('Exception during YesMovies XML Parse: %s' % (e), log_utils.LOGWARNING)
 
         return sources
     
@@ -186,20 +188,20 @@ class Scraper(scraper.Scraper):
         
         vid_type = 'movie' if video_type == VIDEO_TYPES.MOVIE else 'series'
         qp_url = QP_URL.format(slug=slug, movie_id=movie_id, vid_type=vid_type)
-        qp_url = urlparse.urljoin(self.base_url, qp_url)
-        headers = {'Referer': urlparse.urljoin(self.base_url, page_url)}
+        qp_url = scraper_utils.urljoin(self.base_url, qp_url)
+        headers = {'Referer': scraper_utils.urljoin(self.base_url, page_url)}
         headers.update(XHR)
         html = self._http_get(qp_url, headers=headers, cache_limit=8)
         watching_url = dom_parser2.parse_dom(html, 'a', {'title': re.compile('View all episodes')}, req='href')
         if not watching_url: return '', '', ''
         
         watching_url = watching_url[0].attrs['href']
-        page_html = self._http_get(watching_url, headers={'Referer': urlparse.urljoin(self.base_url, page_url)}, cache_limit=8)
+        page_html = self._http_get(watching_url, headers={'Referer': scraper_utils.urljoin(self.base_url, page_url)}, cache_limit=8)
         for attrs, _content in dom_parser2.parse_dom(page_html, 'img', {'class': 'hidden'}, req='src'):
             _img = self._http_get(attrs['src'], headers={'Referer': watching_url}, cache_limit=8)
         
         sl_url = SL_URL.format(movie_id=movie_id)
-        sl_url = urlparse.urljoin(self.base_url, sl_url)
+        sl_url = scraper_utils.urljoin(self.base_url, sl_url)
         html = self._http_get(sl_url, headers=headers, cache_limit=8)
         js_data = scraper_utils.parse_json(html, sl_url)
         try: html = js_data['html']
@@ -227,7 +229,7 @@ class Scraper(scraper.Scraper):
         
     def search(self, video_type, title, year, season=''):
         results = []
-        search_url = urlparse.urljoin(self.base_url, '/search/')
+        search_url = scraper_utils.urljoin(self.base_url, '/search/')
         title = re.sub('[^A-Za-z0-9 ]', '', title)
         search_url += '%s.html' % (urllib.quote_plus(title))
         html = self._http_get(search_url, cache_limit=8)
@@ -245,7 +247,7 @@ class Scraper(scraper.Scraper):
                 match_title = re.sub('</?h2>', '', match_title)
                 match_title = re.sub('\s+\d{4}$', '', match_title)
                 if video_type == VIDEO_TYPES.SEASON:
-                    if season and not re.search('Season\s+%s$' % (season), match_title): continue
+                    if season and not re.search('Season\s+0*%s$' % (season), match_title): continue
                     
                 match_year = match_year.group(1) if match_year else ''
                 if not year or not match_year or year == match_year:
@@ -255,9 +257,10 @@ class Scraper(scraper.Scraper):
         return results
 
     def __get_params(self, movie_id, episode_id, page_url):
+        params = None
         ts = int(time.time() * 1000)
         token_url = TOKEN_URL.format(ep_id=episode_id, movie_id=movie_id, ts=ts)
-        token_url = urlparse.urljoin(self.base_url, token_url)
+        token_url = scraper_utils.urljoin(self.base_url, token_url)
         headers = {'Referer': page_url}
         headers.update(XHR)
         script = self._http_get(token_url, headers=headers, cache_limit=0)
@@ -266,7 +269,10 @@ class Scraper(scraper.Scraper):
         elif script.startswith('[]') and script.endswith('()'):
             params = self.__uncensored2(script)
         else:
-            log_utils.log('Unrecognized js in %s' % (token_url))
+            params = self.__uncensored3(script)
+            
+        if params is None:
+            logger.log('Unrecognized js in %s' % (token_url))
 
         return params
     
@@ -310,17 +316,26 @@ class Scraper(scraper.Scraper):
             data = vLocals['param'].decode('string_escape')
             x = re.search('''_x=['"]([^"']+)''', data).group(1)
             y = re.search('''_y=['"]([^"']+)''', data).group(1)
-            log_utils.log('Used $_$ method to decode x/y: |%s|%s|' % (x, y))
+            logger.log('Used $_$ method to decode x/y: |%s|%s|' % (x, y))
             return {'x': x, 'y': y}
         except Exception as e:
-            log_utils.log('Exception in x/y decode (1): %s' % (e), log_utils.LOGWARNING)
+            logger.log('Exception in x/y decode (1): %s' % (e), log_utils.LOGWARNING)
 
     def __uncensored2(self, script):
         try:
             js = jsunfuck.JSUnfuck(script).decode()
             x = re.search('''_x=['"]([^"']+)''', js).group(1)
             y = re.search('''_y=['"]([^"']+)''', js).group(1)
-            log_utils.log('Used jsunfuck to decode x/y: |%s|%s|' % (x, y))
+            logger.log('Used jsunfuck to decode x/y: |%s|%s|' % (x, y))
             return {'x': x, 'y': y}
         except Exception as e:
-            log_utils.log('Exception in x/y decode (2): %s' % (e), log_utils.LOGWARNING)
+            logger.log('Exception in x/y decode (2): %s' % (e), log_utils.LOGWARNING)
+
+    def __uncensored3(self, script):
+        try:
+            xx = re.search('''_x=['"]([^"']+)''', script).group(1)
+            xy = re.search('''_y=['"]([^"']+)''', script).group(1)
+            logger.log('script used decode xx/xy: |%s|%s|' % (xx, xy))
+            return {'x': xx, 'y': xy}
+        except Exception as e:
+            logger.log('Exception in xx/xy decode (2): %s' % (e), log_utils.LOGWARNING)

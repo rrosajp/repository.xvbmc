@@ -29,7 +29,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import XHR
 import scraper
 
-
+logger = log_utils.Logger.get_logger()
 BASE_URL = 'http://www.dizibox1.com'
 LINKS = ['king.php', 'zeus.php', 'hades.php', 'juliet.php']
 QUALITY_MAP = {'HD': QUALITIES.HD720}
@@ -53,7 +53,7 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         hosters = []
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        page_url = urlparse.urljoin(self.base_url, source_url)
+        page_url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(page_url, cache_limit=1)
         hosters = self.__extract_links(html)
         fragment = dom_parser2.parse_dom(html, 'section', {'id': 'video-area'})
@@ -135,14 +135,15 @@ class Scraper(scraper.Scraper):
         return hosters
     
     def _get_episode_url(self, show_url, video):
-        show_url = urlparse.urljoin(self.base_url, show_url)
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
         html = self._http_get(show_url, cache_limit=8)
         pattern = '''href=['"]([^'"]+)[^>]+>\s*%s\.\s*Sezon<''' % (video.season)
         match = re.search(pattern, html)
         if match:
-            season_url = urlparse.urljoin(self.base_url, match.group(1))
             episode_pattern = '''href=['"]([^'"]+-%s-sezon-%s-bolum[^'"]*)''' % (video.season, video.episode)
-            ep_url = self._default_get_episode_url(season_url, video, episode_pattern)
+            season_url = scraper_utils.urljoin(self.base_url, match.group(1))
+            html = self._http_get(season_url, cache_limit=2)
+            ep_url = self._default_get_episode_url(html, video, episode_pattern)
             if ep_url: return ep_url
         
         # front page fallback
@@ -151,7 +152,6 @@ class Scraper(scraper.Scraper):
             if slug: break
             
         ep_url_frag = 'href="([^"]+/{slug}-{season}-sezon-{episode}-bolum[^"]*)'.format(slug=slug, season=video.season, episode=video.episode)
-        log_utils.log(ep_url_frag)
         match = re.search(ep_url_frag, html)
         if match:
             return scraper_utils.pathify_url(match.group(1))

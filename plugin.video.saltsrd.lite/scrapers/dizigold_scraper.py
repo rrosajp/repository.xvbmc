@@ -25,6 +25,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
+logger = log_utils.Logger.get_logger(__name__)
 
 BASE_URL = 'http://www.dizigold1.com'
 AJAX_URL = '/sistem/ajax.php'
@@ -36,7 +37,7 @@ class Scraper(scraper.Scraper):
     def __init__(self, timeout=scraper.DEFAULT_TIMEOUT):
         self.timeout = timeout
         self.base_url = kodi.get_setting('%s-base_url' % (self.get_name()))
-        self.ajax_url = urlparse.urljoin(self.base_url, AJAX_URL)
+        self.ajax_url = scraper_utils.urljoin(self.base_url, AJAX_URL)
 
     @classmethod
     def provides(cls):
@@ -51,7 +52,7 @@ class Scraper(scraper.Scraper):
         sources = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        page_url = urlparse.urljoin(self.base_url, source_url)
+        page_url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(page_url, cache_limit=.25)
         match = re.search('var\s+view_id\s*=\s*"([^"]+)', html)
         if not match: return hosters
@@ -102,8 +103,11 @@ class Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         episode_pattern = 'href="([^"]+/%s-sezon/%s-[^"]*bolum[^"]*)' % (video.season, video.episode)
-        title_pattern = 'href="(?P<url>[^"]+)"\s+class="realcuf".*?<p\s+class="realcuf">(?P<title>[^<]+)'
-        return self._default_get_episode_url(show_url, video, episode_pattern, title_pattern)
+        title_pattern = 'href="(?P<url>[^"]+)"[^>]+class="realcuf".*?class="realcuf">(?P<title>[^<]+)'
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
+        html = self._http_get(show_url, cache_limit=2)
+        fragment = dom_parser2.parse_dom(html, 'div', {'class': 'sezonlar'})
+        return self._default_get_episode_url(fragment or html, video, episode_pattern, title_pattern)
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []

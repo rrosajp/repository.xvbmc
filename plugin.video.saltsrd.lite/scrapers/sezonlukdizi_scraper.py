@@ -66,7 +66,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        page_url = urlparse.urljoin(self.base_url, source_url)
+        page_url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(page_url, cache_limit=2)
         fragment = dom_parser2.parse_dom(html, 'div', {'id': 'playerMenu'})
         if not fragment: return hosters
@@ -76,7 +76,7 @@ class Scraper(scraper.Scraper):
             data_id = attrs['data-id']
             headers = {'Referer': page_url}
             headers.update(XHR)
-            embed_url = urlparse.urljoin(self.base_url, EMBED_URL)
+            embed_url = scraper_utils.urljoin(self.base_url, EMBED_URL)
             html = self._http_get(embed_url, data={'id': data_id}, headers=headers, cache_limit=.5)
             iframe_url = dom_parser2.parse_dom(html, 'iframe', req='src')
             if not iframe_url: continue
@@ -117,8 +117,9 @@ class Scraper(scraper.Scraper):
         for stream_url in streams:
             quality = streams[stream_url]['quality']
             if 'v.asp' in stream_url:
+                stream_url = scraper_utils.urljoin(self.base_url, stream_url)
                 stream_redirect = self._http_get(stream_url, allow_redirect=False, method='HEAD', cache_limit=0)
-                if stream_redirect:
+                if stream_redirect.startswith('http'):
                     stream_url = stream_redirect
 
             sources.append({'stream_url': stream_url, 'subs': subs, 'quality': quality, 'direct': True})
@@ -131,20 +132,23 @@ class Scraper(scraper.Scraper):
         return sources
     
     def _get_episode_url(self, show_url, video):
-        url = urlparse.urljoin(self.base_url, show_url)
+        show_url = scraper_utils.urljoin(self.base_url, show_url)
         headers = {'Referer': self.base_url}
-        html = self._http_get(url, headers=headers, cache_limit=.25)
+        html = self._http_get(show_url, headers=headers, cache_limit=.25)
         data = dom_parser2.parse_dom(html, 'div', {'id': 'dizidetay'}, req=['data-dizi', 'data-id'])
         if not data: return
         
-        queries = {'sekme': 'bolumler', 'id': data[0].attrs['data-id'], 'dizi': data[0].attrs['data-dizi']}
-        season_url = SEASON_URL + '?' + urllib.urlencode(queries)
         episode_pattern = '''href=['"]([^'"]*/%s-sezon-%s-[^'"]*bolum[^'"]*)''' % (video.season, video.episode)
         title_pattern = '''href=['"](?P<url>[^'"]+)[^>]*>(?P<title>[^<]+)'''
         airdate_pattern = '''href=['"]([^"']+)[^>]*>[^<]*</a>\s*</td>\s*<td class="right aligned">{p_day}\.{p_month}\.{year}'''
-        headers = {'Referer': url, 'Content-Length': 0}
+
+        season_url = scraper_utils.urljoin(self.base_url, SEASON_URL)
+        queries = {'sekme': 'bolumler', 'id': data[0].attrs['data-id'], 'dizi': data[0].attrs['data-dizi']}
+        headers = {'Referer': show_url, 'Content-Length': 0}
         headers.update(XHR)
-        result = self._default_get_episode_url(season_url, video, episode_pattern, title_pattern, airdate_pattern, headers=headers, method='POST')
+
+        html = self._http_get(season_url, params=queries, headers=headers, method='POST', cache_limit=2)
+        result = self._default_get_episode_url(html, video, episode_pattern, title_pattern, airdate_pattern)
         if result and 'javascript:;' not in result:
             return result
 

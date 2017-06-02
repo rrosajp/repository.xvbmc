@@ -28,6 +28,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.utils2 import i18n
 import scraper
 
+logger = log_utils.Logger.get_logger()
 Q_LIST = [item[0] for item in sorted(Q_ORDER.items(), key=lambda x:x[1])]
 
 BASE_URL = 'http://www.alluc.ee'
@@ -62,15 +63,15 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
         
-        params = urlparse.parse_qs(urlparse.urlparse(source_url).query)
+        params = scraper_utils.parse_query(source_url)
         if video.video_type == VIDEO_TYPES.MOVIE:
-            query = urllib.quote_plus('%s %s' % (params['title'][0], params['year'][0]))
+            query = urllib.quote_plus('%s %s' % (params['title'], params['year']))
         else:
-            query = urllib.quote_plus('%s S%02dE%02d' % (params['title'][0], int(params['season'][0]), int(params['episode'][0])))
+            query = urllib.quote_plus('%s S%02dE%02d' % (params['title'], int(params['season']), int(params['episode'])))
         query_url = '/search?query=%s' % (query)
         hosters = self.__get_links(query_url, video)
-        if not hosters and video.video_type == VIDEO_TYPES.EPISODE and params['air_date'][0]:
-            query = urllib.quote_plus('%s %s' % (params['title'][0], params['air_date'][0].replace('-', '.')))
+        if not hosters and video.video_type == VIDEO_TYPES.EPISODE and params['air_date']:
+            query = urllib.quote_plus('%s %s' % (params['title'], params['air_date'].replace('-', '.')))
             query_url = '/search?query=%s' % (query)
             hosters = self.__get_links(query_url, video)
 
@@ -84,7 +85,10 @@ class Scraper(scraper.Scraper):
             if not search_url: continue
             html = self._http_get(search_url, params=params, cache_limit=.5)
             js_result = scraper_utils.parse_json(html, search_url)
-            if js_result.get('status') != 'success': continue
+            if js_result.get('status') != 'success':
+                logger.log('Alluc API Error: |%s|%s|: %s' % (search_url, params, js_result.get('message', 'Unknown Error')), log_utils.LOGWARNING)
+                continue
+            
             for result in js_result['result']:
                 stream_url = result['hosterurls'][0]['url']
                 if len(result['hosterurls']) > 1: continue
@@ -104,8 +108,6 @@ class Scraper(scraper.Scraper):
                     
                     hosters.append(hoster)
                     seen_urls.add(stream_url)
-                else:
-                    log_utils.log('Alluc API Error: |%s|%s|: %s' % (search_url, params, js_result.get('message', 'Unknown Error')), log_utils.LOGWARNING)
 
         return hosters
         
@@ -116,7 +118,7 @@ class Scraper(scraper.Scraper):
             if any(q in title for q in QUALITY_MAP[key]):
                 post_quality = key
 
-        # log_utils.log('Setting |%s| to |%s|' % (title, post_quality), log_utils.LOGDEBUG)
+        # logger.log('Setting |%s| to |%s|' % (title, post_quality), log_utils.LOGDEBUG)
         return post_quality
     
     def get_url(self, video):
@@ -124,7 +126,7 @@ class Scraper(scraper.Scraper):
         result = self.db_connection().get_related_url(video.video_type, video.title, video.year, self.get_name(), video.season, video.episode)
         if result:
             url = result[0][0]
-            log_utils.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url), log_utils.LOGDEBUG)
+            logger.log('Got local related url: |%s|%s|%s|%s|%s|' % (video.video_type, video.title, video.year, self.get_name(), url), log_utils.LOGDEBUG)
         else:
             if video.video_type == VIDEO_TYPES.MOVIE:
                 query = 'title=%s&year=%s' % (urllib.quote_plus(video.title), video.year)
@@ -146,9 +148,9 @@ class Scraper(scraper.Scraper):
         return settings
 
     def __translate_search(self, url, search_type):
-        query = urlparse.parse_qs(urlparse.urlparse(url).query)
-        query = query['query'][0] + ' lang:en'
-        url = urlparse.urljoin(self.base_url, SEARCH_URL % (search_type))
+        query = scraper_utils.parse_query(url)
+        query = query['query'] + ' lang:en'
+        url = scraper_utils.urljoin(self.base_url, SEARCH_URL % (search_type))
         params = {'query': query, 'count': 100, 'from': 0, 'getmeta': 0}
         if self.username and self.password:
             params.update({'user': self.username, 'password': self.password})

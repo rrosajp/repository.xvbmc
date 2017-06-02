@@ -28,7 +28,7 @@ from salts_lib.constants import XHR
 import scraper
 
 BASE_URL = 'http://m4ufree.info'
-AJAX_URL = '/demo.php'
+AJAX_URL = '/ajax.php'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -49,7 +49,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        url = urlparse.urljoin(self.base_url, source_url)
+        url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(url, cache_limit=.5)
         
         views = None
@@ -67,7 +67,7 @@ class Scraper(scraper.Scraper):
         sources = self.__get_embedded(html)
         for link in dom_parser2.parse_dom(html, 'span', {'class': 'btn-eps'}, req='link'):
             link = link.attrs['link']
-            ajax_url = urlparse.urljoin(self.base_url, AJAX_URL)
+            ajax_url = scraper_utils.urljoin(self.base_url, AJAX_URL)
             headers = {'Referer': url}
             headers.update(XHR)
             html = self._http_get(ajax_url, params={'v': link}, headers=headers, cache_limit=.5)
@@ -107,7 +107,7 @@ class Scraper(scraper.Scraper):
         sources2 = {}
         for source in sources:
             if not source.startswith('http'):
-                stream_url = urlparse.urljoin(self.base_url, source)
+                stream_url = scraper_utils.urljoin(self.base_url, source)
             else:
                 stream_url = source
                 
@@ -126,10 +126,11 @@ class Scraper(scraper.Scraper):
         results = []
         title = re.sub('[^A-Za-z0-9 ]', '', title)
         title = re.sub('\s+', '-', title)
-        search_url = urlparse.urljoin(self.base_url, '/tag/%s' % (title))
+        search_url = scraper_utils.urljoin(self.base_url, '/tag/%s' % (title))
         html = self._http_get(search_url, cache_limit=1)
         for attrs, match_title_year in dom_parser2.parse_dom(html, 'a', {'class': 'top-item'}, req='href'):
             match_url = attrs['href']
+            if '-tvshow-' in match_url: continue
             match_title_year = re.sub('</?[^>]*>', '', match_title_year)
             match_title_year = re.sub('^Watch\s*', '', match_title_year)
             match_title, match_year = scraper_utils.extra_year(match_title_year)

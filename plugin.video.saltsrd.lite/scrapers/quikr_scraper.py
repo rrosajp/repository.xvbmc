@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import urllib
 import re
 import urlparse
 import kodi
@@ -26,6 +27,8 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
+
+logger = log_utils.Logger.get_logger(__name__)
 
 BASE_URL = 'http://quikrmovies.to'
 DIRECT_HOSTS = ['quikr.stream', 'openload.stream', 'qvideos.stream']
@@ -49,7 +52,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
-        url = urlparse.urljoin(self.base_url, source_url)
+        url = scraper_utils.urljoin(self.base_url, source_url)
         html = self._http_get(url, cache_limit=.5)
         page_quality = QUALITIES.HD720 if video.video_type == VIDEO_TYPES.MOVIE else QUALITIES.HIGH
         for _attrs, fragment in dom_parser2.parse_dom(html, 'div', {'class': 'embed-responsive'}):
@@ -87,8 +90,9 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        url = '/search/%s/' % (title)
-        url = urlparse.urljoin(self.base_url, url)
+        search_title = re.sub('[^A-Za-z0-9. ]', '', title)
+        url = '/search/%s/' % (urllib.quote(search_title))
+        url = scraper_utils.urljoin(self.base_url, url)
         html = self._http_get(url, cache_limit=48)
         norm_title = scraper_utils.normalize_title(title)
         for _attrs, item in dom_parser2.parse_dom(html, 'article', {'class': 'movie-details'}):
@@ -105,29 +109,28 @@ class Scraper(scraper.Scraper):
         return results
     
     def _get_episode_url(self, show_url, video):
-        episode_pattern = 'href="([^"]+-s0*%se0*%s(?!\d)[^"]*)' % (video.season, video.episode)
-        result = self._default_get_episode_url(show_url, video, episode_pattern)
-        if result: return result
-
-        url = urlparse.urljoin(self.base_url, show_url)
+        url = scraper_utils.urljoin(self.base_url, show_url)
         html = self._http_get(url, cache_limit=2)
-        fragment = dom_parser2.parse_dom(html, 'ul', {'class': 'episode_list'})
-        if fragment:
-            fragment = fragment[0].content
-            ep_urls = [r.attrs['href'] for r in dom_parser2.parse_dom(fragment, 'a', req='href')]
-            ep_dates = [r.content for r in dom_parser2.parse_dom(fragment, 'span', {'class': 'episode_air_d'})]
-            ep_titles = [r.content for r in dom_parser2.parse_dom(fragment, 'span', {'class': 'episode_name'})]
-            force_title = scraper_utils.force_title(video)
-            if not force_title and kodi.get_setting('airdate-fallback') == 'true' and video.ep_airdate:
-                for ep_url, ep_date in zip(ep_urls, ep_dates):
-                    log_utils.log('Quikr Ep Airdate Matching: %s - %s - %s' % (ep_url, ep_date, video.ep_airdate), log_utils.LOGDEBUG)
-                    if video.ep_airdate == scraper_utils.to_datetime(ep_date, '%Y-%m-%d').date():
-                        return scraper_utils.pathify_url(ep_url)
+        episode_pattern = 'href="([^"]+-s0*%se0*%s(?!\d)[^"]*)' % (video.season, video.episode)
+        parts = dom_parser2.parse_dom(html, 'ul', {'class': 'episode_list'})
+        fragment = '\n'.join(part.content for part in parts)
+        result = self._default_get_episode_url(fragment, video, episode_pattern)
+        if result: return result
         
-            if force_title or kodi.get_setting('title-fallback') == 'true':
-                norm_title = scraper_utils.normalize_title(video.ep_title)
-                for ep_url, ep_title in zip(ep_urls, ep_titles):
-                    ep_title = re.sub('<span>.*?</span>\s*', '', ep_title)
-                    log_utils.log('Quikr Ep Title Matching: %s - %s - %s' % (ep_url, norm_title, video.ep_title), log_utils.LOGDEBUG)
-                    if norm_title == scraper_utils.normalize_title(ep_title):
-                        return scraper_utils.pathify_url(ep_url)
+        ep_urls = [r.attrs['href'] for r in dom_parser2.parse_dom(fragment, 'a', req='href')]
+        ep_dates = [r.content for r in dom_parser2.parse_dom(fragment, 'span', {'class': 'episode_air_d'})]
+        ep_titles = [r.content for r in dom_parser2.parse_dom(fragment, 'span', {'class': 'episode_name'})]
+        force_title = scraper_utils.force_title(video)
+        if not force_title and kodi.get_setting('airdate-fallback') == 'true' and video.ep_airdate:
+            for ep_url, ep_date in zip(ep_urls, ep_dates):
+                logger.log('Quikr Ep Airdate Matching: %s - %s - %s' % (ep_url, ep_date, video.ep_airdate), log_utils.LOGDEBUG)
+                if video.ep_airdate == scraper_utils.to_datetime(ep_date, '%Y-%m-%d').date():
+                    return scraper_utils.pathify_url(ep_url)
+    
+        if force_title or kodi.get_setting('title-fallback') == 'true':
+            norm_title = scraper_utils.normalize_title(video.ep_title)
+            for ep_url, ep_title in zip(ep_urls, ep_titles):
+                ep_title = re.sub('<span>.*?</span>\s*', '', ep_title)
+                logger.log('Quikr Ep Title Matching: %s - %s - %s' % (ep_url.encode('utf-8'), ep_title.encode('utf-8'), video.ep_title), log_utils.LOGDEBUG)
+                if norm_title == scraper_utils.normalize_title(ep_title):
+                    return scraper_utils.pathify_url(ep_url)
