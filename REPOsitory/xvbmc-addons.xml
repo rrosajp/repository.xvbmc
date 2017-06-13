@@ -35,22 +35,46 @@
 	</extension>
 </addon>
 
-<addon id="repository.exodus" version="1.0.1" name="Exodus repository" provider-name="Exodus">
-	<extension point="xbmc.addon.repository" name="Exodus repository">
-		<dir>
-			<info compressed="false">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml</info>
-			<checksum>https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/zips/</datadir>
+<addon id="repository.elysium" version="2017.06.10" name="Elysium repository" provider-name="Elysium">
+	<requires>
+		<import addon="xbmc.python" version="2.19.0" />
+	</requires>
+	<extension point="xbmc.addon.repository" name="Elysium repository">
+		<dir minversion="14.0.0">
+			<info compressed="false">https://github.com/OpenELEQ/repository.elysium/raw/master/elysium.xml</info>
+			<checksum>https://github.com/OpenELEQ/repository.elysium/raw/master/elysium.xml.md5</checksum>
+			<datadir zip="true">https://raw.github.com/OpenELEQ/repository.elysium/master/</datadir>
 		</dir>
-		<info compressed="false">https://offshoregit.com/exodus/addons.xml</info>
-		<checksum>https://offshoregit.com/exodus/addons.xml.md5</checksum>
-		<datadir zip="true">https://offshoregit.com/exodus/</datadir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Exodus repository</summary>
-		<description lang="en">Exodus repository</description>
+		<summary lang="en">Elysium repository</summary>
+		<description lang="en">This repository contains Elysium and required dependencies.</description>
+		<disclaimer lang="en">The Author does not host or share any content, nor is he affiliated with any of the content providers.</disclaimer>
 		<platform>all</platform>
+		<news>Rebrand from Zen to Elysium / Disabled Cinemabox</news>
+		<assets>
+			<icon>icon.png</icon>
+			<fanart>fanart.jpg</fanart>
+		</assets>
 	</extension>
+</addon>
+
+<addon id="repository.k3l3vra" name="K3l3vra's Repository" version="1.0.0" provider-name="k3l3vra">
+    <extension point="xbmc.addon.repository" name="K3l3vra's Repository">
+	    <dir>
+	        <info compressed="false">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml</info>
+	        <checksum>https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml.md5</checksum>
+	        <datadir zip="true">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/zips/</datadir>
+	    </dir>
+        <info compressed="false">http://github.com/k3l3vra1/k3l3vra.repo/raw/master/addons.xml</info>
+        <checksum>http://github.com/k3l3vra1/k3l3vra.repo/raw/master/addons.xml.md5</checksum>
+        <datadir zip="true">http://github.com/k3l3vra1/k3l3vra.repo/raw/master/zips/</datadir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>This is my repo for addon development</summary>
+        <description>All K3l3vra's addons</description>
+        <platform>all</platform>
+    </extension>
 </addon>
 
     <addon id="repository.kaosbox2" name="KAOSbox Repo" version="5.0.2" provider-name="KAOSbox">
@@ -84,6 +108,26 @@
 	</extension>
 </addon>
 
+<addon id="repository.metalkettle" name="MetalKettles Addon Repository" version="2.0.0" provider-name="MetalKettle">
+	<extension point="xbmc.addon.repository" name="MetalKettles Addon Repository">
+	<dir>
+		<info compressed="false">https://raw.githubusercontent.com/MetalKettle/MK/master/addons.xml</info>
+		<checksum>https://raw.githubusercontent.com/MetalKettle/MK/master/addons.xml.md5</checksum>
+		<datadir zip="true">https://raw.githubusercontent.com/MetalKettle/MK/master/zips/</datadir>
+	</dir>
+	<dir>
+		<info compressed="false">https://github.com/zqfaen/tva-common/raw/master/addons.xml</info>
+        	<checksum>https://github.com/zqfaen/tva-common/raw/master/addons.xml.md5</checksum>
+        	<datadir zip="true">https://github.com/zqfaen/tva-common/raw/master/zips/</datadir>
+	</dir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Install my Addons</summary>
+		<description>Download and install addons from MetalKettle</description>
+		<platform>all</platform>
+	</extension>
+</addon>
+
 <addon id="repository.natko1412" name="natko1412 repo" version="2.0.0" provider-name="natko1412">
 <extension point="xbmc.addon.repository" name="Natko's Addon Repository">
 <info compressed="false">https://offshoregit.com/natko1412/addons.xml</info>
@@ -97,13 +141,8 @@
 </extension>
 </addon>
 
-<addon id="repository.noobsandnerds" name="noobsandnerds Repository" version="1.7" provider-name="noobsandnerds">
+<addon id="repository.noobsandnerds" name="noobsandnerds Repository" version="1.8" provider-name="noobsandnerds">
 	<extension point="xbmc.addon.repository" name="noobsandnerds Repository">
-		<dir>
-			<info compressed="false">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml</info>
-			<checksum>https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/zips/</datadir>
-		</dir>
 		<dir>
 			<info compressed="false">https://raw.githubusercontent.com/noobsandnerds/modules4all/master/zips/addons.xml</info>
 			<checksum>https://raw.githubusercontent.com/noobsandnerds/modules4all/master/zips/addons.xml.md5</checksum>
@@ -158,6 +197,19 @@
     </extension>
 </addon>
 
+<addon id="repository.StreamAddons" name="[COLOR yellow]Stream Addons[/COLOR]" version="0.2" provider-name="Stream Addons // A Home For All Devs">
+	<extension point="xbmc.addon.repository" name="Stream Addons">
+		<info compressed="false">http://streamaddons.com/xmls/addons.xml</info>
+        <checksum>http://streamaddons.com/xmls/addons.xml.md5</checksum>
+        <datadir zip="true">http://streamaddons.com/zips/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Stream Addons Repo</summary>
+		<description>Official Community StreamAddons.com Repo</description>
+		<platform>all</platform>
+	</extension>
+</addon>
+
 <addon id="repository.tknorris.beta" name="tknorris Beta Testing Repository" version="1.0.5" provider-name="tknorris">
     <extension point="xbmc.addon.repository" name="tknorris beta testing repository">
 	    <dir>
@@ -189,6 +241,19 @@ Addons Included
         </description>
         <platform>all</platform>
     </extension>
+</addon>
+
+<addon id="repository.ukturk" name="UKTurk Addon Repository" version="1.0.2" provider-name="UKTurk">
+	<extension point="xbmc.addon.repository" name="UKTurk Addon Repository">
+		<info compressed="false">https://raw.githubusercontent.com/MetalKettle/UKT/master/addons.xml</info>
+		<checksum>https://raw.githubusercontent.com/MetalKettle/UKT/master/addons.xml.md5</checksum>
+		<datadir zip="true">https://raw.githubusercontent.com/MetalKettle/UKT/master/zips/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Install UKTurk</summary>
+		<description>Install UKTurk</description>
+		<platform>all</platform>
+	</extension>
 </addon>
 
 <addon id="repository.ultimate" name="Ultimate repo" version="1.0.0" provider-name="Whitecream">

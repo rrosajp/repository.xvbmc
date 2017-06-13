@@ -1,5 +1,0 @@
-v1.0.1
-- Exodus bump (over l*m*d*)
-
-v1.0.0
-- initial release (l*m*d*)
