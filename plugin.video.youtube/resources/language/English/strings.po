@@ -610,3 +610,19 @@ msgstr ""
 msgctxt "#30581"
 msgid "Are you sure you want to reset access manager?"
 msgstr ""
+
+msgctxt "#30582"
+msgid "Autoplay suggested videos"
+msgstr ""
+
+msgctxt "#31583"
+msgid "Automatic"
+msgstr ""
+
+msgctxt "#31584"
+msgid "My Subscriptions (Filtered)"
+msgstr ""
+
+msgctxt "#31585"
+msgid "Channel whitelist (comma delimited)"
+msgstr ""
