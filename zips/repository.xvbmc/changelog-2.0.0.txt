@@ -1,5 +1,0 @@
-[B]Version 2.0.0[/B]
-- EPiC code cosmetics ;) :P 
-
-[B]Version 1.0.0[/B]
-- Eerste versie.
