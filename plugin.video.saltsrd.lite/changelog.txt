@@ -1,3 +1,7 @@
+Version [B]2.0.187[/B]MR
++ All Kudos -2- k3l3vra  (Y)
+- MaintenanceRelease RD.lite
+
 Version [B]2.0.187[/B]
 + All Kudos -2- TKnorris (Y)
 - MaintenanceRelease RD.lite
