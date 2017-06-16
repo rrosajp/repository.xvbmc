@@ -807,7 +807,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<addon id="repository.xvbmc" name=" [COLOR lime][B]X[/B][/COLOR]vBMC (Add-ons) REPOsitory" version="4.0.1" provider-name="EPiC XvBMC Nederland">
+<addon id="repository.xvbmc" name=" [COLOR lime][B]X[/B][/COLOR]vBMC (Add-ons) REPOsitory" version="4.0.1MR" provider-name="EPiC XvBMC Nederland">
 	<extension point="xbmc.addon.repository" name=" [COLOR lime][B]X[/B][/COLOR]vBMC (Add-ons) REPOsitory">
 		<dir>
 			<info compressed="false">https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/Dependencies/xvbmc-addons.xml</info>
@@ -821,21 +821,10 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 			<datadir zip="true">https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/REPOsitory/zips/</datadir>
 			<hashes>false</hashes>
 		</dir>
-		<dir>
 			<info compressed="false">https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/xvbmc-addons.xml</info>
 			<checksum>https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/xvbmc-addons.xml.md5</checksum>
 			<datadir zip="true">https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/</datadir>
 			<hashes>false</hashes>
-		</dir>
-		<dir>
-			<info compressed="false">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml</info>
-			<checksum>https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/zips/</datadir>
-		</dir>
-		<info compressed="false">https://raw.github.com/XvBMC/repository.xvbmc/master/xvbmc-addons.xml</info>
-		<checksum>https://raw.github.com/XvBMC/repository.xvbmc/master/xvbmc-addons.xml.md5</checksum>
-		<datadir zip="true">https://raw.github.com/XvBMC/repository.xvbmc/master/zips/</datadir>
-		<hashes>false</hashes>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">XvBMC The Netherlands (Add-ons) REPOsitory</summary>
