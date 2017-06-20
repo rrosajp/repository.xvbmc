@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.saltsrd.lite" version="2.0.187MR" name="Salts RD Lite" provider-name="k3l3vra (EPiC XvBMC MOD)">
+<addon id="plugin.video.saltsrd.lite" version="2.0.196" name="Salts RD Lite" provider-name="k3l3vra (EPiC XvBMC MOD)">
     <requires>
         <import addon="xbmc.python" version="2.19.0"/>
         <import addon="repository.xvbmc" version="4.0.2"/>
@@ -18,14 +18,14 @@
         <extension point="xbmc.service" library="service.py" start="startup"/>
     <extension point="xbmc.addon.metadata">
         <summary>Stream video from many difference sources with EPiC SALTs RD Lite (RealDebrid)</summary>
-        <description>This is the MOD version of SALTs by EPiC + Scott Marten (Credits -2- k3l3vra obviously) -4- RealDebrid usage.</description>
-        <disclaimer>MOD info @ http://bit.ly/XvBMC-NL (USE_AT_YOUR_OWN!_RISK!) ---> *C*R*E*D*I*T*S* -2- k3l3vra obviously</disclaimer>
+        <description>This is the MOD version of SALTs by EPiC + Scott Marten (Credits -2- k3l3vra obviously) -4- RealDebrid usage (als a big thx to TKnorris).</description>
+        <disclaimer>MOD info @ http://bit.ly/XvBMC-NL (USE_AT_YOUR_OWN!_RISK!) ---> *C*R*E*D*I*T*S* -2- k3l3vra obviously (and TKnorris also)</disclaimer>
         <platform>all</platform>
         <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
 		<forum>https://www.facebook.com/groups/XvBMCnederland/</forum>
         <website>repository.xvbmc</website>
         <source>http://bit.ly/XvBMC-NL</source>
-        <news>[B]Version 2.0.187[/B]MR: MaintenanceRelease</news>
+        <news>[B]Version 2.0.196[/B]: Trakt fix</news>
 		<assets>
 		  <icon>icon.png</icon>
 		  <fanart>fanart.jpg</fanart>
