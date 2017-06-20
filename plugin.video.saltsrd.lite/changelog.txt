@@ -1,9 +1,9 @@
-Version [B]2.0.187[/B]MR
-+ All Kudos -2- k3l3vra  (Y)
-- MaintenanceRelease RD.lite
+Version [B]2.0.196[/B]
++ All Kudos -2- k3l3vra/TKnorris
+! Fixed Trakt
 
 Version [B]2.0.187[/B]
-+ All Kudos -2- TKnorris (Y)
++ All Kudos -2- TKnorris/k3l3vra
 - MaintenanceRelease RD.lite
 
 Version [B]2.0.171[/B]
@@ -149,6 +149,36 @@ Version 1.0.132[B]a[/B] EPiC Real-Debrid
 + Salts HD Lite .130 "engine" (kudos-2-TKnorris though)
 
 ----------------------
+
+[B]Version 2.0.195[/B]
+Take over addon from TK
+Update translations
+Improve gvideo parsing
+
+[B]Version 2.0.194[/B]
+- Add sit2play
+- Add pubfilm.to
+- Add Mehliz
+- Improve 2DDL
+- Improve xmovies8.v2
+- Improve filmovizjia
+- Improve Dizimag
+- Improve Mehliz
+- Fix Dizigold
+- Fix Dizilab
+- Fix Dizipas
+- Fix Dizibox
+- Fix tvonline
+- Fix SeriesCoco
+- Fix pubfilm
+- Fix Flixanity
+- Fix DDLSeries
+- Fix RLSSource
+- Remove SolarMovie
+- Remove Torba
+- Fix episode thumbnail caching
+- Improve premiumize scraper
+
 [B]Version 2.0.187[/B]
 - Make episode detection faster across all scrapers
 - Fix m4ufree

@@ -60,6 +60,7 @@ __all__ = ['scraper',
  'pftv_scraper', 
  'piratejunkies_scraper', 
  'pubfilm_scraper', 
+ 'pubfilmto_scraper',
 #'putlocker_scraper', 
  'putmv_scraper', 
  'pw_scraper', 
@@ -196,21 +197,21 @@ def update_scraper(filename, scraper_url):
         exists = os.path.exists(py_path)
         scraper_password = kodi.get_setting('scraper_password')
         if scraper_url and scraper_password:
-            old_etag = ''
+            old_lm = None
             old_py = ''
             if exists:
                 with open(py_path, 'r') as f:
                     old_py = f.read()
-                    match = re.search('^#\s+Etag:\s*(.*)', old_py)
+                    match = re.search('^#\s+Last-Modified:\s*(.*)', old_py)
                     if match:
-                        old_etag = match.group(1).strip()
+                        old_lm = match.group(1).strip()
 
-            new_etag, new_py = utils2.get_and_decrypt(scraper_url, scraper_password, old_etag)
+            new_lm, new_py = utils2.get_and_decrypt(scraper_url, scraper_password, old_lm)
             if new_py:
                 logger.log('%s path: %s, new_py: %s, match: %s' % (filename, py_path, bool(new_py), new_py == old_py), log_utils.LOGDEBUG)
                 if old_py != new_py:
                     with open(py_path, 'w') as f:
-                        f.write('# Etag: %s\n' % (new_etag))
+                        f.write('# Last-Modified: %s\n' % (new_lm))
                         f.write(new_py)
                     kodi.notify(msg=utils2.i18n('scraper_updated') + filename)
                         
