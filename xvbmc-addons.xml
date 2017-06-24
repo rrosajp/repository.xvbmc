@@ -298,7 +298,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   </extension>
 </addon>
 
-<addon id="plugin.video.exodus" version="3.1.19.1" name="Exodus" provider-name="Exodus">
+<addon id="plugin.video.exodus" version="3.1.16.1" name="Exodus" provider-name="Exodus">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="repository.xvbmc"  version="4.0.2"/>
@@ -331,10 +331,11 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 			<screenshot>resources/screenshots/screenshot-02.jpg</screenshot>
 			<screenshot>resources/screenshots/screenshot-03.jpg</screenshot>
 		</assets>
-		<news>- Updated German providers
+		<news>- Updated existing providers
+- Added and Updated German providers
 - Updated Korean providers
-- Tweaked localized trailers
-- Fixed trakt support</news>
+- Fixed Russian providers
+- Fixed library update in some cases</news>
 	</extension>
 </addon>
 
