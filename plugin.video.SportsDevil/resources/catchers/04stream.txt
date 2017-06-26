@@ -307,20 +307,27 @@ item_info_build=%s
 
 item_info_name=file
 item_info_from=path+pp
+item_info_convert=debug
 item_info_build=%s
 
 item_info_name=rtmp_2
 item_info_from=pageUrl
-item_info_convert=getInfo('%s','.*\W([0-9]+(?:\.[0-9]+){3}:[0-9]+).*','@REFERER@')
-item_info_convert=ifEmpty('%s','','rtmp://%s/stream/')
+item_info_convert=getInfo('%s','.*(rtmp:\/\/.*?)"','@REFERER@')
+#item_info_convert=ifEmpty('%s','','rtmp://%s/stream/')
+#item_info_convert=debug
 item_info_build=%s
 
-item_info_name=rtmp
-item_info_from=rtmp_1 || rtmp_2
+item_info_name=url1
+item_info_from=rtmp_1+file+' pageUrl=' + pageUrl + ' swfUrl=http://thecdn.04stream.com/p/ooolo1.swf flashver=WIN\2021,0,0,242 timeout=10 live=1'
+pageUrl='+pageUrl
+item_info_build=%s
+
+item_info_name=url2
+item_info_from=rtmp_2+' pageUrl=' + pageUrl + ' swfUrl=http://thecdn.04stream.com/p/ooolo1.swf flashver=WIN\2021,0,0,242 timeout=10 live=1'
+pageUrl='+pageUrl
 item_info_build=%s
 
 item_info_name=url
 #item_info_from=rtmp+' playPath='+file+' swfUrl=http://thecdn.04stream.com/p/ooolo1.swf flashver=WIN\2021,0,0,242 timeout=10 live=1 
-item_info_from=rtmp+file+' pageUrl=' + pageUrl + ' swfUrl=http://thecdn.04stream.com/p/ooolo1.swf flashver=WIN\2021,0,0,242 timeout=10 live=1'
-pageUrl='+pageUrl
+item_info_from=url1 || url2
 item_info_build=%s

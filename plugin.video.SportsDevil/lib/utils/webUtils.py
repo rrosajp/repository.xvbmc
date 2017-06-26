@@ -41,8 +41,9 @@ class BaseRequest(object):
         self.s.cookies = LWPCookieJar(self.cookie_file)
         if fileExists(self.cookie_file):
             self.s.cookies.load(ignore_discard=True)
-        self.s.headers.update({'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'})
+        self.s.headers.update({'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'})
         self.s.headers.update({'Accept-Language' : 'en-US,en;q=0.5'})
+
         self.url = ''
     
     # def save_cookies_lwp(self, cookiejar, filename):
@@ -113,8 +114,17 @@ class BaseRequest(object):
         if 'streamlive.to' in urlparse.urlsplit(url).netloc:
             self.s.verify = False
 
-        if 'vipleague' in url or 'strikeout' in url or 'homerun' in url:
+        if 'vipleague' in url or 'strikeout' in url or 'homerun' or 'nbastreams' in url:
             self.s.verify = False
+            
+        #if 'dinostream.pw' in urlparse.urlsplit(url).netloc:
+            #self.s.headers.update({'Upgrade-Insecure-Requests': '1'})
+            # self.s.headers.update({'Host': 'wwww.dinostream.pw'})
+            # self.s.headers.update({'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'})
+            # self.s.headers.update({'Accept-Language' : 'en-US,en;q=0.8,de;q=0.6,es;q=0.4'})
+            # self.s.headers.update({'Accept-Encoding': 'gzip, deflate, sdch'})
+            # self.s.headers.update({'Connection' : 'keep-alive'})
+        
 
         if form_data:
             #zo**tv
@@ -149,6 +159,8 @@ class BaseRequest(object):
             r.encoding = 'windows-1251'
             
         response  = r.text
+                
+
         
         if 'beget=begetok' in response: # av
             _cookie = requests.cookies.create_cookie('beget','begetok',domain=urlparse.urlsplit(url).netloc,path='/')
