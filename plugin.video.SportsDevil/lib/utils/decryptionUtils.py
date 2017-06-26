@@ -9,7 +9,7 @@ try: import json
 except ImportError: import simplejson as json
 try: from Crypto.Cipher import AES
 except ImportError: import pyaes as AES
-#import lib.common
+import lib.common
 
 def encryptDES_ECB(data, key):
     data = data.encode()
@@ -75,7 +75,10 @@ def zadd2(data):
                 tmp = re.findall(match+'\s*=\s*[\'\"](.*?)[\"\'];',data)
                 if len(tmp)>0:
                     jsall += tmp[0]
-            tmp_ = re.sub(r"jwplayer\(\'\w+.*eval\(\"\(\"\+\w+\+\"\)\"\);", jsall, data, count=1, flags=re.DOTALL)
+            if re.compile(r"jwplayer\(\'\w+.*eval\(\"\(\"\+\w+\+\"\)\"\);", flags=re.DOTALL).findall(data):
+                 tmp_ = re.sub(r"jwplayer\(\'\w+.*eval\(\"\(\"\+\w+\+\"\)\"\);", jsall, data, count=1, flags=re.DOTALL)
+            if re.compile(r"\w+\.\w+\({.*}\s+</script>(.*)</script>", flags=re.DOTALL).findall(data):
+                tmp_ = re.sub(r"\w+.\w+\({.*}\s+</script>(.*)</script>", jsall, data, count=1, flags=re.DOTALL)
             data = tmp_
         except:
             data = data
@@ -219,6 +222,7 @@ def decryptSaurus(data):
     return data
 
 def doDemystify(data):
+    from base64 import b64decode
     escape_again=False
     
     #init jsFunctions and jsUnpacker
@@ -292,6 +296,30 @@ def doDemystify(data):
             #for base64_data in r2.findall(g):
                 #data = data.replace(g, urllib.unquote(base64_data.decode('base-64')))
                 
+    #jairox: ustreamix -- Obfuscator HTML : https://github.com/BlueEyesHF/Obfuscator-HTML
+    r = re.compile(r"var\s*(\w+)\s*=\s*\[([A-Za-z0-9+=\/\",\s]+)\];\s*\1\.forEach.*-\s*(\d+)")
+    #lib.common.log("JairoX_Decrypt:" + data)
+    if r.findall(data):
+        #lib.common.log("JairoX_Decrypt1:" + data)
+        try:
+            matches = re.compile(r"var\s*(\w+)\s*=\s*\[([A-Za-z0-9+=\/\",\s]+)\];\s*\1\.forEach.*-\s*(\d+)").findall(data)
+            chunks = matches[0][1].split(',')
+            op = int(matches[0][2])
+            dec_data = r""
+            for chunk in chunks:
+                try:
+                    tmp = chunk.replace('"','')
+                    tmp = str(b64decode(tmp))
+                    dig = int(re.sub('[\D\s\n]','',tmp))
+                    dig = dig - op
+                    dec_data += chr(dig)
+                except:
+                    pass
+            data = re.sub(r"(?s)<script>\s*var\s*\w+\s*=.*?var\s*(\w+)\s*=\s*\[.*<\/script>[\"']?", dec_data, data)
+
+        except:
+            pass
+    
     r = re.compile('(<script.*?str=\'@.*?str.replace)')
     while r.findall(data):
         for g in r.findall(data):

@@ -162,12 +162,13 @@ class Parser(object):
             
             form_data = None
             postData = ''
-            parts = lItem['url'].split('|')
-            url = parts[0]
-            lItem['url'] = url
-            if len(parts) > 1:
-                postData = parts[1]
-                form_data = urlparse.parse_qsl(postData)
+            if re.compile(r'\|[\w&=]+').findall(lItem['url']): #jairox: added for post in menu cfgs
+                parts = lItem['url'].split('|') 
+                url = parts[0]
+                lItem['url'] = url
+                if len(parts) > 1:
+                    postData = parts[1]
+                    form_data = urlparse.parse_qsl(postData)
             inputList.curr_url = lItem['url']
             count = 0
             i = 1
@@ -454,11 +455,12 @@ class Parser(object):
         #common.log('_parseHtml called' + url)
         items = []
 
-        for item_rule in rules:
-            #common.log('rule: ' + item_rule.infos)
-      
+        for item_rule in rules:            
+            
+            #precheck attribute is used to filter correct rule from _streams.cfg
             if not hasattr(item_rule, 'precheck') or (item_rule.precheck in data):
-      
+                #common.log('rule: ' + item_rule.infos)
+
                 revid = re.compile(item_rule.infos, re.IGNORECASE + re.DOTALL + re.MULTILINE + re.UNICODE)
                 for reinfos in revid.findall(data):
                     tmp = CListItem()
