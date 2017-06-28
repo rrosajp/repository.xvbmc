@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
+import sys
 import time
 import xbmc
 import xbmcaddon
 import xbmcgui
+
+if sys.version_info >= (2, 7):
+    import json
+else:
+    import simplejson as json
 
 # Import the common settings
 from resources.lib.settings import log
@@ -143,7 +149,7 @@ class PinSentryPlayer(xbmc.Player):
         xbmc.Player.__init__(self)
 
     def onPlayBackStarted(self):
-        if not Settings.isActiveVideoPlaying():
+        if not (Settings.isActiveVideoPlaying() or Settings.isActiveTvChannels()):
             return
 
         log("PinSentryPlayer: Notification that something started playing")
@@ -252,9 +258,11 @@ class PinSentryPlayer(xbmc.Player):
                 year = xbmc.getInfoLabel("VideoPlayer.Year")
                 if year in [None, ""]:
                     year = xbmc.getInfoLabel("ListItem.Year")
-                mpaaLookup = MpaaLookup()
-                cert = mpaaLookup.getMpaaRatings(title, year)
-                del mpaaLookup
+                # Only do the lookup if we are going to use it
+                if Settings.isActiveVideoPlaying():
+                    mpaaLookup = MpaaLookup()
+                    cert = mpaaLookup.getMpaaRatings(title, year)
+                    del mpaaLookup
 
             if cert not in [None, ""]:
                 log("PinSentryPlayer: Checking for certification restrictions: %s" % str(cert))
@@ -303,6 +311,17 @@ class PinSentryPlayer(xbmc.Player):
                     securityLevel = 0
                     log("PinSentryPlayer: Playing background media")
 
+        # Check for the case where the user is restricted from playing a Live TV Channel
+        if Settings.isActiveTvChannels():
+            # Get the Channel for the item currently playing
+            channelName = xbmc.getInfoLabel("VideoPlayer.ChannelName")
+            if channelName not in [None, ""]:
+                log("PinSentryPlayer: Playing Live TV Channel %s" % str(channelName))
+                # Check the security level required
+                pinDB = PinSentryDB()
+                securityLevel = pinDB.getTvChannelsSecurityLevel(str(channelName))
+                del pinDB
+
         # Check if security has been set on this item
         if securityLevel < 1:
             if title in [None, ""]:
@@ -331,19 +350,35 @@ class PinSentryPlayer(xbmc.Player):
         # On some systems we could get notified that we have started playing a video
         # before it has actually been started, so keep trying to pause until we get
         # one that works
-        while not xbmc.getCondVisibility("Player.Paused"):
-            self.pause()
+        # Some PVR channels can not be paused, so mute instead
+        muted = False
+        if filePath.startswith("pvr://") and (not Settings.isPvrPauseSupported()):
+            log("PinSentryPlayer: Muted video to check if OK to play")
+            # Failed to pause, most probably PVR, so mute instead
+            xbmc.executebuiltin('Mute', False)
+            muted = True
+        else:
+            log("PinSentryPlayer: About to pause the video")
+            maxAttempts = 100
+            while (not xbmc.getCondVisibility("Player.Paused")) and (maxAttempts > 0):
+                self.pause()
+                maxAttempts = maxAttempts - 1
 
-        log("PinSentryPlayer: Pausing video to check if OK to play")
+            log("PinSentryPlayer: Paused video to check if OK to play")
 
         # Prompt the user for the pin, returns True if they knew it
         if PinSentry.promptUserForPin(securityLevel):
             log("PinSentryPlayer: Resuming video")
             # Pausing again will start the video playing again
-            self.pause()
+            if muted:
+                xbmc.executebuiltin('Mute', False)
+            else:
+                self.pause()
         else:
             log("PinSentryPlayer: Stopping video")
             self.stop()
+            if muted:
+                xbmc.executebuiltin('Mute', False)
             PinSentry.displayInvalidPinMessage(securityLevel)
 
         xbmcgui.Window(10000).clearProperty("PinSentryPrompting")
@@ -369,6 +404,7 @@ class NavigationRestrictions():
         self.lastTvShowChecked = ""
         self.lastMovieSetChecked = ""
         self.lastPluginChecked = ""
+        self.lastRepositoryChecked = ""
         self.canChangeSettings = False
         self.lastFileSource = ""
 
@@ -522,10 +558,55 @@ class NavigationRestrictions():
         else:
             log("NavigationRestrictions: Not allowed access to plugin %s which has security level %d" % (pluginName, securityLevel))
             # Move back to the Video plugin Screen as they are not allowed where they are at the moment
-            xbmc.executebuiltin("ActivateWindow(Video,addons://sources/video/)", True)
+            xbmc.executebuiltin("ActivateWindow(Home)", True)
             # Clear the previous plugin as we will want to prompt for the pin again if the
             # user navigates there again
             self.lastPluginChecked = ""
+            PinSentry.displayInvalidPinMessage(securityLevel)
+
+    # Check if a user has navigated to a Repository that requires a Pin
+    def checkRepositories(self):
+        navPath = xbmc.getInfoLabel("Container.FolderPath")
+        if 'addons://' not in navPath:
+            # No Repository currently set
+            self.lastRepositoryChecked = ""
+            return
+
+        # Check if we are in a plugin location
+        repoName = xbmc.getInfoLabel("Container.FolderName")
+
+        if repoName in [None, "", self.lastRepositoryChecked]:
+            # No Repository currently set or this is a Repository that has already been checked
+            return
+
+        # If we reach here we have aPlugin that we need to check
+        log("NavigationRestrictions: Checking access to view Repository: %s" % repoName)
+        self.lastRepositoryChecked = repoName
+
+        securityLevel = 0
+        # Check to see if the user should have access to this repository
+        pinDB = PinSentryDB()
+        securityLevel = pinDB.getRepositorySecurityLevel(repoName)
+        if securityLevel < 1:
+            log("NavigationRestrictions: No security enabled for repository %s" % repoName)
+            return
+        del pinDB
+
+        # Check if we have already cached the pin number and at which level
+        if PinSentry.getCachedPinLevel() >= securityLevel:
+            log("NavigationRestrictions: Already cached pin at level %d, allowing access" % PinSentry.getCachedPinLevel())
+            return
+
+        # Prompt the user for the pin, returns True if they knew it
+        if PinSentry.promptUserForPin(securityLevel):
+            log("NavigationRestrictions: Allowed access to repository %s" % repoName)
+        else:
+            log("NavigationRestrictions: Not allowed access to repository %s which has security level %d" % (repoName, securityLevel))
+            # Move back to the Repositories Screen as they are not allowed where they are at the moment
+            xbmc.executebuiltin("ActivateWindow(Video,addons://repos/)", True)
+            # Clear the previous repository as we will want to prompt for the pin again if the
+            # user navigates there again
+            self.lastRepositoryChecked = ""
             PinSentry.displayInvalidPinMessage(securityLevel)
 
     # Checks to see if the PinSentry addons screen has been opened
@@ -731,7 +812,7 @@ class PvrMonitor():
 
     def hasPvrChannelChanged(self):
         # Only need to handle PVR if we are configured to check playing videos
-        if (not Settings.isActiveVideoPlaying()) or (not xbmc.Player().isPlayingVideo()):
+        if (not (Settings.isActiveVideoPlaying() or Settings.isActiveTvChannels())) or (not xbmc.Player().isPlayingVideo()):
             self.lastPvrChannelNumber = None
             self.lastPlayedTitle = None
             return False
@@ -1021,66 +1102,81 @@ if __name__ == '__main__':
     navRestrictions = NavigationRestrictions()
     pvrMonitor = PvrMonitor()
 
-    loopsUntilUserControlCheck = 0
-    while (not xbmc.abortRequested):
-        # There are two types of startup, the first is a genuine startup when
-        # kodi is booted from cold, the second is when kodi is resumed from
-        # a sleep state, if restoring from sleep in memory then the PinSentry
-        # service will be restored from where it was and will not be a clean
-        # start, so we keep track of the current time and then, if too long has
-        # passed since the last time we updated the timer, we know the system
-        # has been in a sleep mode for a while
-        currentTime = int(time.time())
-        # Add on 10 seconds to detect sleep
-        if (lastActivityTime == 0) or ((lastActivityTime + 10) < currentTime):
-            # Check if we need to prompt for the pin when the system starts
-            if Settings.isPromptForPinOnStartup():
-                log("PinSentry: Prompting for pin on startup")
-                xbmcgui.Window(10000).setProperty("PinSentryPrompt", "true")
-            # Also need to reset the User pin control that restricts the amount of
-            # time that the user is allowed to view kodi for
-            if userCtrl not in [None, ""]:
-                del userCtrl
-            userCtrl = UserPinControl()
-            userCtrl.startupCheck()
+    displayNotice = True
+    json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "Addons.GetAddonDetails", "params": { "addonid": "repository.urepo", "properties": ["enabled", "broken", "name", "author"]  }, "id": 1}')
+    json_response = json.loads(json_query)
 
-        # Make sure the last loop is recorded
-        lastActivityTime = currentTime
+    if ("result" in json_response) and ('addon' in json_response['result']):
+        addonItem = json_response['result']['addon']
+        if (addonItem['enabled'] is True) and (addonItem['broken'] is False) and (addonItem['type'] == 'xbmc.addon.repository') and (addonItem['addonid'] == 'repository.urepo'):
+            displayNotice = False
 
-        # No need to perform the user control check every fraction of a second
-        # about every minute will be OK
-        if loopsUntilUserControlCheck < 1:
-            # If we are going to shut down then start closing down this script
-            if not userCtrl.check():
-                break
-            loopsUntilUserControlCheck = 600
-        else:
-            loopsUntilUserControlCheck = loopsUntilUserControlCheck - 1
+    if displayNotice:
+        xbmc.executebuiltin('Notification("URepo Repository Required","www.urepo.org",10000,%s)' % ADDON.getAddonInfo('icon'))
+    else:
+        loopsUntilUserControlCheck = 0
+        while (not xbmc.abortRequested):
+            # There are two types of startup, the first is a genuine startup when
+            # kodi is booted from cold, the second is when kodi is resumed from
+            # a sleep state, if restoring from sleep in memory then the PinSentry
+            # service will be restored from where it was and will not be a clean
+            # start, so we keep track of the current time and then, if too long has
+            # passed since the last time we updated the timer, we know the system
+            # has been in a sleep mode for a while
+            currentTime = int(time.time())
+            # Add on 10 seconds to detect sleep
+            if (lastActivityTime == 0) or ((lastActivityTime + 10) < currentTime):
+                # Check if we need to prompt for the pin when the system starts
+                if Settings.isPromptForPinOnStartup():
+                    log("PinSentry: Prompting for pin on startup")
+                    xbmcgui.Window(10000).setProperty("PinSentryPrompt", "true")
+                # Also need to reset the User pin control that restricts the amount of
+                # time that the user is allowed to view kodi for
+                if userCtrl not in [None, ""]:
+                    del userCtrl
+                userCtrl = UserPinControl()
+                userCtrl.startupCheck()
 
-        xbmc.sleep(100)
-        userCtrl.checkDisplayStatus()
+            # Make sure the last loop is recorded
+            lastActivityTime = currentTime
 
-        # Check if the Pin is set, as no point prompting if it is not
-        if PinSentry.isPinSentryEnabled():
-            # Check to see if we need to restrict navigation access
-            if Settings.isActiveNavigation():
-                navRestrictions.checkTvShows()
-                navRestrictions.checkMovieSets()
-                if Settings.isActiveFileSource():
-                    navRestrictions.checkFileSources()
-            # Always call the plugin check as we have to check if the user is setting
-            # permissions using the PinSentry plugin
-            navRestrictions.checkPlugins()
-            navRestrictions.checkSettings()
-            navRestrictions.checkSystemSettings()
-            # Check if the dialog is being forced to display
-            navRestrictions.checkForcedDisplay()
+            # No need to perform the user control check every fraction of a second
+            # about every minute will be OK
+            if loopsUntilUserControlCheck < 1:
+                # If we are going to shut down then start closing down this script
+                if not userCtrl.check():
+                    break
+                loopsUntilUserControlCheck = 600
+            else:
+                loopsUntilUserControlCheck = loopsUntilUserControlCheck - 1
 
-            # Check if the PVR channel has changed
-            if pvrMonitor.hasPvrChannelChanged():
-                # Need to force the notification for the player as changing
-                # channel will not do this
-                playerMonitor.onPlayBackStarted()
+            xbmc.sleep(100)
+            userCtrl.checkDisplayStatus()
+
+            # Check if the Pin is set, as no point prompting if it is not
+            if PinSentry.isPinSentryEnabled():
+                # Check to see if we need to restrict navigation access
+                if Settings.isActiveNavigation():
+                    navRestrictions.checkTvShows()
+                    navRestrictions.checkMovieSets()
+                    if Settings.isActiveFileSource():
+                        navRestrictions.checkFileSources()
+                # Always call the plugin check as we have to check if the user is setting
+                # permissions using the PinSentry plugin
+                navRestrictions.checkPlugins()
+
+                if Settings.isActiveRepositories():
+                    navRestrictions.checkRepositories()
+                navRestrictions.checkSettings()
+                navRestrictions.checkSystemSettings()
+                # Check if the dialog is being forced to display
+                navRestrictions.checkForcedDisplay()
+
+                # Check if the PVR channel has changed
+                if pvrMonitor.hasPvrChannelChanged():
+                    # Need to force the notification for the player as changing
+                    # channel will not do this
+                    playerMonitor.onPlayBackStarted()
 
     log("Stopping Pin Sentry Service")
     del pvrMonitor
