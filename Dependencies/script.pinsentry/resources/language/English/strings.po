@@ -172,7 +172,11 @@ msgctxt "#32037"
 msgid "Prompt For Pin On Startup"
 msgstr ""
 
-#empty strings from id 32038 to 32102
+msgctxt "#32038"
+msgid "PVR Supports Pause"
+msgstr ""
+
+#empty strings from id 32039 to 32102
 
 msgctxt "#32103"
 msgid "Enter Pin"
@@ -306,7 +310,11 @@ msgctxt "#32135"
 msgid "System Settings"
 msgstr ""
 
-#empty strings from id 32136 to 32200
+msgctxt "#32136"
+msgid "Repository Access"
+msgstr ""
+
+#empty strings from id 32137 to 32200
 
 msgctxt "#32201"
 msgid "Movies"
@@ -360,7 +368,15 @@ msgctxt "#32213"
 msgid "Force Pin Entry"
 msgstr ""
 
-#empty strings from id 32214 to 32300
+msgctxt "#32214"
+msgid "Repositories"
+msgstr ""
+
+msgctxt "#32215"
+msgid "TV Channels"
+msgstr ""
+
+#empty strings from id 32216 to 32300
 
 msgctxt "#32301"
 msgid "UK"
@@ -420,4 +436,24 @@ msgstr ""
 
 msgctxt "#32315"
 msgid "France"
+msgstr ""
+
+msgctxt "#32316"
+msgid "Italy"
+msgstr ""
+
+msgctxt "#32317"
+msgid "Spain"
+msgstr ""
+
+msgctxt "#32318"
+msgid "South Korea"
+msgstr ""
+
+msgctxt "#32319"
+msgid "India"
+msgstr ""
+
+msgctxt "#32320"
+msgid "Portugal"
 msgstr ""

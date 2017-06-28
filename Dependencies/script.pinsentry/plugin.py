@@ -36,6 +36,8 @@ class MenuNavigator():
     PLUGINS = 'plugins'
     MUSICVIDEOS = 'musicvideos'
     FILESOURCE = 'filesource'
+    REPOSITORIES = 'repositories'
+    TVCHANNELS = 'tvchannels'
 
     CLASSIFICATIONS = 'classifications'
     CLASSIFICATIONS_MOVIES = 'classifications-movies'
@@ -102,6 +104,22 @@ class MenuNavigator():
         li.addContextMenuItems([], replaceItems=True)
         xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=True)
 
+        # Repositories
+        if Settings.isActiveRepositories():
+            url = self._build_url({'mode': 'folder', 'foldername': MenuNavigator.REPOSITORIES})
+            li = xbmcgui.ListItem(ADDON.getLocalizedString(32214), iconImage=ICON)
+            li.setProperty("Fanart_Image", FANART)
+            li.addContextMenuItems([], replaceItems=True)
+            xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=True)
+
+        # Live TV Channels
+        if Settings.isActiveTvChannels():
+            url = self._build_url({'mode': 'folder', 'foldername': MenuNavigator.TVCHANNELS})
+            li = xbmcgui.ListItem(ADDON.getLocalizedString(32215), iconImage=ICON)
+            li.setProperty("Fanart_Image", FANART)
+            li.addContextMenuItems([], replaceItems=True)
+            xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=True)
+
         # Add a blank line before the Operations
         li = xbmcgui.ListItem("", iconImage=ICON)
         li.setProperty("Fanart_Image", FANART)
@@ -139,6 +157,14 @@ class MenuNavigator():
             self._setList(MenuNavigator.FILESOURCE)
         elif foldername == MenuNavigator.CLASSIFICATIONS:
             self._setClassificationList(type, subType)
+        elif foldername == MenuNavigator.REPOSITORIES:
+            self._setList(MenuNavigator.REPOSITORIES)
+        elif foldername == MenuNavigator.TVCHANNELS:
+            # Check the subType to work out which list we are showing
+            if type in [None, ""]:
+                self._setTvChannelGroupList()
+            elif type == 'group':
+                self._setTvChannelList(subType)
 
     # Produce the list of videos and flag which ones with security details
     def _setList(self, target):
@@ -147,6 +173,8 @@ class MenuNavigator():
             items = self._setPluginList()
         elif target == MenuNavigator.FILESOURCE:
             items = self._setFileSourceList()
+        elif target == MenuNavigator.REPOSITORIES:
+            items = self._setRepositoryList()
         else:
             # Everything other plugins are forms of video
             items = self._getVideos(target)
@@ -281,6 +309,8 @@ class MenuNavigator():
             securityDetails = pinDB.getAllPluginsSecurity()
         elif type == MenuNavigator.FILESOURCE:
             securityDetails = pinDB.getAllFileSourcesSecurity()
+        elif type == MenuNavigator.REPOSITORIES:
+            securityDetails = pinDB.getAllRepositoriesSecurity()
 
         for item in items:
             # Default security to 0 (Not Set)
@@ -377,6 +407,112 @@ class MenuNavigator():
 
                 plugins.append(pluginDetails)
         return plugins
+
+    # Get the list of repos installed on the system
+    def _setRepositoryList(self):
+        # Make the call to find out all the addons that are installed
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "Addons.GetAddons", "params": { "type": "xbmc.addon.repository", "properties": ["name", "thumbnail", "fanart"] }, "id": 1}')
+        json_query = unicode(json_query, 'utf-8', errors='ignore')
+        json_response = simplejson.loads(json_query)
+        log(json_response)
+        repos = []
+        if ("result" in json_response) and ('addons' in json_response['result']):
+            # Check each of the repos that are installed on the system
+            for addonItem in json_response['result']['addons']:
+                addonId = addonItem['addonid']
+
+                pluginDetails = {}
+                pluginDetails['title'] = addonItem['name']
+                pluginDetails['dbid'] = addonId
+
+                if addonItem['thumbnail'] in [None, ""]:
+                    pluginDetails['thumbnail'] = 'DefaultAddon.png'
+                else:
+                    pluginDetails['thumbnail'] = addonItem['thumbnail']
+
+                if addonItem['fanart'] in [None, ""]:
+                    pluginDetails['fanart'] = FANART
+                else:
+                    pluginDetails['fanart'] = addonItem['fanart']
+
+                repos.append(pluginDetails)
+        return repos
+
+    # Get the list of live TV Group Channels on the system
+    def _setTvChannelGroupList(self):
+        # Make the call to find out all the addons that are installed
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "PVR.GetChannelGroups", "params": { "channeltype": "tv" }, "id": 1}')
+        json_query = unicode(json_query, 'utf-8', errors='ignore')
+        json_response = simplejson.loads(json_query)
+        log(json_response)
+        if ("result" in json_response) and ('channelgroups' in json_response['result']):
+            # Check each of the channel groups that are installed on the system
+            for pvrItem in json_response['result']['channelgroups']:
+                # Create the list-item for this channel group
+                li = xbmcgui.ListItem(pvrItem['label'], iconImage='DefaultAddonPVRClient.png')
+
+                # Remove the default context menu
+                li.addContextMenuItems([], replaceItems=True)
+
+                li.setProperty("Fanart_Image", FANART)
+                url = self._build_url({'mode': 'folder', 'foldername': MenuNavigator.TVCHANNELS, 'type': 'group', 'subtype': pvrItem['channelgroupid']})
+                xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=True)
+
+        xbmcplugin.endOfDirectory(self.addon_handle)
+
+    # Get the list of live TV Channels on the system
+    def _setTvChannelList(self, groupId):
+        # Make the call to find out all the addons that are installed
+        json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "PVR.GetChannels", "params": { "channelgroupid": %s, "properties": ["hidden", "thumbnail"]  }, "id": 1}' % groupId)
+        json_query = unicode(json_query, 'utf-8', errors='ignore')
+        json_response = simplejson.loads(json_query)
+        log(json_response)
+        channels = []
+        if ("result" in json_response) and ('channels' in json_response['result']):
+            # Load the existing security levels for the TV Channels
+            pinDB = PinSentryDB()
+            securityDetails = pinDB.getAllTvChannelsSecurity()
+            del pinDB
+
+            # Check each of the channel groups that are installed on the system
+            for pvrItem in json_response['result']['channels']:
+                # Skip hidden channels
+                if pvrItem['hidden']:
+                    continue
+
+                channelId = pvrItem['channelid']
+
+                # Get the name of the channel
+                channelName = pvrItem['label']
+                try:
+                    channelName = pvrItem['label'].encode("utf-8")
+                except:
+                    pass
+
+                iconImage = 'DefaultAddonPVRClient.png'
+                if pvrItem['thumbnail'] not in [None, ""]:
+                    iconImage = pvrItem['thumbnail']
+
+                securityLevel = 0
+                # Check the existing security level
+                if channelName in securityDetails:
+                    securityLevel = securityDetails[channelName]
+
+                li = xbmcgui.ListItem(pvrItem['label'], iconImage=iconImage)
+
+                # Add a tick if security is set
+                if securityLevel > 0:
+                    li.setInfo('video', {'PlayCount': 1})
+
+                # Remove the default context menu
+                li.addContextMenuItems([], replaceItems=True)
+                li.setProperty("Fanart_Image", FANART)
+
+                url = self._build_url({'mode': 'setsecurity', 'type': MenuNavigator.TVCHANNELS, 'id': channelId, 'title': channelName, 'level': securityLevel})
+                xbmcplugin.addDirectoryItem(handle=self.addon_handle, url=url, listitem=li, isFolder=False)
+
+        xbmcplugin.endOfDirectory(self.addon_handle)
+        return channels
 
     # get the list of plugins installed on the system
     def _setFileSourceList(self):
@@ -551,12 +687,16 @@ class MenuNavigator():
                 pinDB.setMusicVideoSecurityLevel(title, int(id), level)
             elif type == MenuNavigator.PLUGINS:
                 pinDB.setPluginSecurityLevel(title, id, level)
+            elif type == MenuNavigator.REPOSITORIES:
+                pinDB.setRepositorySecurityLevel(title, id, level)
             elif type == MenuNavigator.FILESOURCE:
                 pinDB.setFileSourceSecurityLevel(title, id, level)
             elif type == MenuNavigator.CLASSIFICATIONS_MOVIES:
                 pinDB.setMovieClassificationSecurityLevel(id, title, level)
             elif type == MenuNavigator.CLASSIFICATIONS_TV:
                 pinDB.setTvClassificationSecurityLevel(id, title, level)
+            elif type == MenuNavigator.TVCHANNELS:
+                pinDB.setTvChannelSecurityLevel(title, id, level)
             del pinDB
         else:
             # Handle the bulk operations like set All security for the movies

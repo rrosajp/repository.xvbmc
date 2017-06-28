@@ -111,13 +111,13 @@ def scrape_sources(html, result_blacklist=None, scheme='http', patterns=None):
     if patterns is None: patterns = []
     
     def __parse_to_list(_html, regex):
-        _blacklist = ['.jpg', '.jpeg', '.gif', '.png', '.js', '.css', '.htm', '.html', '.php', '.srt', '.sub', '.xml', '.swf', '.vtt']
+        _blacklist = ['.jpg', '.jpeg', '.gif', '.png', '.js', '.css', '.htm', '.html', '.php', '.srt', '.sub', '.xml', '.swf', '.vtt', '.mpd']
         _blacklist = set(_blacklist + result_blacklist)
         streams = []
         labels = []
         for r in re.finditer(regex, _html, re.DOTALL):
             match = r.groupdict()
-            stream_url = match['url']
+            stream_url = match['url'].replace('&amp;', '&')
             file_name = urlparse(stream_url).path.split('/')[-1]
             blocked = not file_name or any(item in file_name.lower() for item in _blacklist)
             if stream_url.startswith('//'): stream_url = scheme + ':' + stream_url
