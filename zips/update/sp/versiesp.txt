@@ -1,5 +1,1 @@
-name="disabled"
-url=" "
-img=" "
-fanart=" "
-description="XvBMC ServicePacks"
+20170701
