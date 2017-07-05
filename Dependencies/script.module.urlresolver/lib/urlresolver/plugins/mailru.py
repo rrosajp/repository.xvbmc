@@ -44,7 +44,8 @@ class MailRuResolver(UrlResolver):
             try:
                 js_data = json.loads(html)
                 sources = [(video['key'], video['url']) for video in js_data['videos']]
-                sources = sources[::-1]
+                #sources = sources[::-1]
+                sorted(sources)
                 source = helpers.pick_source(sources)
                 source = source.encode('utf-8')
                 if source.startswith("//"): source = 'http:%s' % source
