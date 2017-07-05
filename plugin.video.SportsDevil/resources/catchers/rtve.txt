@@ -23,7 +23,6 @@ item_info_convert=ifEmpty('%s','','http://rtvev4-live.hss.adaptive.level3.net/eg
 item_info_convert=debug
 item_info_build=%s
 
-
 item_info_name=url
 item_info_from=1
 item_info_build=%s
