@@ -116,6 +116,10 @@ class BaseRequest(object):
 
         if 'vipleague' in url or 'strikeout' in url or 'homerun' or 'nbastreams' in url:
             self.s.verify = False
+
+        if 'firstonetv' in url:
+            self.s.verify = False
+
             
         #if 'dinostream.pw' in urlparse.urlsplit(url).netloc:
             #self.s.headers.update({'Upgrade-Insecure-Requests': '1'})

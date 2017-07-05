@@ -5,4 +5,4 @@ Note that SportsDevil only accesses streams from sites that charge for the viewi
 
 If you install via zip file and don't want this fork to be overwritten by a repos, I recommend to disable SD autoupdate.
 
-For information on current development and maintenance status, pls check the tvaddons forum.
+For information on current development and maintenance status, pls visit https://mega.nz/#F!sqZ3gTpK!_2bkq3aXjWfRPGcKr7mRlg.

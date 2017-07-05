@@ -734,6 +734,12 @@ class Parser(object):
                 maximum = int(paramArr[1])
                 src = str(random.randrange(minimum,maximum))
 
+            elif command == 'randomfloat':
+                paramArr = params.split(',')
+                minimum = float(paramArr[0])
+                maximum = float(paramArr[1])
+                src = str(random.uniform(minimum,maximum))
+
             elif command == 'debug':
                 common.log('Debug from cfg file: ' + src)
                 
