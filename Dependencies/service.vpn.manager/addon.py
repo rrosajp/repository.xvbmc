@@ -27,7 +27,7 @@ from libs.common import connectionValidated, getIPInfo, isVPNConnected, getVPNPr
 from libs.common import getFriendlyProfileList, connectVPN, disconnectVPN, setVPNState, requestVPNCycle, getFilteredProfileList
 from libs.common import isVPNMonitorRunning, setVPNMonitorState, getVPNMonitorState, wizard
 from libs.common import getIconPath, getSystemData
-from libs.platform import getPlatform, platforms, getPlatformString
+from libs.platform import getPlatform, platforms, getPlatformString, fakeConnection
 from libs.vpnproviders import getAddonList
 from libs.utility import debugTrace, errorTrace, infoTrace
 
@@ -105,7 +105,10 @@ def displayStatus():
     _, ip, country, isp = getIPInfo(addon)
     if isVPNConnected():
         debugTrace("VPN is connected, displaying the connection info")
-        xbmcgui.Dialog().ok(addon_name, "Connected to a VPN in " + country + ".\nUsing profile " + getVPNProfileFriendly() + ".\nExternal IP address is " + ip + ".\nService Provider is " + isp)
+        if fakeConnection():
+            xbmcgui.Dialog().ok(addon_name, "Faked connection to a VPN in " + country + ".\nUsing profile " + getVPNProfileFriendly() + ".\nExternal IP address is " + ip + ".\nService Provider is " + isp)
+        else:
+            xbmcgui.Dialog().ok(addon_name, "Connected to a VPN in " + country + ".\nUsing profile " + getVPNProfileFriendly() + ".\nExternal IP address is " + ip + ".\nService Provider is " + isp)
     else:
         debugTrace("VPN is not connected, displaying the connection info")
         xbmcgui.Dialog().ok(addon_name, "Disconnected from VPN.\nNetwork location is " + country + ".\nIP address is " + ip + ".\nService Provider is " + isp)
@@ -144,7 +147,10 @@ def listConnections():
 
             if getVPNProfileFriendly() == connections[inc] and isVPNConnected(): 
                 conn_text = "[COLOR ff00ff00]" + connections[inc] + conn_primary + " (Connected)[/COLOR]"
-                icon = getIconPath()+"connected.png"
+                if fakeConnection():
+                    icon = getIconPath()+"faked.png"
+                else:
+                    icon = getIconPath()+"connected.png"
             else:
                 if not conn_primary == "":
                     conn_text = "[COLOR ff0099ff]" + connections[inc] + conn_primary + "[/COLOR]"
@@ -162,7 +168,7 @@ def disconnect():
     # Disconnect or display status if already disconnected
     debugTrace("Disconnect selected from connections menu")
     if isVPNConnected():
-        disconnectVPN()
+        disconnectVPN(True)
         setVPNState("off")
     else:
         displayStatus()
@@ -182,7 +188,7 @@ def changeConnection():
 def cycleConnection():
     # Cycle through the connections
     debugTrace("Cycling through available connections")
-    requestVPNCycle()
+    requestVPNCycle(False)
     return
     
 
@@ -213,7 +219,7 @@ elif not connectionValidated(addon) and action != "":
     if not addon.getSetting("vpn_wizard_run") == "true" : 
         wizard()
     else:
-        if not action =="settings": xbmcgui.Dialog().ok(addon_name, "Please validate a primary VPN connection first.  You can do this using the VPN Configuration tab within the Settings dialog.")
+        if not action =="settings": xbmcgui.Dialog().ok(addon_name, "Please validate a primary VPN connection first.  You can do this using the VPN Configuration and VPN Connections tabs within the Settings dialog.")
     xbmc.executebuiltin("Addon.OpenSettings(service.vpn.manager)")
 else:
     # User wants to see settings, list connections or they've selected to change something.  

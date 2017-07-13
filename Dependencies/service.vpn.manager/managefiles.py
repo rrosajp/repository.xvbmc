@@ -19,10 +19,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-#    This module will update the VPN profiles to point to the directory
-#    in which the VPN Manager for OpenVPN plugin is installed.  It's only
-#    called from the settings menu but shouldn't be needed as it's all
-#    done during the connection change logic
+#    This module is a bunch of functions that are called from the settings
+#    menu to manage various files groups.
 
 import xbmcaddon
 import xbmcgui
@@ -30,11 +28,12 @@ import xbmcvfs
 import datetime
 import os
 from libs.vpnproviders import removeGeneratedFiles, cleanPassFiles, providers, usesUserKeys, usesMultipleKeys, getUserKeys
-from libs.vpnproviders import getUserCerts, getVPNDisplay, getVPNLocation
-from libs.utility import debugTrace, errorTrace, infoTrace
-from libs.platform import getLogPath, getUserDataPath, writeVPNLog
-from libs.common import resetVPNConnections, isVPNConnected
-#from libs.generation import generateAll
+from libs.vpnproviders import getUserCerts, getVPNDisplay, getVPNLocation, refreshFromGit, removeDownloadedFiles
+from libs.utility import debugTrace, errorTrace, infoTrace, newPrint
+from libs.platform import getLogPath, getUserDataPath, writeVPNLog, copySystemdFiles, addSystemd, removeSystemd, generateVPNs
+from libs.common import resetVPNConnections, isVPNConnected, disconnectVPN
+from libs.generation import generateAll
+from libs.ipinfo import resetIPServices
 
 addon = xbmcaddon.Addon("service.vpn.manager")
 addon_name = addon.getAddonInfo("name")
@@ -45,21 +44,31 @@ debugTrace("-- Entered managefiles.py with parameter " + action + " --")
 
 # Reset the ovpn files
 if action == "ovpn":
-    if addon.getSetting("1_vpn_validated") == "" or xbmcgui.Dialog().yesno(addon_name, "Resetting the .ovpn files will reset all VPN connections.  Connections must be re-validated before use.\nContinue?"):
-    
-        # Only used during development to create location files
-        #generateAll()
-
-        # Reset the connection before we do anything else
-        resetVPNConnections(addon)            
+    if addon.getSetting("1_vpn_validated") == "" or xbmcgui.Dialog().yesno(addon_name, "Resetting the .ovpn files will disconnect and reset all VPN connections. Connections must be re-validated before use. Continue?"):
+        # Disconnect so that live files are not being modified
+        if isVPNConnected(): resetVPNConnections(addon)            
         debugTrace("Deleting all generated ovpn files")
         # Delete the ovpn files and the generated flag file.
         removeGeneratedFiles()
-        # Remove any user/password files
-        cleanPassFiles()
-        xbmcgui.Dialog().ok(addon_name, "Deleted all .ovpn files.  Validate a connection to recreate them.\n")
+        # Reset the IP service error counts, etc
+        resetIPServices()
+        xbmcgui.Dialog().ok(addon_name, "Deleted all .ovpn files. Validate a connection to recreate them.\n")
 
+        
+# Generate the VPN provider files
+if action == "generate":
+    # Only used during development to create location files
+    generateAll()
+    xbmcgui.Dialog().ok(addon_name, "Regenerated some or all of the VPN location files.\n")        
+       
 
+# Delete all of the downloaded VPN files
+if action == "downloads":
+    debugTrace("Deleting all downloaded VPN files")
+    removeDownloadedFiles()
+    xbmcgui.Dialog().ok(addon_name, "Deleted all of the downloaded VPN files. They'll be downloaded again if required.\n")
+
+        
 # Copy the log file        
 elif action == "log":
     log_path = ""
@@ -76,6 +85,7 @@ elif action == "log":
         addon = xbmcaddon.Addon("service.vpn.manager")
         infoTrace("managefiles.py", "Copying log file to " + dest_path + ".  Using version " + addon.getSetting("version_number"))
         xbmcvfs.copy(log_path, dest_path)
+        if not xbmcvfs.exists(dest_path): raise IOError('Failed to copy log ' + log_path + " to " + dest_path)
         dialog_message = "Copied log file to:\n" + dest_path
     except:
         errorTrace("Failed to copy log from " + log_path + " to " + dest_path)
@@ -89,9 +99,9 @@ elif action == "log":
 
 # Delete the user key and cert files        
 elif action == "user":
-    if addon.getSetting("1_vpn_validated") == "" or xbmcgui.Dialog().yesno(addon_name, "Deleting key and certificate files will reset all VPN connections.  Connections must be re-validated before use.\nContinue?"):
+    if addon.getSetting("1_vpn_validated") == "" or xbmcgui.Dialog().yesno(addon_name, "Deleting key and certificate files will disconnect and reset all VPN connections. Connections must be re-validated before use. Continue?"):
 
-        # Reset the connection before we do anything else
+        # Disconnect so that live files are not being modified
         if isVPNConnected(): resetVPNConnections(addon)
     
         # Select the provider
@@ -148,8 +158,10 @@ elif action == "user":
                                     if not item == all_item and not item == finished_item: 
                                         path = getUserDataPath(provider + "/" + item)
                                         try:
-                                            if xbmcvfs.exists(path+".key"):
+                                            if xbmcvfs.exists(path + ".key"):
                                                 xbmcvfs.delete(path + ".key")
+                                            if xbmcvfs.exists(path + ".txt"):
+                                                xbmcvfs.delete(path + ".txt")
                                             if xbmcvfs.exists(path + ".crt"):
                                                 xbmcvfs.delete(path + ".crt")
                                         except:
@@ -159,6 +171,8 @@ elif action == "user":
                             try:
                                 if xbmcvfs.exists(path+".key"):
                                     xbmcvfs.delete(path + ".key")
+                                if xbmcvfs.exists(path + ".txt"):
+                                    xbmcvfs.delete(path + ".txt")
                                 if xbmcvfs.exists(path + ".crt"):
                                     xbmcvfs.delete(path + ".crt")
                             except:
