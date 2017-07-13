@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
+<addon id="network.openvpn"
+       name="OpenVPN (Isengard)"
+       version="2016.05.01.600"
+       provider-name="Stefan Saraev (seo at irc.freenode.net)">
+  <requires>
+    <import addon="os.openelec.tv" version="6.0"/>
+	<import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.script" library="default.py">
+    <provides></provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary>openvpn: a full featured SSL VPN software solution that integrates OpenVPN server capabilities. (XvBMC: version control).</summary>
+    <description>
+openvpn binary is installed as /storage/.kodi/addons/network.openvpn/bin/openvpn (XvBMC: version control '6.0.0 *bump*' -4- Isengard).
+    </description>
+    <disclaimer>
+this is an unofficial addon. please don't ask for support in openelec forum / irc channel (XvBMC: version control).
+    </disclaimer>
+    <platform>all</platform>
+  </extension>
+</addon>
+
 <addon id="plugin.video.exodus" version="3.1.19.2" name="Exodus" provider-name="Exodus">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
@@ -573,7 +596,7 @@
     </extension>
 </addon>
 
-<addon id="script.openvpn" name="OpenVPN (alternative)" version="2.1.0" provider-name="brianhornsby">
+<addon id="script.openvpn" name="OpenVPN" version="3.0.0" provider-name="brianhornsby">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 		<import addon="script.module.beautifulsoup" version="3.0.8"/>
@@ -581,9 +604,12 @@
 	<extension point="xbmc.python.script" library="default.py"/>
 	<extension point="xbmc.addon.metadata">
 		<platform>all</platform>
-		<summary lang="en">OpenVPN addon for XBMC.</summary>
-		<description lang="en">This addon allows you to set up a number of OpenVPN configurations, which you can then run from XBMC.
-For more information on setting up this addon see http://brianhornsby.com/xbmc_plugins/openvpn</description>
+		<summary lang="en">OpenVPN addon for Kodi.</summary>
+		<description lang="en">This addon allows you to set up a number of OpenVPN configurations, which you can then run from Kodi.
+For more information on setting up this addon see http://brianhornsby.com/kodi_plugins/openvpn</description>
+		<license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
+		<website>http://brianhornsby.com/kodi_addons/openvpn</website>
+		<source>https://github.com/brianhornsby/script.openvpn</source>
   </extension>
 </addon>
 
@@ -1014,19 +1040,20 @@ Other languages with a great number of subtitles are: Danish, French, Swedish, D
 
 <addon id="service.vpn.manager"
        name="VPN Manager for OpenVPN"
-       version="0.4.8"
+       version="4.0.9"
        provider-name="Zomboided">
   <requires>
     <import addon="xbmc.python" version="2.7.0"/>
   </requires>
-  <extension point="xbmc.service" library="service.py" start="startup"/>
+  <extension point="xbmc.service" library="service.py" start="startup" />
+  <extension point="xbmc.python.module" library="libs" />
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
     <summary lang="en">Configure and manage VPN connections using openVPN</summary>
-    <description lang="en">Establish a connection to a VPN provider and automatically switch VPN locations based on the add-on being used.  Also supports automatic reconnect and connection at boot time.  And with some simple configuring (see README and remote.xml file in add-on directory), you can cycle through VPN connections using a remote button.</description>
+    <description lang="en">Establish a connection to a VPN provider and automatically switch VPN locations based on the add-on being used.</description>
   </extension>
 </addon>
 

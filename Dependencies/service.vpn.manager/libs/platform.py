@@ -26,19 +26,47 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 import xbmcaddon
-from libs.utility import debugTrace, errorTrace, infoTrace, enum
+from utility import debugTrace, errorTrace, infoTrace, newPrint, infoPrint, enum
 from sys import platform
 
 
 # **** ADD MORE PLATFORMS HERE ****
 platforms = enum(UNKNOWN=0, WINDOWS=1, LINUX=2, RPI=3, ANDROID=4, MAC=5)  
 platforms_str = ("Unknown", "Windows", "Linux, openvpn installed", "Linux, openvpn plugin", "Android", "Apple")
+fake_name = "FAKECONNECTION.txt"
 
 
 def fakeConnection():
-    # Return True to fake out any calls to openVPN to change the network
-    return False
+    # Return True to fake out any calls to openVPN to change the network.
+    # This is governed by the existance of 'FAKECONNECTION.txt' in the userdata directory.
+    return xbmcvfs.exists(getUserDataPath(fake_name))
 
+    
+def fakeItTillYouMakeIt(fake):
+    try:
+        if fake:
+            if not fakeConnection():
+                f = open(getUserDataPath(fake_name),'w')
+                f.close()
+        else:
+            if fakeConnection():
+                xbmcvfs.delete(getUserDataPath(fake_name))
+    except Exception as e:
+        errorTrace("platform.py", "fakeItTillYouMakeIt " + str(fake) + " failed")
+        errorTrace("platform.py", str(e))
+                
+    
+def fakeSystemd():
+    # Return True to pretend that systemd exists, but not make OS calls to use it
+    # This is governed by the existance of 'FAKESYSTEMD.txt' in the userdata directory.
+    return xbmcvfs.exists(getUserDataPath("FAKESYSTEMD.txt"))
+
+
+def generateVPNs():
+    # Return True if the set of location files for the VPNs should be generated
+    # This is governed by the existance of 'GENERATEVPNS.txt' in the userdata directory.
+    return xbmcvfs.exists(getUserDataPath("GENERATEVPNS.txt"))     
+    
     
 def getPlatform():
     # Work out which platform is being used.
@@ -60,6 +88,59 @@ def getPlatform():
     return platforms.UNKNOWN    
         
 
+def supportSystemd():
+    if fakeSystemd() : return True
+    # Only supporting systemd VPN connection on LibreELEC
+    if getPlatform() == platforms.LINUX and xbmcvfs.exists("etc/os-release"):
+        os_info = open("etc/os-release", 'r')
+        lines = os_info.readlines()
+        os_info.close()
+        for line in lines:
+            if "LibreELEC" in line:
+                # Shouldn't really need to check this as LibreELEC comes with systemd installed
+                return xbmcvfs.exists(getSystemdPath("system.d/"))
+    return False
+    
+    
+def copySystemdFiles():
+    # Delete any existing openvpn.service and copy openvpn service file to config directory
+    service_source = getAddonPath(True, "openvpn.service")
+    service_dest = getSystemdPath("system.d/openvpn.service")
+    debugTrace("Copying openvpn.service " + service_source + " to " + service_dest)
+    if not fakeSystemd():
+        if xbmcvfs.exists(service_dest): xbmcvfs.delete(service_dest)
+        xbmcvfs.copy(service_source, service_dest)
+        if not xbmcvfs.exists(service_dest): raise IOError('Failed to copy service ' + service_source + " to " + service_dest)
+    
+    # Delete any existing openvpn.config and copy first VPN to openvpn.config
+    config_source = sudo_setting = xbmcaddon.Addon("service.vpn.manager").getSetting("1_vpn_validated")
+    if service_source == "": errorTrace("platform.py", "Nothing has been validated")
+    config_dest = getSystemdPath("openvpn.config")
+    debugTrace("Copying openvpn.config " + config_source + " to " + config_dest)
+    if not fakeSystemd():
+        if xbmcvfs.exists(config_dest): xbmcvfs.delete(config_dest)
+        xbmcvfs.copy(config_source, config_dest)
+        if not xbmcvfs.exists(config_dest): raise IOError('Failed to copy service ovpn ' + config_source + " to " + config_dest)
+    
+
+def addSystemd():
+    # Enable the openvpn systemd service, assuming a configuration has been copied
+    command = "systemctl enable openvpn.service"
+    if useSudo(): command = "sudo " + command
+    infoTrace("platform.py", "Enabling systemd service with " + command)
+    if not fakeSystemd(): os.system(command)
+    return
+
+    
+def removeSystemd():
+    # Disable the openvpn systemd service
+    command = "systemctl disable openvpn.service"
+    if useSudo(): command = "sudo " + command
+    infoTrace("platform.py", "Disabling systemd service with " + command)
+    if not fakeSystemd(): os.system(command)
+    return
+    
+  
 def useSudo():
     sudo_setting = xbmcaddon.Addon("service.vpn.manager").getSetting("openvpn_sudo")
     if sudo_setting == "Always": return True
@@ -69,6 +150,14 @@ def useSudo():
         if not getAddonPath(True, "").startswith("/storage/.kodi/"): return True
     return False
 
+
+def useBigHammer():
+    hammer = xbmcaddon.Addon("service.vpn.manager").getSetting("openvpn_killall")
+    if hammer == "true": 
+        return True
+    else:
+        return False
+    
     
 def getPlatformString():
     p = getPlatform()
@@ -92,16 +181,36 @@ def getVPNLogFilePath():
     return ""
     
 
+def getImportLogPath():
+    return xbmc.translatePath("special://logpath/import.log")
+    
+    
 def stopVPN():
+    # Little hammer
+    stopVPNn("15")
+    return
+    
+    
+def stopVPN9():
+    # Big hammer
+    stopVPNn("9")
+    return
+
+    
+def stopVPNn(n):
     # Stop the platform VPN task.
     if not fakeConnection():
         p = getPlatform()
         if p == platforms.LINUX or p == platforms.RPI:
-            command = "killall -9 openvpn"            
-            if useSudo() : command = "sudo " + command
+            if useBigHammer(): n = "9"
+            command = "killall -" + n + " openvpn"
+            if useSudo(): command = "sudo " + command
             debugTrace("(Linux) Stopping VPN with " + command)
             os.system(command)
         if p == platforms.WINDOWS:
+            # This call doesn't pay any attention to the size of the hammer.
+            # Probably for Windows, if n is 15, then I should omit the /F but
+            # I've not noticed any problems using /F so the n is ignored
             command = "taskkill /F /T /IM openvpn*"
             debugTrace("(Windows) Stopping VPN with " + command)
             args = shlex.split(command)
@@ -137,16 +246,32 @@ def startVPN(vpn_profile):
     return
 
 
+def updateSystemTime(newtime):
+    # Update the system time using a second since epoch value
+    if not fakeConnection():
+        p = getPlatform()
+        # Only doing this for Linux as it's the small Linux boxes that no clocks
+        if p == platforms.RPI or p == platforms.LINUX:
+            command = "date +%s -s @" + str(newtime)
+            if useSudo() : command = "sudo " + command            
+            debugTrace("(Linux) Changing system clock with " + command)
+            os.system(command)
+            
+        # **** ADD MORE PLATFORMS HERE ****
+        
+    return
+
+    
 def getOpenVPNPath():
     # Call the platform VPN to start the VPN
-    if fakeConnection():
-        p = platforms.RPI
-    else:
-        p = getPlatform()
-        
+    #if fakeConnection():
+    #    p = platforms.LINUX
+    #else:
+    p = getPlatform()   
     if p == platforms.RPI:
         return getAddonPath(False, "network.openvpn/bin/openvpn")
-    if p == platforms.LINUX:            
+    if p == platforms.LINUX:
+        if xbmcaddon.Addon("service.vpn.manager").getSetting("openvpn_no_path") == "true": return "openvpn"
         return "/usr/sbin/openvpn"
     if p == platforms.WINDOWS:
         # No path specified as install will update command path
@@ -160,8 +285,9 @@ def getOpenVPNPath():
 def checkPlatform(addon):
     if not fakeConnection():
         p = getPlatform()
+        infoTrace("platform.py", "Checking platform, found " + str(p) + ", " + sys.platform)
         dialog_msg = ""
-        if p == platforms.UNKNOWN:
+        if p == platforms.UNKNOWN or "Android" in getAddonPath(True, ""):
             dialog_msg = addon.getAddonInfo("name") + " is not currently supported on this hardware platform."
             xbmcgui.Dialog().ok(addon.getAddonInfo("name"), dialog_msg)
             return False
@@ -202,9 +328,12 @@ def checkVPNCommand(addon):
         elif p == platforms.WINDOWS:
             # Issue Windows command
             command=getOpenVPNPath()
+            infoTrace("platform.py", "Testing openvpn with : " + command)
             args = shlex.split(command)
             outfile = open(getVPNLogFilePath(),'w')
             proc = subprocess.Popen(args, stdout=outfile, creationflags=subprocess.SW_HIDE, shell=True)
+        else:
+            errorTrace("platform.py", "Unsupported platform " + str(p))
             
         # **** ADD MORE PLATFORMS HERE ****
                 
@@ -219,21 +348,20 @@ def checkVPNCommand(addon):
             log_file = open(getVPNLogFilePath(), 'r')
             log_file_lines = log_file.readlines()
             log_file.close()
-            i = 0
             # Look for a phrase we'd expect to see if the call
             # worked and the list of options was displayed
             for line in log_file_lines:
                 if "General Options" in line:
                     return True
-                i = i + 1
             # Write the log file in case there's something in it
-            errorTrace("platform.py", "Ran openvpn command and it failed")
+            errorTrace("platform.py", "Ran openvpn command and it failed")            
             writeVPNLog()
+            dialog_msg = "The OpenVPN executable isn't working.  Check the log, then from a command line prompt type 'openvpn' and fix any problems reported."
         else:
             errorTrace("platform.py", "Ran openvpn command and VPN log didn't appear")
+            dialog_msg = "The OpenVPN executable isn't writing out a log.  Try changing the Kodi log directory setting in Settings-Debug menu and retry."
         
         # Display an error message
-        dialog_msg = "The OpenVPN executable isn't working.  Check the log, then from a command line prompt type 'openvpn' and fix any problems reported\n"
         xbmcgui.Dialog().ok(addon.getAddonInfo("name"), dialog_msg)
         return False
         
@@ -254,10 +382,15 @@ def isVPNTaskRunning():
             debugTrace("(Linux) Checking VPN task with " + command)
             pid = os.system(command)
             # This horrible call returns 0 if it finds a process, it's not returning the PID number
-            if pid == 0 : return True
+            if xbmcaddon.Addon("service.vpn.manager").getSetting("alt_pid_check") == "true":
+                if pid > 0 : return True
+            else:
+                if pid == 0 : return True
+            debugTrace("(Linux) Didn't find a running process")
             return False
-        except:
+        except Exception as e:
             errorTrace("platform.py", "VPN task list failed")
+            errorTrace("platform.py", str(e))
             return False
     if p == platforms.WINDOWS:
         try:
@@ -268,9 +401,11 @@ def isVPNTaskRunning():
             if "openvpn.exe" in out:
                 return True
             else:
+                debugTrace("(Windows) Didn't find a running process")
                 return False
-        except:
+        except Exception as e:
             errorTrace("platform.py", "VPN task list failed")
+            errorTrace("platform.py", str(e))
             return False
 
     # **** ADD MORE PLATFORMS HERE ****
@@ -278,7 +413,7 @@ def isVPNTaskRunning():
     return False
 
 
-connection_status = enum(UNKNOWN=0, CONNECTED=1, AUTH_FAILED=2, NETWORK_FAILED=3, TIMEOUT=4, ROUTE_FAILED=5, ACCESS_DENIED=6, ERROR=7) 
+connection_status = enum(UNKNOWN=0, CONNECTED=1, AUTH_FAILED=2, NETWORK_FAILED=3, TIMEOUT=4, ROUTE_FAILED=5, ACCESS_DENIED=6, OPTIONS_ERROR=7, ERROR=8) 
     
 def getVPNConnectionStatus():
     # Open the openvpn output file and parse it for known phrases
@@ -303,10 +438,16 @@ def getVPNConnectionStatus():
                     break
                 if "AUTH_FAILED" in line:
                     state = connection_status.AUTH_FAILED
+                if "private key password verification failed" in line:
+                    state = connection_status.AUTH_FAILED
                 if "TLS Error" in line:
                     state = connection_status.NETWORK_FAILED
                 if "Connection timed out" in line:
                     state = connection_status.TIMEOUT
+                #if (not p == platforms.WINDOWS) and "Options error" in line and "block-outside-dns" in line
+                    #state = connection_status.OPTIONS_ERROR
+                    # This has been updated to what should be the right check, but other checks elsewhere 
+                    # have make it unnecessary (block-outside-dns is not written for non Windows platform).
                 if p == platforms.WINDOWS and "ROUTE" in line and "Access is denied" in line:
                     # This is a Windows, not running Kodi as administrator error
                     state = connection_status.ACCESS_DENIED
@@ -334,10 +475,11 @@ def writeVPNLog():
         log_file.close()
         infoTrace("platform.py", "VPN log file start >>>")
         for line in log_output:
-            print line
+            infoPrint(line)
         infoTrace("platform.py", "<<< VPN log file end")
-    except:
+    except Exception as e:
         errorTrace("platform.py", "Couldn't write VPN error log")
+        errorTrace("platform.py", str(e))
 
 
 def getSeparator():
@@ -354,10 +496,22 @@ def getAddonPath(this_addon, path):
     else:
         return xbmc.translatePath("special://home/addons/" + path)
         
-
+        
+def getSystemdPath(path):
+    return "/storage/.config/" + path
+    
+    
 def getUserDataPath(path):
     return xbmc.translatePath("special://userdata/addon_data/service.vpn.manager/" + path)
     
+    
+def getKeyMapsPath(path):
+    return xbmc.translatePath("special://userdata/keymaps/" + path)
+    
+
+def getKeyMapsFileName():
+    return "vpn.manager.xml"
+
     
 def getLogPath():    
     return xbmc.translatePath("special://logpath/kodi.log")
