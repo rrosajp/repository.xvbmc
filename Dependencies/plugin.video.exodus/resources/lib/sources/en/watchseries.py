@@ -29,7 +29,7 @@ class source:
     def __init__(self):
         self.priority = 0
         self.language = ['en']
-        self.domains = ['watchseries.ag']
+        self.domains = ['watchseriesfree.to']
         self.base_link = 'aHR0cDovL3dzLm1n'
         self.hash_link = 'MzI4aiUlR3VTKiVzZkEyNDMxNDJmbyMyMyUl'
         self.search_link = 'L2pzb24vc2VhcmNoLyVz'
