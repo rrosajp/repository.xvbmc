@@ -169,7 +169,7 @@ class HostedMediaFile:
             A direct URL to the media file that is playable by XBMC, or False
             if this was not possible.
         '''
-        do_block_check()
+        #do_block_check()
         urlresolver.ALLOW_POPUPS = allow_popups
         for resolver in self.__resolvers:
             try:
