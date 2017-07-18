@@ -34,7 +34,7 @@ class source:
     def __init__(self):
         self.priority = 1
         self.language = ['en']
-        self.domains = ['moviefree.to', 'topfreemovies.online']
+        self.domains = ['moviefree.to', 'http://topfreemovies.online']
         self.base_link = 'http://topfreemovies.online'
         self.search_link = '/search/%s'
         self.server_link = '/ajax/loadServer'

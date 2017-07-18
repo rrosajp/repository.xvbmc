@@ -44,6 +44,7 @@ class source:
         except:
             return
 
+
     def tvshow(self, imdb, tvdb, tvshowtitle, localtvshowtitle, aliases, year):
         try:
             url = self.__search([localtvshowtitle] + source_utils.aliases_to_array(aliases), year)
@@ -51,6 +52,7 @@ class source:
             return url
         except:
             return
+
 
     def episode(self, url, imdb, tvdb, title, premiered, season, episode):
         try:
@@ -70,6 +72,7 @@ class source:
             return source_utils.strip_domain(r)
         except:
             return
+
 
     def sources(self, url, hostDict, hostprDict):
         sources = []
@@ -91,8 +94,8 @@ class source:
             r = [dom_parser.parse_dom(r, 'div', attrs={'id': i}) for i in rels]
 
             links = re.findall('''(?:link|file)["']?\s*:\s*["'](.+?)["']''', ''.join([i[0].content for i in r]))
-            links += [l.attrs['src'] for i in r for l in dom_parser.parse_dom(i, 'iframe', attrs={'class': 'metaframe'}, req='src')]
-            links += [l.attrs['src'] for i in r for l in dom_parser.parse_dom(i, 'source', req='src')]
+            links += [l.attrs['src'] for l in dom_parser.parse_dom(i, 'iframe', attrs={'class': 'metaframe'}, req='src') for i in r]
+            links += [l.attrs['src'] for l in dom_parser.parse_dom(i, 'source', req='src') for i in r]
 
             for i in set(links):
                 try:
@@ -132,6 +135,7 @@ class source:
             return sources
         except:
             return sources
+
 
     def resolve(self, url):
         return url

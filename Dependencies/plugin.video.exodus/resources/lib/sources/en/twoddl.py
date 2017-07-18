@@ -30,8 +30,8 @@ class source:
     def __init__(self):
         self.priority = 1
         self.language = ['en']
-        self.domains = ['iiddl.com/', '2ddl.download']
-        self.base_link = 'http://2ddl.download'
+        self.domains = ['iiddl.com/']
+        self.base_link = 'http://iiddl.com'
         self.search_link = '/search/%s/feed/rss2/'
 
 

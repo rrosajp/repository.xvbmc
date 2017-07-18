@@ -31,7 +31,7 @@ class source:
         self.priority = 1
         self.language = ['en']
         self.domains = ['fmovie.co', 'afdah.org', 'xmovies8.org', 'putlockerhd.co']
-        self.base_link = 'https://afdah.org'
+        self.base_link = 'https://putlockerhd.co'
         self.search_link = '/results?q=%s'
 
 
