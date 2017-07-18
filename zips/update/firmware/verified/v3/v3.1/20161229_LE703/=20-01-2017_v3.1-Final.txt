@@ -1,1 +1,0 @@
-EPiC: '20-01-2017' v3.1-Final XvBMC Pi2+3 image
