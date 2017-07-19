@@ -1,19 +1,2 @@
-[B]Version 4[/B][I].0.1[/I]
- + Repo VoOdOo 3:[
-
-[B]Version 4[/B][I].0.0[/I]
- + Pi VoOdOo 3:[
-
-[B]Version 3[/B][I].03[/I]
- + Code Cosmetics ;-p
-
-[B]Version 3[/B][I].02[/I]
- + Code Cosmetics ;-p
-
-[B]Version 3[/B][I].01[/I]
- + Code Cosmetics
-
-[B]Version 3[/B][I].00[/I]
- + XvBMC Nederland initial release
- - also implemented in 'script.XvBMC.Update' (v3 build/image).
- 
+v4.0.2
+ ! this addon is no longer supported...
