@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.xvbmc.dev"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]#DEV# Corner[/COLOR] [COLOR darkgreen] [I](v4+)[/I][/COLOR]"
-       version="4.0.1"
-       provider-name="EPiC XvBMC-NL">
+       name="[COLOR dimgray][B]X[/B]vBMC #DEV# Corner[/COLOR] [COLOR red][I](outdated)[/I][/COLOR]"
+       version="4.0.2"
+       provider-name="XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
 	<import addon="repository.xvbmc" version="4.0.2"/>
@@ -13,13 +13,19 @@
    <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC Nederland - #DEV# Corner (v3.1) RPi2+3</summary>
-    <description lang="en">XvBMC #DEV# ; Firmware &amp; LibreELEC + OpenElec OS-updates Raspberry Pi 2+3 (XvBMC-NL v3.1)</description>
-	<disclaimer lang="en">!!! USE AT YOUR OWN RISK !!! more info @ http://bit.ly/XvBMC-NL !!!</disclaimer>
+    <summary lang="en">this addon is no longer supported</summary>
+    <description lang="en">this addon is no longer supported</description>
+	<disclaimer lang="en">this addon is no longer supported</disclaimer>
 	<platform>all</platform>  <!-- open-/libreelec -->
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-    <forum>http://bit.ly/XvBMC-Pi</forum>
-    <website>http://bit.ly/XvBMC-NL</website>
+	<forum>http://bit.ly/XvBMC-Pi</forum>
+	<website>http://bit.ly/XvBMC-NL</website>
 	<source>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+	<news>this addon is no longer supported</news>
+	<assets>
+		<icon>icon.png</icon>
+		<fanart>fanart.jpg</fanart>
+		<screenshot></screenshot>
+	</assets>
   </extension>
 </addon>
