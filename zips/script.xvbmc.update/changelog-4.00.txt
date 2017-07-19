@@ -1,3 +1,0 @@
-[B]Version 4.00[/B]
- + XvBMC Nederland v3.1 (final) + v4.0 (beta)
- 

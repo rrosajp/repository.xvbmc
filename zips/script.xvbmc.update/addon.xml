@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.xvbmc.update"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red]UPDATE(r)[/COLOR] &amp; [COLOR white]DEV[/COLOR]elopment [COLOR darkgreen] [I](v4+)[/I][/COLOR]"
-       version="0.0.0.1"
-       provider-name="EPiC XvBMC-NL">
+       name="[COLOR dimgray][B]X[/B]vBMC UPDATE(r) &amp; DEVelopment[/COLOR] [COLOR red][I](outdated)[/I][/COLOR]"
+       version="4.1.0"
+       provider-name="XvBMC-NL">
   <requires>
-    <import addon="repository.xvbmc"  version="4.0.1"/>
-    <import addon="xbmc.python"       version="2.14.0"/>
-    <import addon="script.schoonmaak" version="1.10.19"/>
-<!--<import addon="script.xvbmc.dev"  version="4.0.0" optional="true"/>-->
-<!--<import addon="script.xvbmc.oc"   version="4.0.0" optional="true"/>-->
+    <import addon="xbmc.python" version="2.14.0"/>
+	<import addon="repository.xvbmc" version="4.0.2"/>
+<!--<import addon="os.openelec.tv" version="7.0" optional="false" />-->
+<!--<import addon="os.libreelec.tv" version="7.0" optional="false"/>-->
   </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-    <provides>executable</provides>
+   <extension point="xbmc.python.script" library="default.py">
+   <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">XvBMC Nederland - UPDATE(r)+DEVelopment v4+</summary>
-    <description lang="en">XvBMC's UPDATE(r)+DEVelopment; updates, tools, config, tweaks, etc.</description>
-    <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!! MORE iNFO @ http://bit.ly/XvBMC-NL !!!</disclaimer>
-    <platform>all</platform>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-    <forum>http://bit.ly/XvBMC-Pi</forum>
-    <website>http://bit.ly/XvBMC-NL</website>
-    <source>https://www.fb.com/groups/XvBMCnederland/</source>
-    <news>Code Cosmetics v4.0.11</news>
-    <assets>
-        <icon>icon.png</icon>
-        <fanart>fanart.jpg</fanart>
-        <screenshot></screenshot>
-    </assets>
+    <summary lang="en">this addon is no longer supported</summary>
+    <description lang="en">this addon is no longer supported</description>
+	<disclaimer lang="en">this addon is no longer supported</disclaimer>
+	<platform>all</platform>  <!-- open-/libreelec -->
+	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+	<forum>http://bit.ly/XvBMC-Pi</forum>
+	<website>http://bit.ly/XvBMC-NL</website>
+	<source>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+	<news>this addon is no longer supported</news>
+	<assets>
+		<icon>icon.png</icon>
+		<fanart>fanart.jpg</fanart>
+		<screenshot></screenshot>
+	</assets>
   </extension>
 </addon>
