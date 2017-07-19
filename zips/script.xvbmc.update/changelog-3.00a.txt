@@ -1,8 +1,0 @@
-[B]Version 3.00a[/B]
- + XvBMC Nederland v3.00a 'code cosmetics'
-
-[B]Version 3.00[/B]
- + XvBMC Nederland v3.00 release
-
-[B]Version 2.0.0[/B]
- + XvBMC Nederland initial release
