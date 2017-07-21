@@ -30,15 +30,7 @@ item_info_name=pageUrl2
 item_info_from=http://www.zoomtv.me/embed.php?v=' + fid
 item_info_build=%s
 
-item_info_name=req2
-item_info_from=pageUrl
-item_info_convert=getInfo('%s','.*?file.?:\s*['"](smil[^'"]+)['"].*','@REFERER@')
-#item_info_convert=quote('%s')
-#item_info_convert=replace('%s','%27','')
-#item_info_convert=replace('%s','%2B','')
-#item_info_convert=unquote('%s')
-item_info_convert=ifEmpty('%s','','http://www.zoomtv.me/%s')
-item_info_build=%s
+
 
 #item_info_name=file_
 #item_info_from=pageUrl
@@ -64,10 +56,10 @@ item_info_build=%s
 #item_info_convert=getInfo('%s','@rex1@','@REFERER@','junk|rtmp__')
 #item_info_build=%s
 
-item_info_name=file
+item_info_name=file1
 item_info_from=pageUrl
-item_info_convert=getInfo('%s','.*?rtmp.*?\/(\w+)"','@REFERER@')
-item_info_convert=debug
+item_info_convert=getInfo('%s','.*?rtmp://.*?\/(\w+)"','@REFERER@')
+#item_info_convert=debug
 item_info_build=%s
 
 item_info_name=rex1
@@ -95,31 +87,78 @@ item_info_name=ip
 item_info_from=data
 item_info_convert=parseText('%s','.*atob\("([^"]+)')
 item_info_convert=decodeBase64
+#item_info_convert=debug
 item_info_build=%s
 
 item_info_name=rtmp1
-item_info_from=rtmp://' + ip + rtmp1_
+item_info_from=rtmp1_
+item_info_convert=ifEmpty('%s','','rtmp://___IP___%s')
+item_info_convert=replace('%s','___IP___','@ip@')
 item_info_build=%s
 
-item_info_name=tok
+item_info_name=tok1
 item_info_from=data
 item_info_convert=parseText('%s','.*?ske"\s*:\s*"(\w+)"')
 item_info_build=%s
 
-item_info_name=num
+item_info_name=num1
 item_info_from=data
 item_info_convert=parseText('%s','.*?tum"\s*:\s*"?(\d+)"?')
 item_info_build=%s
 
-item_info_name=rtmp2
+item_info_name=req2
+item_info_from=pageUrl
+item_info_convert=getInfo('%s','.*?file.?:\s*['"](smil[^'"]+)['"].*','@REFERER@')
+#item_info_convert=quote('%s')
+#item_info_convert=replace('%s','%27','')
+#item_info_convert=replace('%s','%2B','')
+#item_info_convert=unquote('%s')
+item_info_convert=ifEmpty('%s','','http://www.zoomtv.me/%s')
+item_info_build=%s
+
+item_info_name=file2
 item_info_from=req2
-item_info_convert=getInfo('%s','.*['"](rtmp[^'"]+).*','@pageUrl2@')
-#item_info_convert=debug
+item_info_convert=getInfo('%s','.*video\s+src="([^"]+)"\s+title="Default"','@REFERER@')
+item_info_build=%s
+
+item_info_name=ip2
+item_info_from=pageUrl
+item_info_convert=getInfo('%s','.*atob\("([^"]+)','@REFERER@')
+item_info_convert=decodeBase64
+item_info_build=%s
+
+item_info_name=tok2
+item_info_from=pageUrl
+item_info_convert=getInfo('%s','.*hlUDia0":"(\w+)"','@REFERER@')
+item_info_build=%s
+
+item_info_name=num2
+item_info_from=pageUrl
+item_info_convert=getInfo('%s','.*TRiexl4":"?(\d+)"?','@REFERER@')
+item_info_build=%s
+
+item_info_name=rtmp2
+item_info_from=ip2
+#item_info_convert=getInfo('%s','.*['"](rtmp[^'"]+).*','@pageUrl2@')
+item_info_convert=ifEmpty('%s','','rtmp://%s:1935/zmliveme')
 item_info_build=%s
 
 item_info_name=rtmp
 item_info_from=rtmp1 || rtmp2
 #item_info_convert=debug
+item_info_build=%s
+
+item_info_name=file
+item_info_from=file1 || file2
+item_info_build=%s
+
+item_info_name=tok
+item_info_from=tok1 || tok2
+item_info_build=%s
+
+
+item_info_name=num
+item_info_from=num1 || num2
 item_info_build=%s
 
 item_info_name=url
