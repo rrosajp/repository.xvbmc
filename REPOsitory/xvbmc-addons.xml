@@ -98,6 +98,19 @@
     </extension>
 </addon>
 
+<addon id="repository.Cypherslocker" name="[COLOR cornflowerblue]Cyphers locker[/COLOR]" version="1.0.2" provider-name="Project Cypher">
+	<extension point="xbmc.addon.repository" name="TheMegaRepo">
+		<info compressed="false">https://github.com/CypherMediaGIT/CypherRepo/raw/master/cypherrepo/plugins/addons.xml</info>
+		<checksum>https://github.com/CypherMediaGIT/CypherRepo/raw/master/cypherrepo/plugins/addons.xml.md5</checksum>
+		<datadir zip="true">https://github.com/CypherMediaGIT/CypherRepo/raw/master/cypherrepo/plugins</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Cypers Locker Repo - Home to Project Cypher</summary>
+		<description>Cypers Locker Repo - Home to Project Cypher.</description>
+		<platform>all</platform>
+	</extension>
+</addon>
+
 <addon id="repository.dss" name="DSS" version="1.8.3" provider-name="DSS">
 	<extension point="xbmc.addon.repository" name=" DSS Repository">
 		<info compressed="true">https://raw.githubusercontent.com/dutchsportstreams/DSS/master/addons.xml</info>
@@ -289,21 +302,21 @@
 	</extension>
 </addon>
 
-﻿<addon id="repository.smash" name="Smash repository" version="1.0.1" provider-name="SMASH">
-	<extension point="xbmc.addon.repository" name="Smash repository">
+<addon id="repository.smash" name="[COLOR indigo][B]-[/B][/COLOR][COLOR gold][B]S[/B][/COLOR][COLOR indigo][B]M[/B][/COLOR][COLOR gold][B]A[/B][/COLOR][COLOR indigo][B]S[/B][/COLOR][COLOR gold][B]H[/B][/COLOR] [COLOR ghostwhite]Repo[/COLOR]" version="1.2.0" provider-name="SMASH">
+	<extension point="xbmc.addon.repository" name="SMASH Repo">
 	<dir>
-        <info compressed="false">https://mediarepos.net/Repos/smashrepo/addons.xml</info>
-        <checksum>https://mediarepos.net/Repos/smashrepo/addons.xml.md5</checksum>
-        <datadir zip="true">https://mediarepos.net/Repos/smashrepo/</datadir>
+        <info compressed="false">http://mediarepos.net/Repos/smashrepo/addons.xml</info>
+        <checksum>http://mediarepos.net/Repos/smashrepo/addons.xml.md5</checksum>
+        <datadir zip="true">http://mediarepos.net/Repos/smashrepo/</datadir>
 	</dir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Under This Repo, I Will Host Addons With No Home,Bring Life To Dead Addons That Fully Work, Link To Repos From Devs (This will install current version the Dev Has) </summary>
-		<description lang="en">Alright To The Cunts Bitching About This Repo, The addons if they get updated will be posted here or repos linking to them so why you hate? the addons under here work</description>
+		<summary lang="en">Under This Repo, I Will Host Addons With No Home,Bring Life To Dead Addons That Are Fully Work, Link To Repos From Devs (This will install current version the Dev Has) </summary>
+		<description lang="en">[B]THE ADDONS UNDER THIS SCRAPE THE NET, NO CONTENT IS HOSTED/DISTRIBUTED HERE, CONTACT WEBSITES HOSTING THE CONTENT IF WANT IT REMOVED [CR] [B]Smash Repo Change Log 1.2.0[/B] [CR] - Removed Addons That Are Now In Colossus Repository [CR] - Fixed Repos [CR] - check for updates before going into vid addons</description>
 		<platform>all</platform>
 		<forum></forum>
         <website></website>
-		<news>[B]Smash Repo Change Log 1.0.8[/B] [CR] - msg's to cunts who hate on this, dont worry i will pay for stuff my self </news>
+		<news>IF YOU DO WANNA HELP YOU CAN FOLLOW ME ON TWITTER @XSMASHX88X AND SUB TO MY CHANNEL WWW.YOUTUBE.COM/XSMASHX88X</news>
 	</extension>
 </addon>
 
