@@ -18,9 +18,9 @@
 	<disclaimer lang="en">this addon is no longer supported</disclaimer>
 	<platform>all</platform>  <!-- open-/libreelec -->
 	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-	<forum>http://bit.ly/XvBMC-Pi</forum>
-	<website>http://bit.ly/XvBMC-NL</website>
-	<source>https://www.fb.com/groups/XbmcVoorBeginnersRaspberryPi/</source>
+    <forum>http://bit.ly/XvBMC-NL</forum>
+    <website>https://bit.ly/XvBMC-Android</website>
+    <source>http://bit.ly/XvBMC-Pi</source>
 	<news>this addon is no longer supported</news>
 	<assets>
 		<icon>icon.png</icon>

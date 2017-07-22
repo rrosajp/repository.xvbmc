@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.schoonmaak"
-       name=" [COLOR lime][B]X[/B][/COLOR]vBMC [COLOR red][B]S[/B][/COLOR]choonmaak/[COLOR red][B]M[/B][/COLOR]aintenance [I][COLOR darkgreen] (kodi schoonmaak)[/COLOR][/I]"
-       version="0.0.0.1"
-       provider-name="EPiC XvBMC-NL">
+       name="[COLOR dimgray][B]X[/B]vBMC Schoonmaak/Maintenance[/COLOR] [COLOR red][I](outdated)[/I][/COLOR]"
+       version="4.1.0"
+       provider-name="XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.14.0"/>
-    <import addon="repository.xvbmc" version="4.0.1"/>
+	<import addon="repository.xvbmc" version="4.0.2"/>
+<!--<import addon="os.openelec.tv" version="7.0" optional="false" />-->
+<!--<import addon="os.libreelec.tv" version="7.0" optional="false"/>-->
   </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-    <provides>executable</provides>
+   <extension point="xbmc.python.script" library="default.py">
+   <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <platform>all</platform>
-    <summary lang="en">XvBMC Nederland - Kodi Schoonmaak (CleanUp-tool)</summary>
-    <description lang="en">XvBMC Maintenance/Schoonmaak ; CrapCleaner, Purge and Refresh.</description>
-    <disclaimer lang="en">!!! USE AT YOUR OWN RISK !!! MORE iNFO @ http://bit.ly/XvBMC-NL !!!</disclaimer>
-    <platform>all</platform>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
-    <forum>http://bit.ly/XvBMC-Pi</forum>
-    <website>http://bit.ly/XvBMC-NL</website>
-    <source>https://www.fb.com/groups/XvBMCnederland/</source>
-    <news>Krypton improvements v1.10.22</news>
-    <assets>
-        <icon>icon.png</icon>
-        <fanart>fanart.jpg</fanart>
-        <screenshot></screenshot>
-    </assets>
+    <summary lang="en">this addon is no longer supported</summary>
+    <description lang="en">this addon is no longer supported</description>
+	<disclaimer lang="en">this addon is no longer supported</disclaimer>
+	<platform>all</platform>  <!-- open-/libreelec -->
+	<license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <forum>http://bit.ly/XvBMC-NL</forum>
+    <website>https://bit.ly/XvBMC-Android</website>
+    <source>http://bit.ly/XvBMC-Pi</source>
+	<news>this addon is no longer supported</news>
+	<assets>
+		<icon>icon.png</icon>
+		<fanart>fanart.jpg</fanart>
+		<screenshot></screenshot>
+	</assets>
   </extension>
 </addon>
