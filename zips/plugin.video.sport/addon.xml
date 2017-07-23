@@ -4,10 +4,9 @@
 	   version="0.0.0.1"
 	   provider-name="XvBMC-NL">
   <requires>
-    <import addon="repository.xvbmc" version="4.0.1"/>
+    <import addon="repository.xvbmc" version="4.0.2"/>
     <import addon="xbmc.python" version="2.1.0"/>
-    <!--<import addon="script.module.addon.common" version="2.0.0"/>-->
-    <import addon="plugin.video.youtube" version="5.3.12"/>
+    <import addon="plugin.video.youtube" version="5.4"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
     <provides>video</provides>
@@ -21,7 +20,7 @@
     <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
     <website>http://bit.ly/XvBMC-NL</website>
     <source>https://www.facebook.com/groups/XvBMCnederland/</source>
-    <news>[B]Version 1.0.4[/B]: Updates</news>
+    <news>[B]Version 1.0.6[/B]: Updates</news>
     <assets>
         <icon>icon.png</icon>
         <fanart>fanart.jpg</fanart>
