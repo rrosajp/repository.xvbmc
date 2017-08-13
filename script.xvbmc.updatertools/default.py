@@ -1,1 +1,478 @@
-exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("IyEvMWYxLzI3OC8xN2IKIiIjMTBlOjYKMWUgMzFjIDJhIGM3ICwxZjQgMmEgMWE3ICwxOGIgMmEgYSAsMmRmIDJhIGNhICwyMWUgMmEgMmJhICwyZWMgMmEgYzYgIzEwZToyNQoxZSAxYzcgMmEgMTlkICwxM2UgMmEgYzUgLDE1ZCAyYSAxYyAsMTFhIDJhIDFkICMxMGU6MjYKMWUgMWYzIDJhIGIzICwyYmYgMmEgYzkgLDFiYyAyYSAxZGUgIzEwZToyNwoxZSAxNmMgMmEgYzggIzEwZToyOAoxZSAxYTMgMmEgOCAjMTBlOjI5CjVhIDFkNiAuMmU2IDFlIDJhYiAyYSA2ZCAjMTBlOjMyCjVhIDFkNiAuMmU2IDFlIDEyYiAyYSA2ZSAsMTY1IDJhIDMwZCAjMTBlOjMzCjVhIDFkNiAuMmU2IDFlIGI2IDJhIDE0ZSAjMTBlOjM0CjVhIDFkNiAuMmU2IC5iNiAxZSAxNGIgMmEgNGIgLDFmZiAyYSAyZiAsMmJjIDJhIDRmICwxMzkgMmEgNGUgIzEwZTozNQo1YSAxZDYgLjJlNiAuYjYgMWUgMWIwIDJhIDFmNiAsMjdkIDJhIDMyYyAsZjMgMmEgMzRmICxmNyAyYSA3NCAsZDcgMmEgNzMgLGUyIDJhIDZhICMxMGU6MzYKNWEgMWQ2IC4yZTYgMWUgMTljIDJhIDZmICMxMGU6MzgKNWEgMWQ2IC4yZTYgMWUgMTNjIDJhIDI0MSAjMTBlOjM5CjVhIDFkNiAuMmU2IDFlIDExYyAyYSAzNGMgIzEwZTo0MAo1YSAxZDYgLjJlNiAxZSAxYTYgMmEgMzBiICMxMGU6NDEKNWEgMWQ2IC4yZTYgMWUgMmQ1IDJhIDM0ZSAjMTBlOjQyCjViID0nYjUuZTcuMmMzJyMxMGU6NDQKZGMgPTggLmRjICMxMGU6NDUKMTViID0nYjUuZTcuMmMzJyMxMGU6NDYKMmFkID0nM2IgOGUnIzEwZTo0NwpiZSA9YjMgLjFiOCAuMzViIChiMyAuMWI4IC4zNWIgKDE5ZCAuMWI0ICgnMWZlOi8vNWQnKSwnMzJiJyksJ2I1LmU3LjJjMycpIzEwZTo0OAozMzIgPTE5ZCAuMWI0IChiMyAuMWI4IC4zNWIgKCcxZmU6Ly81ZC8zMmIvJys1YiArJy8xZDYvZGUvJykpIzEwZTo0OQplNCA9MWE3IC4zNyAoJzFlNicpIzEwZTo1MAphMCA9MTlkIC4xYjQgKGIzIC4xYjggLjM1YiAoJzFmZTovLzVkLzMyYi8nKzViICwnMzJhLmRmJykpIzEwZTo1MQpjMyA9MTlkIC4xYjQgKGIzIC4xYjggLjM1YiAoJzFmZTovLzVkLzMyYi8nKzViICsnLzFkNi9kZS8nLCcyNmUuZGYnKSkjMTBlOjUyCjFiMyA9MTlkIC4xYjQgKGIzIC4xYjggLjM1YiAoJzFmZTovLzVkLzMyYi8nKzViICwnMWM2LjFiNicpKSMxMGU6NTMKMWYgPSIzYiA4ZSIjMTBlOjU0CjM1YSA9YjMgLjFiOCAuMzViIChiZSAsJzFkNi9kZScpIzEwZTo1NQoyYjYgPWRjIC4yYWUgKCcxY2InKSMxMGU6NTYKMTJhID0nMTZkLzUuMCAoZWY7IDJiNjsgZWYgMWU3IDUuMTsgMmU5LTJjZDsgMzFiOjEuOS4wLjMpIDFhNS8yOWMgMTVjLzMuMC4zJyMxMGU6NTcKMWU0ID0nWzI1ZiAxYjldW2JdMWQyWy9iXTM1OVtiXTJlMlsvYl0gMmFhICYgMWEyIDE4ZFsvMjVmXScjMTBlOjU5CjFlNSA9J1syNWYgMWI5XTw8PDFkNFsvMjVmXScjMTBlOjYwCjMzYyA9MWMgLmZhICgpIzEwZTo2MgoxZTAgPSIxYTQ6Ly8yN2EuMmU3LzNiLWY2IiMxMGU6NjMKMjhjID0nWzI1ZiA4OF1bYl0gLSBbL2JdN2QgNWUgMzRhOiBbMWZhXTMzYlsvMWZhXSBbLzI1Zl0nIzEwZTo2NAoxN2QgPSdbMjVmIDg4XVtiXSAtIFsvYl03ZCA2NyBmYzogWzFmYV0zM2JbLzFmYV0gWy8yNWZdJyMxMGU6NjUKZTUgPTE5ZCAuZjggKCJhOS4yNmIiKVs6NCBdIzEwZTo2Ngo1ZiAzNGQgKCk6IzEwZTo3MAoJMWUgMTBmIDJhIDY4ICMxMGU6NzEKCTY4IC5kMiAoKSMxMGU6NzIKNWYgZDQgKCk6IzEwZTo3NQoJMmUgLDRkID04IC4yOWUgKCkjMTBlOjc3Cgk1YyAyZSA9PSIxN2MiOiMxMGU6NzgKCSAgIDM1NyA9IlsyNWYgMTdlXTNiIDE3YyBiYltiXTogJTljWy9iXVsvMjVmXSIlKDRkICkrJ1syNWYgMTdlXSAoMWQ4KVsvMjVmXScjMTBlOjc5CgkgICAxYjcgPTFhNyAuMzcgKDFmNiApKycxN2MvMTc2LzMzZi5jMicjMTBlOjgwCgkgICAzM2UgKCclOWMnJTM1NyAsMWI3ICwxICwzMzIgKydlNy4xYjYnLGEwICwnJykjMTBlOjgyCgkxYjUgMmUgPT0iMmYzIjojMTBlOjgzCgkgICAzNTcgPSJbMjVmIDE3ZV0zYiAxN2MgYmJbYl06ICU5Y1svYl1bLzI1Zl0iJSg0ZCApKydbMjVmIDE3ZV0gKDVlKVsvMjVmXScjMTBlOjg0CgkgICAxYjcgPTFhNyAuMzcgKDMyYyApKydkMS5jMicjMTBlOjg1CgkgICAzM2UgKCclOWMnJTM1NyAsMWI3ICwxICwzMzIgKydlNy4xYjYnLGEwICwnJykjMTBlOjg3CgkxYjUgMmUgPT0iZjkiOiMxMGU6OTEKCSAgIDVjIDE5ZCAuMmMyICgnYTkuYTEoJTljKSclKGU0ICkpOiMxMGU6OTIKCQkgIDVjIGIzIC4xYjggLjEwYiAoMTRlIC5hOCApOiMxMGU6OTMKCQkJIDM1NyA9IlsyNWYgMTdlXTJjNSAoYmYpIDE3YyA5ZSBbYl0zM2JbL2JdLCBlYSBlZCBhNCBmZCBbYl0/Wy9iXVsvMjVmXSIjMTBlOjk0CgkJCSAxYjcgPTFhNyAuMzcgKDFmNiApKycxN2MvMTc2LzMzZi5jMicjMTBlOjk1CgkJCSAxZDAgKCclOWMnJTM1NyAsMWI3ICwxICwzMzIgKydlNy4xYjYnKSMxMGU6OTcKCQkgIDFiNSBiMyAuMWI4IC4xMGIgKDE0ZSAuMjhmICk6IzEwZTo5OAoJCQkgICAzNTcgPSJbMjVmIDE3ZV0yYzUgKDVlKSAxN2MgOWUgW2JdMzNiWy9iXSwgZWEgZWQgYTQgZmQgW2JdP1svYl1bLzI1Zl0iIzEwZTo5OQoJCQkgICAxYjcgPTFhNyAuMzcgKDMyYyApKydkMS5jMicjMTBlOjEwMAoJCQkgICAxZDAgKCclOWMnJTM1NyAsMWI3ICwxICwzMzIgKydlNy4xYjYnKSMxMGU6MTAyCgkJICAyMDQgOiMxMGU6MTAzCgkJCSAgIDM1NyA9IlsyNWYgMTdlXTMzYiAzNGEgOWU7IGUxIDE3Yz9bLzI1Zl0gWzI1ZiBiNF1bYl0oYTQgMWQ1IDdkIDJjYiAyMmEpWy9iXVsvMjVmXSIjMTBlOjEwNAoJCQkgICA3NiA9MWE3IC4zNyAoMWY2ICkrJzE3Yy8xNzYvMzNmLmMyJyMxMGU6MTA1CgkJCSAgIDFkMCAoJyU5YyclMzU3ICw3NiAsMSAsMzMyICsnZTcuMWI2JykjMTBlOjEwNwoJICAgMjA0IDojMTBlOjEwOAoJCSAgMzU3ID0iWzI1ZiAxN2VdMmM1LCBbYl0zM2JbL2JdIDM0YS8zM2YvMTdjIDllIFtiXSA6Wy9iXVwnLShbLzI1Zl0iIzEwZToxMDkKCQkgIDFkMCAoJyU5YyclMzU3ICwxZTAgLDQgLDMzMiArJ2U3LjFiNicpIzEwZToxMTAKCTIwNCA6IzEwZToxMTEKCSAgIDM1NyA9IlsyNWYgMTdlXTJlNCAxZTEgMjBmIFtiXTE5MlsvYl0gM2IgMWYwIFtiXSA6Wy9iXS0pWy8yNWZdIiMxMGU6MTEyCgkgICAxZDAgKCclOWMnJTM1NyAsMWUwICw0ICwzMzIgKydlNy4xYjYnKSMxMGU6MTEzCgkxZDAgKCcnLDFlMCAsJycsMzMyICsnZTcuMWI2JykjMTBlOjExNQoJMzNlICgnWzI1ZiBiNF0zYiAyYTRbLzI1Zl0nLDFlMCAsMTAgLDMzMiArJzExZi4xYjYnLGIzIC4xYjggLjM1YiAoMzVhICwiMjlkLmRmIiksJycpIzEwZToxMTYKCTMzZSAoJ1syNWYgM2VdM2IgYWJbLzI1Zl0nLDFlMCAsMjAgLDMzMiArJzFmNS4xYjYnLGIzIC4xYjggLjM1YiAoMzVhICwiMTNhLmRmIiksJycpIzEwZToxMTcKCTMzZSAoJ1syNWYgMTFlXTNiIDFlNFsvMjVmXScsMWUwICwyICwzMzIgKydiYy4xYjYnLGIzIC4xYjggLjM1YiAoMzVhICwiMWJhLmRmIiksJycpIzEwZToxMTgKCTFkMCAoJycsMWUwICwnJywzMzIgKydlNy4xYjYnKSMxMGU6MTE5CgkxZDAgKCdbMjVmIDg4XWJmIDI4YiAoMTRjICU5Yyk6Wy8yNWZdJyVlNSAsMWUwICwxNiAsMzMyICsnZTcuMWI2JykjMTBlOjEyMAoJMTBhIDE3ZCAjMTBlOjEyMQoJMjBhICw0YyA9MTRlIC5mMiAoKSMxMGU6MTIyCgk1YyAyMGEgPT0iZjAiOiMxMGU6MTIzCgkgICAyMmQgPTggLjgxICg3NCApIzEwZToxMjQKCSAgIDE3ZCA9J1syNWYgODhdW2JdIC0gWy9iXTdkIDY3IGZjOiAlOWMgWy8yNWZdJyUoNGMgKycgWzI1ZiAxYjldWzFmYV0oOWQ6ICU5YylbLzFmYV1bLzI1Zl0nJTIyZCApIzEwZToxMjUKCTFiNSAyMGEgPT0iY2QiOiMxMGU6MTI2CgkJIDIyZCA9OCAuODEgKDZhICkjMTBlOjEyNwoJCSAxN2QgPSdbMjVmIDg4XVtiXSAtIFsvYl03ZCA2NyBmYzogJTljIFsvMjVmXSclKDRjICsnIFsyNWYgMWI5XVsxZmFdKDlkOiAlOWMpWy8xZmFdWy8yNWZdJyUyMmQgKSMxMGU6MTI4CgkxZDAgKCclOWMnJTE3ZCAsMWUwICwnJyxiMyAuMWI4IC4zNWIgKDM1YSAsImJjLjFiNiIpKSMxMGU6MTI5CgkxMGEgMjhjICMxMGU6MTMwCgkxZTggLDMyZiA9MTRlIC5kNSAoKSMxMGU6MTMxCgk1YyAxZTggPT0iYTgiOiMxMGU6MTMyCgkgICAxYzggPTggLjgxICgzNGYgKSMxMGU6MTMzCgkgICAyOGMgPSdbMjVmIDg4XVtiXSAtIFsvYl03ZCBiZiAzNGE6ICU5YyBbLzI1Zl0nJSgzMmYgKycgWzI1ZiAxYjldWzFmYV0oOWQ6ICU5YylbLzFmYV1bLzI1Zl0nJTFjOCApIzEwZToxMzQKCTFiNSAxZTggPT0iMjhmIjojMTBlOjEzNQoJCSAxYzggPTggLjgxICg3MyApIzEwZToxMzYKCQkgMjhjID0nWzI1ZiA4OF1bYl0gLSBbL2JdN2QgNWUgMzRhOiAlOWMgWy8yNWZdJyUoMzJmICsnIFsyNWYgMWI5XVsxZmFdKDlkOiAlOWMpWy8xZmFdWy8yNWZdJyUxYzggKSMxMGU6MTM3CgkxZDAgKCclOWMnJTI4YyAsMWUwICwnJyxiMyAuMWI4IC4zNWIgKDM1YSAsImJjLjFiNiIpKSMxMGU6MTM4Cgk1YyAxOWQgLjJjMiAoJ2E5LmExKCI2Ny4yZWYuYWEiKScpKzE5ZCAuMmMyICgnYTkuYTEoIjY3LjJmNS5hYSIpJyk6IzEwZToxNDAKCSAgIDFkMCAoJycsMWUwICwnJywzMzIgKydlNy4xYjYnKSMxMGU6MTQxCgkgICAzM2UgKCdbMjVmIDE3ZV0zYiAyZjcgZjYgW2JdIC1bL2JdIDJhNCwgMzA4LiAmIGFiWy8yNWZdJywxZTAgLDMwICwzMzIgKycyZjguMWI2JyxjMyAsJycpIzEwZToxNDIKCTFkMCAoJycsMWUwICwnJywzMzIgKydlNy4xYjYnKSMxMGU6MTQ0CgkxZDAgKDFlNSAsMWUwICwzICxiMyAuMWI4IC4zNWIgKDM1YSAsImU3LjFiNiIpKSMxMGU6MTQ1CgkxNGUgLjhiICgnOWYnLCdkYScpIzEwZToxNDYKNWYgYWQgKCk6IzEwZToxNDgKCTFkMCAoJ1tiXWJbL2JdMWFkIFsyNWYgYjRdMTFjWy8yNWZdIFsyNWYgMWI5XSgzNGEgW2JdMzMxWy9iXTJmMVtiXTMzMVsvYl0xOGUgJiAyMGUgMWIyIDMyYi8yYTkpWy8yNWZdJywxZTAgLDIxICxiMyAuMWI4IC4zNWIgKDM1YSAsIjFmNS4xYjYiKSkjMTBlOjE0OQoJMWQwICgnW2JdMzMxWy9iXTFhZiBlMCcsMWUwICwyMiAsYjMgLjFiOCAuMzViICgzNWEgLCIxZjUuMWI2IikpIzEwZToxNTAKCTFkMCAoJ1tiXWRbL2JdMTlhIGIyJywxZTAgLDIzICxiMyAuMWI4IC4zNWIgKDM1YSAsIjFmNS4xYjYiKSkjMTBlOjE1MQoJMWQwICgnW2JdZlsvYl0xZGQgYzEtYzAgWzI1ZiAxYjldKDFhMSAzNGIvMzFhIDFiZCAmIDJkMiBcJ2UwKzFjMFwnIDJjMClbLzI1Zl0nLDFlMCAsMjQgLGIzIC4xYjggLjM1YiAoMzVhICwiMWY1LjFiNiIpKSMxMGU6MTUyCgkxZDAgKCdbYl1mWy9iXTJlYiBcIjFiZVwiIDI1NyBbMjVmIDFiOV0oZTAsIDJmYSwgOWIgJiBiMilbLzI1Zl0nLDFlMCAsMjUgLGIzIC4xYjggLjM1YiAoMzVhICwiMWY1LjFiNiIpKSMxMGU6MTUzCgkxZDAgKCdbYl0yZjBbL2JdMWQxIDliJywxZTAgLDI2ICxiMyAuMWI4IC4zNWIgKDM1YSAsIjFmNS4xYjYiKSkjMTBlOjE1NAoJMWQwICgnW2JdMWRiWy9iXTJiYiAzMmJbMjVmIDNlXStbLzI1Zl0yYTknLDFlMCAsMjcgLGIzIC4xYjggLjM1YiAoMzVhICwiMWY1LjFiNiIpKSMxMGU6MTU1Cgk1YyA3YyAoOCAuMmM3ICk8PTE2LjcgOiMxMGU6MTU2CgkgICAxZDAgKCdbYl1bMjVmIGEyXTFkMlsvMjVmXVsvYl0yNGFcJzljIGI3IDMyYi5kYicsMWUwICwyOCAsYjMgLjFiOCAuMzViICgzNWEgLCJlNy4xYjYiKSkjMTBlOjE1NwoJMWI1IDdjICg4IC4yYzcgKT4xNi43IDojMTBlOjE1OAoJCSAxZDAgKCdbYl1bMjVmIGEyXTFkMlsvMjVmXVsvYl0yNGFcJzljIDFmOCAxMmUgYzEtYzAgWzI1ZiAxYjldKDJlNSAxNysgODkpWy8yNWZdJywxZTAgLDI5ICxiMyAuMWI4IC4zNWIgKDM1YSAsImU3LjFiNiIpKSMxMGU6MTU5CgkxZDAgKCcnLDFlMCAsJycsMzMyICsnZTcuMWI2JykjMTBlOjE2MQoJMWQwICgxZTQgLDFlMCAsMiAsYjMgLjFiOCAuMzViICgzNWEgLCJiYy4xYjYiKSkjMTBlOjE2MgoJMWQwICgxZTUgLDFlMCAsMyAsYjMgLjFiOCAuMzViICgzNWEgLCJlNy4xYjYiKSkjMTBlOjE2MwoJMTRlIC44YiAoJzlmJywnZGEnKSMxMGU6MTY0CjVmIGIwICgpOiMxMGU6MTY2CgkxZDAgKCdbYl0zMzFbL2JdMmQxIDE0NyAxYTAgKFwnNWRcJykgZWQgXCcxZmVcJycsMWUwICwxMSAsYjMgLjFiOCAuMzViICgzNWEgLCIxZjUuMWI2IikpIzEwZToxNjcKCTFkMCAoJ1tiXWVbL2JdZTMgMmU1IDIzZSBbMjVmIDFiOV0oMmU1IDE3KyA4OTsgWzI1ZiAzZV0xYmZbLzI1Zl0gYzEtYzApWy8yNWZdJywxZTAgLDEyICxiMyAuMWI4IC4zNWIgKDM1YSAsIjFmNS4xYjYiKSkjMTBlOjE2OAoJMWQwICgnW2JdZVsvYl1lMyAyZTUgMjNlIFsyNWYgMWI5XSgyZTUgMTcrIDg5OyBbMjVmIDNlXTEyZVsvMjVmXSBjMS1jMClbLzI1Zl0nLDFlMCAsMTMgLGIzIC4xYjggLjM1YiAoMzVhICwiMWY1LjFiNiIpKSMxMGU6MTY5CgkxZDAgKCdbYl1lWy9iXWUzIDJlNSAxZDkgMTVmIFsyNWYgMWI5XSgxNysgODk7IFsyNWYgM2VdMWQzWy8yNWZdKVsvMjVmXScsMWUwICwxNCAsYjMgLjFiOCAuMzViICgzNWEgLCIxZjUuMWI2IikpIzEwZToxNzAKCTFkMCAoJ1tiXWZbL2JdMWRhIDMxZiAyZTUnLDFlMCAsMTUgLGIzIC4xYjggLjM1YiAoMzVhICwiMWY1LjFiNiIpKSMxMGU6MTcxCgkxZDAgKCdbYl0zNThbL2JdMjM5IDJkMyBbMjVmIDFiOV0oMWRjIFwnMTRjLjg2XCcpWy8yNWZdJywxZTAgLDE3ICxiMyAuMWI4IC4zNWIgKDM1YSAsIjFmNS4xYjYiKSkjMTBlOjE3MwoJMWQwICgnW2JdMmI2Wy9iXTIzYyAtPiBhYScsMWUwICwxOCAsYjMgLjFiOCAuMzViICgzNWEgLCIxZjUuMWI2IikpIzEwZToxNzQKCTFkMCAoJ1tiXVsyNWYgYTJdMWQyWy8yNWZdWy9iXTI0YVwnOWMgY2IgMzNkIFsyNWYgMWI5XShkZClbLzI1Zl0nLDFlMCAsMTkgLGIzIC4xYjggLjM1YiAoMzVhICwiZTcuMWI2IikpIzEwZToxNzUKCTFkMCAoJycsMWUwICwnJywzMzIgKydlNy4xYjYnKSMxMGU6MTc3CgkxZDAgKDFlNCAsMWUwICwyICxiMyAuMWI4IC4zNWIgKDM1YSAsImJjLjFiNiIpKSMxMGU6MTc4CgkxZDAgKDFlNSAsMWUwICwzICxiMyAuMWI4IC4zNWIgKDM1YSAsImU3LjFiNiIpKSMxMGU6MTc5CgkxNGUgLjhiICgnOWYnLCdkYScpIzEwZToxODAKNWYgY2YgKCk6IzEwZToxODIKCTFkMCAoJ1syNWYgM2VdW2JdMWRiWy9iXVsvMjVmXTlhIFsyNWYgM2VdZjZbLzI1Zl0gMTZlIDIwYiBbMjVmIDFiOV0oW2JdMWMxWy9iXSAxNmEgZGQpWy8yNWZdJywxZTAgLDMxICxiMyAuMWI4IC4zNWIgKDM1YSAsIjExZi4xYjYiKSkjMTBlOjE4MwoJMWQwICgnWzI1ZiAzZV1bYl0xZGJbL2JdWy8yNWZdOWEgWzI1ZiAzZV1mNlsvMjVmXSBiZCBbMjVmIDFiOV0oMTJmIGY2ICoqKjFhYioqKilbLzI1Zl0nLDFlMCAsMzIgLGIzIC4xYjggLjM1YiAoMzVhICwiYmQuMWI2IikpIzEwZToxODQKCTFkMCAoJ1syNWYgM2VdW2JdMWRiWy9iXVsvMjVmXTlhIFsyNWYgM2VdZjZbLzI1Zl0gIzE4YSMgMmNhIFsyNWYgMWI5XShkMCwgMTgxLCAyOGQuKVsvMjVmXScsMWUwICwzMyAsYjMgLjFiOCAuMzViICgzNWEgLCJkMC4xYjYiKSkjMTBlOjE4NQoJMWQwICgnJywxZTAgLCcnLDMzMiArJ2U3LjFiNicpIzEwZToxODcKCTFkMCAoMWU0ICwxZTAgLDIgLGIzIC4xYjggLjM1YiAoMzVhICwiYmMuMWI2IikpIzEwZToxODgKCTFkMCAoMWU1ICwxZTAgLDMgLGIzIC4xYjggLjM1YiAoMzVhICwiZTcuMWI2IikpIzEwZToxODkKCTE0ZSAuOGIgKCc5ZicsJ2RhJykjMTBlOjE5MAo1ZiA1ZSAoM2EgLDNkICk6IzEwZToxOTQKCTMwNyA9MTlkIC4xYjQgKGIzIC4xYjggLjM1YiAoJzFmZTovLzVkLzMyYicsJzliJykpIzEwZToxOTUKCTVjIDJmMiBiMyAuMWI4IC4xMDYgKDMwNyApOiMxMGU6MTk2CgkJYjMgLjI4YSAoMzA3ICkjMTBlOjE5NwoJMWEgPWIzIC4xYjggLjM1YiAoMzA3ICwnMjdmLmMyJykjMTBlOjE5OAoJOGYgOiMxMGU6MTk5CgkgICBiMyAuYjcgKDFhICkjMTBlOjIwMAoJM2YgOiMxMGU6MjAxCgkgICAyM2QgIzEwZToyMDIKCTZlIC4yNmYgKDNkICwxYSApIzEwZToyMDMKCTVjIGIzIC4xYjggLjEwNiAoMWEgKTojMTBlOjIwNQoJCTQzID0xOWQgLjFiNCAoYjMgLjFiOCAuMzViICgnMWZlOi8vJywnNWQnKSkjMTBlOjIwNgoJCTFkZSAuOTYgKDIgKSMxMGU6MjA3CgkJMWM0ID0xYyAuZWMgKCkjMTBlOjIwOAoJCTFjNCAuMTkxICgxZiAsJzNiLTFlMzogMWQ3IDE3YyAxOTMuLi4nLCcnLCcxMDEgMjg4JykjMTBlOjIwOQoJCTFjNCAuMTdjICgwICwiIiwiKioqMjdlIDFmNyAtIDEwMSAyODgiKSMxMGU6MjEwCgkJMTRlIC44NiAoIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iKSMxMGU6MjExCgkJMTRlIC44NiAoNDMgKSMxMGU6MjEyCgkJMTRlIC44NiAoIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iKSMxMGU6MjEzCgkJMzBkIC4xMmUgKDFhICw0MyAsMWM0ICkjMTBlOjIxNAoJCTFjNCAuMzFmICgpIzEwZToyMTUKCQk4ZiA6YjMgLmI3ICgxYSApIzEwZToyMTYKCQkzZiA6MjNkICMxMGU6MjE3Cgk1YyA3YyAoOCAuMmM3ICk8PTE2LjcgOiMxMGU6MjE4CgkgICAzM2MgLmU5ICgxZiArIiA6IGZiIFsyNWY9MzFlXVtiXWQzWy9iXVsvMjVmXSIsJ1syNWY9MTdlXVtiXSEhISAgMWFlICAhISFbL2JdWy8yNWZdJywnW2JdYTdbL2JdIDJlNSBlZCAzMjMuLi4nLCdbYl0zMjJbL2JdIDJlNSAyZjYgOGQnKSMxMGU6MjE5CgkgICAxNGUgLmE2ICgyYzYgPTJlOCApIzEwZToyMjAKCTFiNSA3YyAoOCAuMmM3ICk+MTYuNyA6IzEwZToyMjEKCQkgOCAuMmM0ICgyYzYgPTJlOCApIzEwZToyMjIKCQkgMWRlIC45NiAoMC41ICkjMTBlOjIyMwoJCSAyMGQgPTFjIC5mYSAoKS4xOWYgKDFmICsiIDogZmIgWzI1Zj0zMWVdW2JdZDNbL2JdWy8yNWZdIiwnWzI1Zj0xN2VdW2JdISEhICAxNWUgICEhIVsvYl1bLzI1Zl0nLCdbYl0zMGNbL2JdIGMxLWMwIDI2ZCAyNmEgMWFhIDI1YiAyMmYgMTg2IDFmOS4nLCcoMjM3IDJjOCAyYzkgMzNhIDFlZSAzMGYgMThmIDJmNCknLDE0ZCA9J1syNWYgYTJdYTdbLzI1Zl0nLDE2YiA9J1syNWYgYjRdMjJjWy8yNWZdJykjMTBlOjIyNAoJCSA1YyAyMGQgPT0xIDojMTBlOjIyNQoJCQkxZGUgLjk2ICgxICkjMTBlOjIyNgoJCQkxNGUgLmQ5ICgpIzEwZToyMjcKCQkgMWI1IDIwZCA9PTAgOiMxMGU6MjI4CgkJCSAgNWMgN2MgKDggLjJjNyApPjE2LjcgOiMxMGU6MjI5CgkJCQkgOCAuMmM0ICgyYzYgPTJlOCApIzEwZToyMzAKCQkJCSAxZGUgLjk2ICgwLjUgKSMxMGU6MjMxCgkJCQkgMzNjIC5lOSAoMWYgKyIgOiBbMjVmPWI0XWMxLWMwWy8yNWZdIFsyNWY9MzFlXVtiXTE1YVsvYl1bLzI1Zl0iLCdbMjVmPTE3ZV1bYl0hISEgIDJjZSAgISEhWy9iXVsvMjVmXScsJ1tiXWE3Wy9iXSAyZTUgZWQgMzIzLi4uJywnW2JdMzIyWy9iXSAyZTUgMmY2IDhkJykjMTBlOjIzMgoJCQkJIDE5ZCAuOGEgKCcxMWIoKScpIzEwZToyMzMKCTE5ZCAuOGEgKCIyN2IuMTYwIikjMTBlOjIzNAoJMTlkIC45NiAoMWE4ICkjMTBlOjIzNQo1ZiAzM2QgKCk6IzEwZToyNDAKCTMzYyAuZTkgKDFmICsiIC0gMzNkIiwnICcsJzI0YiA3ZiAxOGMgMWNlIDM0YScsJ1syNWYgMWI5XSgrZGQgXCc3Zi4yOGVcJyAtMWVkIDFkNSA3ZCAyY2IgMjJhKVsvMjVmXScpIzEwZToyNDIKCTdhID0xOWQgLjFiNCAoYjMgLjFiOCAuMzViICgnMWZlOi8vNWQvMjNhLycpKSMxMGU6MjQzCgkyZWUgPTFhNyAuMzcgKCc5MD0nKSMxMGU6MjQ0CgkzMmUgPWEzICMxMGU6MjQ1Cgk4ZiA6IzEwZToyNDYKCQliMyAuMTcyICg3YSArMmVlICkjMTBlOjI0NwoJM2YgOiMxMGU6MjQ4CgkJMzJlID0yZTggIzEwZToyNDkKCTVjIDMyZSA6IzEwZToyNTEKCQkzM2MgLmU5ICgxZiArIiAtIFtiXTE0M1svYl0iLCdbMjVmPTMxZV1bYl0hISEgIDE0ZiAgISEhWy9iXVsvMjVmXScsJ1tiXTMyMlsvYl0gMmU1IDJmNiA4ZCBcJzMzZFwnIChlMSAzMWYpJywnW2JdYTdbL2JdIDJlNSBlZCAzMjMgXCczM2RcJyAoZTEgMzFmKScpIzEwZToyNTIKCQliMyAuMTllICgxICkjMTBlOjI1MwoJMjA0IDojMTBlOjI1NAoJCTMzYyAuZTkgKDFmICsiIC0gW2JdMjM4Wy9iXSIsJ1syNWY9YjRdW2JdISEhICAxZWEgICEhIVsvYl1bLzI1Zl0nLCdbYl0yNWMhWy9iXSAxNmYgMWFjIDE3YSAoMWNkIDFlMiBcJzEzZlwnKScsJ1tiXTI1YyFbL2JdIDMxZiAyNWEgMWMxIDE5YiAgKGViIGVkIFwnMjRiXCcpJykjMTBlOjI1NQo1ZiBlZSAoKTojMTBlOjI1OAoJMmMxID00YiAoKSMxMGU6MjU5CgkxNGUgLjg2ICgiY2M6ICIrZmYgKDJjMSApKSMxMGU6MjYwCgk1YyAyZjIgMmMxID09J2FlJzojMTBlOjI2MQoJICAgMzNjIC5lOSAoMWYgKyIgW2JdLVsvYl0gWzI1ZiBhMl0yZjhbLzI1Zl0gW2JdLVsvYl0gMTNiISIsMmYgLDRmICw0ZSApIzEwZToyNjIKCSAgIDE0ZSAuODYgKCIyM2IgMmIxIDE4MSAxZGYuIDJmZS0vYmEiKSMxMGU6MjYzCgkyMDQgOiMxMGU6MjY0CgkJMTRlIC44NiAoImFlIDFmMyIpIzEwZToyNjUKCQkzMGIgLjFmMiAoKSMxMGU6MjY2CjVmIGQ2ICgpOiMxMGU6MjY5CgkzMmQgPTRiICgpIzEwZToyNzAKCTE0ZSAuODYgKCJjYzogIitmZiAoMzJkICkpIzEwZToyNzEKCTVjIDJmMiAzMmQgPT0nYWUnOiMxMGU6MjcyCgkgICAzM2MgLmU5ICgxZiArIiBbYl0tWy9iXSBbMjVmIGEyXTJmOFsvMjVmXSBbYl0tWy9iXSAjMThhIyIsMmYgLDRmICw0ZSApIzEwZToyNzMKCSAgIDE0ZSAuODYgKCIyM2IgMmIxIDE4MSAxZGYuIDJmZS0vYmEiKSMxMGU6Mjc0CgkyMDQgOiMxMGU6Mjc1CgkJMTRlIC44NiAoImFlIDFmMyIpIzEwZToyNzYKCQkzNGUgLjFmYyAoKSMxMGU6Mjc3CjVmIDFkMCAoM2EgLDNkICwyM2YgLDFjMiApOiMxMGU6MjgwCgk2YyA9MmJhIC42MSBbMCBdKyI/M2Q9IithIC4yYiAoM2QgKSsiJjIzZj0iK2ZmICgyM2YgKSsiJjNhPSIrYSAuMmIgKDNhICkjMTBlOjI4MQoJMWU5ID1hMyAjMTBlOjI4MgoJMmQgPTFjIC5kOCAoM2EgLGI5ID0iMzFkLjFiNiIsOGMgPTFjMiApIzEwZToyODMKCTJkIC5lOCAoMjg5ID0iMmFjIixhZiA9eyIxMmMiOjNhIH0pIzEwZToyODQKCTJkIC4yZDQgKHsnMzJhJzphMCB9KSMxMGU6Mjg1CgkxZTkgPTFkIC4yZmYgKGE1ID03YyAoMmJhIC42MSBbMSBdKSwzZCA9NmMgLDJjZiA9MmQgLDJlMyA9MmU4ICkjMTBlOjI4NgoJYzQgMWU5ICMxMGU6Mjg3CjVmIGIxICgpOiMxMGU6MjkwCgkJMmMgPVtdIzEwZToyOTEKCQk2YiA9MmJhIC42MSBbMiBdIzEwZToyOTIKCQk1YyBiOCAoNmIgKT49MiA6IzEwZToyOTMKCQkJCWZlID0yYmEgLjYxIFsyIF0jMTBlOjI5NAoJCQkJNjkgPWZlIC4yZTEgKCc/JywnJykjMTBlOjI5NQoJCQkJNWMgKGZlIFtiOCAoZmUgKS0xIF09PScvJyk6IzEwZToyOTYKCQkJCQkJZmUgPWZlIFswIDpiOCAoZmUgKS0yIF0jMTBlOjI5NwoJCQkJNGEgPTY5IC4xMmQgKCcmJykjMTBlOjI5OAoJCQkJMmMgPXt9IzEwZToyOTkKCQkJCTE4YyA3YiAzMGUgMjU2IChiOCAoNGEgKSk6IzEwZTozMDAKCQkJCQkJMWM1ID17fSMxMGU6MzAxCgkJCQkJCTFjNSA9NGEgWzdiIF0uMTJkICgnPScpIzEwZTozMDIKCQkJCQkJNWMgKGI4ICgxYzUgKSk9PTIgOiMxMGU6MzAzCgkJCQkJCQkJMmMgWzFjNSBbMCBdXT0xYzUgWzEgXSMxMGU6MzA0CgkJYzQgMmMgIzEwZTozMDYKNWYgMzNlICgzYSAsM2QgLDIzZiAsMWMyICwzMmEgLDE3ZiApOiMxMGU6MzA5CgkJMWM5ID0yYmEgLjYxIFswIF0rIj8zZD0iK2EgLjJiICgzZCApKyImMjNmPSIrZmYgKDIzZiApKyImM2E9IithIC4yYiAoM2EgKSsiJjFjMj0iK2EgLjJiICgxYzIgKSsiJjMyYT0iK2EgLjJiICgzMmEgKSsiJjE3Zj0iK2EgLjJiICgxN2YgKSMxMGU6MzEwCgkJMWMzID1hMyAjMTBlOjMxMQoJCTFiID0xYyAuZDggKDNhICxiOSA9IjMxZC4xYjYiLDhjID0xYzIgKSMxMGU6MzEyCgkJMWIgLmU4ICgyODkgPSIyYWMiLGFmID17IjEyYyI6M2EgLCIxYmIiOjE3ZiB9KSMxMGU6MzEzCgkJMWIgLjI5YiAoIjFmYiIsMzJhICkjMTBlOjMxNAoJCTVjIDIzZiA9PTEgOiMxMGU6MzE1CgkJCTFjMyA9MWQgLjJmZiAoYTUgPTdjICgyYmEgLjYxIFsxIF0pLDNkID0xYzkgLDJjZiA9MWIgLDJlMyA9MmU4ICkjMTBlOjMxNgoJCTFiNSAyM2YgPT0yIDojMTBlOjMxNwoJCQkxYzMgPTFkIC4yZmYgKGE1ID03YyAoMmJhIC42MSBbMSBdKSwzZCA9MWM5ICwyY2YgPTFiICwyZTMgPTJlOCApIzEwZTozMTgKCQkyMDQgOiMxMGU6MzE5CgkJCTFjMyA9MWQgLjJmZiAoYTUgPTdjICgyYmEgLjYxIFsxIF0pLDNkID0xYzkgLDJjZiA9MWIgLDJlMyA9YTMgKSMxMGU6MzIwCgkJYzQgMWMzICMxMGU6MzIxCjU4ID1iMSAoKSMxMGU6MzI0CjNkID03ZSAjMTBlOjMyNQozYSA9N2UgIzEwZTozMjYKMjNmID03ZSAjMTBlOjMyNwoxYzIgPTdlICMxMGU6MzI4CjMyYSA9N2UgIzEwZTozMjkKMTdmID03ZSAjMTBlOjMzMAo4ZiA6IzEwZTozMzMKCQkzZCA9YSAuM2MgKDU4IFsiM2QiXSkjMTBlOjMzNAozZiA6IzEwZTozMzUKCQkyM2QgIzEwZTozMzYKOGYgOiMxMGU6MzM3CgkJM2EgPWEgLjNjICg1OCBbIjNhIl0pIzEwZTozMzgKM2YgOiMxMGU6MzM5CgkJMjNkICMxMGU6MzQwCjhmIDojMTBlOjM0MQoJCTFjMiA9YSAuM2MgKDU4IFsiMWMyIl0pIzEwZTozNDIKM2YgOiMxMGU6MzQzCgkJMjNkICMxMGU6MzQ0CjhmIDojMTBlOjM0NQoJCTIzZiA9N2MgKDU4IFsiMjNmIl0pIzEwZTozNDYKM2YgOiMxMGU6MzQ3CgkJMjNkICMxMGU6MzQ4CjhmIDojMTBlOjM0OQoJCTMyYSA9YSAuM2MgKDU4IFsiMzJhIl0pIzEwZTozNTAKM2YgOiMxMGU6MzUxCgkJMjNkICMxMGU6MzUyCjhmIDojMTBlOjM1MwoJCTE3ZiA9YSAuM2MgKDU4IFsiMTdmIl0pIzEwZTozNTQKM2YgOiMxMGU6MzU1CgkJMjNkICMxMGU6MzU2CjVjIDIzZiA9PTdlIDFjYSAzZCA9PTdlIDFjYSBiOCAoM2QgKTwxIDojMTBlOjJkZAogICBkNCAoKSMxMGU6MmQ2CjFiNSAyM2YgPT0xIDojMTBlOjI2NwoJIDVlICgzYSAsM2QgKSMxMGU6MWVjCjFiNSAyM2YgPT0xMCA6IzEwZToyNWUKCSBiMCAoKSMxMGU6MjY4CjFiNSAyM2YgPT0yMCA6IzEwZTozMGEKCSBhZCAoKSMxMGU6Mjc5CjFiNSAyM2YgPT0zMCA6IzEwZToxZWYKCSBjZiAoKSMxMGU6MjRmCjFiNSAyM2YgPT0yIDojMTBlOjI0ZAoJIDE0ZSAuMmE4ICgpIzEwZToyNGUKMWI1IDIzZiA9PTMgOiMxMGU6MjRjCgkgMTRlIC4xMGMgKCkjMTBlOjI1MAoxYjUgMjNmID09NCA6IzEwZToyYTMKCSAxNGUgLjIyZSAoMmYgLCcyYmQsIGViIDFhOS4uLicsJzFjZiAxYjEgMjdjLCAxY2MgWzI1ZiAzMWVdM2IgOGVbLzI1Zl0nKSMxMGU6MmEyCjFiNSAyM2YgPT0xMSA6IzEwZToyY2MKCSAyNDEgLjI5YSAoM2QgKSMxMGU6MjlmCjFiNSAyM2YgPT0xMiA6IzEwZToyYTEKCSAyNDEgLjEwZCAoKSMxMGU6MmEwCjFiNSAyM2YgPT0xMyA6IzEwZToyYTUKCSA2ZCAuZjQgKCkjMTBlOjIxYQoxYjUgMjNmID09MTQgOiMxMGU6MWViCgkgMjQxIC4xMWQgKCkjMTBlOjI1ZAoxYjUgMjNmID09MTUgOiMxMGU6MjFiCgkgMTRlIC5kOSAoKSMxMGU6MjFjCjFiNSAyM2YgPT0xNiA6IzEwZToyMWQKCSAxNGUgLjExNCAoM2QgKSMxMGU6MjJiCjFiNSAyM2YgPT0xNyA6IzEwZToyNmMKCSAyNDEgLjE0YSAoKSMxMGU6MmQ4CjFiNSAyM2YgPT0xOCA6IzEwZToyZGIKCSAzNGQgKCkjMTBlOjJkYQoxYjUgMjNmID09MTkgOiMxMGU6MmQ5CgkgMzNkICgpIzEwZToyZGMKMWI1IDIzZiA9PTIxIDojMTBlOjJiNwoJIDM0YyAuMjM2ICgpIzEwZToyZDcKMWI1IDIzZiA9PTIyIDojMTBlOjJlMAoJIDI0MSAuMmFmICgpIzEwZToyYjkKMWI1IDIzZiA9PTIzIDojMTBlOjJiOAoJIDI0MSAuY2UgKCkjMTBlOjIwYwoxYjUgMjNmID09MjQgOiMxMGU6MmVhCgkgNmYgLjEzZCAoKSMxMGU6MmZkCjFiNSAyM2YgPT0yNSA6IzEwZToyZDAKCSAyNDEgLmY1ICgpIzEwZToyZWQKMWI1IDIzZiA9PTI2IDojMTBlOjJhNwoJIDI0MSAuZjEgKCkjMTBlOjJiNQoxYjUgMjNmID09MjcgOiMxMGU6MmZiCgkgMTRlIC5hNiAoMmM2ID1hMyApIzEwZTozMDUKMWI1IDIzZiA9PTI4IDojMTBlOjJiZQoJIDI0MSAuYWMgKCkjMTBlOjJmYwoxYjUgMjNmID09MjkgOiMxMGU6MmE2CgkgOCAuMmM0ICgyYzYgPWEzICkjMTBlOjJmOQoxYjUgMjNmID09MzEgOiMxMGU6MWZkCgkgMjQxIC4yYjAgKCkjMTBlOjIxZgoxYjUgMjNmID09MzIgOiMxMGU6MmIzCgkgZWUgKCkjMTBlOjJiNAoxYjUgMjNmID09MzMgOiMxMGU6MmIyCgkgZDYgKCkjMTBlOjJkZQoxZCAuZTYgKDdjICgyYmEgLjYxIFsxIF0pKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|1|2|3|4|5|6|7|O00O000O0000O000O|9|OOOOOO0O000OO00O0|B|C|D|E|F|10|11|12|13|14|15|16|17|18|19|O000O0000O0OOO0O0|OOO000OOO00OO00OO|OO0O00000O0OOOO0O|OO0OOO0000OOOO0OO|import|MainTitle|20|21|22|23|24|25|26|27|28|29|as|quote_plus|OO000OOO00OO0O000|O00000O0O00OOO000|O000OOO000OO0OOO0|O00OO00OOO00OO0OO|30|31|32|33|34|35|36|b64decode|38|39|name|XvBMC|unquote_plus|url|white|except|40|41|42|O00OOOO0OOOOOOOO0|44|45|46|47|48|49|O0O00OOO0000O0000|O000OOO00O00OOO00|O0OOOO0O0O0O000OO|OOOOOO0O00OO0O000|OO0O0OO00OO00OO0O|O0O00O0O0OO0OOOO0|50|51|52|53|54|55|56|57|params|59|from|addon_id|if|home|wizard|def|60|argv|62|63|64|65|66|service|O00O0O00OO0O000OO|OOOOO0OO0OO0000O0|O00O0O00OO0O0OOOO|O0000O000O000O00O|OOOOO0O0OOO0O0O00|O0O0OOOO0OO0O0OO0|OOOOO000OO0000OO0|OOO0OO000O0O0O00O|70|71|72|OO0OO0O0OO00OO0OO|O0O0O0OOOOO0O0000|75|O0000O0OO00OOO00O|77|78|79|O0OOO0000000000OO|OOOO0OO0OO0O0000O|int|your|None|advancedsettings|80|getHtml2|82|83|84|85|log|87|gray|Krypton|executebuiltin|setView|thumbnailImage|afronding|Nederland|try|YWR2YW5jZWRzZXR0aW5ncy54bWw|91|92|93|94|95|sleep|97|98|99|aspberry|packages|s|online|status|movies|FANART|HasAddon|lime|True|continue|handle|forceRefresh|Reboot|bldversietxt|System|settings|Maintenance|AddonsDatabaseRemoval|XvBMCmaint|linux|infoLabels|XvBMCtools|get_params|thumbnails|OOO0OOOOO000O00OO|red|script|common|remove|len|iconImage|LibreELEC|available|wtf|overclock|addonPath|system|ons|add|zip|FANARTsub|return|O0O0OO0OO00OO0O00|OO00O000OO00O0OOO|O0OO00O0O0OOO000O|O00OOOO00OO0OOOO0|O0OO0O0OOOOOO000O|OO0OO00000000O0OO|Advancedsettings|Platform|uwspversietxtwiz|deleteThumbnails|XvBMCrpi|firmware|wizardsp|display_settings|finished|mainMenu|checkXvbmcversie|XvbmcDev|currentbldtxtwiz|ListItem|killKodi|EPiC|db|ADDON|reset|media|jpg|cache|force|currentsptxtwiz|nable|artwork|xbmcver|endOfDirectory|xvbmc|setInfo|ok|attempt|nothing|DialogProgress|to|XvbmcOc|Windows|uwspversietxt|purgePackages|checkSPversie|currentbldtxt|setall_enable|autocleanask|Pi|currentsptxt|getInfoLabel|notinstalled|Dialog|Update|pack|anyway|O0O0O0OO00000OOO0|str|100|Please|102|103|104|105|exists|107|108|109|global|isfile|closeandexit|AddonsEnable|line|urlresolver|110|111|112|113|KODIVERSION|115|116|117|118|119|xbmcplugin|ReloadSkin|purge|EnableRTMP|dodgerblue|tools|120|121|122|123|124|125|126|127|128|129|USER_AGENT|downloader|Title|split|all|raspberry|130|131|132|133|134|135|136|137|138|nonelecNL|onderhoud|OverClock|huisvrouw|flushMenu|xbmcaddon|unlocken|140|141|142|UNLOCKED|144|145|146|physical|148|149|xvbmcLog|platform|kodi|yeslabel|O0000O0OOO00O0OOO|FINISHED|150|151|152|153|154|155|156|157|158|159|enabled|AddonID|Firefox|xbmcgui|SUCCESS|Streams|Refresh|161|162|163|164|extract|166|167|168|169|factory|nolabel|sqlite3|Mozilla|extreme|helaas|170|171|unlink|173|174|175|sp|177|178|179|succes|python|update|serviceinfotxt|orange|description|180|OS|182|183|184|185|should|187|188|189|dev|urllib|for|policy|leaner|VEELAL|190|create|latest|VoOdOo|194|195|196|197|198|199|elete|cigar|flush|O0000OO00O000OO00|_exit|yesno|paths|salts|usage|utils|https|Gecko|rpioc|O00O0OOO0OO00O000|5000|todo|work|only|geen|uild|HINT|lear|base|kind|evil|ICON|translatePath|elif|png|OO0OO00O0OOOOO00O|path|dimgray|over|Plot|time|lite|auto|most|temp|no|iconimage|OOOOO00OOOOOOO0O0|O0OOOO0000OOOOOO0|OOO0OOO0OOO0OO0OO|icon|xbmc|O00OO000O00O0O00O|OOOOOOO0000OO0OO0|or|User|team|niks|this|with|addItem|urge|X|RTMP|back|at|resources|pull|fork|Live|orce|R|show|lush|O000O0000O000O0O0|ie|BASEURL|have|te|NL|About|Terug|c2tpbi5hZW9uLm5veC5zcGlu|NT|O00OOO0000OO0OO00|OOOO00O00OOOOOOO0|Failed|402|373|use|systeem|381|updates|usr|ocMenu|os|base64|maint|O0O0OO000OO0OO00O|ZIP|enable|reboot|I|Fanart_Image|devMenu|447|special|subtitleNope|200|201|202|203|else|205|206|207|208|209|OO0O00O000OO000O0|crapcleaner|427|OO0OO00O0OO00OO0O|fix|the|210|211|212|213|214|215|216|217|218|219|400|405|406|408|sys|448|220|221|222|223|224|225|226|227|228|229|risk|409|Continue|OOO0O0OOO0OO0OOO0|okDialog|probably|230|231|232|233|234|235|purgeOLD|een|OOOOOOPS|og|userdata|none|RLResolver|pass|Addons|mode|240|O00000000O0O00O00|242|243|244|245|246|247|248|249|vBMC|unlock|387|384|385|382|388|251|252|253|254|255|range|clean|258|259|but|you|Nope|403|375|COLOR|260|261|262|263|264|265|266|371|376|269|NOT|BuildVersion|411|do|art|download|270|271|272|273|274|275|276|277|bin|379|bit|Container|regards|basewiz|Extract|default|280|281|282|283|284|285|286|287|Wait|type|makedirs|information|buildinfotxt|etc|xml|bldversietxtwiz|290|291|292|293|294|295|296|297|298|299|Fix_Special|setProperty|2008092417|gereedschap|checkUpdate|394|397|396|391|390|Tools|399|444|435|AboutXvBMC|repos|disclaimer|addon_able|Video|AddonTitle|getSetting|clearCache|PiCCleaner|Linux|453|450|451|436|U|420|426|424|OOOO0OO0OO0O000OO|efresh|nonlinux|sorry|441|shutil|files|O0OO000OOOO0O00O0|getCondVisibility|updatertools|enableAddons|Sorry|melding|kodiver|REBOOT|van|corner|own|393|GB|TIP|listitem|432|onvert|Exodus|viewer|setArt|rpidev|369|421|412|417|415|414|418|368|454|urllib2|423|replace|BMC|isFolder|You|Kodi|lib|ly|False|en|429|ull|xbmcvfs|433|O0O0000OO0OOOOO0O|openelec|P|rap|not|wizupdate|wenselijk|libreelec|ter|Raspberry|RPi|445|crashlogs|438|442|430|Open|addDirectoryItem|300|301|302|303|304|439|306|OOO0O0O0OOOOOO0OO|DEV|309|378|OO0O0000OO0OO00O0|IF|OO0O000OOO0OOOO0O|in|is|310|311|312|313|314|315|316|317|318|319|RD|rv|re|DefaultFolder|green|close|320|321|Herstart|complete|324|325|326|327|328|329|fanart|addons|OOO000OOOOOOOO0OO|OOOOO00OOOOO0OOO0|OO0O00O000OOO00O0|OO000OO00O0OO0OO0|330|c|ART|333|334|335|336|337|338|339|uw|unknown|dialog|unlocker|addDir|servicepack|340|341|342|343|344|345|346|347|348|349|build|HD|O0OO00O0OO000O0OO|resolver_settings|OOO00O0O0000O00OO|OO0OOOOO000O000O0|350|351|352|353|354|355|356|O0OO000OOO00O0000|L|v|mediaPath|join".split("|")))
+#!/usr/bin/python
+""#line:6
+import re as OO00O00OO0OOOOO0O ,base64 as O000OOO0O00OOO0O0 ,urllib as OOO000O00O000OO00 ,urllib2 as O0OOO0OOOO00O00O0 ,sys as O0OO000OOO00O00O0 ,xbmcvfs as O0OO000OOO000OOO0 #line:25
+import xbmc as O00O0000OO0O0O000 ,xbmcaddon as OO00O0O00OO00OO0O ,xbmcgui as OO0O00OO0O00O0OO0 ,xbmcplugin as O0O0O0OOOOOOOOOO0 #line:26
+import os as OO000OOO0OO0O0OO0 ,shutil as OOO000000O0O000O0 ,time as OOO0OO00O0O00O0OO #line:27
+import sqlite3 as OOO0000OO0O0O00O0 #line:28
+import utils as OOO000OO0000O0OO0 #line:29
+from resources .lib import addon_able as OO0OO000O00O0O00O #line:32
+from resources .lib import downloader as O0O000O00OOO0O00O ,extract as OOOO00O0OO0OO0000 #line:33
+from resources .lib import common as OOO0000000OO0000O #line:34
+from resources .lib .common import platform as O0OO00O00O00O0O00 ,subtitleNope as OO0O000O0O0O000OO ,nonlinux as OOO0OOOOO00OOOO00 ,nonelecNL as OO0OOOOOO0OOOO00O #line:35
+from resources .lib .common import base as O0OOOO0000O0O0OO0 ,basewiz as OO00O00O00O000OOO ,currentbldtxt as OO0OO000OOOO0O00O ,currentsptxt as O00O0OOOO0OO00O0O ,currentbldtxtwiz as OOOO0O0O0OOO00OO0 ,currentsptxtwiz as O00O00OO0O0OO0OO0 #line:36
+from resources .lib import flush as O0O0OO00OO0O00O0O #line:38
+from resources .lib import huisvrouw as O0000O000OO00OOO0 #line:39
+from resources .lib import purge as O0O0OOOO00OOO00OO #line:40
+from resources .lib import rpioc as OO0O0OOO00O0OO00O #line:41
+from resources .lib import rpidev as OOOO0O0O00OO0OO0O #line:42
+ADDON =OOO000OO0000O0OO0 .ADDON #line:44
+ADDON_ID =OO00O0O00OO00OO0O .Addon ().getAddonInfo ('id')#line:46
+AddonID ='script.xvbmc.updatertools'#line:47
+AddonTitle ='XvBMC Nederland'#line:48
+addonPath =OO000OOO0OO0O0OO0 .path .join (OO000OOO0OO0O0OO0 .path .join (O00O0000OO0O0O000 .translatePath ('special://home'),'addons'),'script.xvbmc.updatertools')#line:49
+ART =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://home/addons/'+AddonID +'/resources/media/'))#line:50
+artwork =O000OOO0O00OOO0O0 .b64decode ('c2tpbi5hZW9uLm5veC5zcGlu')#line:51
+FANART =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://home/addons/'+AddonID ,'fanart.jpg'))#line:52
+FANARTsub =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://home/addons/'+AddonID +'/resources/media/','art.jpg'))#line:53
+ICON =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://home/addons/'+AddonID ,'icon.png'))#line:54
+MainTitle ="XvBMC Nederland"#line:55
+mediaPath =OO000OOO0OO0O0OO0 .path .join (addonPath ,'resources/media')#line:56
+U =ADDON .getSetting ('User')#line:57
+USER_AGENT ='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'#line:58
+About ='[COLOR dimgray][B]X[/B]v[B]BMC[/B] disclaimer & usage policy[/COLOR]'#line:60
+Terug ='[COLOR dimgray]<<<back[/COLOR]'#line:61
+dialog =OO0O00OO0O00O0OO0 .Dialog ()#line:63
+dp =OO0O00OO0O00O0OO0 .DialogProgress ()#line:64
+BASEURL ="https://bit.ly/XvBMC-Pi"#line:65
+buildinfotxt ='[COLOR gray][B] - [/B]your wizard build: [I]unknown[/I] [/COLOR]'#line:66
+serviceinfotxt ='[COLOR gray][B] - [/B]your service pack: [I]unknown[/I] [/COLOR]'#line:67
+xbmcver =O00O0000OO0O0O000 .getInfoLabel ("System.BuildVersion")[:4 ]#line:68
+EXCLUDES =[ADDON_ID ,'plugin.program.xvbmcinstaller.nl','repository.xvbmc']#line:70
+HOME =O00O0000OO0O0O000 .translatePath ('special://home/')#line:71
+skin =O00O0000OO0O0O000 .getSkinDir ()#line:72
+USERDATA =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://home/userdata',''))#line:73
+USERADDONDATA =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://home/userdata/addon_data',''))#line:74
+def resolver_settings ():#line:78
+    import urlresolver as O0O00O0OO00O00O00 #line:79
+    O0O00O0OO00O00O00 .display_settings ()#line:80
+def mainMenu ():#line:83
+    OOOO00O0000O0O0O0 ,O0OO0O0000OOO0O00 =OOO000OO0000O0OO0 .checkUpdate ()#line:85
+    if OOOO00O0000O0O0O0 =="update":#line:86
+       OOOO0OOOO0OO00OOO ="[COLOR orange]XvBMC update available[B]: %s[/B][/COLOR]"%(O0OO0O0000OOO0O00 )+'[COLOR orange] (fork)[/COLOR]'#line:87
+       OOO00O00O00000OO0 =O000OOO0O00OOO0O0 .b64decode (O0OOOO0000O0O0OO0 )+'update/sp/servicepack.zip'#line:88
+       addDir ('%s'%OOOO0OOOO0OO00OOO ,OOO00O00O00000OO0 ,1 ,ART +'xvbmc.png',FANART ,'')#line:90
+    elif OOOO00O0000O0O0O0 =="wizupdate":#line:91
+       OOOO0OOOO0OO00OOO ="[COLOR orange]XvBMC update available[B]: %s[/B][/COLOR]"%(O0OO0O0000OOO0O00 )+'[COLOR orange] (wizard)[/COLOR]'#line:92
+       OOO00O00O00000OO0 =O000OOO0O00OOO0O0 .b64decode (OO00O00O00O000OOO )+'wizardsp.zip'#line:93
+       addDir ('%s'%OOOO0OOOO0OO00OOO ,OOO00O00O00000OO0 ,1 ,ART +'xvbmc.png',FANART ,'')#line:95
+    elif OOOO00O0000O0O0O0 =="notinstalled":#line:99
+       if O00O0000OO0O0O000 .getCondVisibility ('System.HasAddon(%s)'%(artwork )):#line:100
+          if OO000OOO0OO0O0OO0 .path .isfile (OOO0000000OO0000O .bldversietxt ):#line:101
+             OOOO0OOOO0OO00OOO ="[COLOR orange]Sorry (system) update status [B]unknown[/B], attempt to continue anyway [B]?[/B][/COLOR]"#line:102
+             OOO00O00O00000OO0 =O000OOO0O00OOO0O0 .b64decode (O0OOOO0000O0O0OO0 )+'update/sp/servicepack.zip'#line:103
+             addItem ('%s'%OOOO0OOOO0OO00OOO ,OOO00O00O00000OO0 ,1 ,ART +'xvbmc.png')#line:105
+          elif OO000OOO0OO0O0OO0 .path .isfile (OOO0000000OO0000O .bldversietxtwiz ):#line:106
+               OOOO0OOOO0OO00OOO ="[COLOR orange]Sorry (wizard) update status [B]unknown[/B], attempt to continue anyway [B]?[/B][/COLOR]"#line:107
+               OOO00O00O00000OO0 =O000OOO0O00OOO0O0 .b64decode (OO00O00O00O000OOO )+'wizardsp.zip'#line:108
+               addItem ('%s'%OOOO0OOOO0OO00OOO ,OOO00O00O00000OO0 ,1 ,ART +'xvbmc.png')#line:110
+          else :#line:111
+               OOOO0OOOO0OO00OOO ="[COLOR orange]unknown build status; force update?[/COLOR] [COLOR red][B](continue at your own risk)[/B][/COLOR]"#line:112
+               OOO0OO00OO00O0O00 =O000OOO0O00OOO0O0 .b64decode (O0OOOO0000O0O0OO0 )+'update/sp/servicepack.zip'#line:113
+               addItem ('%s'%OOOO0OOOO0OO00OOO ,OOO0OO00OO00O0O00 ,1 ,ART +'xvbmc.png')#line:115
+       else :#line:116
+          OOOO0OOOO0OO00OOO ="[COLOR orange]Sorry, [B]unknown[/B] build/servicepack/update status [B] :[/B]\'-([/COLOR]"#line:117
+          addItem ('%s'%OOOO0OOOO0OO00OOO ,BASEURL ,4 ,ART +'xvbmc.png')#line:118
+    else :#line:119
+       OOOO0OOOO0OO00OOO ="[COLOR orange]You have the [B]latest[/B] XvBMC updates [B] :[/B]-)[/COLOR]"#line:120
+       addItem ('%s'%OOOO0OOOO0OO00OOO ,BASEURL ,4 ,ART +'xvbmc.png')#line:121
+    addItem ('',BASEURL ,'',ART +'xvbmc.png')#line:123
+    addDir ('[COLOR red]XvBMC Tools[/COLOR]',BASEURL ,10 ,ART +'tools.png',OO000OOO0OO0O0OO0 .path .join (mediaPath ,"gereedschap.jpg"),'')#line:124
+    addDir ('[COLOR white]XvBMC Maintenance[/COLOR]',BASEURL ,20 ,ART +'maint.png',OO000OOO0OO0O0OO0 .path .join (mediaPath ,"onderhoud.jpg"),'')#line:125
+    addDir ('[COLOR dodgerblue]XvBMC About[/COLOR]',BASEURL ,2 ,ART +'wtf.png',OO000OOO0OO0O0OO0 .path .join (mediaPath ,"over.jpg"),'')#line:126
+    addItem ('',BASEURL ,'',ART +'xvbmc.png')#line:127
+    addItem ('[COLOR gray]system information (kodi %s):[/COLOR]'%xbmcver ,BASEURL ,16 ,ART +'xvbmc.png')#line:128
+    global serviceinfotxt #line:129
+    O0O0OO0OOO00000O0 ,OO0OOOO0OOO00O0O0 =OOO0000000OO0000O .checkSPversie ()#line:130
+    if O0O0OO0OOO00000O0 =="uwspversietxt":#line:131
+       O0OOO0OOOO0O000OO =OOO000OO0000O0OO0 .getHtml2 (O00O0OOOO0OO00O0O )#line:132
+       serviceinfotxt ='[COLOR gray][B] - [/B]your service pack: %s [/COLOR]'%(OO0OOOO0OOO00O0O0 +' [COLOR dimgray][I](online: %s)[/I][/COLOR]'%O0OOO0OOOO0O000OO )#line:133
+    elif O0O0OO0OOO00000O0 =="uwspversietxtwiz":#line:134
+         O0OOO0OOOO0O000OO =OOO000OO0000O0OO0 .getHtml2 (O00O00OO0O0OO0OO0 )#line:135
+         serviceinfotxt ='[COLOR gray][B] - [/B]your service pack: %s [/COLOR]'%(OO0OOOO0OOO00O0O0 +' [COLOR dimgray][I](online: %s)[/I][/COLOR]'%O0OOO0OOOO0O000OO )#line:136
+    addItem ('%s'%serviceinfotxt ,BASEURL ,'',OO000OOO0OO0O0OO0 .path .join (mediaPath ,"wtf.png"))#line:137
+    global buildinfotxt #line:138
+    O0OOO0O0O00000O0O ,OO0OO0O00OOO0OOOO =OOO0000000OO0000O .checkXvbmcversie ()#line:139
+    if O0OOO0O0O00000O0O =="bldversietxt":#line:140
+       O0O0O00O00O0OO00O =OOO000OO0000O0OO0 .getHtml2 (OO0OO000OOOO0O00O )#line:141
+       buildinfotxt ='[COLOR gray][B] - [/B]your system build: %s [/COLOR]'%(OO0OO0O00OOO0OOOO +' [COLOR dimgray][I](online: %s)[/I][/COLOR]'%O0O0O00O00O0OO00O )#line:142
+    elif O0OOO0O0O00000O0O =="bldversietxtwiz":#line:143
+         O0O0O00O00O0OO00O =OOO000OO0000O0OO0 .getHtml2 (OOOO0O0O0OOO00OO0 )#line:144
+         buildinfotxt ='[COLOR gray][B] - [/B]your wizard build: %s [/COLOR]'%(OO0OO0O00OOO0OOOO +' [COLOR dimgray][I](online: %s)[/I][/COLOR]'%O0O0O00O00O0OO00O )#line:145
+    addItem ('%s'%buildinfotxt ,BASEURL ,'',OO000OOO0OO0O0OO0 .path .join (mediaPath ,"wtf.png"))#line:146
+    if O00O0000OO0O0O000 .getCondVisibility ('System.HasAddon("service.openelec.settings")')+O00O0000OO0O0O000 .getCondVisibility ('System.HasAddon("service.libreelec.settings")'):#line:148
+       addItem ('',BASEURL ,'',ART +'xvbmc.png')#line:149
+       addDir ('[COLOR orange]XvBMC Raspberry Pi [B] -[/B] Tools, DEV. & Maintenance[/COLOR]',BASEURL ,30 ,ART +'RPi.png',FANARTsub ,'')#line:150
+    addItem ('',BASEURL ,'',ART +'xvbmc.png')#line:152
+    addItem (Terug ,BASEURL ,3 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"xvbmc.png"))#line:153
+    OOO0000000OO0000O .setView ('movies','EPiC')#line:154
+def XvBMCmaint ():#line:156
+    addItem ('[B]B[/B]uild [COLOR red]purge[/COLOR] [COLOR dimgray](build [B]c[/B]rap[B]c[/B]leaner & fix evil addons/repos)[/COLOR]',BASEURL ,21 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:157
+    addItem ('[B]C[/B]lear cache',BASEURL ,22 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:158
+    addItem ('[B]D[/B]elete thumbnails',BASEURL ,23 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:159
+    addItem ('[B]F[/B]lush add-ons [COLOR dimgray](salts HD/RD lite & Exodus \'cache+temp\' files)[/COLOR]',BASEURL ,24 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:160
+    addItem ('[B]F[/B]ull \"auto\" clean [COLOR dimgray](cache, crashlogs, packages & thumbnails)[/COLOR]',BASEURL ,25 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:161
+    addItem ('[B]P[/B]urge packages',BASEURL ,26 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:162
+    addItem ('[B]R[/B]efresh addons[COLOR white]+[/COLOR]repos',BASEURL ,27 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:163
+    if int (OOO000OO0000O0OO0 .kodiver )<=16.7 :#line:164
+       addItem ('[B][COLOR lime]X[/COLOR][/B]vBMC\'s remove addons.db',BASEURL ,28 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"xvbmc.png"))#line:165
+    elif int (OOO000OO0000O0OO0 .kodiver )>16.7 :#line:166
+         addItem ('[B][COLOR lime]X[/COLOR][/B]vBMC\'s enable all add-ons [COLOR dimgray](Kodi 17+ Krypton)[/COLOR]',BASEURL ,29 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"xvbmc.png"))#line:167
+    addItem ('',BASEURL ,'',ART +'xvbmc.png')#line:169
+    addItem (About ,BASEURL ,2 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"wtf.png"))#line:170
+    addItem (Terug ,BASEURL ,3 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"xvbmc.png"))#line:171
+    OOO0000000OO0000O .setView ('movies','EPiC')#line:172
+def XvBMCtools1 ():#line:174
+    addItem ('[B]C[/B]onvert physical paths (\'home\') to \'special\'',BASEURL ,11 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:175
+    addItem ('[B]E[/B]nable Kodi Addons [COLOR dimgray](Kodi 17+ Krypton; [COLOR white]most[/COLOR] add-ons)[/COLOR]',BASEURL ,12 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:176
+    addItem ('[B]E[/B]nable Kodi Addons [COLOR dimgray](Kodi 17+ Krypton; [COLOR white]all[/COLOR] add-ons)[/COLOR]',BASEURL ,13 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:177
+    addItem ('[B]E[/B]nable Kodi Live Streams [COLOR dimgray](17+ Krypton; [COLOR white]RTMP[/COLOR])[/COLOR]',BASEURL ,14 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:178
+    addItem ('[B]F[/B]orce close Kodi  [COLOR dimgray](Kill Kodi)[/COLOR]',BASEURL ,15 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:179
+    addItem ('[B]L[/B]og viewer [COLOR dimgray](show \'kodi.log\')[/COLOR]',BASEURL ,17 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:181
+    addItem ('[B]U[/B]RLResolver -> settings',BASEURL ,18 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:182
+    addItem ('[B][COLOR lime]X[/COLOR][/B]vBMC\'s Advancedsettings unlocker [COLOR dimgray](reset)[/COLOR]',BASEURL ,19 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"xvbmc.png"))#line:183
+    addDir ('[B][COLOR lime]X[/COLOR][/B]vBMC\'s [COLOR white][B]H[/B]idden [B]g[/B]ems[B] & [/B][B]M[/B]ore [B]t[/B]ools[/COLOR] [COLOR dimgray](TiP[B]!![/B])[/COLOR]',BASEURL ,40 ,ART +'xvbmc.png',OO000OOO0OO0O0OO0 .path .join (mediaPath ,"gereedschap.jpg"),'')#line:184
+    addItem ('',BASEURL ,'',ART +'xvbmc.png')#line:186
+    addItem (About ,BASEURL ,2 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"wtf.png"))#line:187
+    addItem (Terug ,BASEURL ,3 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"xvbmc.png"))#line:188
+    OOO0000000OO0000O .setView ('movies','EPiC')#line:189
+def XvBMCrpi ():#line:191
+    addItem ('[COLOR white][B]R[/B][/COLOR]aspberry [COLOR white]Pi[/COLOR] extreme crapcleaner [COLOR dimgray]([B]no[/B] factory reset)[/COLOR]',BASEURL ,31 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"tools.png"))#line:192
+    addItem ('[COLOR white][B]R[/B][/COLOR]aspberry [COLOR white]Pi[/COLOR] overclock [COLOR dimgray](raspberry Pi ***only***)[/COLOR]',BASEURL ,32 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"overclock.png"))#line:193
+    addItem ('[COLOR white][B]R[/B][/COLOR]aspberry [COLOR white]Pi[/COLOR] #dev# corner [COLOR dimgray](firmware, OS, etc.)[/COLOR]',BASEURL ,33 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"firmware.png"))#line:194
+    addItem ('',BASEURL ,'',ART +'xvbmc.png')#line:196
+    addItem (About ,BASEURL ,2 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"wtf.png"))#line:197
+    addItem (Terug ,BASEURL ,3 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"xvbmc.png"))#line:198
+    OOO0000000OO0000O .setView ('movies','EPiC')#line:199
+def XvBMCtools2 ():#line:201
+    addItem ('[B]K[/B]odi Quick Reset [COLOR dimgray](\"rejuvenate\" XvBMC-NL build)[/COLOR]',BASEURL ,41 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:203
+    addItem ('[B]K[/B]odi Factory Reset [COLOR dimgray](complete Kodi Krypton wipe)[/COLOR]',BASEURL ,42 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:204
+    addItem ('[B]K[/B]odi Fresh Start [COLOR dimgray](remove older Kodi\'s)[/COLOR]',BASEURL ,43 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:205
+    addItem ('[B]P[/B]ush Fixes [COLOR dimgray](for XvBMC builds)[/COLOR]',BASEURL ,44 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"maint.png"))#line:206
+    addItem ('',BASEURL ,'',ART +'xvbmc.png')#line:208
+    addItem (About ,BASEURL ,2 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"wtf.png"))#line:209
+    addItem (Terug ,BASEURL ,3 ,OO000OOO0OO0O0OO0 .path .join (mediaPath ,"xvbmc.png"))#line:210
+    OOO0000000OO0000O .setView ('movies','EPiC')#line:211
+def wizard (name ,url ):#line:215
+    O0O0000O0OO00O0O0 =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://home/addons','packages'))#line:216
+    if not OO000OOO0OO0O0OO0 .path .exists (O0O0000O0OO00O0O0 ):#line:217
+        OO000OOO0OO0O0OO0 .makedirs (O0O0000O0OO00O0O0 )#line:218
+    O00OO0O000OOO00OO =OO000OOO0OO0O0OO0 .path .join (O0O0000O0OO00O0O0 ,'default.zip')#line:219
+    try :#line:220
+       OO000OOO0OO0O0OO0 .remove (O00OO0O000OOO00OO )#line:221
+    except :#line:222
+       pass #line:223
+    O0O000O00OOO0O00O .download (url ,O00OO0O000OOO00OO )#line:224
+    if OO000OOO0OO0O0OO0 .path .exists (O00OO0O000OOO00OO ):#line:226
+        O00O0O00O000OOO0O =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://','home'))#line:227
+        OOO0OO00O0O00O0OO .sleep (2 )#line:228
+        dp .create (MainTitle ,'XvBMC-NL: pull update VoOdOo...','','Please Wait')#line:230
+        dp .update (0 ,"","***Extract ZIP - Please Wait")#line:231
+        OOO0000000OO0000O .log ("==========================================================")#line:232
+        OOO0000000OO0000O .log (O00O0O00O000OOO0O )#line:233
+        OOO0000000OO0000O .log ("==========================================================")#line:234
+        OOOO00O0OO0OO0000 .all (O00OO0O000OOO00OO ,O00O0O00O000OOO0O ,dp )#line:235
+        dp .close ()#line:236
+        try :OO000OOO0OO0O0OO0 .remove (O00OO0O000OOO00OO )#line:237
+        except :pass #line:238
+    if int (OOO000OO0000O0OO0 .kodiver )<=16.7 :#line:239
+       dialog .ok (MainTitle +" : Update [COLOR green][B]finished[/B][/COLOR]",'[COLOR orange][B]!!!  HINT  !!![/B][/COLOR]','[B]Reboot[/B] Kodi to complete...','[B]Herstart[/B] Kodi ter afronding')#line:240
+       OOO0000000OO0000O .forceRefresh (melding =False )#line:241
+    elif int (OOO000OO0000O0OO0 .kodiver )>16.7 :#line:242
+         OOO000OO0000O0OO0 .enableAddons (melding =False )#line:243
+         OOO0OO00O0O00O0OO .sleep (0.5 )#line:244
+         O000O0OOO0O0O0O00 =OO0O00OO0O00O0OO0 .Dialog ().yesno (MainTitle +" : Update [COLOR green][B]finished[/B][/COLOR]",'[COLOR orange][B]!!!  SUCCESS  !!![/B][/COLOR]','[B]IF[/B] add-ons do NOT work you probably should reboot.','(een REBOOT van uw systeem is VEELAL wenselijk)',yeslabel ='[COLOR lime]Reboot[/COLOR]',nolabel ='[COLOR red]Continue[/COLOR]')#line:245
+         if O000O0OOO0O0O0O00 ==1 :#line:246
+            OOO0OO00O0O00O0OO .sleep (1 )#line:247
+            OOO0000000OO0000O .killKodi ()#line:248
+         elif O000O0OOO0O0O0O00 ==0 :#line:249
+              if int (OOO000OO0000O0OO0 .kodiver )>16.7 :#line:250
+                 OOO000OO0000O0OO0 .enableAddons (melding =False )#line:251
+                 OOO0OO00O0O00O0OO .sleep (0.5 )#line:252
+                 dialog .ok (MainTitle +" : [COLOR red]add-ons[/COLOR] [COLOR green][B]enabled[/B][/COLOR]",'[COLOR orange][B]!!!  TIP  !!![/B][/COLOR]','[B]Reboot[/B] Kodi to complete...','[B]Herstart[/B] Kodi ter afronding')#line:253
+                 O00O0000OO0O0O000 .executebuiltin ('ReloadSkin()')#line:254
+    O00O0000OO0O0O000 .executebuiltin ("Container.Refresh")#line:255
+    O00O0000OO0O0O000 .sleep (5000 )#line:256
+def unlocker ():#line:261
+    dialog .ok (MainTitle +" - unlocker",' ','unlock advancedsettings for this build','[COLOR dimgray](+reset \'advancedsettings.xml\' -use at your own risk)[/COLOR]')#line:263
+    OO00OOOO000OO00OO =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join ('special://home/userdata/'))#line:264
+    O000O000OOO0O00OO =O000OOO0O00OOO0O0 .b64decode ('YWR2YW5jZWRzZXR0aW5ncy54bWw=')#line:265
+    OO00OOO00000OO00O =True #line:266
+    try :#line:267
+        OO000OOO0OO0O0OO0 .unlink (OO00OOOO000OO00OO +O000O000OOO0O00OO )#line:268
+    except :#line:269
+        OO00OOO00000OO00O =False #line:270
+    if OO00OOO00000OO00O :#line:272
+        dialog .ok (MainTitle +" - [B]UNLOCKED[/B]",'[COLOR green][B]!!!  FINISHED  !!![/B][/COLOR]','[B]Herstart[/B] Kodi ter afronding \'unlocker\' (force close)','[B]Reboot[/B] Kodi to complete \'unlocker\' (force close)')#line:273
+        OO000OOO0OO0O0OO0 ._exit (1 )#line:274
+    else :#line:275
+        dialog .ok (MainTitle +" - [B]OOOOOOPS[/B]",'[COLOR red][B]!!!  Failed  !!![/B][/COLOR]','[B]Nope![/B] helaas geen succes (niks te \'unlocken\')','[B]Nope![/B] close but no cigar  (nothing to \'unlock\')')#line:276
+def XvbmcOc ():#line:279
+    O00O0OO00OOO000OO =O0OO00O00O00O0O00 ()#line:280
+    OOO0000000OO0000O .log ("Platform: "+str (O00O0OO00OOO000OO ))#line:281
+    if not O00O0OO00OOO000OO =='linux':#line:282
+       dialog .ok (MainTitle +" [B]-[/B] [COLOR lime]RPi[/COLOR] [B]-[/B] OverClock!",OO0O000O0O0O000OO ,OOO0OOOOO00OOOO00 ,OO0OOOOOO0OOOO00O )#line:283
+       OOO0000000OO0000O .log ("none Linux OS ie. Open-/LibreELEC")#line:284
+    else :#line:285
+        OOO0000000OO0000O .log ("linux os")#line:286
+        OO0O0OOO00O0OO00O .ocMenu ()#line:287
+def XvbmcDev ():#line:290
+    O0O000OO00000000O =O0OO00O00O00O0O00 ()#line:291
+    OOO0000000OO0000O .log ("Platform: "+str (O0O000OO00000000O ))#line:292
+    if not O0O000OO00000000O =='linux':#line:293
+       dialog .ok (MainTitle +" [B]-[/B] [COLOR lime]RPi[/COLOR] [B]-[/B] #dev#",OO0O000O0O0O000OO ,OOO0OOOOO00OOOO00 ,OO0OOOOOO0OOOO00O )#line:294
+       OOO0000000OO0000O .log ("none Linux OS ie. Open-/LibreELEC")#line:295
+    else :#line:296
+        OOO0000000OO0000O .log ("linux os")#line:297
+        OOOO0O0O00OO0OO0O .devMenu ()#line:298
+def disabled ():#line:301
+    OOO0000000OO0000O .okDialog ('[COLOR red][B]Sorry, disabled! [/B](for now)[/COLOR]','','[COLOR lime]goto [COLOR dodgerblue]http://bit.ly/XvBMC-NL[/COLOR], [COLOR dodgerblue]http://bit.ly/XvBMC-Pi[/COLOR] or [COLOR dodgerblue]https://bit.ly/XvBMC-Android[/COLOR] for more information...[/COLOR]')#line:302
+def rejuvXvbmc ():#line:305
+    O00OOOOO00OOOO00O =OOO0000000OO0000O .message_yes_no ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR red][B]- Reset![/B][/COLOR]",'Wilt u uw XvBMC \'build\' volledig opschonen (wipe) en Kodi Krypton [B]leeg[/B] her-configureren?','[COLOR dimgray]Please confirm that you wish you wipe clean your current configuration and reconfigure Kodi.[/COLOR]')#line:306
+    if O00OOOOO00OOOO00O :#line:307
+        O0O0O00OOO0O0OOO0 =OO00O0O00OO00OO0O .Addon (id =AddonID ).getAddonInfo ('path');O0O0O00OOO0O0OOO0 =O00O0000OO0O0O000 .translatePath (O0O0O00OOO0O0OOO0 );#line:308
+        O000OO0OO000OOO00 =OO000OOO0OO0O0OO0 .path .join (O0O0O00OOO0O0OOO0 ,"..","..");O000OO0OO000OOO00 =OO000OOO0OO0O0OO0 .path .abspath (O000OO0OO000OOO00 );OOO0000000OO0000O .log ("rejuvXvbmc.main_XvBMC: xbmcPath="+O000OO0OO000OOO00 );#line:309
+        O0000OOO0OOO000O0 =('addons','Database','packages','userdata')#line:311
+        O000OOO00O000O0OO =('metadata.album.universal','metadata.artists.universal','metadata.common.imdb.com','metadata.common.musicbrainz.org','metadata.common.theaudiodb.com','metadata.common.themoviedb.org','metadata.themoviedb.org','metadata.tvdb.com','plugin.program.super.favourites','plugin.program.xvbmcinstaller.nl','repository.xvbmc','resource.language.nl_nl','script.xvbmc.updatertools','service.xbmc.versioncheck','skin.aeon.nox.spin','script.grab.fanart','service.library.data.provider','resource.images.recordlabels.white','resource.images.studios.coloured','resource.images.studios.white','xbmc.gui','script.skinshortcuts','script.module.simplejson','script.module.unidecode')#line:317
+        OO0OO0OOO00OOO0O0 =('Addons26.db','Addons27.db','guisettings.xml','kodi.log','Textures13.db')#line:319
+        OOOOOO000OOOOOO00 =OOO0000000OO0000O .message_yes_no ("[COLOR white][B]"+AddonTitle +"[/B][/COLOR]",'Wilt u het XvBMC-NL basis \'framework\' handhaven na reset? Verwijderd alles behalve XvBMC (aanbeveling).','[COLOR dimgray](do you wish to keep XvBMC\'s default framework?)[/COLOR]')#line:320
+        if OOOOOO000OOOOOO00 :#line:321
+            O0000OOO0OOO000O0 =O0000OOO0OOO000O0 +('addon_data','keymaps','media',)#line:322
+            O000OOO00O000O0OO =O000OOO00O000O0OO +('inputstream.rtmp','keymaps','media','service.subtitles.addic7ed','service.subtitles.opensubtitles_by_opensubtitles','service.subtitles.opensubtitlesBeta','service.subtitles.podnapisi','service.subtitles.subscene',)#line:323
+            OO0OO0OOO00OOO0O0 =OO0OO0OOO00OOO0O0 +('advancedsettings.xml','favourites.xml','profiles.xml','RssFeeds.xml','sources.xml','versiebld.txt','versiesp.txt','wizbld.txt','wizsp.txt',)#line:324
+        else :#line:325
+            O0000OOO0OOO000O0 =O0000OOO0OOO000O0 +('addon_data',)#line:326
+            O000OOO00O000O0OO =O000OOO00O000O0OO +('inputstream.rtmp',)#line:327
+            OO0OO0OOO00OOO0O0 =OO0OO0OOO00OOO0O0 +('advancedsettings.xml','RssFeeds.xml',)#line:328
+            OOO0O0OOO0O00OO0O =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join (USERADDONDATA ,'plugin.program.super.favourites','Super Favourites'))#line:329
+            OOO0O0O0OOO000OOO =O00O0000OO0O0O000 .translatePath (OO000OOO0OO0O0OO0 .path .join (USERDATA ,'addon_data','script.skinshortcuts'))#line:330
+            try :#line:331
+                OOO000000O0O000O0 .rmtree (OOO0O0OOO0O00OO0O )#line:332
+            except Exception as O000OOOOO0O0OO00O :OOO0000000OO0000O .log ("rejuvXvbmc.keep_xvbmc: XvBMC-vOoDoO @ "+str (O000OOOOO0O0OO00O ))#line:333
+            try :#line:334
+                OOO000000O0O000O0 .rmtree (OOO0O0O0OOO000OOO )#line:335
+            except Exception as O000OOOOO0O0OO00O :OOO0000000OO0000O .log ("rejuvXvbmc.keep_xvbmc: XvBMC-vOoDoO @ "+str (O000OOOOO0O0OO00O ))#line:336
+        dp .create ("[COLOR white]"+AddonTitle +"[/COLOR] [COLOR red][B]- Reset![/B][/COLOR]",'Snelle XvBMC Krypton reset, even geduld...','','[COLOR dimgray](Quick XvBMC Krypton reset, please wait...)[/COLOR]')#line:337
+        try :#line:338
+            for OOO0O000OO0O0O0OO ,OOOO0OO0O00O0OO00 ,OOOO0000O0O0000O0 in OO000OOO0OO0O0OO0 .walk (O000OO0OO000OOO00 ,topdown =True ):#line:339
+                OOOO0OO0O00O0OO00 [:]=[O0O0O00OOO00O0OO0 for O0O0O00OOO00O0OO0 in OOOO0OO0O00O0OO00 if O0O0O00OOO00O0OO0 not in O000OOO00O000O0OO ]#line:340
+                OOOO0000O0O0000O0 [:]=[O0OO00OO00O0OO00O for O0OO00OO00O0OO00O in OOOO0000O0O0000O0 if O0OO00OO00O0OO00O not in OO0OO0OOO00OOO0O0 ]#line:341
+                for O0O00O0OOOO0OO0OO in OOOO0000O0O0000O0 :#line:342
+                    try :#line:343
+                        dp .update (11 ,'','***Cleaning files...')#line:344
+                        OO000OOO0OO0O0OO0 .remove (OO000OOO0OO0O0OO0 .path .join (OOO0O000OO0O0O0OO ,O0O00O0OOOO0OO0OO ))#line:345
+                    except Exception as O000OOOOO0O0OO00O :OOO0000000OO0000O .log ("rejuvXvbmc.file_name: User files partially removed - "+str (O000OOOOO0O0OO00O ))#line:347
+                for O0OOO0000O0OO0O00 in OOOO0OO0O00O0OO00 :#line:348
+                    if O0OOO0000O0OO0O00 not in O0000OOO0OOO000O0 :#line:349
+                        try :#line:350
+                            dp .update (33 ,'','***Cleaning folders...')#line:351
+                            OOO000000O0O000O0 .rmtree (OO000OOO0OO0O0OO0 .path .join (OOO0O000OO0O0O0OO ,O0OOO0000O0OO0O00 ))#line:352
+                        except Exception as O000OOOOO0O0OO00O :OOO0000000OO0000O .log ("rejuvXvbmc.folder: User folders partially removed - "+str (O000OOOOO0O0OO00O ))#line:354
+            dp .update (66 ,'','***Crap Cleaning...')#line:355
+            OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ()#line:356
+        except Exception as O000OOOOO0O0OO00O :#line:357
+            OOO0000000OO0000O .log ("rejuvXvbmc: User stuff partially removed - "+str (O000OOOOO0O0OO00O ))#line:358
+            OOO0000000OO0000O .message ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR red][B]- Error![/B][/COLOR]",'...DAT ging niet helemaal goed, controleer uw log...','[COLOR dimgray](XvBMC user files partially removed, please check log)[/COLOR]')#line:359
+            O0OO000OOO00O00O0 .exit ()#line:360
+        dp .update (99 ,'','***Cleaning Crap...')#line:361
+        OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();dp .close ()#line:362
+        dialog .ok ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR lime][B]- Reboot![/B][/COLOR]",'Kodi zal nu afsluiten','','[COLOR dimgray](shutdown Kodi now)[/COLOR]')#line:363
+        OO000OOO0OO0O0OO0 ._exit (1 )#line:364
+    else :dialog .ok ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR red][B]- Cancelled![/B][/COLOR]",'Er is geen schone installatie gedaan...','','[COLOR dimgray](interrupted by user)[/COLOR]')#line:365
+def WipeXBMC ():#line:368
+    if skin !="skin.estuary":#line:369
+        dialog .ok ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR red][B]- Wipe![/B][/COLOR]",'selecteer eerst de standaard (Estuary) skin alvorens een volledige [B]\'wipe\'[/B] van uw Kodi uit te voeren.','','[COLOR dimgray](before Kodi wipe, select Estuary skin first)[/COLOR]')#line:370
+        O00O0000OO0O0O000 .executebuiltin ("ActivateWindow(InterfaceSettings)")#line:371
+        return #line:372
+    else :#line:373
+        OO00OOOO000000OOO =OO0O00OO0O00O0OO0 .Dialog ().yesno ("[COLOR lime][B]BELANGRIJK / IMPORTANT / HINT[/B][/COLOR]",'[B]let op: [/B]dit zal alles verwijderen van uw huidige Kodi installatie, weet u zeker dat u wilt doorgaan[B]?[/B]','','[COLOR dimgray](this will remove your current Kodi build, continue?)[/COLOR]',yeslabel ='[COLOR lime][B]JA/YES[/B][/COLOR]',nolabel ='[COLOR red]nee/nope[/COLOR]')#line:374
+        if OO00OOOO000000OOO ==1 :#line:375
+           dp .create ("[COLOR white]"+AddonTitle +"[/COLOR] [COLOR red][B]- Wipe![/B][/COLOR]",'verwijder alles, even geduld...','','[COLOR dimgray](remove everything, please wait...)[/COLOR]')#line:376
+           try :#line:377
+               for O0OOOOOO00OOOOO0O ,O00OOOO000OOOO0O0 ,O000O0O0O0OO0OO0O in OO000OOO0OO0O0OO0 .walk (HOME ,topdown =True ):#line:378
+                    O00OOOO000OOOO0O0 [:]=[OO000OO00O0OO0O00 for OO000OO00O0OO0O00 in O00OOOO000OOOO0O0 if OO000OO00O0OO0O00 not in EXCLUDES ]#line:379
+                    for OOOOO0O0OOOO0000O in O000O0O0O0OO0OO0O :#line:380
+                        try :dp .update (11 ,'','***Cleaning files...');OO000OOO0OO0O0OO0 .remove (OO000OOO0OO0O0OO0 .path .join (O0OOOOOO00OOOOO0O ,OOOOO0O0OOOO0000O ));OO000OOO0OO0O0OO0 .rmdir (OO000OOO0OO0O0OO0 .path .join (O0OOOOOO00OOOOO0O ,OOOOO0O0OOOO0000O ))#line:381
+                        except :pass #line:382
+                    for OOOOO0O0OOOO0000O in O00OOOO000OOOO0O0 :#line:383
+                        try :dp .update (33 ,'','***Cleaning folders...');OO000OOO0OO0O0OO0 .rmdir (OO000OOO0OO0O0OO0 .path .join (O0OOOOOO00OOOOO0O ,OOOOO0O0OOOO0000O ));OO000OOO0OO0O0OO0 .rmdir (O0OOOOOO00OOOOO0O )#line:384
+                        except :pass #line:385
+               dp .update (66 ,'','***Crap Cleaning...')#line:386
+               OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ()#line:387
+           except :pass #line:388
+           dp .update (99 ,'','***Cleaning Crap...')#line:389
+           OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();dp .close ()#line:390
+           dialog .ok ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR lime][B]- Voltooid![/B][/COLOR]",'Kodi zal nu afsluiten...','','[COLOR dimgray](shutdown Kodi now)[/COLOR]')#line:391
+           OO000OOO0OO0O0OO0 ._exit (1 )#line:392
+        elif OO00OOOO000000OOO ==0 :#line:393
+             dialog .ok ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR red][B]- Cancelled![/B][/COLOR]",'Er is geen Kodi Krypton \'wipe\' uitgevoerd...','','[COLOR dimgray](interrupted by user)[/COLOR]')#line:394
+def FRESHSTART (params ):#line:397
+    if int (OOO000OO0000O0OO0 .kodiver )>16.7 :#line:398
+       dialog .ok ("[COLOR lime]"+MainTitle +"[/COLOR] [COLOR red][B]- NOPE![/B][/COLOR]",'[COLOR orange][B]NOTE:[/B][/COLOR]','[COLOR white]alleen voor oudere Kodi\'s dan Krypton (>17.0)[/COLOR]','[COLOR dimgray](for use with older Kodi\'s only (>17.0)[/COLOR]')#line:399
+    else :#line:400
+        OOO0000000OO0000O .log ("freshstart.main_XvBMC: "+repr (params ));OO0OOOO0OO0O0O0O0 =OOO0000000OO0000O .message_yes_no ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR red][B]- Remove[/B][/COLOR]",'Kodi terugzetten naar de standaard fabrieksinstellingen?','[COLOR dimgray](reset Kodi to factory defaults)[/COLOR]')#line:401
+        if OO0OOOO0OO0O0O0O0 :#line:402
+            OOOO0O0O0O00000O0 =OO00O0O00OO00OO0O .Addon (id =AddonID ).getAddonInfo ('path');OOOO0O0O0O00000O0 =O00O0000OO0O0O000 .translatePath (OOOO0O0O0O00000O0 );#line:403
+            OOOOOO0O0OO00O00O =OO000OOO0OO0O0OO0 .path .join (OOOO0O0O0O00000O0 ,"..","..");OOOOOO0O0OO00O00O =OO000OOO0OO0O0OO0 .path .abspath (OOOOOO0O0OO00O00O );OOO0000000OO0000O .log ("freshstart.main_XvBMC: xbmcPath="+OOOOOO0O0OO00O00O );OOOO0OO0O00000000 =False #line:404
+            dp .create ("[COLOR white]"+AddonTitle +"[/COLOR] [COLOR red][B]- FreshStart![/B][/COLOR]",'terug naar fabrieksinstellingen, even geduld...','','[COLOR dimgray](factory reset Kodi, please wait...)[/COLOR]')#line:405
+            try :#line:406
+                for OO0O0O00O0000O00O ,OOOO0O0OO0O00OO00 ,OO00OO0OOOOO00000 in OO000OOO0OO0O0OO0 .walk (OOOOOO0O0OO00O00O ,topdown =True ):#line:407
+                    OOOO0O0OO0O00OO00 [:]=[OOOO0O00OO0OO00OO for OOOO0O00OO0OO00OO in OOOO0O0OO0O00OO00 if OOOO0O00OO0OO00OO not in EXCLUDES ]#line:408
+                    dp .update (33 ,'','***Cleaning files+folders...')#line:409
+                    for O00000OO0OO00O0O0 in OO00OO0OOOOO00000 :#line:410
+                        try :OO000OOO0OO0O0OO0 .remove (OO000OOO0OO0O0OO0 .path .join (OO0O0O00O0000O00O ,O00000OO0OO00O0O0 ))#line:411
+                        except :#line:412
+                            if O00000OO0OO00O0O0 not in ["Addons1.db","MyMusic7","MyVideos37.db","Textures1.db","xbmc.log"]:OOOO0OO0O00000000 =True #line:413
+                            OOO0000000OO0000O .log ("XvBMC-Error removing file: "+OO0O0O00O0000O00O +" "+O00000OO0OO00O0O0 )#line:414
+                    for O00000OO0OO00O0O0 in OOOO0O0OO0O00OO00 :#line:415
+                        try :OO000OOO0OO0O0OO0 .rmdir (OO000OOO0OO0O0OO0 .path .join (OO0O0O00O0000O00O ,O00000OO0OO00O0O0 ))#line:416
+                        except :#line:417
+                            if O00000OO0OO00O0O0 not in ["Database","userdata"]:OOOO0OO0O00000000 =True #line:418
+                            OOO0000000OO0000O .log ("XvBMC-Error removing folder: "+OO0O0O00O0000O00O +" "+O00000OO0OO00O0O0 )#line:419
+                dp .update (66 ,'','***Crap Cleaning...')#line:420
+                OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ()#line:421
+                if not OOOO0OO0O00000000 :OOO0000000OO0000O .log ("freshstart.main_XvBMC: All user files removed, you now have a CLEAN install");OOO0000000OO0000O .message ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR lime][B]- Voltooid![/B][/COLOR]",'\'FreshStart\' is klaar, verse Kodi beschikbaar na herstart...','[COLOR dimgray](\'FreshStart\' finished, fresh Kodi available after reboot)[/COLOR]')#line:422
+                else :OOO0000000OO0000O .log ("freshstart.main_XvBMC: User files partially removed");OOO0000000OO0000O .message ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR lime][B]- Voltooid![/B][/COLOR]",'\'FreshStart\' is klaar, verse Kodi beschikbaar na herstart...','[COLOR dimgray](\'FreshStart\' finished, fresh Kodi available after reboot)[/COLOR]')#line:423
+            except :OOO0000000OO0000O .message ("[COLOR red][B]"+AddonTitle +"[/B][/COLOR]",'Problem found','Your settings have [B]not[/B] been changed');import traceback as OOOO00OOOOOOO0000 ;OOO0000000OO0000O .log (OOOO00OOOOOOO0000 .format_exc ());OOO0000000OO0000O .log ("freshstart.main_XvBMC: NOTHING removed");O0OO000OOO00O00O0 .exit ()#line:424
+            dp .update (99 ,'','***Cleaning Crap...')#line:425
+            OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();OOO0000000OO0000O .REMOVE_EMPTY_FOLDERS ();dp .close ()#line:426
+            dialog .ok ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR lime][B]- Reboot![/B][/COLOR]",'Kodi zal nu afsluiten','','[COLOR dimgray](shutdown Kodi now)[/COLOR]')#line:427
+            OO000OOO0OO0O0OO0 ._exit (1 )#line:428
+        else :dialog .ok ("[COLOR dodgerblue]"+AddonTitle +"[/COLOR] [COLOR red][B]- Cancelled![/B][/COLOR]",'Er is geen schone installatie gedaan...','','[COLOR dimgray](interrupted by user)[/COLOR]')#line:429
+def addItem (name ,url ,mode ,iconimage ):#line:433
+    OO0OOOO0O0O00O00O =O0OO000OOO00O00O0 .argv [0 ]+"?url="+OOO000O00O000OO00 .quote_plus (url )+"&mode="+str (mode )+"&name="+OOO000O00O000OO00 .quote_plus (name )#line:434
+    OO0OO00OOO0O0O000 =True #line:435
+    OO000OO0OO0O0OOOO =OO0O00OO0O00O0OO0 .ListItem (name ,iconImage ="DefaultFolder.png",thumbnailImage =iconimage )#line:436
+    OO000OO0OO0O0OOOO .setInfo (type ="Video",infoLabels ={"Title":name })#line:437
+    OO000OO0OO0O0OOOO .setArt ({'fanart':FANART })#line:438
+    OO0OO00OOO0O0O000 =O0O0O0OOOOOOOOOO0 .addDirectoryItem (handle =int (O0OO000OOO00O00O0 .argv [1 ]),url =OO0OOOO0O0O00O00O ,listitem =OO000OO0OO0O0OOOO ,isFolder =False )#line:439
+    return OO0OO00OOO0O0O000 #line:440
+def get_params ():#line:443
+        OO00O0O0O0O0O0O00 =[]#line:444
+        O00OOO00O0000O0OO =O0OO000OOO00O00O0 .argv [2 ]#line:445
+        if len (O00OOO00O0000O0OO )>=2 :#line:446
+                OOO0O0O0OO0OOO000 =O0OO000OOO00O00O0 .argv [2 ]#line:447
+                OOOOO0O0O000OO00O =OOO0O0O0OO0OOO000 .replace ('?','')#line:448
+                if (OOO0O0O0OO0OOO000 [len (OOO0O0O0OO0OOO000 )-1 ]=='/'):#line:449
+                        OOO0O0O0OO0OOO000 =OOO0O0O0OO0OOO000 [0 :len (OOO0O0O0OO0OOO000 )-2 ]#line:450
+                O00OOOOOOOO0O0OO0 =OOOOO0O0O000OO00O .split ('&')#line:451
+                OO00O0O0O0O0O0O00 ={}#line:452
+                for O0O00OO00OO00O0OO in range (len (O00OOOOOOOO0O0OO0 )):#line:453
+                        OOO0000O00OOO0OO0 ={}#line:454
+                        OOO0000O00OOO0OO0 =O00OOOOOOOO0O0OO0 [O0O00OO00OO00O0OO ].split ('=')#line:455
+                        if (len (OOO0000O00OOO0OO0 ))==2 :#line:456
+                                OO00O0O0O0O0O0O00 [OOO0000O00OOO0OO0 [0 ]]=OOO0000O00OOO0OO0 [1 ]#line:457
+        return OO00O0O0O0O0O0O00 #line:458
+def addDir (name ,url ,mode ,iconimage ,fanart ,description ):#line:461
+        O0OOOOO00OOOOOO00 =O0OO000OOO00O00O0 .argv [0 ]+"?url="+OOO000O00O000OO00 .quote_plus (url )+"&mode="+str (mode )+"&name="+OOO000O00O000OO00 .quote_plus (name )+"&iconimage="+OOO000O00O000OO00 .quote_plus (iconimage )+"&fanart="+OOO000O00O000OO00 .quote_plus (fanart )+"&description="+OOO000O00O000OO00 .quote_plus (description )#line:462
+        O00O0OOOO0O0OO0O0 =True #line:463
+        O00O0OO0O0O0OOO0O =OO0O00OO0O00O0OO0 .ListItem (name ,iconImage ="DefaultFolder.png",thumbnailImage =iconimage )#line:464
+        O00O0OO0O0O0OOO0O .setInfo (type ="Video",infoLabels ={"Title":name ,"Plot":description })#line:465
+        O00O0OO0O0O0OOO0O .setProperty ("Fanart_Image",fanart )#line:466
+        if mode ==1 :#line:467
+            O00O0OOOO0O0OO0O0 =O0O0O0OOOOOOOOOO0 .addDirectoryItem (handle =int (O0OO000OOO00O00O0 .argv [1 ]),url =O0OOOOO00OOOOOO00 ,listitem =O00O0OO0O0O0OOO0O ,isFolder =False )#line:468
+        elif mode ==2 :#line:469
+            O00O0OOOO0O0OO0O0 =O0O0O0OOOOOOOOOO0 .addDirectoryItem (handle =int (O0OO000OOO00O00O0 .argv [1 ]),url =O0OOOOO00OOOOOO00 ,listitem =O00O0OO0O0O0OOO0O ,isFolder =False )#line:470
+        else :#line:471
+            O00O0OOOO0O0OO0O0 =O0O0O0OOOOOOOOOO0 .addDirectoryItem (handle =int (O0OO000OOO00O00O0 .argv [1 ]),url =O0OOOOO00OOOOOO00 ,listitem =O00O0OO0O0O0OOO0O ,isFolder =True )#line:472
+        return O00O0OOOO0O0OO0O0 #line:473
+params =get_params ()#line:476
+url =None #line:477
+name =None #line:478
+mode =None #line:479
+iconimage =None #line:480
+fanart =None #line:481
+description =None #line:482
+try :#line:485
+        url =OOO000O00O000OO00 .unquote_plus (params ["url"])#line:486
+except :#line:487
+        pass #line:488
+try :#line:489
+        name =OOO000O00O000OO00 .unquote_plus (params ["name"])#line:490
+except :#line:491
+        pass #line:492
+try :#line:493
+        iconimage =OOO000O00O000OO00 .unquote_plus (params ["iconimage"])#line:494
+except :#line:495
+        pass #line:496
+try :#line:497
+        mode =int (params ["mode"])#line:498
+except :#line:499
+        pass #line:500
+try :#line:501
+        fanart =OOO000O00O000OO00 .unquote_plus (params ["fanart"])#line:502
+except :#line:503
+        pass #line:504
+try :#line:505
+        description =OOO000O00O000OO00 .unquote_plus (params ["description"])#line:506
+except :#line:507
+        pass #line:508
+OOO0000000OO0000O .log ("EPiC "+str (AddonTitle ))#line:512
+if mode ==None or url ==None or len (url )<1 :#line:520
+   mainMenu ()#line:521
+elif mode ==1 :#line:523
+     wizard (name ,url )#line:525
+elif mode ==10 :#line:527
+     XvBMCtools1 ()#line:528
+elif mode ==20 :#line:530
+     XvBMCmaint ()#line:531
+elif mode ==30 :#line:533
+     XvBMCrpi ()#line:534
+elif mode ==2 :#line:536
+     OOO0000000OO0000O .AboutXvBMC ()#line:537
+elif mode ==3 :#line:539
+     OOO0000000OO0000O .closeandexit ()#line:540
+elif mode ==4 :#line:542
+     OOO0000000OO0000O .okDialog (OO0O000O0O0O000OO ,'sorry, nothing todo...','with kind regards, team [COLOR green]XvBMC Nederland[/COLOR]')#line:543
+elif mode ==11 :#line:545
+     O0000O000OO00OOO0 .Fix_Special (url )#line:546
+elif mode ==12 :#line:548
+     O0000O000OO00OOO0 .AddonsEnable ()#line:549
+elif mode ==13 :#line:551
+     OO0OO000O00O0O00O .setall_enable ()#line:552
+elif mode ==14 :#line:554
+     O0000O000OO00OOO0 .EnableRTMP ()#line:555
+elif mode ==15 :#line:557
+     OOO0000000OO0000O .killKodi ()#line:558
+elif mode ==16 :#line:560
+     OOO0000000OO0000O .KODIVERSION (url )#line:561
+elif mode ==17 :#line:563
+     O0000O000OO00OOO0 .xvbmcLog ()#line:564
+elif mode ==18 :#line:566
+     resolver_settings ()#line:567
+elif mode ==19 :#line:569
+     unlocker ()#line:570
+elif mode ==21 :#line:572
+     O0O0OOOO00OOO00OO .purgeOLD ()#line:573
+elif mode ==22 :#line:575
+     O0000O000OO00OOO0 .clearCache ()#line:576
+elif mode ==23 :#line:578
+     O0000O000OO00OOO0 .deleteThumbnails ()#line:579
+elif mode ==24 :#line:581
+     O0O0OO00OO0O00O0O .flushMenu ()#line:582
+elif mode ==25 :#line:584
+     O0000O000OO00OOO0 .autocleanask ()#line:585
+elif mode ==26 :#line:587
+     O0000O000OO00OOO0 .purgePackages ()#line:588
+elif mode ==27 :#line:590
+     OOO0000000OO0000O .forceRefresh (melding =True )#line:591
+elif mode ==28 :#line:593
+     O0000O000OO00OOO0 .AddonsDatabaseRemoval ()#line:594
+elif mode ==29 :#line:596
+     OOO000OO0000O0OO0 .enableAddons (melding =True )#line:597
+elif mode ==31 :#line:599
+     O0000O000OO00OOO0 .PiCCleaner ()#line:600
+elif mode ==32 :#line:602
+     XvbmcOc ()#line:603
+elif mode ==33 :#line:605
+     XvbmcDev ()#line:606
+elif mode ==40 :#line:608
+     XvBMCtools2 ()#line:609
+elif mode ==41 :#line:611
+     rejuvXvbmc ()#line:612
+elif mode ==42 :#line:614
+     WipeXBMC ()#line:615
+elif mode ==43 :#line:617
+     FRESHSTART (params )#line:618
+elif mode ==44 :#line:620
+     disabled ()#line:621
+O0O0O0OOOOOOOOOO0 .endOfDirectory (int (O0OO000OOO00O00O0 .argv [1 ]))
