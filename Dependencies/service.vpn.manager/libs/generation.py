@@ -37,7 +37,9 @@ MINIMUM_LEVEL = "400"
 def generateAll():
     infoTrace("generation.py", "Generating Location files")
     #generateAirVPN()
+    #generateBlackbox
     #generateBTGuard()
+    #generateBulletVPN()
     #generateCelo()
     #generateCyberGhost()
     #generateExpressVPN()
@@ -47,9 +49,9 @@ def generateAll():
     #generateibVPN()
     #generateIPVanish()
     #generateIVPN()
-    #generateLimeVPN()
+    generateLimeVPN()
     #generateLiquidVPN()
-    generateNordVPN()
+    #generateNordVPN()
     #generatePerfectPrivacy()
     #generatePIA()
     #generatePrivateVPN()
@@ -105,6 +107,14 @@ def generateAirVPN():
     generateMetaData("AirVPN", MINIMUM_LEVEL)    
     
 
+def generateBlackbox():
+    files = getProfileList("blackbox")
+    destination_path = getProviderPath("blackbox" + "/")
+    for file in files:
+        xbmcvfs.copy(file, destination_path + os.path.basename(file))
+    generateMetaData("blackbox", MINIMUM_LEVEL)
+    
+    
 def generateBTGuard():
     # Data is stored as a bunch of ovpn files
     # File name has location.  File has the server
@@ -121,7 +131,7 @@ def generateBTGuard():
             profile_file.close()
             for line in lines:
                 if line.startswith("remote "):
-                    _, server, port = line.split()  
+                    _, server, port, _ = line.split()  
             output_line_udp = geo + " (UDP)," + server + "," + "udp,1194" + "\n"
             output_line_tcp = geo + " (TCP)," + server + "," + "tcp,443" + "\n"
             location_file.write(output_line_udp)
@@ -129,6 +139,34 @@ def generateBTGuard():
     location_file.close()
     generateMetaData("BTGuard", MINIMUM_LEVEL)    
     
+
+def generateBulletVPN():
+    # Data is stored as a bunch of ovpn files
+    # File name has location.  File has the server
+    profiles = getProfileList("BulletVPN")
+    location_file = getLocations("BulletVPN", "")
+    for profile in profiles:
+        if not "TCP" in profile:
+            geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+            geo = geo.replace("bulletVPN-", "")
+            geo = geo.replace("-tcp", "")
+            geo = geo.replace("-udp", "")
+            geo = geo.replace("GB", "UK")
+            geo = resolveCountry(geo[0:2].upper()) + " - " + geo[3:]
+            geo = geo[:len(geo)-6]
+            profile_file = open(profile, 'r')
+            lines = profile_file.readlines()
+            profile_file.close()
+            for line in lines:
+                if line.startswith("remote "):
+                    _, server, port = line.split()
+                if line.startswith("proto "):
+                   _, proto = line.split()
+            output_line = geo + " (" + proto.upper() + ")," + server + "," + proto + "," + port + "\n"
+            location_file.write(output_line)
+    location_file.close()
+    generateMetaData("BulletVPN", MINIMUM_LEVEL)    
+
     
 def generateCelo():
     # Data is stored as a bunch of ovpn files
@@ -403,7 +441,8 @@ def generateIPVanish():
         profile = profile.replace("Kuala-Lumpur", "Kuala Lumpur")
         profile = profile.replace("New-Delhi", "New Delhi")
         profile = profile.replace("Sao-Paulo", "Sao Paulo")
-        profile = profile.replace("Buenos-Aires", "Buenos Aires")        
+        profile = profile.replace("Buenos-Aires", "Buenos Aires")
+        profile = profile.replace("Tel-Aviv", "Tel Aviv")
         tokens = profile.split("-")
         server = tokens[3] + "-" + tokens[4].replace(".ovpn", "") + ".ipvanish.com"
         server_num = tokens[4][1:3]
@@ -442,52 +481,36 @@ def generateIVPN():
 
 
 def generateLimeVPN():
-    # Can't use a template as LimeVPN use server certs. 
-    # Copy the file to the target directory and strip it of user keys
-    existing_profiles = glob.glob(getProviderPath("LimeVPN" + "/*.ovpn"))
-    for connection in existing_profiles:
-        xbmcvfs.delete(connection)
-    # Get the list from the provider data directory
+    # Data is stored as a bunch of ovpn files
+    # http://www.limevpn.com/downloads/OpenVPN-Config.zip
     profiles = getProfileList("LimeVPN")
-    destination_path = getProviderPath("LimeVPN" + "/")   
+    location_file = getLocations("LimeVPN", "")
     for profile in profiles:
-        shortname = profile[profile.index("LimeVPN")+8:]
-        shortname = shortname.replace("_openvpn_remote_access_l3", "")
-        shortname = shortname[:shortname.index(".")]
-        shortname = shortname.replace("aus", "au")
-        shortname = shortname.replace("sw", "se")
-        shortname = shortname.replace("sk", "kr")
-        countryname = resolveCountry(shortname[0:2].upper())
-        if len(shortname) == 3:
-            shortname = " " + shortname[2:3]
-        else:
-            shortname = ""
-        proto = " (UDP)"
-        filename = countryname + shortname + proto + ".ovpn"
+        geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
+        geo = geo.replace("limevpn","")
+        geo = geo.replace(".com", "")
+        geo = geo.replace(".", "")
+        if geo.startswith("ny"): geo = "New York"
+        elif geo.startswith("eu"): geo = "Europe " + geo[2:]
+        elif geo.startswith("london"): geo = "London"
+        elif geo.startswith("sw"): geo = "Sweden " + geo[2:]
+        else: geo = resolveCountry(geo[0:2].upper()) + " " + geo[2:]
         profile_file = open(profile, 'r')
-        output_file = open(destination_path + filename, 'w')
-        profile_contents = profile_file.readlines()
+        lines = profile_file.readlines()
         profile_file.close()
-        output = ""
-        i = 0
-        write = True;
-        for line in profile_contents:
-            line = line.strip(' \t\n\r')
-            if not (line == "" or line.startswith("#")) :
-                if "<key>" in line or "<cert>" in line: write = False
-                if "</key>" in line: 
-                    write = True
-                    line = ""
-                if "</cert>" in line:
-                    write = True
-                    line = ""
-                if write and not line == "" : 
-                    output_file.write(line + "\n")
-            i = i + 1    
-        output_file.close()   
+        for line in lines:
+            if line.startswith("remote "):
+                tokens = line.split(" ")
+                server = tokens[1]
+                port = tokens[2]
+        output_line_udp = geo + " (UDP)," + server + "," + "udp,1195" + "\n"
+        #output_line_tcp = geo + " (TCP)," + server + "," + "tcp,80" + "\n"
+        location_file.write(output_line_udp)
+        #location_file.write(output_line_tcp)
+    location_file.close()
     generateMetaData("LimeVPN", MINIMUM_LEVEL)
 
-
+    
 def generateLiquidVPN():
     directories = ["Canada", "Netherlands", "Romania", "Singapore", "Sweden", "Switzerland", "United Kingdom", "USA"]
     location_file = getLocations("LiquidVPN", "Connections recommended use with Kodi")
@@ -655,7 +678,8 @@ def generatePrivateVPN():
     for profile in profiles:
         geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
         geo = geo.replace("PrivatVPN-", "")
-        geo = geo.replace("-TUN", "")
+        geo = geo.replace("-TUN-443", "")
+        geo = geo.replace("-TUN-1194", "")
         geo = geo.replace("-", "- ")
         geo = geo = resolveCountry(geo[0:2].upper()) + " " + geo[2:]
         profile_file = open(profile, 'r')
@@ -663,11 +687,11 @@ def generatePrivateVPN():
         profile_file.close()
         for line in lines:
             if line.startswith("remote "):
-                _, server, port = line.split()  
-        output_line_udp = geo + " (UDP)," + server + "," + "udp,53" + ",#REMOVE=1\n"
-        output_line_tcp = geo + " (TCP)," + server + "," + "tcp,443" + ",#REMOVE=2\n"
-        location_file.write(output_line_udp)
-        location_file.write(output_line_tcp)
+                _, server, port, proto = line.split()
+        proto_title = proto
+        if "tcp" in proto_title: proto_title = "TCP"
+        output_line = geo + " (" + proto_title.upper() + ")," + server + "," + proto + "," + port + "\n"
+        location_file.write(output_line)
     location_file.close()
     generateMetaData("PrivateVPN", MINIMUM_LEVEL)
     
@@ -1011,14 +1035,21 @@ def generateVanishedVPN():
 def generateVPNac():
     # Data is stored as a bunch of ovpn files
     # File name has location.  File has the servers
+    # OVPNs can be found at https://vpnac.com/ovpn/
     profiles = getProfileList("VPN.ac")
-    location_file = getLocations("VPN.ac", "")
+    location_file_standard = getLocations("VPN.ac", "Standard Connections")
+    location_file_china = getLocations("VPN.ac", "China Connections")
     for profile in profiles:
         geo = profile[profile.rfind("\\")+1:profile.index(".ovpn")]
         if "tcp" in geo:
             proto = "tcp"
         else:
             proto = "udp"
+        if geo.startswith("cnusers-"):
+            china = True
+        else:
+            china = False
+        geo = geo.replace("cnusers-", "")
         geo = geo.replace("-aes128-tcp", "")
         geo = geo.replace("-aes128-udp", "")
         geo = geo.replace("_", " ")
@@ -1027,8 +1058,16 @@ def generateVPNac():
         geo = geo.replace("Us-West ", "US-West ")
         geo = geo.replace("Us-Central ", "US-Central ")
         geo = geo.replace("Uk ", "UK ")
+        geo = geo.replace("-1", " 1")
         geo = geo.replace("-2", " 2")
         geo = geo.replace("-3", " 3")
+        geo = geo.replace("-4", " 4")
+        geo = geo.replace("-5", " 5")
+        geo = geo.replace("-Cn2", " China 2")
+        if geo.startswith("2-Hop"):
+            geo = geo.replace("2-Hop-","")
+            l1,l2 = geo.split("-")
+            geo = resolveCountry(l1[0:2].upper()) + " " + l1[2:] + " - " + resolveCountry(l2[0:2].upper()) + " " + l2[2:]
         servers = ""
         ports = ""
         writeline = ""
@@ -1043,9 +1082,13 @@ def generateVPNac():
                 servers = servers + server
                 if not ports == "" : ports = ports + " "
                 ports = ports + port
-        output_line = geo + " (" + proto.upper() + ")," + servers + "," + proto + "," + ports + "\n" 
-        location_file.write(output_line)
-    location_file.close()   
+        output_line = geo + " (" + proto.upper() + ")," + servers + "," + proto + "," + ports + "\n"
+        if china:
+            location_file_china.write(output_line)
+        else:
+            location_file_standard.write(output_line)
+    location_file_standard.close()
+    location_file_china.close()
     generateMetaData("VPN.ac", MINIMUM_LEVEL)
 
 

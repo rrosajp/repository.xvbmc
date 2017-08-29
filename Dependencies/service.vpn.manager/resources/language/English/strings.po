@@ -31,144 +31,148 @@ msgid "Set up VPN provider, then validate VPN connections"
 msgstr ""
 
 msgctxt "#32002"
-msgid "Click here to update VPN settings"
+msgid "[I]*** VPN provider update available, revalidate connections[/I] ***"
 msgstr ""
 
 msgctxt "#32003"
-msgid "VPN Provider"
+msgid "Click here to update VPN settings"
 msgstr ""
 
 msgctxt "#32004"
-msgid "Username"
+msgid "VPN Provider"
 msgstr ""
 
 msgctxt "#32005"
-msgid "Password"
+msgid "Username"
 msgstr ""
 
 msgctxt "#32006"
-msgid "Show password"
+msgid "Password"
 msgstr ""
 
 msgctxt "#32007"
-msgid "Advanced settings (leave as default if in doubt)"
+msgid "Show password"
 msgstr ""
 
 msgctxt "#32008"
-msgid "Protocol filter (UDP recommended)"
+msgid "Advanced settings (leave as default if in doubt)"
 msgstr ""
 
 msgctxt "#32009"
-msgid "UDP"
+msgid "Protocol filter (UDP recommended)"
 msgstr ""
 
 msgctxt "#32010"
-msgid "TCP"
+msgid "UDP"
 msgstr ""
 
 msgctxt "#32011"
-msgid "UDP and TCP"
+msgid "TCP"
 msgstr ""
 
 msgctxt "#32012"
-msgid "Use VPN provider default UDP port"
+msgid "UDP and TCP"
 msgstr ""
 
 msgctxt "#32013"
-msgid "  Alternative UDP port"
+msgid "Use VPN provider default UDP port"
 msgstr ""
 
 msgctxt "#32014"
-msgid "Use VPN provider default TCP port"
+msgid "  Alternative UDP port"
 msgstr ""
 
 msgctxt "#32015"
-msgid "  Alternative TCP port"
+msgid "Use VPN provider default TCP port"
 msgstr ""
 
 msgctxt "#32016"
-msgid "[I]User Defined[/I]  provider"
+msgid "  Alternative TCP port"
 msgstr ""
 
 msgctxt "#32017"
-msgid "User Defined import wizard"
+msgid "[I]User Defined[/I]  provider"
 msgstr ""
 
 msgctxt "#32018"
-msgid "View last User Defined import wizard log"
+msgid "User Defined import wizard"
 msgstr ""
 
 msgctxt "#32019"
-msgid "Manage username and password"
+msgid "View last User Defined import wizard log"
 msgstr ""
 
 msgctxt "#32020"
-msgid "Manage client or user key and cert files"
+msgid "Manage username and password"
 msgstr ""
 
 msgctxt "#32021"
-msgid "None"
+msgid "Manage client or user key and cert files"
 msgstr ""
 
 msgctxt "#32022"
-msgid "Single"
+msgid "None"
 msgstr ""
 
 msgctxt "#32023"
-msgid "Multiple"
+msgid "Single"
 msgstr ""
 
 msgctxt "#32024"
+msgid "Multiple"
+msgstr ""
+
+msgctxt "#32025"
 msgid "Manage key password"
 msgstr ""
 
 # VPN Connection Settings
 
-msgctxt "#32025"
+msgctxt "#32028"
 msgid "VPN Connections"
 msgstr ""
 
-msgctxt "#32026"
+msgctxt "#32029"
 msgid "Click the boxes below to validate primary VPN connections"
 msgstr ""
 
-msgctxt "#32027"
+msgctxt "#32030"
 msgid "First VPN connection (optionally used to auto connect during boot)"
 msgstr ""
 
-msgctxt "#32028"
+msgctxt "#32031"
 msgid "Second VPN connection"
 msgstr ""
 
-msgctxt "#32029"
+msgctxt "#32032"
 msgid "Third VPN connection"
 msgstr ""
 
-msgctxt "#32030"
+msgctxt "#32033"
 msgid "Fourth VPN connection"
 msgstr ""
 
-msgctxt "#32031"
+msgctxt "#32034"
 msgid "Fifth VPN connection"
 msgstr ""
 
-msgctxt "#32032"
+msgctxt "#32035"
 msgid "Sixth VPN connection"
 msgstr ""
 
-msgctxt "#32033"
+msgctxt "#32036"
 msgid "Seventh VPN connection"
 msgstr ""
 
-msgctxt "#32034"
+msgctxt "#32037"
 msgid "Eigth VPN connection"
 msgstr ""
 
-msgctxt "#32035"
+msgctxt "#32038"
 msgid "Ninth VPN connection"
 msgstr ""
 
-msgctxt "#32036"
+msgctxt "#32039"
 msgid "Tenth VPN connection"
 msgstr ""
 
@@ -587,11 +591,11 @@ msgid "Auto select"
 msgstr ""
 
 msgctxt "#32173"
-msgid "IP-API"
+msgid "ipinfo.io"
 msgstr ""
 
 msgctxt "#32174"
-msgid "IPInfoDB"
+msgid "IP-API"
 msgstr ""
 
 msgctxt "#32175"
@@ -606,142 +610,149 @@ msgid "AirVPN"
 msgstr ""
 
 msgctxt "#32202"
-msgid "BTGuard"
+msgid "black.box"
 msgstr ""
 
 msgctxt "#32203"
-msgid "Celo"
+msgid "BTGuard"
 msgstr ""
 
 msgctxt "#32204"
-msgid "CyberGhost"
+msgid "BulletVPN"
 msgstr ""
 
 msgctxt "#32205"
-msgid "ExpressVPN"
+msgid "Celo"
 msgstr ""
 
 msgctxt "#32206"
-msgid "Hide.Me"
+msgid "CyberGhost"
 msgstr ""
 
 msgctxt "#32207"
-msgid "Hide My Ass"
+msgid "ExpressVPN"
 msgstr ""
 
 msgctxt "#32208"
-msgid "HideIPVPN"
+msgid "Hide.Me"
 msgstr ""
 
 msgctxt "#32209"
-msgid "Invisible Browsing VPN"
+msgid "Hide My Ass"
 msgstr ""
 
 msgctxt "#32210"
-msgid "IPVanish"
+msgid "HideIPVPN"
 msgstr ""
 
 msgctxt "#32211"
-msgid "IVPN"
+msgid "Invisible Browsing VPN"
 msgstr ""
 
 msgctxt "#32212"
-msgid "LimeVPN"
+msgid "IPVanish"
 msgstr ""
 
 msgctxt "#32213"
-msgid "LiquidVPN"
+msgid "IVPN"
 msgstr ""
 
 msgctxt "#32214"
-msgid "NordVPN"
+msgid "LimeVPN"
 msgstr ""
 
 msgctxt "#32215"
-msgid "Perfect Privacy"
+msgid "LiquidVPN"
 msgstr ""
 
 msgctxt "#32216"
-msgid "Private Internet Access"
+msgid "NordVPN"
 msgstr ""
 
-
 msgctxt "#32217"
-msgid "PrivateVPN"
+msgid "Perfect Privacy"
 msgstr ""
 
 msgctxt "#32218"
-msgid "proXPN"
+msgid "Private Internet Access"
 msgstr ""
 
 msgctxt "#32219"
-msgid "PureVPN"
+msgid "PrivateVPN"
 msgstr ""
 
 msgctxt "#32220"
-msgid "RA4W VPN"
+msgid "proXPN"
 msgstr ""
 
 msgctxt "#32221"
-msgid "SaferVPN"
+msgid "PureVPN"
 msgstr ""
 
 msgctxt "#32222"
-msgid "SecureVPN.to"
+msgid "RA4W VPN"
 msgstr ""
 
 msgctxt "#32223"
-msgid "Smart DNS Proxy"
+msgid "SaferVPN"
 msgstr ""
 
 msgctxt "#32224"
-msgid "tigerVPN"
+msgid "SecureVPN.to"
 msgstr ""
 
 msgctxt "#32225"
-msgid "TorGuard"
+msgid "Smart DNS Proxy"
 msgstr ""
 
 msgctxt "#32226"
-msgid "TotalVPN"
+msgid "tigerVPN"
 msgstr ""
 
 msgctxt "#32227"
-msgid "User Defined"
+msgid "TorGuard"
 msgstr ""
 
 msgctxt "#32228"
-msgid "VanishedVPN"
+msgid "TotalVPN"
 msgstr ""
 
 msgctxt "#32229"
-msgid "VPN.ac"
+msgid "User Defined"
 msgstr ""
 
 msgctxt "#32230"
-msgid "VPN.ht"
+msgid "VanishedVPN"
 msgstr ""
 
 msgctxt "#32231"
-msgid "VPN Unlimited"
+msgid "VPN.ac"
 msgstr ""
 
 msgctxt "#32232"
-msgid "VPNArea"
+msgid "VPN.ht"
 msgstr ""
 
 msgctxt "#32233"
-msgid "VPNSecure"
+msgid "VPN Unlimited"
 msgstr ""
 
 msgctxt "#32234"
-msgid "VyprVPN"
+msgid "VPNArea"
 msgstr ""
 
 msgctxt "#32235"
-msgid "WiTopia"
+msgid "VPNSecure"
 msgstr ""
 
 msgctxt "#32236"
+msgid "VyprVPN"
+msgstr ""
+
+msgctxt "#32237"
+msgid "WiTopia"
+msgstr ""
+
+msgctxt "#32238"
 msgid "Windscribe"
 msgstr ""

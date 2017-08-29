@@ -36,6 +36,7 @@ from utility import debugTrace, infoTrace, errorTrace, ifDebug, newPrint
 from vpnproviders import getVPNLocation, getRegexPattern, getAddonList, provider_display, usesUserKeys, usesSingleKey, gotKeys, checkForGitUpdates
 from vpnproviders import ovpnFilesAvailable, ovpnGenerated, fixOVPNFiles, getLocationFiles, removeGeneratedFiles, copyKeyAndCert, populateSupportingFromGit
 from vpnproviders import usesPassAuth, cleanPassFiles, isUserDefined, getKeyPass, getKeyPassName, usesKeyPass, writeKeyPass, refreshFromGit
+from vpnproviders import setVPNProviderUpdate, setVPNProviderUpdateTime
 from ipinfo import getIPInfoFrom, getIPSources, getNextSource, getAutoSource, isAutoSelect, getErrorValue, getIndex
 from logbox import popupOpenVPNLog
 from userdefined import importWizard
@@ -142,8 +143,7 @@ def getIPInfo(addon):
         
     if isAutoSelect(source):
         source = getAutoSource()
-        
-    debugTrace("Getting IP info from " + source)
+
     retry = 0
     bad_response = False
     while retry < 6:
@@ -181,12 +181,11 @@ def getIPInfo(addon):
             # Worked, exit loop
             break
         retry = retry + 1
-
+        
     # Check to see if the call was good (after 5 retries)
-    if ip == "no_info" or ip == "error":
+    if ip == "no info" or ip == "error":
         return source, "no info", "unknown", "unknown"
 
-    
     location = ""
     if not (region == "-" or region == "Not Available"): location = region
     if not (country == "-" or country == "Not Available"):
@@ -616,6 +615,7 @@ def requestVPNCycle(immediate):
               
             # Display a notification message
             icon = getIconPath()+"locked.png"
+            notification_title = addon_name
             if getVPNCycle() == "Disconnect":
                 if getVPNProfile() == "":
                     dialog_message = "Disconnected"
@@ -630,11 +630,14 @@ def requestVPNCycle(immediate):
                         icon = getIconPath()+"faked.png"
                     else:
                         icon = getIconPath()+"connected.png"
+                    if checkForGitUpdates(getVPNLocation(addon.getSetting("vpn_provider_validated")), True):
+                        notification_title = "VPN Manager, update available"
+                        icon = getIconPath()+"update.png"
                 else:
                     dialog_message = "Connect to " + getFriendlyProfileName(getVPNCycle()) + "?"
             
             debugTrace("Cycle request is " + dialog_message)
-            xbmcgui.Dialog().notification(addon_name, dialog_message , icon, 3000, False)
+            xbmcgui.Dialog().notification(notification_title, dialog_message , icon, 3000, False)
         else:
             xbmcgui.Dialog().notification(addon_name, "VPN is not set up and authenticated.", xbmcgui.NOTIFICATION_ERROR, 10000, True)
 
@@ -743,6 +746,10 @@ def resetVPNConnections(addon):
     setVPNLastConnectedProfileFriendly("")
         
     addon.setSetting("vpn_provider_validated","")    
+    
+    # Assume no update and force a check when it's connected
+    setVPNProviderUpdate("false")
+    setVPNProviderUpdateTime(0)
     
     # Removal any password files that were created (they'll get recreated if needed)
     debugTrace("Deleting all pass.txt files")
@@ -1010,23 +1017,36 @@ def connectVPN(connection_order, vpn_profile):
         
     # Check to see if there are new ovpn files
     provider_download = True
+    reset_connections = False
     if not progress.iscanceled() and not isUserDefined(vpn_provider):
-        if connection_order == "1":
-            # Is this provider able to update via the interweb?
-            progress_message = "Checking for latest provider files."
+        progress_message = "Checking for latest provider files."
+        progress.update(7, progress_title, progress_message)
+        xbmc.sleep(500)
+        if checkForGitUpdates(vpn_provider, False):
+            addon = xbmcaddon.Addon("service.vpn.manager")
+            if (connection_order == "1" and addon.getSetting("2_vpn_validated") == ""):
+                # Is this provider able to update via the interweb?
+                provider_download = refreshFromGit(vpn_provider, progress)    
+            else:
+                progress_message = "New VPN provider files found! Click OK to download and reset existing settings. [I]If you use existing settings they may not continue to work.[/I]"
+                if not xbmcgui.Dialog().yesno(progress_title, progress_message, "", "", "OK", "Use Existing"):
+                    provider_download = refreshFromGit(vpn_provider, progress)
+                    # This is horrible code to avoid adding more booleans.  It'll pretend that the files
+                    # didn't download and skip to the end, but it'll indicate that connections need resetting
+                    if provider_download == True:
+                        progress_title = "Downloaded new VPN provider files"
+                        reset_connections = True
+                        provider_download = False
+                else:
+                    progress_message = "[I]VPN provider updates are available, but using existing settings.[/I]"
+                    progress.update(7, progress_title, progress_message)
+                    xbmc.sleep(2000)
+        else:
+            progress_message = "Using latest VPN provider files."
             progress.update(7, progress_title, progress_message)
             xbmc.sleep(500)
-            provider_download = refreshFromGit(vpn_provider, progress)        
-        else:
-            if checkForGitUpdates(vpn_provider):
-                progress_message = "[I]VPN provider update is available, revalidate to use.[/I]"
-                progress.update(7, progress_title, progress_message)
-                xbmc.sleep(2000)
-            else:
-                progress_message = "Using latest VPN provider files."
-                progress.update(7, progress_title, progress_message)
-                xbmc.sleep(500)
-            
+        addon = xbmcaddon.Addon("service.vpn.manager") 
+        
     # Install the VPN provider    
     existing_connection = ""
     if not progress.iscanceled() and provider_download:
@@ -1125,7 +1145,9 @@ def connectVPN(connection_order, vpn_profile):
                     # User selected cancel on dialog box
                     provider_gen = False
                     cancel_attempt = True
-
+        addon = xbmcaddon.Addon("service.vpn.manager")
+ 
+                    
     if provider_gen:
         if not progress.iscanceled():
             progress_message = "Using VPN provider " + vpn_provider + "."
@@ -1321,7 +1343,7 @@ def connectVPN(connection_order, vpn_profile):
         setConnectionErrorCount(0)
         setConnectTime(addon)
         # Indicate to the service that it should update its settings
-        updateService("connectVPN")        
+        updateService("connectVPN")
     elif progress.iscanceled() or cancel_attempt:
         # User pressed cancel.  Don't change any of the settings as we've no idea how far we got
         # down the path of installing the VPN, configuring the credentials or selecting the connection
@@ -1357,15 +1379,24 @@ def connectVPN(connection_order, vpn_profile):
         setVPNState("off")
     else:
         # An error occurred, The current connection is already invalidated.  The VPN credentials might 
-        # be ok, but if they need re-entering, the user must update them which will force a reset.  
-        progress_message = "Error connecting to VPN, restarting VPN monitor."
+        # be ok, but if they need re-entering, the user must update them which will force a reset.
+        if not reset_connections:
+            progress_message = "Error connecting to VPN, restarting VPN monitor."
+        else:
+            progress_message = "Restarting VPN monitor."
         progress.update(97, progress_title, progress_message)
         xbmc.sleep(500)
         # Set the final message to show an error occurred
-        progress_message = "Error connecting, VPN is disconnected. VPN monitor restarted."
+        if not reset_connections:
+            progress_message = "Error connecting, VPN is disconnected. VPN monitor restarted."
+        else:
+            progress_message = "VPN monitor restarted"
         # First set of errors happened prior to trying to connect
         if not provider_download:
-            dialog_message = "Unable to download the VPN provider files. Check log and try again."
+            if reset_connections:
+                dialog_message = "Please revalidate all connections."
+            else:
+                dialog_message = "Unable to download the VPN provider files. Check log and try again."
             log_option = False
         elif not provider_gen:
             dialog_message = "Error updating .ovpn files or creating user credentials file. Check log to determine cause of failure."
