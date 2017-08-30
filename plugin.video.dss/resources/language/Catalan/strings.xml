@@ -1,0 +1,99 @@
+﻿<? Xml version = "1.0" encoding = "utf-8" standalone = "yes"?>
+<Strings>
+    <! - Beschikbaar id van 30000 tot 30999 ->
+
+    <! - ======================================= ->
+    <! - 30000 tot 30049: Configuratie ->
+    <! - ======================================= ->
+    
+    <! - Commons ->
+    <String id = "30000"> Standaard speler (alleen XBOX): </ string>
+    <String id = "30001"> Controleer voor updates: </ string>
+    <String id = "30004"> Automatische updatekanalen: </ string>
+    <String id = "30201"> Update bibliotheek elke keer dat XBMC opent </ string>
+    <String id = "30002"> Volwassen modus inschakelen: </ string>
+    <String id = "30003"> Debug logging inschakelen: </ string>
+    <String id = "30043"> Krachtweergave modus: </ string>
+
+    <! - Standaard actie wanneer u een video selecteert ->
+    <String id = "30005"> Standaard afspeelinstelling: </ string>
+    <String id = "30006"> Vraag </ string>
+    <String id = "30007"> Bekijk in lage kwaliteit </ string>
+    <String id = "30008"> Bekijk in hoge kwaliteit </ string>
+    <String id = "30009"> Stuur naar jDownloader </ string>
+
+    <! - Logo visualisatie voor kanalen ->
+    <String id = "30010"> Kanaal iconen bekijken: </ string>
+    <String id = "30011"> Poster (verticaal) </ string>
+    <String id = "30012"> Banner (horizontaal) </ string>
+<String id = "30200"> Vierkant </ string>
+
+    <! - Premium account ->
+    <String id = "30014"> Gebruikersnaam: </ string>
+    <String id = "30015"> Wachtwoord: </ string>
+    <String id = "30031"> Videokwaliteit (FLV) </ string>
+    <String id = "30032"> Standaarddefinitie (SD) </ string>
+    <String id = "30033"> High Definition (HD) (indien beschikbaar) </ string>
+
+    <String id = "30034"> Inloggen voor privépagina's: </ string>
+    <String id = "30035"> Wachtwoord voor privé pagina's: </ string>
+
+    <! - Overige ->
+    <String id = "30017"> Downloadpad: </ string>
+    <String id = "30018"> Download lijstpad: </ string>
+    <String id = "30030"> Favorieten pad: </ string>
+    <String id = "30067"> Bibliotheekpad voor STRM: </ string>
+    <String id = "30020"> Hoogste kwaliteit (Youtube) </ string>
+    <String id = "30021"> Ondertiteling inschakelen: </ string>
+    <String id = "30022"> JDownloader-URL: </ string>
+    <String id = "30066"> pyLoad-URL: </ string>
+    <String id = "30024"> Aantal zoekopdrachten die u wilt opslaan: </ string>
+
+    <String id = "30019"> Filterkanalen per taal: </ string>
+    <String id = "30025"> Alle talen </ string>
+    <String id = "30026"> Spaans </ string>
+    <String id = "30027"> Engels </ string>
+    <String id = "30028"> Italiaans </ string>
+    <String id = "30029"> Portugees </ string>
+    <String id = "30046"> Frans </ string>
+    <String id = "30016"> ​​Catalan </ string>
+    <String id = "30023"> Euskera </ string>
+    <String id = "30036"> Gallego </ string>
+    <String id = "30037"> Valenciano </ string>
+
+    <String id = "30038"> Cache-modus: </ string>
+    <String id = "30039"> Auto </ string>
+    <String id = "30040"> Cache alles </ string>
+    <String id = "30041"> Cache niets </ string>
+    <String id = "30042"> Cache pad: </ string>
+
+    <String id = "30044"> Play mode: </ string>
+
+    <String id = "30013"> Persoonlijk kanaal inschakelen </ string>
+    <String id = "30048"> Kanaalnaam </ string>
+    <String id = "30049"> Kanaallogo </ string>
+    <String id = "30045"> Video lijst URL / bestand </ string>
+    <String id = "30047"> Elementen per pagina </ string>
+
+    <! - Filtros ->
+    <String id = "30068"> Filter door servers: </ string>
+    <String id = "30069"> witte lijst: </ string>
+    <String id = "30070"> Zwarte lijst: </ string>
+    <String id = "30071"> Om meerdere servers toe te voegen gebruikt u "," als scheider </ string>
+
+
+    <! - ============================================== ================= ->
+    <! - 30050 tot 30099: Info / foutmeldingen ->
+    <! - ============================================== ================= ->
+    <String id = "30050"> Serververbinding fout </ string> <! - Geen verbinding met de server ->
+    <String id = "30051"> Website foutbericht (http code% d) </ string> <! - Geen site voor correctie (fout http% d) ->
+    <String id = "30052"> Megavideo heeft een beperkte kijk tijdsbeperking van 72 minuten. </ String> <! - Meavideo heeft een tijdloze weergave van 72 minuten ->
+    <String id = "30053"> voor gratis gebruikers. De limiet is niet van toepassing op gebruikers </ string> <! - Para evitar que los vídeos se corten pasado ese tiempo ->
+    <String id = "30054"> ingelogd bij een premium account. </ String> <! - Nauwkeurigheid Una Cuenta Premium ->
+    <String id = "30055"> Video niet beschikbaar </ string> <! - Video niet beschikbaar ->
+    <String id = "30056"> Er zijn geen video's beschikbaar op de webpagina </ string> <! - Geen video's beschikbaar op je webpagina ->
+    <String id = "30057"> De video is verwijderd van% s </ string> <! - Weergeven geen video en% s ->
+    <String id = "30058"> Probeer een andere server of een kanaal </ string> <! - Prueba en otro servidor o en otro kanaal ->
+    <String id = "30059"> Website fout </ string> <! - Error en el sitio web ->
+    <String id = "30060"> Laden geannuleerd als gevolg van een website fout </ string> <! - Er is geen fout opgetreden bij een fout op uw website ->
+    <String id = "30061"> Kwaliteit niet beschikbaar of video verwijderd </ string> <! - La calidad elegida no esta disponible o el video ha sido borrado ->

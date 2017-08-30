@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<channel>
+	<id>sebn</id>
+	<name>SEBN</name>
+
+	<active>true</active>
+	<adult>false</adult>
+	<language>nl</language>
+
+	<fanart>http://sebn.sc/images/photos/bg-blurred.jpg</fanart>
+	<thumbnail>http://sebn.sc/images/logo.png</thumbnail>
+	<bannermenu></bannermenu>
+
+	<update_url></update_url>
+	<version>1</version>
+	<date>8/8/2017</date>
+	<changes>Version</changes>
+
+	<categories>
+		<category>sport</category>	
+	</categories>
+
+</channel>
