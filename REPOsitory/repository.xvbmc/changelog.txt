@@ -1,3 +1,6 @@
+[B]Version 4.1.0[/B]
+- EPiC XvBMC Nederland VoOdOo ;-p
+
 [B]Version 4.0.2[/B]
 - EPiC XvBMC Maintenance Release...
 
