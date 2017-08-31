@@ -1,4 +1,4 @@
-[B]Version 4.0.1MR[/B]
+[B]Version 4.0.2[/B]
 - EPiC XvBMC Maintenance Release...
 
 [B]Version 4.0.1[/B]
