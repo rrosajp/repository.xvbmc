@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2016-03-17 11:30+0000\n"
+"PO-Revision-Date: 2017-01-22 15:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,11 +22,11 @@ msgstr "Geral"
 
 msgctxt "#30001"
 msgid "Download path (not FAT32)"
-msgstr "Pasta de download (não FAT32)"
+msgstr "Pasta de transferências (não FAT32)"
 
 msgctxt "#30002"
 msgid "Keep files after playback/download stops"
-msgstr "Manter ficheiros depois da reprodução/download parar"
+msgstr "Manter ficheiros depois da reprodução/transferência parar"
 
 msgctxt "#30003"
 msgid "Buffer size (MB)"
@@ -38,7 +38,7 @@ msgstr "Taxa máxima de upload (kB/s)"
 
 msgctxt "#30005"
 msgid "Max download rate (kB/s)"
-msgstr "Taxa máxima de download (kB/S)"
+msgstr "Taxa máxima de transferência (kB/S)"
 
 msgctxt "#30006"
 msgid "Listen port min"
@@ -256,6 +256,130 @@ msgctxt "#30059"
 msgid "Library update delay on startup (seconds)"
 msgstr "Atraso na atualização da biblioteca ao iniciar (segundos)"
 
+msgctxt "#30060"
+msgid "Library update frequency (hours)"
+msgstr "Frequência de atualização da biblioteca (horas)"
+
+msgctxt "#30061"
+msgid "Sync frequency of Trakt lists to library (hours)"
+msgstr "Frequência de sincronização das listas Trakt para a biblioteca (horas)"
+
+msgctxt "#30062"
+msgid "Ask to keep the files after streaming"
+msgstr "Perguntar para guardar os ficheiros depois do stream"
+
+msgctxt "#30114"
+msgid "TheTVDB"
+msgstr "TheTVDB"
+
+msgctxt "#30115"
+msgid "TV show scraper used by Kodi library"
+msgstr "Scraper de TV usado pela biblioteca"
+
+msgctxt "#30063"
+msgid "Disable UPNP & NATPMP"
+msgstr "Desativar UPNP e NATPMP"
+
+msgctxt "#30064"
+msgid "Encryption policy"
+msgstr "Política de Encriptação"
+
+msgctxt "#30065"
+msgid "Disabled"
+msgstr "Desativado"
+
+msgctxt "#30066"
+msgid "Forced"
+msgstr "Forçado"
+
+msgctxt "#30067"
+msgid "Proxy type"
+msgstr "Tipo de Proxy"
+
+msgctxt "#30068"
+msgid "SOCKS4"
+msgstr "SOCKS4"
+
+msgctxt "#30069"
+msgid "SOCKS5"
+msgstr "SOCKS5"
+
+msgctxt "#30070"
+msgid "SOCKS5 password"
+msgstr "Senha SOCKS5"
+
+msgctxt "#30071"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30072"
+msgid "HTTP password"
+msgstr "Senha HTTP"
+
+msgctxt "#30073"
+msgid "i2p"
+msgstr "i2p"
+
+msgctxt "#30074"
+msgid "Spoof user agent (highly inadvisable)"
+msgstr "Identidade Falsa (altamente desaconselhável)"
+
+msgctxt "#30075"
+msgid "Default from libtorrent (acceptable)"
+msgstr "Padrão do libtorrent (aceitável)"
+
+msgctxt "#30076"
+msgid "libtorrent (Rasterbar) 1.1.0"
+msgstr "libtorrent (Rasterbar) 1.1.0"
+
+msgctxt "#30077"
+msgid "BitTorrent 7.5.0"
+msgstr "BitTorrent 7.5.0"
+
+msgctxt "#30078"
+msgid "BitTorrent 7.4.3"
+msgstr "BitTorrent 7.4.3"
+
+msgctxt "#30079"
+msgid "µTorrent 3.4.9"
+msgstr "µTorrent 3.4.9"
+
+msgctxt "#30080"
+msgid "µTorrent 3.2.0"
+msgstr "µTorrent 3.2.0"
+
+msgctxt "#30081"
+msgid "µTorrent 2.2.1"
+msgstr "µTorrent 2.2.1"
+
+msgctxt "#30082"
+msgid "Transmission 2.92"
+msgstr "Transmission 2.92"
+
+msgctxt "#30083"
+msgid "Deluge 1.3.6.0"
+msgstr "Deluge 1.3.6.0"
+
+msgctxt "#30084"
+msgid "Deluge 1.3.12.0"
+msgstr "Deluge 1.3.12.0"
+
+msgctxt "#30085"
+msgid "Vuze 5.7.3.0"
+msgstr "Vuze 5.7.3.0"
+
+msgctxt "#30086"
+msgid "Enable tuned storage settings"
+msgstr "Ativar configurações de armazenamento afinadas"
+
+msgctxt "#30087"
+msgid "Ask to delete the files after streaming"
+msgstr "Perguntar para apagar os ficheiros depois do stream"
+
+msgctxt "#30088"
+msgid "Initial buffering timeout (seconds)"
+msgstr "Timeout de buffering inicial (segundos)"
+
 
 # Interface
 
@@ -313,7 +437,7 @@ msgstr "Não é possível desativar o provedor"
 
 msgctxt "#30113"
 msgid "Download path not set, check your settings"
-msgstr "Pasta de download não foi definida, verifique as configurações"
+msgstr "Pasta de transferência não foi definida, verifique as configurações"
 
 
 # Quasar daemon
@@ -348,7 +472,7 @@ msgstr "Pesquisar Filmes"
 
 msgctxt "#30207"
 msgid "Not enough space available on the download path."
-msgstr "Sem espaço disponível na pasta de download."
+msgstr "Sem espaço disponível na pasta de transferência."
 
 msgctxt "#30208"
 msgid "Quasar daemon has started"
@@ -404,7 +528,7 @@ msgstr "Pasta da biblioteca não definida"
 
 msgctxt "#30221"
 msgid "Item successfully added to library"
-msgstr "Item adicionado à biblioteca"
+msgstr "Item adicionado com sucesso à biblioteca"
 
 msgctxt "#30222"
 msgid "Item removed from library"
@@ -512,7 +636,7 @@ msgstr "Mais Reproduzidos"
 
 msgctxt "#30248"
 msgid "Most Watched"
-msgstr "Mais Vistos"
+msgstr "Mais Assistidos"
 
 msgctxt "#30249"
 msgid "Most Collected"
@@ -569,3 +693,59 @@ msgstr "Histórico de pesquisas"
 msgctxt "#30262"
 msgid "Use search history?"
 msgstr "Utilizar histórico de pesquisas?"
+
+msgctxt "#30263"
+msgid "Lists"
+msgstr "Listas"
+
+msgctxt "#30264"
+msgid "Reset clearances"
+msgstr "Restaurar permissões"
+
+msgctxt "#30265"
+msgid "Item already in library"
+msgstr "Item já se encontra na biblioteca"
+
+msgctxt "#30266"
+msgid "Ignore duplicates"
+msgstr "Ignorar duplicados"
+
+msgctxt "#30267"
+msgid "Keep downloaded files?"
+msgstr "Manter ficheiros transferidos?"
+
+msgctxt "#30268"
+msgid "Toggle watched"
+msgstr "Alternar assistido"
+
+msgctxt "#30269"
+msgid "Delete downloaded files?"
+msgstr "Apagar ficheiros transferidos?"
+
+msgctxt "#30270"
+msgid "Match found in your active torrents, play it?"
+msgstr "Correspondência encontrada nos torrents ativos, reproduzi-la?"
+
+msgctxt "#30271"
+msgid "There is now an official multi-provider for Quasar called [COLOR FFFF6B00]Burst[/COLOR], would you like to install it now?"
+msgstr "Há agora um multi-provedor oficial para o Quasar chamado [COLOR FFFF6B00]Burst[/COLOR], gostaria de o instalar agora?"
+
+msgctxt "#30272"
+msgid "Installation successful, enjoy Quasar [COLOR FFFF6B00]Burst[/COLOR]!"
+msgstr "Instalação terminou com sucesso, desfrute do Quasar [COLOR FFFF6B00]Burst[/COLOR]!"
+
+msgctxt "#30273"
+msgid "Shoot... It looks like we couldn't install [COLOR FFFF6B00]Burst[/COLOR] automatically, head over to the Quasar Repository, then under the Program add-ons section to install it."
+msgstr "Bolas... Parece que não conseguimos instalar o [COLOR FFFF6B00]Burst[/COLOR] automaticamente, dirija-se à secção Program add-ons no repositório do Quasar para o instalar."
+
+msgctxt "#30274"
+msgid "Enable all"
+msgstr "Ativar todos"
+
+msgctxt "#30275"
+msgid "Disable all"
+msgstr "Desativar todos"
+
+msgctxt "#30276"
+msgid "Delete torrent and files"
+msgstr "Apagar torrent e ficheiros"

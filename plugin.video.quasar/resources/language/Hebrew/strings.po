@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-18 08:43+0200\n"
-"PO-Revision-Date: 2016-03-18 08:43+0200\n"
+"POT-Creation-Date: 2017-04-03 21:51+0300\n"
+"PO-Revision-Date: 2017-04-03 21:53+0300\n"
 "Last-Translator: Assaf Sapir <meijin007 AT gmail.com>, ShlomiD\n"
 "Language-Team: \n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.11\n"
 
 # Settings
 msgctxt "#30000"
@@ -120,8 +120,8 @@ msgid "Get updates for pre-releases"
 msgstr "הפעלת עדכוני קדם-שחרור"
 
 msgctxt "#30025"
-msgid "Limit rates after buffering only"
-msgstr "הגבלת קצב לאחר התחלת הניגון"
+msgid "Limit rates after initial buffering only"
+msgstr "הגבלת קצב לאחר הבאפרינג ההתחלתי"
 
 msgctxt "#30026"
 msgid "Library path"
@@ -132,8 +132,8 @@ msgid "Connections limit"
 msgstr "הגבלת חיבורים"
 
 msgctxt "#30028"
-msgid "Background handling of torrents"
-msgstr "ניהול הורדת בטורנטים ברקע"
+msgid "Do not ask to keep downloading"
+msgstr "לא לשאול האם להמשיך להוריד"
 
 msgctxt "#30029"
 msgid "Session saving frequency (seconds)"
@@ -216,8 +216,9 @@ msgid "Resolution preference for TV Shows"
 msgstr "העדפות רזולוציה לסדרות"
 
 msgctxt "#30049"
-msgid "Percentage of additional seeders required before choosing next resolution"
-msgstr "אחוז נדרש של זורעים לפני בחירה של המקור הבא"
+msgid ""
+"Percentage of additional seeders required before choosing next resolution"
+msgstr "אחוז נדרש של זורעים לפני בחירה של הרזולוציה הבאה"
 
 msgctxt "#30050"
 msgid "Disable DHT"
@@ -259,6 +260,162 @@ msgctxt "#30059"
 msgid "Library update delay on startup (seconds)"
 msgstr "זמן (בשניות) להשהיה לאחר ההפעה עד לעדכון הספריה"
 
+msgctxt "#30060"
+msgid "Library update frequency (hours)"
+msgstr "תדירות עדכון הספרייה (בשעות)"
+
+msgctxt "#30061"
+msgid "Sync frequency of Trakt lists to library (hours)"
+msgstr "תדירות סנכרון הספרייה עם רשימות מבTrakt"
+
+msgctxt "#30062"
+msgid "Ask to keep the files after streaming"
+msgstr "האם לשאול אם לשמור קבצים בסיום הניגון"
+
+msgctxt "#30063"
+msgid "Disable UPNP & NATPMP"
+msgstr "כיבוי UPNP ו־NATPMP"
+
+msgctxt "#30064"
+msgid "Encryption policy"
+msgstr "מדיניות הצפנה"
+
+msgctxt "#30065"
+msgid "Disabled"
+msgstr "כבוי"
+
+msgctxt "#30066"
+msgid "Forced"
+msgstr "כפוי"
+
+msgctxt "#30067"
+msgid "Proxy type"
+msgstr "שיטת הפרוקסי"
+
+msgctxt "#30068"
+msgid "SOCKS4"
+msgstr "SOCKS4"
+
+msgctxt "#30069"
+msgid "SOCKS5"
+msgstr "SOCKS5"
+
+msgctxt "#30070"
+msgid "SOCKS5 password"
+msgstr "SOKCS% עם ססמה"
+
+msgctxt "#30071"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30072"
+msgid "HTTP password"
+msgstr "HTTP עם ססמה"
+
+msgctxt "#30073"
+msgid "i2p"
+msgstr "i2p"
+
+msgctxt "#30074"
+msgid "Spoof user agent (highly inadvisable)"
+msgstr "שינוי\tUser agent (מאוד לא מומלץ)"
+
+msgctxt "#30075"
+msgid "Default from libtorrent (acceptable)"
+msgstr "ברירת המחדל של libtorrent (סביר)"
+
+msgctxt "#30076"
+msgid "libtorrent (Rasterbar) 1.1.0"
+msgstr "libtorrent (Rasterbar) 1.1.0"
+
+msgctxt "#30077"
+msgid "BitTorrent 7.5.0"
+msgstr "BitTorrent 7.5.0"
+
+msgctxt "#30078"
+msgid "BitTorrent 7.4.3"
+msgstr "BitTorrent 7.4.3"
+
+msgctxt "#30079"
+msgid "µTorrent 3.4.9"
+msgstr "µTorrent 3.4.9"
+
+msgctxt "#30080"
+msgid "µTorrent 3.2.0"
+msgstr "µTorrent 3.2.0"
+
+msgctxt "#30081"
+msgid "µTorrent 2.2.1"
+msgstr "µTorrent 2.2.1"
+
+msgctxt "#30082"
+msgid "Transmission 2.92"
+msgstr "Transmission 2.92"
+
+msgctxt "#30083"
+msgid "Deluge 1.3.6.0"
+msgstr "Deluge 1.3.6.0"
+
+msgctxt "#30084"
+msgid "Deluge 1.3.12.0"
+msgstr "Deluge 1.3.12.0"
+
+msgctxt "#30085"
+msgid "Vuze 5.7.3.0"
+msgstr "Vuze 5.7.3.0"
+
+msgctxt "#30086"
+msgid "Enable tuned storage settings"
+msgstr "הפעלת הגדרות לאחסון מכוון"
+
+msgctxt "#30087"
+msgid "Ask to delete the files after streaming"
+msgstr "האם לשאול אם למחוק את הקבצים בסיום ההזרמה"
+
+msgctxt "#30088"
+msgid "Initial buffering timeout (seconds)"
+msgstr "מקסימום זמן לטעינה לפני תחילת ניגון (בשניות)"
+
+msgctxt "#30089"
+msgid "Automatically re-scan Kodi library after updates"
+msgstr "סריקה חוזרת של ספריית ה־Kodi לאחר עדכונים"
+
+msgctxt "#30090"
+msgid "Listen interfaces"
+msgstr "מנשק האזנה"
+
+msgctxt "#30091"
+msgid "Outgoing interfaces"
+msgstr "מנשק יוצא"
+
+msgctxt "#30092"
+msgid "Use default fanart"
+msgstr "שימוש ב fanart ברירת מחדל"
+
+msgctxt "#30093"
+msgid "Disable notification sound"
+msgstr "כיבוי צלילי התראות"
+
+msgctxt "#30094"
+msgid "Disable background progress dialog"
+msgstr "כיבוי הצגת מצב ההתקדמות ברקע"
+
+msgctxt "#30095"
+msgid "Resume playback from library integration"
+msgstr "המשך צפיה באינטגרציה עם הספריה"
+
+msgctxt "#30096"
+msgid "Never"
+msgstr "לעולם לא"
+
+msgctxt "#30097"
+msgid "Always"
+msgstr "תמיד"
+
+msgctxt "#30098"
+msgid "Active torrents only"
+msgstr "טורנטים פעילים בלבד"
+
 # Interface
 msgctxt "#30100"
 msgid "Quasar has crashed, restarting..."
@@ -273,8 +430,8 @@ msgid "This add-on can only be run from within Quasar"
 msgstr "הרחבה זאת פועלת רק מתוך Quasar"
 
 msgctxt "#30103"
-msgid "Unable to find Quasar binary"
-msgstr "אין אפשרות למצוא את קובץ ההרצה של Quasar"
+msgid "Unable to find Quasar binary[CR]Required platform:"
+msgstr "לא ניתן למצוא את קובץ ההרצה של Quasar[CR] לארכיטקטורה:"
 
 msgctxt "#30104"
 msgid "Insert file or URL"
@@ -315,6 +472,72 @@ msgstr "לא ניתן לבטל את ההפעלה של הספק"
 msgctxt "#30113"
 msgid "Download path not set, check your settings"
 msgstr "לא הוגדר נתיב הורדה, אנא בדקו את ההגדרות"
+
+# Site name
+msgctxt "#30114"
+msgid "TheTVDB"
+msgstr "TheTVDB"
+
+msgctxt "#30115"
+msgid "TV show scraper used by Kodi library"
+msgstr "סקרפרים בשימוש על־ידי הספרייה"
+
+msgctxt "#30116"
+msgid "Looks like Quasar is still starting up, give it a few seconds..."
+msgstr "נראה כי Quasar עדיין בעליה, תנו לזה עוד כמה שניות..."
+
+msgctxt "#30117"
+msgid "Resolving torrent files..."
+msgstr "מוצא קבצי טורנט"
+
+msgctxt "#30118"
+msgid "Scraping trackers..."
+msgstr "מוצא טראקרים"
+
+msgctxt "#30141"
+msgid ""
+"Please support Quasar development by visiting https://quasar.surge.sh/donate"
+msgstr "תמכו בפיתוח של Quasar באמצעות ביקור ב־https://quasar.surge.sh/donate"
+
+msgctxt "#30142"
+msgid "Default view for menus in Movies"
+msgstr "תצוגת ברירת מחדל לתפריטי סרטים"
+
+msgctxt "#30143"
+msgid "Default view for menus in TV Shows"
+msgstr "תצוגת ברירת מחדל לסדרות טלויזיה"
+
+msgctxt "#30144"
+msgid "Default view for movie genres"
+msgstr "תצוגת ברירת מחדל לז'נרים של סרטים"
+
+msgctxt "#30145"
+msgid "Default view for TV show genres"
+msgstr "תצוגת ברירת מחדל לז'נרים של סדרו"
+
+msgctxt "#30146"
+msgid "Keep downloading?"
+msgstr "האם להמשיך להוריד?"
+
+msgctxt "#30147"
+msgid "Caches are still warming up, give it a minute or two..."
+msgstr "עדיין טוען את הקאש, יש עוד דקה או שתיים"
+
+msgctxt "#30148"
+msgid "Caches warmed up"
+msgstr "הקאש נטען"
+
+msgctxt "#30149"
+msgid "Trakt username not set, check your settings"
+msgstr "שם המשתמש ב־Trakt לא הוגדר, יש לבדוק את ההגדרות"
+
+msgctxt "#30199"
+msgid ""
+"No available JSON-RPC connection to Kodi.[CR]Enable both Application control "
+"options in Service settings / Control and restart Kodi."
+msgstr ""
+"לא מצליח ליצור קישור JSON-RPC ל־Kodi.[CR]יש להפעיל את שתי האפשרויות לשליטה "
+"באפליקציה תחת הגדרות שירות / שליטה ולהפעיל את Kodi מחדש"
 
 # Quasar daemon
 msgctxt "#30200"
@@ -568,6 +791,239 @@ msgstr "היסטוריית חיפוש"
 msgctxt "#30262"
 msgid "Use search history?"
 msgstr "האם להשתמש בהיסטוריית החיפוש?"
+
+msgctxt "#30263"
+msgid "Lists"
+msgstr "רשימות"
+
+msgctxt "#30264"
+msgid "Reset clearances"
+msgstr "איפוס הסיווגים"
+
+msgctxt "#30265"
+msgid "Item already in library"
+msgstr "הפריט כבר בספרייה"
+
+msgctxt "#30266"
+msgid "Ignore duplicates"
+msgstr "התעלמות מכפילויות"
+
+msgctxt "#30267"
+msgid "Keep downloaded files?"
+msgstr "האם לשמור את הקבצים שהורדו?"
+
+msgctxt "#30268"
+msgid "Toggle watched"
+msgstr "סימון כנצפה"
+
+msgctxt "#30269"
+msgid "Delete downloaded files?"
+msgstr "למחוק את הקבצים שהורדו?"
+
+msgctxt "#30270"
+msgid "Match found in your active torrents, play it?"
+msgstr "נמצאה התאמה ברשימת הטורנטים הפעילים, האם להשתמש בה?"
+
+msgctxt "#30271"
+msgid ""
+"There is now an official multi-provider for Quasar called [COLOR "
+"FFFF6B00]Burst[/COLOR], would you like to install it now?"
+msgstr ""
+"כעת זמין להורדה מולטי-ספק רשמי בשם \"[COLOR FFFF6B00]Burst[/COLOR]\". האם "
+"תרצו להתקינו כעת?"
+
+msgctxt "#30272"
+msgid "Installation successful, enjoy Quasar [COLOR FFFF6B00]Burst[/COLOR]!"
+msgstr "ההתקנה הצליחה. תיהנו מ Quasar [COLOR FFFF6B00]Burst[/COLOR] !"
+
+msgctxt "#30273"
+msgid ""
+"Shoot... It looks like we couldn't install [COLOR FFFF6B00]Burst[/COLOR] "
+"automatically, head over to the Quasar Repository, then under the Program "
+"add-ons section to install it."
+msgstr ""
+"נראה כי ההתקנה האוטומטית של [COLOR FFFF6B00]Burst[/COLOR] לא הצליחה. ניתן "
+"להתקין מהמקור של Quasar, תחת \"הרחבות תוכנה\"."
+
+msgctxt "#30274"
+msgid "Enable all"
+msgstr "הפעלת כל הספקים"
+
+msgctxt "#30275"
+msgid "Disable all"
+msgstr "כיבוי כל הספקים"
+
+msgctxt "#30276"
+msgid "Delete torrent and files"
+msgstr "מחיקת כל הקבצים והטורנטים"
+
+msgctxt "#30277"
+msgid ""
+"%s added to library, do you want to rescan it?[CR]You can later use Kodi's "
+"'Update library' feature instead."
+msgstr ""
+"%s נוסף לספריה. האם לסרוק אותה מחדש?[CR]אפשר להשתמש מאוחר יותר ב\"עדכון "
+"ספריה של קודי"
+
+msgctxt "#30278"
+msgid ""
+"%s removed from library, do you want to clean it?[CR]You can later use "
+"Kodi's 'Clean library' feature instead."
+msgstr ""
+"%s הוסרה מהספריה, האם לנקות אותה?[CR]אפשר להשתמש מאוחר יותר גם באפשרות "
+"המובנית בקודי \"ניקוי ספריה\""
+
+msgctxt "#30279"
+msgid "Watchlist added to library"
+msgstr "רשימת צפיה נוספה לספרייה"
+
+msgctxt "#30280"
+msgid "Collection added to library"
+msgstr "האוספים נוספות לספריה"
+
+msgctxt "#30281"
+msgid "List added to library"
+msgstr "הרשימות נוספו לספריה"
+
+msgctxt "#30282"
+msgid "Nothing left to remove from Quasar"
+msgstr "לא נשאר דבר להסיר מQuasar"
+
+msgctxt "#30283"
+msgid "Merge to library"
+msgstr "מיזוג לספריה"
+
+msgctxt "#30284"
+msgid "Show unaired seasons"
+msgstr "הצגת עונות שטרם שודרו"
+
+msgctxt "#30285"
+msgid "Show unaired episodes"
+msgstr "הצגת פרקים שטרם שודרו"
+
+msgctxt "#30286"
+msgid ""
+"%s merged to library, do you want to rescan it?[CR]You can later use Kodi's "
+"'Update library' feature instead."
+msgstr ""
+"%s מוזגה לספריה, האם לסרוק אותה מחדש?[CR]אפשר גם להשתמש מאוחר יותר ב\"עדכון "
+"ספריה\" של קודי"
+
+msgctxt "#30287"
+msgid "%s already in library"
+msgstr "%s כבר בספריה"
+
+msgctxt "#30288"
+msgid ""
+"Library updated, do you want to rescan it?[CR]You can later use Kodi's "
+"'Update library' feature instead."
+msgstr ""
+"הספריה עודכנה, האם לסרוק אותה מחדש?[CR]ניתן לעשות זאת מאוחר יותר באמצעות "
+"\"עדכון ספריה\" של קודי"
+
+msgctxt "#30289"
+msgid "Genres"
+msgstr "ז'אנרים"
+
+msgctxt "#30290"
+msgid "Calendars"
+msgstr "לוחות שנה"
+
+msgctxt "#30291"
+msgid "My Movies"
+msgstr "הסרטים שלי"
+
+msgctxt "#30292"
+msgid "My Releases"
+msgstr "השחרורים שלי"
+
+msgctxt "#30293"
+msgid "All Movies"
+msgstr "כל הסרטים"
+
+msgctxt "#30294"
+msgid "All Releases"
+msgstr "כל השחרורים"
+
+msgctxt "#30295"
+msgid "My Shows"
+msgstr "הסדרות שלי"
+
+msgctxt "#30296"
+msgid "My New Shows"
+msgstr "הסדרות החדשות שלי"
+
+msgctxt "#30297"
+msgid "My Premieres"
+msgstr "הבכורות שלי"
+
+msgctxt "#30298"
+msgid "All Shows"
+msgstr "כל הסדרות"
+
+msgctxt "#30299"
+msgid "All New Shows"
+msgstr "כל הסדרות החדשות"
+
+msgctxt "#30300"
+msgid "All Premieres"
+msgstr "כל הבכורות"
+
+msgctxt "#30301"
+msgid "Move finished downloads to separate folders"
+msgstr "העברת קבצים בסיום ההורדה לתיקיה נפרדת"
+
+msgctxt "#30302"
+msgid ""
+"Files will only be moved after seeding is finished (see[CR]- BitTorrent "
+"settings), and will wait if currently playing"
+msgstr ""
+"הקבצים יועברו רק לאחר שזריעת הקבצים הסתיימה (ראו[CR]בהגדרות BitTorrent), "
+"וימתינו לסיום הניגון"
+
+msgctxt "#30303"
+msgid ""
+"RAR archive detected. Download will need to be completed before playback can "
+"start and will require around twice the amount of space, continue?"
+msgstr ""
+"זוהתה הורדה של ארכיון RAR. ההורדה חייבת להסתיים לפני שאפשר יהיה להתחיל לנגן, "
+"ותדרוש כפול מקום פנוי. להמשיך?"
+
+msgctxt "#30304"
+msgid "Error creating output pipe for 'unrar' command"
+msgstr "שגיאה בעת יצירת פלט של הפקודה unrar"
+
+msgctxt "#30305"
+msgid "Error starting 'unrar' command"
+msgstr "שגיאה בהפעלת פקודת 'unrar'"
+
+msgctxt "#30306"
+msgid "Error waiting for 'unrar' command"
+msgstr "לא נמצאה פקודת 'unrar'"
+
+msgctxt "#30307"
+msgid "Error reading from destination folder"
+msgstr "שגיאה בקריאת תיקיית היעד"
+
+msgctxt "#30308"
+msgid "Move completed"
+msgstr "העברה הושלמה"
+
+#~ msgctxt "#30025"
+#~ msgid "Limit rates after buffering only"
+#~ msgstr "הגבלת קצב לאחר התחלת הניגון"
+
+#~ msgctxt "#30103"
+#~ msgid "Unable to find Quasar binary"
+#~ msgstr "אין אפשרות למצוא את קובץ ההרצה של Quasar"
+
+#~ msgctxt "#30093"
+#~ msgid "Do Not Disturb mode"
+#~ msgstr "מצב נא לא להפריע"
+
+#~ msgctxt "#30028"
+#~ msgid "Background handling of torrents"
+#~ msgstr "ניהול הורדת בטורנטים ברקע"
 
 #~ msgctxt "#30021"
 #~ msgid "Enable pagination"

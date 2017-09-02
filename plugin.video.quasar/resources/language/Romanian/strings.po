@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2016-02-20 12:37+0200\n"
+"PO-Revision-Date: 2017-01-22 14:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ro\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.11\n"
 
 # Settings
 msgctxt "#30000"
@@ -24,7 +24,7 @@ msgstr "General"
 
 msgctxt "#30001"
 msgid "Download path (not FAT32)"
-msgstr "Calea spre descărcare (nu FAT32)"
+msgstr "Calea pentru descărcare (nu FAT32)"
 
 msgctxt "#30002"
 msgid "Keep files after playback/download stops"
@@ -103,8 +103,8 @@ msgid "Clear cache"
 msgstr "Șterge cache"
 
 msgctxt "#30021"
-msgid "Enable pagination"
-msgstr "Activează paginare"
+msgid "Results per page"
+msgstr "Rezultate per pagina"
 
 msgctxt "#30022"
 msgid "Enable overlay status"
@@ -180,7 +180,7 @@ msgstr "TheMovieDB"
 
 msgctxt "#30040"
 msgid "API key"
-msgstr "Cheia API"
+msgstr "Cheie API"
 
 msgctxt "#30041"
 msgid "Stream sorting"
@@ -215,13 +215,178 @@ msgid "Resolution preference for TV Shows"
 msgstr "Rezoluția preferată pentru Seriale"
 
 msgctxt "#30049"
-msgid "Percentage of additional seeders required before choosing next resolution"
-msgstr "Procente de surse necesare înainte de-a alege următoarea rezoluție"
+msgid ""
+"Percentage of additional seeders required before choosing next resolution"
+msgstr "Procentul de surse necesare înainte de-a alege următoarea rezoluție"
+
+msgctxt "#30050"
+msgid "Disable DHT"
+msgstr "Dezactivează DHT"
+
+msgctxt "#30051"
+msgid "Share ratio limit (percent)"
+msgstr "Limita raportului de partajare (procent)"
+
+msgctxt "#30052"
+msgid "Seed time ratio limit (percent)"
+msgstr "Limita raportului de încărcare (procent)"
+
+msgctxt "#30053"
+msgid "Seed time limit (hours)"
+msgstr "Limita raportului de încărcare (ore)"
+
+msgctxt "#30054"
+msgid "Update library"
+msgstr "Actualizează librăria"
+
+msgctxt "#30055"
+msgid "Add Specials to library"
+msgstr "Adaugă episoadele Speciale in librărie"
+
+msgctxt "#30056"
+msgid "Trakt"
+msgstr "Trakt"
+
+msgctxt "#30057"
+msgid "Username"
+msgstr "Nume"
+
+msgctxt "#30058"
+msgid "Authorize Quasar"
+msgstr "Autorizează Quasar"
+
+msgctxt "#30059"
+msgid "Library update delay on startup (seconds)"
+msgstr "Întârziere actualizare librărie la pornire (secunde)"
+
+msgctxt "#30060"
+msgid "Library update frequency (hours)"
+msgstr "Frecvența actualizării librăriei"
+
+msgctxt "#30061"
+msgid "Sync frequency of Trakt lists to library (hours)"
+msgstr "Frecvența sincronizării listelor Trakt in librărie"
+
+msgctxt "#30062"
+msgid "Ask to keep the files after streaming"
+msgstr "Întreabă dacă păstrează fișierele după redare"
+
+msgctxt "#30114"
+msgid "TheTVDB"
+msgstr "TheTVDB"
+
+msgctxt "#30115"
+msgid "TV show scraper used by Kodi library"
+msgstr "Scraper TV folosit de librărie"
+
+msgctxt "#30063"
+msgid "Disable UPNP & NATPMP"
+msgstr "Dezactivează UPNP & NATPMP"
+
+msgctxt "#30064"
+msgid "Encryption policy"
+msgstr "Politica de criptare"
+
+msgctxt "#30065"
+msgid "Disabled"
+msgstr "Dezactivat"
+
+msgctxt "#30066"
+msgid "Forced"
+msgstr "Forțat"
+
+msgctxt "#30067"
+msgid "Proxy type"
+msgstr "Tip proxy"
+
+msgctxt "#30068"
+msgid "SOCKS4"
+msgstr "SOCKS4"
+
+msgctxt "#30069"
+msgid "SOCKS5"
+msgstr "SOCKS5"
+
+msgctxt "#30070"
+msgid "SOCKS5 password"
+msgstr "Parola SOCKS5"
+
+msgctxt "#30071"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30072"
+msgid "HTTP password"
+msgstr "Parolă HTTP"
+
+msgctxt "#30073"
+msgid "i2p"
+msgstr "i2p"
+
+msgctxt "#30074"
+msgid "Spoof user agent (highly inadvisable)"
+msgstr "Păcălește user agent-ul (nu este recomandat)"
+
+msgctxt "#30075"
+msgid "Default from libtorrent (acceptable)"
+msgstr "Implicit de la libtorrent (acceptabil)"
+
+msgctxt "#30076"
+msgid "libtorrent (Rasterbar) 1.1.0"
+msgstr "libtorrent (Rasterbar) 1.1.0"
+
+msgctxt "#30077"
+msgid "BitTorrent 7.5.0"
+msgstr "BitTorrent 7.5.0"
+
+msgctxt "#30078"
+msgid "BitTorrent 7.4.3"
+msgstr "BitTorrent 7.4.3"
+
+msgctxt "#30079"
+msgid "µTorrent 3.4.9"
+msgstr "µTorrent 3.4.9"
+
+msgctxt "#30080"
+msgid "µTorrent 3.2.0"
+msgstr "µTorrent 3.2.0"
+
+msgctxt "#30081"
+msgid "µTorrent 2.2.1"
+msgstr "µTorrent 2.2.1"
+
+msgctxt "#30082"
+msgid "Transmission 2.92"
+msgstr "Transmission 2.92"
+
+msgctxt "#30083"
+msgid "Deluge 1.3.6.0"
+msgstr "Deluge 1.3.6.0"
+
+msgctxt "#30084"
+msgid "Deluge 1.3.12.0"
+msgstr "Deluge 1.3.12.0"
+
+msgctxt "#30085"
+msgid "Vuze 5.7.3.0"
+msgstr "Vuze 5.7.3.0"
+
+msgctxt "#30086"
+msgid "Enable tuned storage settings"
+msgstr "Activează setările optimizate pentru stocare"
+
+msgctxt "#30087"
+msgid "Ask to delete the files after streaming"
+msgstr "Întreabă dacă păstrează fișierele după redare"
+
+msgctxt "#30088"
+msgid "Initial buffering timeout (seconds)"
+msgstr "Timp răspuns în secunde"
 
 # Interface
 msgctxt "#30100"
 msgid "Quasar has crashed, restarting..."
-msgstr "Quasar a întâmpinat probleme, repornește..."
+msgstr "Quasar a întâmpinat probleme, se repornește..."
 
 msgctxt "#30101"
 msgid "You must restart Kodi before using Quasar"
@@ -342,11 +507,11 @@ msgstr "Seriale"
 
 msgctxt "#30216"
 msgid "Add Torrent"
-msgstr "Inserează torrent"
+msgstr "Adaugă torrent"
 
 msgctxt "#30217"
 msgid "Paste Magnet or URL"
-msgstr "Inserează Magnet sau URL"
+msgstr "Adaugă Magnet sau URL"
 
 msgctxt "#30218"
 msgid "Next page"
@@ -483,3 +648,115 @@ msgstr "Cele mai anticipate"
 msgctxt "#30251"
 msgid "Box Office"
 msgstr "Box Office"
+
+msgctxt "#30252"
+msgid "Add to library"
+msgstr "Adaugă în librărie"
+
+msgctxt "#30253"
+msgid "Remove from library"
+msgstr "Șterge din librărie"
+
+msgctxt "#30254"
+msgid "Watchlist"
+msgstr "Listă de vizionat"
+
+msgctxt "#30255"
+msgid "Add to watchlist"
+msgstr "Adaugă în lista de vizionat"
+
+msgctxt "#30256"
+msgid "Remove from watchlist"
+msgstr "Șterge din lista de vizionat"
+
+msgctxt "#30257"
+msgid "Collection"
+msgstr "Colecție"
+
+msgctxt "#30258"
+msgid "Add to collection"
+msgstr "Adaugă în colecție"
+
+msgctxt "#30259"
+msgid "Remove from collection"
+msgstr "Șterge din colecție"
+
+msgctxt "#30260"
+msgid "A torrent was previously chosen, use it?"
+msgstr "Un torent a fost ales anterior, îl folosesc?"
+
+msgctxt "#30261"
+msgid "Search history"
+msgstr "Istoricul cautărilor"
+
+msgctxt "#30262"
+msgid "Use search history?"
+msgstr "Folosește istoricul căutărilor?"
+
+msgctxt "#30263"
+msgid "Lists"
+msgstr "Liste"
+
+msgctxt "#30264"
+msgid "Reset clearances"
+msgstr "Șterge permisiunile"
+
+msgctxt "#30265"
+msgid "Item already in library"
+msgstr "Exista deja în librărie"
+
+msgctxt "#30266"
+msgid "Ignore duplicates"
+msgstr "Ignoră duplicatele"
+
+msgctxt "#30267"
+msgid "Keep downloaded files?"
+msgstr "Păstrează fișierele descărcate?"
+
+msgctxt "#30268"
+msgid "Toggle watched"
+msgstr "Comutare vizionare"
+
+msgctxt "#30269"
+msgid "Delete downloaded files?"
+msgstr "Păstrează fișierele descărcate?"
+
+msgctxt "#30270"
+msgid "Match found in your active torrents, play it?"
+msgstr "S-a găsit un fișier asemănător in torentele tale active, îl redau?"
+
+msgctxt "#30271"
+msgid ""
+"There is now an official multi-provider for Quasar called [COLOR "
+"FFFF6B00]Burst[/COLOR], would you like to install it now?"
+msgstr ""
+"Există un multi furnizor oficial pentru Quasar numit  [COLOR "
+"FFFF6B00]Burst[/COLOR], vrei să-l instalezi acum?"
+
+msgctxt "#30272"
+msgid "Installation successful, enjoy Quasar [COLOR FFFF6B00]Burst[/COLOR]!"
+msgstr ""
+"Instalarea s-a efectuat cu succes, bucură-te de Quasar [COLOR "
+"FFFF6B00]Burst[/COLOR] !"
+
+msgctxt "#30273"
+msgid ""
+"Shoot... It looks like we couldn't install [COLOR FFFF6B00]Burst[/COLOR] "
+"automatically, head over to the Quasar Repository, then under the Program "
+"add-ons section to install it."
+msgstr ""
+"Opa... Se pare ca nu s-a putut instala [COLOR FFFF6B00]Burst[/COLOR] "
+"automat. Instalează-l manual din Repository-ul Quasar, secțiunea Program "
+"add-ons"
+
+msgctxt "#30274"
+msgid "Enable all"
+msgstr "Activează-le pe toate"
+
+msgctxt "#30275"
+msgid "Disable all"
+msgstr "Dezactivează-le pe toate"
+
+msgctxt "#30276"
+msgid "Delete torrent and files"
+msgstr "Șterge torentele si fișierele"
