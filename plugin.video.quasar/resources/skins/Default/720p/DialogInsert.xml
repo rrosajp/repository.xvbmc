@@ -2,8 +2,7 @@
 <window type="dialog">
 	<!-- 1280 x 720 -->
 	<defaultcontrol always="true">32501</defaultcontrol>
-	<include>dialogeffect</include>
-	<depth>DepthDialog+</depth>
+	<depth>DepthOSD</depth>
   <controls>
 		<control type="group">
 			<control type="image">
@@ -12,7 +11,7 @@
 				<posy>205</posy>
 				<width>800</width>
 				<height>310</height>
-				<texture>AddonWindow/dialog_back.png</texture>
+				<texture colordiffuse="F0F0F0F0">AddonWindow/black.png</texture>
 			</control>
 			<control type="button" id="32500">
 				<!-- Close button -->
@@ -20,23 +19,21 @@
 				<posy>222</posy>
 				<width>32</width>
 				<height>32</height>
-				<texturefocus>AddonWindow/dialog_close_focus.png</texturefocus>
-				<texturenofocus>AddonWindow/dialog_close_nofocus.png</texturenofocus>
+				<texturefocus colordiffuse="button_focus">Button/close.png</texturefocus>
+				<texturenofocus colordiffuse="EEFFFFFF">Button/close.png</texturenofocus>
 				<onup>32508</onup>
 				<ondown>32501</ondown>
 				<onleft condition="SubString(Control.GetLabel(32501),*)">32505</onleft>
 				<onleft condition="SubString(Control.GetLabel(32502),*)">32507</onleft>
 			</control>
 			<control type="radiobutton" id="32501">
-				<!-- Radio Button 1 -->
-				<posx>820</posx>
+				<!-- Radio Button URL -->
+				<posx>760</posx>
 				<posy>315</posy>
-				<width>180</width>
-				<height>43</height>
+				<width>280</width>
+				<height>80</height>
 				<visible>true</visible>
 				<colordiffuse>FFFFFFFF</colordiffuse>
-				<texturefocus>Button/button-focus.png</texturefocus>
-				<texturenofocus>Button/button-nofocus.png</texturenofocus>
 				<wrapmultiline>true</wrapmultiline>
 				<font>font12</font>
 				<label>$ADDON[plugin.video.quasar 30105]</label>
@@ -52,15 +49,13 @@
 				<onleft condition="SubString(Control.GetLabel(32502),*)">32507</onleft>
 			</control>
 			<control type="radiobutton" id="32502">
-				<!-- Radio Button 2 -->
-				<posx>820</posx>
+				<!-- Radio Button file path -->
+				<posx>760</posx>
 				<posy>375</posy>
-				<width>180</width>
-				<height>43</height>
+				<width>280</width>
+				<height>80</height>
 				<visible>true</visible>
 				<colordiffuse>FFFFFFFF</colordiffuse>
-				<texturefocus>Button/button-focus.png</texturefocus>
-				<texturenofocus>Button/button-nofocus.png</texturenofocus>
 				<wrapmultiline>true</wrapmultiline>
 				<font>font12</font>
 				<label>$ADDON[plugin.video.quasar 30106]</label>
@@ -77,14 +72,12 @@
 			</control>
 			<control type="button" id="32508">
 				<!-- OK button -->
-				<posx>820</posx>
+				<posx>760</posx>
 				<posy>435</posy>
-				<width>180</width>
-				<height>43</height>
+				<width>280</width>
+				<height>80</height>
 				<visible>true</visible>
 				<colordiffuse>FFFFFFFF</colordiffuse>
-				<texturefocus>Button/button-focus.png</texturefocus>
-				<texturenofocus>Button/button-nofocus.png</texturenofocus>
 				<wrapmultiline>true</wrapmultiline>
 				<font>font12</font>
 				<label>$ADDON[plugin.video.quasar 30109]</label>
@@ -109,11 +102,11 @@
 				<align>center</align>
 				<aligny>center</aligny>
 				<label>[B]$ADDON[plugin.video.quasar 30104][/B]</label>
-				<textcolor>silver</textcolor>
+				<textcolor>white</textcolor>
 				<shadowcolor>AA000000</shadowcolor>
 			</control>
 			<control type="label" id="32504">
-				<!-- Option 1 label -->
+				<!-- Option 1 Insert URL label -->
 				<posx>280</posx>
 				<posy>280</posy>
 				<width>500</width>
@@ -123,19 +116,17 @@
 				<label>$ADDON[plugin.video.quasar 30107]</label>
 				<align>left</align>
 				<aligny>center</aligny>
-				<textcolor>silver</textcolor>
+				<textcolor>white</textcolor>
 				<shadowcolor>AA000000</shadowcolor>
 			</control>
 			<control type="button" id="32505">
-				<!-- Option 1 url button -->
-				<posx>280</posx>
+				<!-- Option 1 Insert URL box -->
+				<posx>260</posx>
 				<posy>315</posy>
 				<width>500</width>
-				<height>43</height>
+				<height>80</height>
 				<visible>SubString(Control.GetLabel(32501),*)</visible>
 				<colordiffuse>FFFFFFFF</colordiffuse>
-				<texturefocus>Button/button-focus.png</texturefocus>
-				<texturenofocus>Button/button-nofocus.png</texturenofocus>
 				<wrapmultiline>false</wrapmultiline>
 				<font>font14</font>
 				<textcolor>FFB2D4F5</textcolor>
@@ -147,7 +138,7 @@
 				<onright>32508</onright>
 			</control>
 			<control type="label" id="32506">
-				<!-- Option 2 label -->
+				<!-- Option 2 File path label -->
 				<posx>280</posx>
 				<posy>280</posy>
 				<width>500</width>
@@ -157,19 +148,17 @@
 				<label>$ADDON[plugin.video.quasar 30108]</label>
 				<align>left</align>
 				<aligny>center</aligny>
-				<textcolor>silver</textcolor>
+				<textcolor>white</textcolor>
 				<shadowcolor>AA000000</shadowcolor>
 			</control>
 			<control type="button" id="32507">
-				<!-- Option 2 path button -->
-				<posx>280</posx>
+				<!-- Option 2 File path box -->
+				<posx>260</posx>
 				<posy>315</posy>
 				<width>500</width>
-				<height>43</height>
+				<height>80</height>
 				<visible>SubString(Control.GetLabel(32502),*)</visible>
 				<colordiffuse>FFFFFFFF</colordiffuse>
-				<texturefocus>Button/button-focus.png</texturefocus>
-				<texturenofocus>Button/button-nofocus.png</texturenofocus>
 				<wrapmultiline>false</wrapmultiline>
 				<font>font14</font>
 				<textcolor>FFB2D4F5</textcolor>

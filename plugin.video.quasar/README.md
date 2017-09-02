@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/scakemyer/plugin.video.quasar.svg?branch=master)](https://travis-ci.org/scakemyer/plugin.video.quasar)
 [![Join the chat at https://gitter.im/QuasarHQ/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuasarHQ/Lobby)
+[![Bountysource](https://www.bountysource.com/badge/team?team_id=133972&style=bounties_received)](https://www.bountysource.com/teams/plugin.video.quasar)
 
 What it is
 ----------
@@ -13,10 +14,12 @@ Big thanks for his great job.
 Supported platforms
 -------------------
 - Windows 32/64 bits
-- Linux 32/64 bits (starting Ubuntu 12.04)
+- Linux 32/64 bits (starting Ubuntu 15.04)
 - Linux ARM (Raspberry Pi, Cubox i4Pro, etc)
 - OS X 64 bits
 - Android ARM (4.4.x, L and M), x86 and x64 (L and M)
+
+Minimum supported Kodi version: 16 (Jarvis)
 
 Download
 --------
@@ -25,9 +28,9 @@ See the [Releases](https://github.com/scakemyer/plugin.video.quasar/releases) pa
 
 Installation
 ------------
+- Go to Settings > Service settings > Control and **enable both Application control options**
+- Restart Kodi if one or both options were not enabled
 - Install Quasar like any other add-on
-- Go to Settings > Services > Remote Control and **enable both options**
-- Restart Kodi
 
 Build
 -----
@@ -58,8 +61,8 @@ How it works
 ------------
 Quasar is a torrent finding and streaming engine. **It doesn't go on torrent websites for legal reasons**. It calls specially crafted add-ons (called **providers**) that are installed separately. They are normal Kodi add-ons, and thus can be installed/updated/distributed just like any other add-on.
 
-Quasar is centered around media: it browses media from [TheMovieDB](https://www.themoviedb.org/) and [TheTVDB](http://thetvdb.com/).
-And so, when you decide you want to watch a media (i.e. given an IMDB or TVDB Id), here's what Quasar does:
+Quasar is centered around media: it browses media from [TheMovieDB](https://www.themoviedb.org/) and [Trakt.tv](https://trakt.tv/).
+And so, when you decide you want to watch a media (i.e. given an TMDB ID), here's what Quasar does:
 
 - Enumerate the installed providers
 - Call each provider to find the media you want to watch (in parallel)
@@ -67,17 +70,17 @@ And so, when you decide you want to watch a media (i.e. given an IMDB or TVDB Id
 - Collects and de-duplicates all the links
 - Goes on the BitTorrent network to find out the number of seeds and peers in real time (i.e. not provided by the provider)
 - Finds out of which quality are the different links (thanks to their name)
-- Ranks the links by quality and availability (Quasar privileges quality over availability, but it's not dumb. However, you can get a full list to choose from manually it you want, or enable 'Choose stream by default' to always choose manually)
-- Sends the chosen link to the BitTorrent streaming engine (brand new, and completely rewritten)
+- Ranks the links by quality and availability (Quasar privileges quality over availability, but it's not dumb. However, you can get a full list to choose from manually if you want, or disable 'Choose stream automatically' to always choose manually)
+- Sends the chosen link to the BitTorrent streaming engine
 
-All of this is done in less than 1s. Quasar is around 95% Go, and thus, it's *fast*. Very fast, actually.
+All of this is done in less than 10s depending on your platform and timeout settings. Quasar is around 95% Go, and thus, it's *fast*. Very fast, actually.
 
-The BitTorrent streaming engine is brand new and very resilient (or at least it's designed to be). It's built on top of the brand new libtorrent 1.0 (which had special patches for the streaming case). So it's very optimized, especially for low CPU machines. I have yet to find a media that doesn't play with the engine.
+The BitTorrent streaming engine is very resilient (or at least it's designed to be). It's built on top of libtorrent 1.1, so it's very optimized, especially for low CPU machines. I have yet to find a media that doesn't play with the engine.
 
 
 Providers
 ---------
-As said before, Quasar **relies on providers to find streams**. Providers are easy to write, and average ~20 lines of Python. As they are normal Kodi add-ons, which can have their own configuration (although it is not recommended because it complicates things).
+As said before, Quasar **relies on providers to find streams**. Providers are easy to write, and can be as little as ~20 lines of Python code. As they are normal Kodi add-ons, which can have their own configuration (although it is not recommended because it complicates things).
 
 Sample Quasar provider: [https://github.com/scakemyer/script.quasar.dummy](https://github.com/scakemyer/script.quasar.dummy)
 
@@ -104,7 +107,7 @@ Yes, but it can fail.
 ##### What about seeding?
 When watching a torrent, **you will be seeding while you watch the stream**.
 
-##### Does it downloads the whole file? Do I need the space? Is it ever deleted?
+##### Does it download the whole file? Do I need the space? Is it ever deleted?
 Yes, yes and yes.
 
 ##### Can I keep the file after watching it?
@@ -119,7 +122,8 @@ Sorry, I won't comment of specific providers.
 
 Screenshots
 -----------
-![](http://i.imgur.com/uchej1p.png)
-![](http://i.imgur.com/0ybvekN.jpg)
-![](http://i.imgur.com/L103Xt1.jpg)
-![](http://i.imgur.com/8qSwVk1.jpg)
+![](https://raw.githubusercontent.com/scakemyer/plugin.video.quasar/master/resources/screenshots/home.jpg)
+
+![](https://raw.githubusercontent.com/scakemyer/plugin.video.quasar/master/resources/screenshots/movies.jpg)
+
+![](https://raw.githubusercontent.com/scakemyer/plugin.video.quasar/master/resources/screenshots/webui.png)
