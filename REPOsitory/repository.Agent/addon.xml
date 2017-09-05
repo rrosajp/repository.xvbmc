@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="repository.Agent" name=" [COLOR gold]AGENT 47[/COLOR]" version="1.0.2" provider-name="[COLOR red][B] COLD[/B][/COLOR][COLOR royalblue][B]FIRE[/B][/COLOR]">
+<addon id="repository.Agent" name=" [COLOR gold]AGENT 47[/COLOR]" version="1.0.4" provider-name="[COLOR red][B] COLD[/B][/COLOR][COLOR royalblue][B]FIRE[/B][/COLOR]">
         <requires>
             <import addon="xbmc.addon" version="12.0.0"/>
         </requires>
