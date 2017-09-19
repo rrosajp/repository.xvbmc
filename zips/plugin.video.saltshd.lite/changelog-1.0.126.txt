@@ -1,9 +1,0 @@
-[B]Version 1.0.126[/B]
-- Add MysticLand scraper
-- Replace onlinemovies.is with emovies.pro
-- Improve/Fix WatchHD scraper
-- Fix Farda scraper
-- Fix 9Movies scraper
-- Fix TVWTS scraper
-- Fix PubFilm scraper
-
