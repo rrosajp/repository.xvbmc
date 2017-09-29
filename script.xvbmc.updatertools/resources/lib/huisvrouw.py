@@ -28,119 +28,119 @@ class cacheEntry :#line:56
         self .name =namei #line:58
         self .path =pathi #line:59
 def setupCacheEntries ():#line:66
-    OO0OOO00OOO0O0O0O =6 #line:67
-    OO0OOOO0OO000OOO0 =["MP3 Streams","Quasar","SportsDevil","Simple Downloader","Spotitube","SkinHelperService"]#line:68
-    OOO0O0OOOO0O0OO0O =["special://profile/addon_data/plugin.audio.mp3streams/temp_dl","special://profile/addon_data/plugin.video.quasar/cache","special://profile/addon_data/plugin.video.SportsDevil/cache","special://profile/addon_data/script.module.simple.downloader","special://profile/addon_data/plugin.video.spotitube/cache","special://profile/addon_data/script.skin.helper.service/musicartcache"]#line:74
-    O0O000000O00OO00O =[]#line:76
-    for OOOO0OOO00O0O00O0 in range (OO0OOO00OOO0O0O0O ):#line:78
-        O0O000000O00OO00O .append (cacheEntry (OO0OOOO0OO000OOO0 [OOOO0OOO00O0O00O0 ],OOO0O0OOOO0O0OO0O [OOOO0OOO00O0O00O0 ]))#line:79
-    return O0O000000O00OO00O #line:81
+    OO0O000OOOOO0OOOO =6 #line:67
+    OO00O00O0O0000OOO =["MP3 Streams","Quasar","SportsDevil","Simple Downloader","Spotitube","SkinHelperService"]#line:68
+    O00000O0OOOO00OO0 =["special://profile/addon_data/plugin.audio.mp3streams/temp_dl","special://profile/addon_data/plugin.video.quasar/cache","special://profile/addon_data/plugin.video.SportsDevil/cache","special://profile/addon_data/script.module.simple.downloader","special://profile/addon_data/plugin.video.spotitube/cache","special://profile/addon_data/script.skin.helper.service/musicartcache"]#line:74
+    OO0OOO00O0O0O000O =[]#line:76
+    for O0OOO0O0OOOO0O0O0 in range (OO0O000OOOOO0OOOO ):#line:78
+        OO0OOO00O0O0O000O .append (cacheEntry (OO00O00O0O0000OOO [O0OOO0O0OOOO0O0O0 ],O00000O0OOOO00OO0 [O0OOO0O0OOOO0O0O0 ]))#line:79
+    return OO0OOO00O0O0O000O #line:81
 def clearCache ():#line:88
     if os .path .exists (cachePath )==True :#line:89
-        for O000OOO00O0O00OO0 ,OO00OO00O0OO00OO0 ,O0O00O0O0O0O0000O in os .walk (cachePath ):#line:90
-            O00O00OO00OOO0OOO =0 #line:91
-            O00O00OO00OOO0OOO +=len (O0O00O0O0O0O0000O )#line:92
-            if O00O00OO00OOO0OOO >0 :#line:93
-                if dialog .yesno ("Delete Cache Files",str (O00O00OO00OOO0OOO )+' files found','Do you want to delete them?'):#line:95
-                    for OO00OO000OO0OO0O0 in O0O00O0O0O0O0000O :#line:96
+        for O0O0OO0OOOO0OOO00 ,OOOO0OO00O0OOOO00 ,OO000OOOO00O0O0O0 in os .walk (cachePath ):#line:90
+            O000O0O0OO00000O0 =0 #line:91
+            O000O0O0OO00000O0 +=len (OO000OOOO00O0O0O0 )#line:92
+            if O000O0O0OO00000O0 >0 :#line:93
+                if dialog .yesno ("Delete Cache Files",str (O000O0O0OO00000O0 )+' files found','Do you want to delete them?'):#line:95
+                    for OOO000OOOO0OOOOO0 in OO000OOOO00O0O0O0 :#line:96
                         try :#line:97
-                            if (OO00OO000OO0OO0O0 .endswith (".log")):continue #line:99
-                            os .unlink (os .path .join (O000OOO00O0O00OO0 ,OO00OO000OO0OO0O0 ))#line:100
+                            if (OOO000OOOO0OOOOO0 .endswith (".log")):continue #line:99
+                            os .unlink (os .path .join (O0O0OO0OOOO0OOO00 ,OOO000OOOO0OOOOO0 ))#line:100
                         except :#line:101
                             pass #line:102
-                    for OOO000OO00OOO0OOO in OO00OO00O0OO00OO0 :#line:103
+                    for O0O0OOOOO0OOOO00O in OOOO0OO00O0OOOO00 :#line:103
                         try :#line:104
-                            O00O0O00OOO0OO0OO =(os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:106
-                            if not "archive_cache"in str (O00O0O00OOO0OO0OO ):#line:107
-                                shutil .rmtree (os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:108
+                            OOO00OO0OOOOO000O =(os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:106
+                            if not "archive_cache"in str (OOO00OO0OOOOO000O ):#line:107
+                                shutil .rmtree (os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:108
                         except :#line:109
                             pass #line:110
             else :#line:111
                 pass #line:112
     if os .path .exists (tempPath )==True :#line:114
-        for O000OOO00O0O00OO0 ,OO00OO00O0OO00OO0 ,O0O00O0O0O0O0000O in os .walk (tempPath ):#line:115
-            O00O00OO00OOO0OOO =0 #line:116
-            O00O00OO00OOO0OOO +=len (O0O00O0O0O0O0000O )#line:117
-            if O00O00OO00OOO0OOO >0 :#line:118
-                if dialog .yesno ("Delete Temp Files",str (O00O00OO00OOO0OOO )+' files found','Do you want to delete them?'):#line:120
-                    for OO00OO000OO0OO0O0 in O0O00O0O0O0O0000O :#line:121
+        for O0O0OO0OOOO0OOO00 ,OOOO0OO00O0OOOO00 ,OO000OOOO00O0O0O0 in os .walk (tempPath ):#line:115
+            O000O0O0OO00000O0 =0 #line:116
+            O000O0O0OO00000O0 +=len (OO000OOOO00O0O0O0 )#line:117
+            if O000O0O0OO00000O0 >0 :#line:118
+                if dialog .yesno ("Delete Temp Files",str (O000O0O0OO00000O0 )+' files found','Do you want to delete them?'):#line:120
+                    for OOO000OOOO0OOOOO0 in OO000OOOO00O0O0O0 :#line:121
                         try :#line:122
-                            if (OO00OO000OO0OO0O0 .endswith (".log")):continue #line:124
-                            os .unlink (os .path .join (O000OOO00O0O00OO0 ,OO00OO000OO0OO0O0 ))#line:125
+                            if (OOO000OOOO0OOOOO0 .endswith (".log")):continue #line:124
+                            os .unlink (os .path .join (O0O0OO0OOOO0OOO00 ,OOO000OOOO0OOOOO0 ))#line:125
                         except :#line:126
                             pass #line:127
-                    for OOO000OO00OOO0OOO in OO00OO00O0OO00OO0 :#line:128
+                    for O0O0OOOOO0OOOO00O in OOOO0OO00O0OOOO00 :#line:128
                         try :#line:129
-                            O00O0O00OOO0OO0OO =(os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:131
-                            if not "archive_cache"in str (O00O0O00OOO0OO0OO ):#line:132
-                                shutil .rmtree (os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:133
+                            OOO00OO0OOOOO000O =(os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:131
+                            if not "archive_cache"in str (OOO00OO0OOOOO000O ):#line:132
+                                shutil .rmtree (os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:133
                         except :#line:134
                             pass #line:135
             else :#line:136
                 pass #line:137
     if xbmc .getCondVisibility ('system.platform.ATV2'):#line:139
-        OO000OO0OOO0O000O =os .path .join ('/private/var/mobile/Library/Caches/AppleTV/Video/','Other')#line:140
-        for O000OOO00O0O00OO0 ,OO00OO00O0OO00OO0 ,O0O00O0O0O0O0000O in os .walk (OO000OO0OOO0O000O ):#line:141
-            O00O00OO00OOO0OOO =0 #line:142
-            O00O00OO00OOO0OOO +=len (O0O00O0O0O0O0000O )#line:143
-            if O00O00OO00OOO0OOO >0 :#line:144
-                if dialog .yesno ("Delete ATV2 Cache Files",str (O00O00OO00OOO0OOO )+" files found in 'Other'",'Do you want to delete them?'):#line:146
-                    for OO00OO000OO0OO0O0 in O0O00O0O0O0O0000O :#line:147
+        OO000O00O00O00O00 =os .path .join ('/private/var/mobile/Library/Caches/AppleTV/Video/','Other')#line:140
+        for O0O0OO0OOOO0OOO00 ,OOOO0OO00O0OOOO00 ,OO000OOOO00O0O0O0 in os .walk (OO000O00O00O00O00 ):#line:141
+            O000O0O0OO00000O0 =0 #line:142
+            O000O0O0OO00000O0 +=len (OO000OOOO00O0O0O0 )#line:143
+            if O000O0O0OO00000O0 >0 :#line:144
+                if dialog .yesno ("Delete ATV2 Cache Files",str (O000O0O0OO00000O0 )+" files found in 'Other'",'Do you want to delete them?'):#line:146
+                    for OOO000OOOO0OOOOO0 in OO000OOOO00O0O0O0 :#line:147
                         try :#line:149
-                            if (OO00OO000OO0OO0O0 .endswith (".log")):continue #line:150
-                            os .unlink (os .path .join (O000OOO00O0O00OO0 ,OO00OO000OO0OO0O0 ))#line:151
+                            if (OOO000OOOO0OOOOO0 .endswith (".log")):continue #line:150
+                            os .unlink (os .path .join (O0O0OO0OOOO0OOO00 ,OOO000OOOO0OOOOO0 ))#line:151
                         except :#line:152
                             pass #line:153
-                    for OOO000OO00OOO0OOO in OO00OO00O0OO00OO0 :#line:154
+                    for O0O0OOOOO0OOOO00O in OOOO0OO00O0OOOO00 :#line:154
                         try :#line:156
-                            O00O0O00OOO0OO0OO =(os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:157
-                            if not "archive_cache"in str (O00O0O00OOO0OO0OO ):#line:158
-                                shutil .rmtree (os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:159
+                            OOO00OO0OOOOO000O =(os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:157
+                            if not "archive_cache"in str (OOO00OO0OOOOO000O ):#line:158
+                                shutil .rmtree (os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:159
                         except :#line:160
                             pass #line:161
             else :#line:162
                 pass #line:163
-        O000O0O00000OO00O =os .path .join ('/private/var/mobile/Library/Caches/AppleTV/Video/','LocalAndRental')#line:165
-        for O000OOO00O0O00OO0 ,OO00OO00O0OO00OO0 ,O0O00O0O0O0O0000O in os .walk (O000O0O00000OO00O ):#line:166
-            O00O00OO00OOO0OOO =0 #line:167
-            O00O00OO00OOO0OOO +=len (O0O00O0O0O0O0000O )#line:168
-            if O00O00OO00OOO0OOO >0 :#line:169
-                if dialog .yesno ("Delete ATV2 Cache Files",str (O00O00OO00OOO0OOO )+" files found in 'LocalAndRental'",'Do you want to delete them?'):#line:171
-                    for OO00OO000OO0OO0O0 in O0O00O0O0O0O0000O :#line:172
+        O0O00OO00O00OO0O0 =os .path .join ('/private/var/mobile/Library/Caches/AppleTV/Video/','LocalAndRental')#line:165
+        for O0O0OO0OOOO0OOO00 ,OOOO0OO00O0OOOO00 ,OO000OOOO00O0O0O0 in os .walk (O0O00OO00O00OO0O0 ):#line:166
+            O000O0O0OO00000O0 =0 #line:167
+            O000O0O0OO00000O0 +=len (OO000OOOO00O0O0O0 )#line:168
+            if O000O0O0OO00000O0 >0 :#line:169
+                if dialog .yesno ("Delete ATV2 Cache Files",str (O000O0O0OO00000O0 )+" files found in 'LocalAndRental'",'Do you want to delete them?'):#line:171
+                    for OOO000OOOO0OOOOO0 in OO000OOOO00O0O0O0 :#line:172
                         try :#line:174
-                            if (OO00OO000OO0OO0O0 .endswith (".log")):continue #line:175
-                            os .unlink (os .path .join (O000OOO00O0O00OO0 ,OO00OO000OO0OO0O0 ))#line:176
+                            if (OOO000OOOO0OOOOO0 .endswith (".log")):continue #line:175
+                            os .unlink (os .path .join (O0O0OO0OOOO0OOO00 ,OOO000OOOO0OOOOO0 ))#line:176
                         except :#line:177
                             pass #line:178
-                    for OOO000OO00OOO0OOO in OO00OO00O0OO00OO0 :#line:179
+                    for O0O0OOOOO0OOOO00O in OOOO0OO00O0OOOO00 :#line:179
                         try :#line:181
-                            O00O0O00OOO0OO0OO =(os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:182
-                            if not "archive_cache"in str (O00O0O00OOO0OO0OO ):#line:183
-                                shutil .rmtree (os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:184
+                            OOO00OO0OOOOO000O =(os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:182
+                            if not "archive_cache"in str (OOO00OO0OOOOO000O ):#line:183
+                                shutil .rmtree (os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:184
                         except :#line:185
                             pass #line:186
             else :#line:187
                 pass #line:188
-    O00O0000O0O0O0OOO =setupCacheEntries ()#line:190
-    for O0O00000000O00000 in O00O0000O0O0O0OOO :#line:191
-        OO0O0000O000OO00O =xbmc .translatePath (O0O00000000O00000 .path )#line:192
-        if os .path .exists (OO0O0000O000OO00O )==True :#line:193
-            for O000OOO00O0O00OO0 ,OO00OO00O0OO00OO0 ,O0O00O0O0O0O0000O in os .walk (OO0O0000O000OO00O ):#line:194
-                O00O00OO00OOO0OOO =0 #line:195
-                O00O00OO00OOO0OOO +=len (O0O00O0O0O0O0000O )#line:196
-                if O00O00OO00OOO0OOO >0 :#line:197
-                    if dialog .yesno (MainTitle ,'%s cache files found'%(O0O00000000O00000 .name ),'Do you want to delete them?'):#line:200
-                        for OO00OO000OO0OO0O0 in O0O00O0O0O0O0000O :#line:201
+    O00OOOO0OOO00O0O0 =setupCacheEntries ()#line:190
+    for O00OO0OO0O00O000O in O00OOOO0OOO00O0O0 :#line:191
+        OO0O000O0O0000O0O =xbmc .translatePath (O00OO0OO0O00O000O .path )#line:192
+        if os .path .exists (OO0O000O0O0000O0O )==True :#line:193
+            for O0O0OO0OOOO0OOO00 ,OOOO0OO00O0OOOO00 ,OO000OOOO00O0O0O0 in os .walk (OO0O000O0O0000O0O ):#line:194
+                O000O0O0OO00000O0 =0 #line:195
+                O000O0O0OO00000O0 +=len (OO000OOOO00O0O0O0 )#line:196
+                if O000O0O0OO00000O0 >0 :#line:197
+                    if dialog .yesno (MainTitle ,'%s cache files found'%(O00OO0OO0O00O000O .name ),'Do you want to delete them?'):#line:200
+                        for OOO000OOOO0OOOOO0 in OO000OOOO00O0O0O0 :#line:201
                             try :#line:203
-                                if (OO00OO000OO0OO0O0 .endswith (".log")):continue #line:204
-                                os .unlink (os .path .join (O000OOO00O0O00OO0 ,OO00OO000OO0OO0O0 ))#line:205
+                                if (OOO000OOOO0OOOOO0 .endswith (".log")):continue #line:204
+                                os .unlink (os .path .join (O0O0OO0OOOO0OOO00 ,OOO000OOOO0OOOOO0 ))#line:205
                             except :#line:206
                                 pass #line:207
-                        for OOO000OO00OOO0OOO in OO00OO00O0OO00OO0 :#line:208
+                        for O0O0OOOOO0OOOO00O in OOOO0OO00O0OOOO00 :#line:208
                             try :#line:210
-                                O00O0O00OOO0OO0OO =(os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:211
-                                if not "archive_cache"in str (O00O0O00OOO0OO0OO ):#line:212
-                                    shutil .rmtree (os .path .join (O000OOO00O0O00OO0 ,OOO000OO00OOO0OOO ))#line:213
+                                OOO00OO0OOOOO000O =(os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:211
+                                if not "archive_cache"in str (OOO00OO0OOOOO000O ):#line:212
+                                    shutil .rmtree (os .path .join (O0O0OO0OOOO0OOO00 ,O0O0OOOOO0OOOO00O ))#line:213
                             except :#line:214
                                 pass #line:215
                 else :#line:216
@@ -150,95 +150,95 @@ def clearCache ():#line:88
 def deleteThumbnails ():#line:227
     if os .path .exists (thumbnailPath )==True :#line:228
             if dialog .yesno ("Delete Thumbnails",'This option deletes all thumbnails','Are you sure you want to do this?'):#line:230
-                for O0OOO0OOO0O0O000O ,O0O0O000O000O0O0O ,OO00000OOO0O0O00O in os .walk (thumbnailPath ):#line:231
-                    OO0OO0OO00O0OO000 =0 #line:232
-                    OO0OO0OO00O0OO000 +=len (OO00000OOO0O0O00O )#line:233
-                    if OO0OO0OO00O0OO000 >0 :#line:234
-                        for OOOOO00O00O0O0OO0 in OO00000OOO0O0O00O :#line:235
+                for OO00OOO000O00000O ,O00OO000O000000OO ,O000O00O0O000OOOO in os .walk (thumbnailPath ):#line:231
+                    O00OO000OOOO0O000 =0 #line:232
+                    O00OO000OOOO0O000 +=len (O000O00O0O000OOOO )#line:233
+                    if O00OO000OOOO0O000 >0 :#line:234
+                        for OO0O0OOOO00OO0000 in O000O00O0O000OOOO :#line:235
                             try :#line:236
-                                os .unlink (os .path .join (O0OOO0OOO0O0O000O ,OOOOO00O00O0O0OO0 ))#line:237
+                                os .unlink (os .path .join (OO00OOO000O00000O ,OO0O0OOOO00OO0000 ))#line:237
                             except :#line:238
                                 pass #line:239
     else :#line:240
         pass #line:241
-    O00000O00OOO0O00O =os .path .join (databasePath ,"Textures13.db")#line:243
+    OOOOOOOOOOOO0O0OO =os .path .join (databasePath ,"Textures13.db")#line:243
     try :#line:244
-        os .unlink (O00000O00OOO0O00O )#line:245
+        os .unlink (OOOOOOOOOOOO0O0OO )#line:245
     except OSError :#line:246
         try :#line:247
-            OO0OOO000O0O0O00O =sqlite3 .connect (O00000O00OOO0O00O )#line:248
-            OO000OOO0O000O000 =OO0OOO000O0O0O00O .cursor ()#line:249
-            OO000OOO0O000O000 .execute ('DROP TABLE IF EXISTS path')#line:250
-            OO000OOO0O000O000 .execute ('VACUUM')#line:251
-            OO0OOO000O0O0O00O .commit ()#line:252
-            OO000OOO0O000O000 .execute ('DROP TABLE IF EXISTS sizes')#line:253
-            OO000OOO0O000O000 .execute ('VACUUM')#line:254
-            OO0OOO000O0O0O00O .commit ()#line:255
-            OO000OOO0O000O000 .execute ('DROP TABLE IF EXISTS texture')#line:256
-            OO000OOO0O000O000 .execute ('VACUUM')#line:257
-            OO0OOO000O0O0O00O .commit ()#line:258
-            OO000OOO0O000O000 .execute ("""CREATE TABLE path (id integer, url text, type text, texture text, primary key(id))""")#line:260
-            OO0OOO000O0O0O00O .commit ()#line:261
-            OO000OOO0O000O000 .execute ("""CREATE TABLE sizes (idtexture integer,size integer, width integer, height integer, usecount integer, lastusetime text)""")#line:263
-            OO0OOO000O0O0O00O .commit ()#line:264
-            OO000OOO0O000O000 .execute ("""CREATE TABLE texture (id integer, url text, cachedurl text, imagehash text, lasthashcheck text, PRIMARY KEY(id))""")#line:266
-            OO0OOO000O0O0O00O .commit ()#line:267
+            OOOO00OO00O0OO000 =sqlite3 .connect (OOOOOOOOOOOO0O0OO )#line:248
+            O0OO00OO0OO000OO0 =OOOO00OO00O0OO000 .cursor ()#line:249
+            O0OO00OO0OO000OO0 .execute ('DROP TABLE IF EXISTS path')#line:250
+            O0OO00OO0OO000OO0 .execute ('VACUUM')#line:251
+            OOOO00OO00O0OO000 .commit ()#line:252
+            O0OO00OO0OO000OO0 .execute ('DROP TABLE IF EXISTS sizes')#line:253
+            O0OO00OO0OO000OO0 .execute ('VACUUM')#line:254
+            OOOO00OO00O0OO000 .commit ()#line:255
+            O0OO00OO0OO000OO0 .execute ('DROP TABLE IF EXISTS texture')#line:256
+            O0OO00OO0OO000OO0 .execute ('VACUUM')#line:257
+            OOOO00OO00O0OO000 .commit ()#line:258
+            O0OO00OO0OO000OO0 .execute ("""CREATE TABLE path (id integer, url text, type text, texture text, primary key(id))""")#line:260
+            OOOO00OO00O0OO000 .commit ()#line:261
+            O0OO00OO0OO000OO0 .execute ("""CREATE TABLE sizes (idtexture integer,size integer, width integer, height integer, usecount integer, lastusetime text)""")#line:263
+            OOOO00OO00O0OO000 .commit ()#line:264
+            O0OO00OO0OO000OO0 .execute ("""CREATE TABLE texture (id integer, url text, cachedurl text, imagehash text, lasthashcheck text, PRIMARY KEY(id))""")#line:266
+            OOOO00OO00O0OO000 .commit ()#line:267
         except :#line:268
             pass #line:269
     dialog .ok (MainTitle ,'Please reboot your system to rebuild thumbnail folder...')#line:271
     xbmc .executebuiltin ("Container.Refresh")#line:272
 def PiCCleaner ():#line:279
-    OO000O000OO0OOOOO =platform ()#line:280
-    log ("XvBMC_Platform: "+str (OO000O000OO0OOOOO ))#line:281
-    if not OO000O000OO0OOOOO =='linux':#line:282
+    OO000O000OOO00000 =platform ()#line:280
+    log ("XvBMC_Platform: "+str (OO000O000OOO00000 ))#line:281
+    if not OO000O000OOO00000 =='linux':#line:282
        dialog .ok (MainTitle +SubTitle ,subtitleNope ,nonlinux ,nonelecNL )#line:283
        log ("none Linux OS ie. Open-/LibreELEC")#line:284
     else :#line:285
         log ("linux os")#line:286
         if dialog .yesno (MainTitle +SubTitle ,'about to do some extreme CrapCleaner voodoo...','[I]this will take a few seconds to complete, be patient![/I]','[B]are you sure[COLOR white]?[/COLOR][/B]'):#line:287
-            O0O00O0O0O0OOO00O ="/bin/bash /storage/.kodi/addons/script.xvbmc.updatertools/resources/lib/sources/rpiecc.sh"#line:288
-            os .system (O0O00O0O0O0OOO00O )#line:289
+            O00O000O0O0000OOO ="/bin/bash /storage/.kodi/addons/script.xvbmc.updatertools/resources/lib/sources/rpiecc.sh"#line:288
+            os .system (O00O000O0O0000OOO )#line:289
             dialog .ok (MainTitle +SubTitle ,'[B]RPi[/B] CrapCleaner finished!','','Press OK to reboot...')#line:290
             xbmc .executebuiltin ("Reboot")#line:291
 def purgePackages ():#line:298
-    OOOOOO0OO00OOO000 =xbmc .translatePath ('special://home/addons/packages')#line:299
-    for OO00O0OO0O0O0000O ,OOOO0O0O0OOO000O0 ,OO00000OOO000OOO0 in os .walk (OOOOOO0OO00OOO000 ):#line:301
-            OO0OO0000O0O000OO =0 #line:302
-            OO0OO0000O0O000OO +=len (OO00000OOO000OOO0 )#line:303
-    if dialog .yesno ("Delete Package Cache Files",'%d packages found.'%OO0OO0000O0O000OO ,'Delete Them?'):#line:304
-        for OO00O0OO0O0O0000O ,OOOO0O0O0OOO000O0 ,OO00000OOO000OOO0 in os .walk (OOOOOO0OO00OOO000 ):#line:305
-            OO0OO0000O0O000OO =0 #line:306
-            OO0OO0000O0O000OO +=len (OO00000OOO000OOO0 )#line:307
-            if OO0OO0000O0O000OO >0 :#line:308
+    O0OO0O0OOO000OO0O =xbmc .translatePath ('special://home/addons/packages')#line:299
+    for O0OOOOO00O000O0O0 ,O0O00O00OO0O0OO0O ,OOO0O00OOO0OO0000 in os .walk (O0OO0O0OOO000OO0O ):#line:301
+            OO00OO00OO00OOOO0 =0 #line:302
+            OO00OO00OO00OOOO0 +=len (OOO0O00OOO0OO0000 )#line:303
+    if dialog .yesno ("Delete Package Cache Files",'%d packages found.'%OO00OO00OO00OOOO0 ,'Delete Them?'):#line:304
+        for O0OOOOO00O000O0O0 ,O0O00O00OO0O0OO0O ,OOO0O00OOO0OO0000 in os .walk (O0OO0O0OOO000OO0O ):#line:305
+            OO00OO00OO00OOOO0 =0 #line:306
+            OO00OO00OO00OOOO0 +=len (OOO0O00OOO0OO0000 )#line:307
+            if OO00OO00OO00OOOO0 >0 :#line:308
                 try :#line:309
-                    for O0O00OO0OO0O0OO0O in OO00000OOO000OOO0 :#line:310
-                        os .unlink (os .path .join (OO00O0OO0O0O0000O ,O0O00OO0OO0O0OO0O ))#line:311
-                    for O0O0OOO0OOOOO0OO0 in OOOO0O0O0OOO000O0 :#line:312
-                        shutil .rmtree (os .path .join (OO00O0OO0O0O0000O ,O0O0OOO0OOOOO0OO0 ))#line:313
+                    for OO0O00000OOOOOO0O in OOO0O00OOO0OO0000 :#line:310
+                        os .unlink (os .path .join (O0OOOOO00O000O0O0 ,OO0O00000OOOOOO0O ))#line:311
+                    for OO0O00O0OO0OOOO0O in O0O00O00OO0O0OO0O :#line:312
+                        shutil .rmtree (os .path .join (O0OOOOO00O000O0O0 ,OO0O00O0OO0OOOO0O ))#line:313
                 except :pass #line:314
                 dialog .ok (MainTitle ,'Deleting Packages all done')#line:315
             else :#line:317
                 dialog .ok (MainTitle ,'No Packages to Purge')#line:318
     xbmc .executebuiltin ("Container.Refresh")#line:320
 def AddonsDatabaseRemoval ():#line:327
-    OO0O0OO000OO0OO0O =os .listdir (databasePath )#line:328
-    OOO0OO0000OO000OO =[]#line:329
-    O000O00O0000O0OO0 =True #line:330
+    OOO000OO000O0O0O0 =os .listdir (databasePath )#line:328
+    O0O0OO0O000OOO0OO =[]#line:329
+    OO00OOOO0O000O0OO =True #line:330
     if dialog .yesno ("[COLOR lime]"+MainTitle +"[/COLOR]",' ','[COLOR red]Are YOU Sure [B]?!?[/B][/COLOR]'):#line:338
         if int (kodiver )<=16.7 :#line:339
            try :#line:340
-               for OO0O0O0OOO00O000O in OO0O0OO000OO0OO0O :#line:341
-                   if re .findall ('Addons(\d+)\.db',OO0O0O0OOO00O000O ):#line:342
-                       OOO0OO0000OO000OO .append (OO0O0O0OOO00O000O )#line:343
-               for OO0O0O0OOO00O000O in OOO0OO0000OO000OO :#line:344
-                   O0O0OOOOOO000OOOO =os .path .join (databasePath ,OO0O0O0OOO00O000O )#line:345
-                   OOOOO0000O00O0000 =open (O0O0OOOOOO000OOOO ,'ab+')#line:346
+               for O00OO00000O0O0000 in OOO000OO000O0O0O0 :#line:341
+                   if re .findall ('Addons(\d+)\.db',O00OO00000O0O0000 ):#line:342
+                       O0O0OO0O000OOO0OO .append (O00OO00000O0O0000 )#line:343
+               for O00OO00000O0O0000 in O0O0OO0O000OOO0OO :#line:344
+                   O0OO0OO0O000OO0OO =os .path .join (databasePath ,O00OO00000O0O0000 )#line:345
+                   O0OOOOOO0OOO000O0 =open (O0OO0OO0O000OO0OO ,'ab+')#line:346
                    try :#line:347
-                       OOOOO0000O00O0000 .close ()#line:349
-                       os .remove (OOOOO0000O00O0000 .name )#line:350
+                       O0OOOOOO0OOO000O0 .close ()#line:349
+                       os .remove (O0OOOOOO0OOO000O0 .name )#line:350
                    except :#line:351
-                       O000O00O0000O0OO0 =False #line:352
-               if O000O00O0000O0OO0 :#line:353
+                       OO00OOOO0O000O0OO =False #line:352
+               if OO00OOOO0O000O0OO :#line:353
                    dialog .ok (MainTitle ,'Your system will [COLOR red]reboot[/COLOR] to rebuild addons.db...')#line:354
                    Common .killKodi #line:355
                else :#line:356
@@ -248,276 +248,296 @@ def AddonsDatabaseRemoval ():#line:327
         else :#line:360
            dialog .ok (MainTitle ,'This feature is not available in Kodi 17 Krypton','','[COLOR yellow]Thank you for using XvBMC Maintenance[/COLOR]')#line:361
 def autocleanask ():#line:368
-    O00OOOO000O0000O0 =xbmcgui .Dialog ().yesno (MainTitle ,'Select [COLOR green]YES[/COLOR] to delete your:','cache, crashlogs, packages & thumbnails all at once.','[I][COLOR white]Do you wish to continue?[/I][/COLOR]',yeslabel ='[B][COLOR green]YES[/COLOR][/B]',nolabel ='[B][COLOR red]NO[/COLOR][/B]')#line:370
-    if O00OOOO000O0000O0 ==1 :#line:371
+    O00OOOO000OO0OOO0 =xbmcgui .Dialog ().yesno (MainTitle ,'Select [COLOR green]YES[/COLOR] to delete your:','cache, crashlogs, packages & thumbnails all at once.','[I][COLOR white]Do you wish to continue[B]?[/B][/I][/COLOR]',yeslabel ='[B][COLOR green]YES[/COLOR][/B]',nolabel ='[B][COLOR red]NO[/COLOR][/B]')#line:370
+    if O00OOOO000OO0OOO0 ==1 :#line:371
         autocleannow ()#line:372
 def autocleannow ():#line:374
-    O00OOOOO0OOOOO000 =True #line:375
+    OOOOO00O0OOO0OO00 =True #line:375
     if os .path .exists (cachePath )==True :#line:377
-        for O0O0O000OOOOOOOOO ,OOO000OO0O00O0OO0 ,OO0O00OO0OOOO00OO in os .walk (cachePath ):#line:378
-            O000OOOOOO00OOOO0 =0 #line:379
-            O000OOOOOO00OOOO0 +=len (OO0O00OO0OOOO00OO )#line:380
-            if O000OOOOOO00OOOO0 >0 :#line:381
-                    for OOO0O0OO00OO000OO in OO0O00OO0OOOO00OO :#line:382
+        for OO00O000OOO00O0OO ,O0OO0000O0000OOOO ,OOOOO0OO0O00O000O in os .walk (cachePath ):#line:378
+            O00000OOO00O0O00O =0 #line:379
+            O00000OOO00O0O00O +=len (OOOOO0OO0O00O000O )#line:380
+            if O00000OOO00O0O00O >0 :#line:381
+                    for O000O00OOOOOOOOOO in OOOOO0OO0O00O000O :#line:382
                         try :#line:383
-                            if (OOO0O0OO00OO000OO .endswith (".log")):continue #line:384
-                            os .unlink (os .path .join (O0O0O000OOOOOOOOO ,OOO0O0OO00OO000OO ))#line:385
+                            if (O000O00OOOOOOOOOO .endswith (".log")):continue #line:384
+                            os .unlink (os .path .join (OO00O000OOO00O0OO ,O000O00OOOOOOOOOO ))#line:385
                         except :#line:386
                             pass #line:387
-                    for OOO0000OOOO0OOOO0 in OOO000OO0O00O0OO0 :#line:388
+                    for OOOOO00OO0OO0O0O0 in O0OO0000O0000OOOO :#line:388
                         try :#line:389
-                            O00OO000000O0OO0O =(os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:390
-                            if not "archive_cache"in str (O00OO000000O0OO0O ):#line:391
-                                shutil .rmtree (os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:392
+                            O0O00000000OO0OOO =(os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:390
+                            if not "archive_cache"in str (O0O00000000OO0OOO ):#line:391
+                                shutil .rmtree (os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:392
                         except :#line:393
                             pass #line:394
             else :pass #line:395
     if os .path .exists (tempPath )==True :#line:397
-        for O0O0O000OOOOOOOOO ,OOO000OO0O00O0OO0 ,OO0O00OO0OOOO00OO in os .walk (tempPath ):#line:398
-            O000OOOOOO00OOOO0 =0 #line:399
-            O000OOOOOO00OOOO0 +=len (OO0O00OO0OOOO00OO )#line:400
-            if O000OOOOOO00OOOO0 >0 :#line:401
-                    for OOO0O0OO00OO000OO in OO0O00OO0OOOO00OO :#line:402
+        for OO00O000OOO00O0OO ,O0OO0000O0000OOOO ,OOOOO0OO0O00O000O in os .walk (tempPath ):#line:398
+            O00000OOO00O0O00O =0 #line:399
+            O00000OOO00O0O00O +=len (OOOOO0OO0O00O000O )#line:400
+            if O00000OOO00O0O00O >0 :#line:401
+                    for O000O00OOOOOOOOOO in OOOOO0OO0O00O000O :#line:402
                         try :#line:403
-                            if (OOO0O0OO00OO000OO .endswith (".log")):continue #line:404
-                            os .unlink (os .path .join (O0O0O000OOOOOOOOO ,OOO0O0OO00OO000OO ))#line:405
+                            if (O000O00OOOOOOOOOO .endswith (".log")):continue #line:404
+                            os .unlink (os .path .join (OO00O000OOO00O0OO ,O000O00OOOOOOOOOO ))#line:405
                         except :#line:406
                             pass #line:407
-                    for OOO0000OOOO0OOOO0 in OOO000OO0O00O0OO0 :#line:408
+                    for OOOOO00OO0OO0O0O0 in O0OO0000O0000OOOO :#line:408
                         try :#line:409
-                            O00OO000000O0OO0O =(os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:410
-                            if not "archive_cache"in str (O00OO000000O0OO0O ):#line:411
-                                shutil .rmtree (os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:412
+                            O0O00000000OO0OOO =(os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:410
+                            if not "archive_cache"in str (O0O00000000OO0OOO ):#line:411
+                                shutil .rmtree (os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:412
                         except :#line:413
                             pass #line:414
             else :pass #line:415
     if xbmc .getCondVisibility ('system.platform.ATV2'):#line:417
-        O000O0000O0O00OOO =os .path .join ('/private/var/mobile/Library/Caches/AppleTV/Video/','Other')#line:418
-        for O0O0O000OOOOOOOOO ,OOO000OO0O00O0OO0 ,OO0O00OO0OOOO00OO in os .walk (O000O0000O0O00OOO ):#line:419
-            O000OOOOOO00OOOO0 =0 #line:420
-            O000OOOOOO00OOOO0 +=len (OO0O00OO0OOOO00OO )#line:421
-            if O000OOOOOO00OOOO0 >0 :#line:423
-                    for OOO0O0OO00OO000OO in OO0O00OO0OOOO00OO :#line:424
+        OO0O00O0OO00O0OOO =os .path .join ('/private/var/mobile/Library/Caches/AppleTV/Video/','Other')#line:418
+        for OO00O000OOO00O0OO ,O0OO0000O0000OOOO ,OOOOO0OO0O00O000O in os .walk (OO0O00O0OO00O0OOO ):#line:419
+            O00000OOO00O0O00O =0 #line:420
+            O00000OOO00O0O00O +=len (OOOOO0OO0O00O000O )#line:421
+            if O00000OOO00O0O00O >0 :#line:423
+                    for O000O00OOOOOOOOOO in OOOOO0OO0O00O000O :#line:424
                         try :#line:425
-                            if (OOO0O0OO00OO000OO .endswith (".log")):continue #line:426
-                            os .unlink (os .path .join (O0O0O000OOOOOOOOO ,OOO0O0OO00OO000OO ))#line:427
+                            if (O000O00OOOOOOOOOO .endswith (".log")):continue #line:426
+                            os .unlink (os .path .join (OO00O000OOO00O0OO ,O000O00OOOOOOOOOO ))#line:427
                         except :#line:428
                             pass #line:429
-                    for OOO0000OOOO0OOOO0 in OOO000OO0O00O0OO0 :#line:430
+                    for OOOOO00OO0OO0O0O0 in O0OO0000O0000OOOO :#line:430
                         try :#line:431
-                            O00OO000000O0OO0O =(os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:432
-                            if not "archive_cache"in str (O00OO000000O0OO0O ):#line:433
-                                shutil .rmtree (os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:434
+                            O0O00000000OO0OOO =(os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:432
+                            if not "archive_cache"in str (O0O00000000OO0OOO ):#line:433
+                                shutil .rmtree (os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:434
                         except :#line:435
                             pass #line:436
             else :pass #line:437
-        O00OOO0OOOO0O00O0 =os .path .join ('/private/var/mobile/Library/Caches/AppleTV/Video/','LocalAndRental')#line:439
-        for O0O0O000OOOOOOOOO ,OOO000OO0O00O0OO0 ,OO0O00OO0OOOO00OO in os .walk (O00OOO0OOOO0O00O0 ):#line:440
-            O000OOOOOO00OOOO0 =0 #line:441
-            O000OOOOOO00OOOO0 +=len (OO0O00OO0OOOO00OO )#line:442
-            if O000OOOOOO00OOOO0 >0 :#line:444
-                    for OOO0O0OO00OO000OO in OO0O00OO0OOOO00OO :#line:445
+        OO0O00OO00O0O000O =os .path .join ('/private/var/mobile/Library/Caches/AppleTV/Video/','LocalAndRental')#line:439
+        for OO00O000OOO00O0OO ,O0OO0000O0000OOOO ,OOOOO0OO0O00O000O in os .walk (OO0O00OO00O0O000O ):#line:440
+            O00000OOO00O0O00O =0 #line:441
+            O00000OOO00O0O00O +=len (OOOOO0OO0O00O000O )#line:442
+            if O00000OOO00O0O00O >0 :#line:444
+                    for O000O00OOOOOOOOOO in OOOOO0OO0O00O000O :#line:445
                         try :#line:446
-                            if (OOO0O0OO00OO000OO .endswith (".log")):continue #line:447
-                            os .unlink (os .path .join (O0O0O000OOOOOOOOO ,OOO0O0OO00OO000OO ))#line:448
+                            if (O000O00OOOOOOOOOO .endswith (".log")):continue #line:447
+                            os .unlink (os .path .join (OO00O000OOO00O0OO ,O000O00OOOOOOOOOO ))#line:448
                         except :#line:449
                             pass #line:450
-                    for OOO0000OOOO0OOOO0 in OOO000OO0O00O0OO0 :#line:451
+                    for OOOOO00OO0OO0O0O0 in O0OO0000O0000OOOO :#line:451
                         try :#line:452
-                            O00OO000000O0OO0O =(os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:453
-                            if not "archive_cache"in str (O00OO000000O0OO0O ):#line:454
-                                shutil .rmtree (os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:455
+                            O0O00000000OO0OOO =(os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:453
+                            if not "archive_cache"in str (O0O00000000OO0OOO ):#line:454
+                                shutil .rmtree (os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:455
                         except :#line:456
                             pass #line:457
             else :pass #line:458
-    O00OOOOO00OO0O000 =setupCacheEntries ()#line:460
-    for OO000OO00O0OOO0O0 in O00OOOOO00OO0O000 :#line:461
-        OOOOO0O00O000O0OO =xbmc .translatePath (OO000OO00O0OOO0O0 .path )#line:462
-        if os .path .exists (OOOOO0O00O000O0OO )==True :#line:463
-            for O0O0O000OOOOOOOOO ,OOO000OO0O00O0OO0 ,OO0O00OO0OOOO00OO in os .walk (OOOOO0O00O000O0OO ):#line:464
-                O000OOOOOO00OOOO0 =0 #line:465
-                O000OOOOOO00OOOO0 +=len (OO0O00OO0OOOO00OO )#line:466
-                if O000OOOOOO00OOOO0 >0 :#line:467
-                    for OOO0O0OO00OO000OO in OO0O00OO0OOOO00OO :#line:468
+    OO00OOOO0OOO0000O =setupCacheEntries ()#line:460
+    for OO00O0O0OOO0000OO in OO00OOOO0OOO0000O :#line:461
+        OO00OOO0O0OO00000 =xbmc .translatePath (OO00O0O0OOO0000OO .path )#line:462
+        if os .path .exists (OO00OOO0O0OO00000 )==True :#line:463
+            for OO00O000OOO00O0OO ,O0OO0000O0000OOOO ,OOOOO0OO0O00O000O in os .walk (OO00OOO0O0OO00000 ):#line:464
+                O00000OOO00O0O00O =0 #line:465
+                O00000OOO00O0O00O +=len (OOOOO0OO0O00O000O )#line:466
+                if O00000OOO00O0O00O >0 :#line:467
+                    for O000O00OOOOOOOOOO in OOOOO0OO0O00O000O :#line:468
                         try :#line:469
-                            if (OOO0O0OO00OO000OO .endswith (".log")):continue #line:470
-                            os .unlink (os .path .join (O0O0O000OOOOOOOOO ,OOO0O0OO00OO000OO ))#line:471
+                            if (O000O00OOOOOOOOOO .endswith (".log")):continue #line:470
+                            os .unlink (os .path .join (OO00O000OOO00O0OO ,O000O00OOOOOOOOOO ))#line:471
                         except :#line:472
                             pass #line:473
-                    for OOO0000OOOO0OOOO0 in OOO000OO0O00O0OO0 :#line:474
+                    for OOOOO00OO0OO0O0O0 in O0OO0000O0000OOOO :#line:474
                         try :#line:475
-                            O00OO000000O0OO0O =(os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:476
-                            if not "archive_cache"in str (O00OO000000O0OO0O ):#line:477
-                                shutil .rmtree (os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:478
+                            O0O00000000OO0OOO =(os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:476
+                            if not "archive_cache"in str (O0O00000000OO0OOO ):#line:477
+                                shutil .rmtree (os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:478
                         except :#line:479
                             pass #line:480
                 else :pass #line:481
-    if os .path .exists (thumbnailPath )==True :#line:483
-                for O0O0O000OOOOOOOOO ,OOO000OO0O00O0OO0 ,OO0O00OO0OOOO00OO in os .walk (thumbnailPath ):#line:484
-                    O000OOOOOO00OOOO0 =0 #line:485
-                    O000OOOOOO00OOOO0 +=len (OO0O00OO0OOOO00OO )#line:486
-                    if O000OOOOOO00OOOO0 >0 :#line:487
-                        for OOO0O0OO00OO000OO in OO0O00OO0OOOO00OO :#line:488
-                            try :#line:489
-                                os .unlink (os .path .join (O0O0O000OOOOOOOOO ,OOO0O0OO00OO000OO ))#line:490
-                            except :#line:491
-                                pass #line:492
-    else :pass #line:493
-    O00OOOOO0O00O0O0O =os .path .join (databasePath ,"Textures13.db")#line:495
-    try :#line:496
-        os .unlink (O00OOOOO0O00O0O0O )#line:497
-    except :#line:498
-        pass #line:499
-    O00O0O0OOO0OOO0OO =xbmc .translatePath ('special://home/addons/packages')#line:501
-    for O0O0O000OOOOOOOOO ,OOO000OO0O00O0OO0 ,OO0O00OO0OOOO00OO in os .walk (O00O0O0OOO0OOO0OO ):#line:502
-            O000OOOOOO00OOOO0 =0 #line:503
-            O000OOOOOO00OOOO0 +=len (OO0O00OO0OOOO00OO )#line:504
-    for O0O0O000OOOOOOOOO ,OOO000OO0O00O0OO0 ,OO0O00OO0OOOO00OO in os .walk (O00O0O0OOO0OOO0OO ):#line:505
-            O000OOOOOO00OOOO0 =0 #line:506
-            O000OOOOOO00OOOO0 +=len (OO0O00OO0OOOO00OO )#line:507
-            if O000OOOOOO00OOOO0 >0 :#line:508
-                try :#line:509
-                    for OOO0O0OO00OO000OO in OO0O00OO0OOOO00OO :#line:510
-                        os .unlink (os .path .join (O0O0O000OOOOOOOOO ,OOO0O0OO00OO000OO ))#line:511
-                    for OOO0000OOOO0OOOO0 in OOO000OO0O00O0OO0 :#line:512
-                        shutil .rmtree (os .path .join (O0O0O000OOOOOOOOO ,OOO0000OOOO0OOOO0 ))#line:513
-                except :#line:514
-                    pass #line:515
-    if O00OOOOO0OOOOO000 ==True :#line:517
-        AutoCrash ()#line:519
-    else :#line:520
-        xbmc .log (str (O00OOOOO0OOOOO000 ))#line:522
-    O000OOO00000O00O0 =xbmcgui .Dialog ().yesno (MainTitle ,'[COLOR white][B]A[/B]uto [B]C[/B]lean finished:[/COLOR]','[I]cache, crashlogs, packages & thumbnails are removed.[/I]','Reboot your device now to finish the process?',yeslabel ='[B][COLOR green]YES[/COLOR][/B]',nolabel ='[B][COLOR red]NO[/COLOR][/B]')#line:524
-    if O000OOO00000O00O0 ==1 :#line:525
-         Common .killKodi ()#line:526
-def AutoCrash ():#line:528
-    O0O0OO0000OO0O0O0 =xbmc .translatePath ('special://home')#line:530
-    O0OO000O0O00O0OOO =os .path .join (xbmc .translatePath ('special://home'),'cache')#line:531
-    O000OO0O0OO0O0OO0 =os .path .join (xbmc .translatePath ('special://home'),'temp')#line:532
-    if os .path .exists (O0O0OO0000OO0O0O0 )==True :#line:534
-        OO0OOOO000000OO0O =Windows #line:535
-        import glob as O000O0O00O00O0OOO #line:536
-        for OOO00O0000OOO00O0 in O000O0O00O00O0OOO .glob (os .path .join (OO0OOOO000000OO0O ,'*.dmp')):#line:537
-            OOO0OOOOOOOO0OO00 =OOO00O0000OOO00O0 #line:538
-            log (OOO00O0000OOO00O0 )#line:539
-            os .remove (OOO00O0000OOO00O0 )#line:540
-        for OOO00O0000OOO00O0 in O000O0O00O00O0OOO .glob (os .path .join (OO0OOOO000000OO0O ,'*.txt')):#line:542
-            OOO0OOOOOOOO0OO00 =OOO00O0000OOO00O0 #line:543
-            log (OOO00O0000OOO00O0 )#line:544
-            os .remove (OOO00O0000OOO00O0 )#line:545
-    if os .path .exists (O0OO000O0O00O0OOO )==True :#line:547
-        OO0OOOO000000OO0O =O0OO000O0O00O0OOO #line:548
-        import glob as O000O0O00O00O0OOO #line:549
-        for OOO00O0000OOO00O0 in O000O0O00O00O0OOO .glob (os .path .join (OO0OOOO000000OO0O ,'*.dmp')):#line:550
-            OOO0OOOOOOOO0OO00 =OOO00O0000OOO00O0 #line:551
-            log (OOO00O0000OOO00O0 )#line:552
-            os .remove (OOO00O0000OOO00O0 )#line:553
-        for OOO00O0000OOO00O0 in O000O0O00O00O0OOO .glob (os .path .join (OO0OOOO000000OO0O ,'*.txt')):#line:555
-            OOO0OOOOOOOO0OO00 =OOO00O0000OOO00O0 #line:556
-            log (OOO00O0000OOO00O0 )#line:557
-            os .remove (OOO00O0000OOO00O0 )#line:558
-    if os .path .exists (O000OO0O0OO0O0OO0 )==True :#line:560
-        OO0OOOO000000OO0O =O000OO0O0OO0O0OO0 #line:561
-        import glob as O000O0O00O00O0OOO #line:562
-        for OOO00O0000OOO00O0 in O000O0O00O00O0OOO .glob (os .path .join (OO0OOOO000000OO0O ,'*.dmp')):#line:563
-            OOO0OOOOOOOO0OO00 =OOO00O0000OOO00O0 #line:564
-            log (OOO00O0000OOO00O0 )#line:565
-            os .remove (OOO00O0000OOO00O0 )#line:566
-        for OOO00O0000OOO00O0 in O000O0O00O00O0OOO .glob (os .path .join (OO0OOOO000000OO0O ,'*.txt')):#line:568
-            OOO0OOOOOOOO0OO00 =OOO00O0000OOO00O0 #line:569
-            log (OOO00O0000OOO00O0 )#line:570
-            os .remove (OOO00O0000OOO00O0 )#line:571
-def Fix_Special (url ):#line:578
-    O00OOOOOO0OOO00OO =xbmc .translatePath ('special://home')#line:579
-    dp .create (MainTitle ,"Renaming paths...",'','Please Wait')#line:580
-    for OOOOO0O0O000O0O0O ,O0OOO00O0OO00000O ,OOOO00O0OOOOOOOOO in os .walk (O00OOOOOO0OOO00OO ):#line:581
-        for OO000O0O0O00OO0O0 in OOOO00O0OOOOOOOOO :#line:582
-            if OO000O0O0O00OO0O0 .endswith (".xml"):#line:583
-                 dp .update (0 ,"Fixing","[COLOR green]"+OO000O0O0O00OO0O0 +"[/COLOR]","Please wait.....")#line:584
-                 O0OO0O0000O00OOO0 =open ((os .path .join (OOOOO0O0O000O0O0O ,OO000O0O0O00OO0O0 ))).read ()#line:585
-                 O000O000O00O0OO0O =O0OO0O0000O00OOO0 .replace (O00OOOOOO0OOO00OO ,'special://home/')#line:586
-                 OO0OO00O0O000OO0O =open ((os .path .join (OOOOO0O0O000O0O0O ,OO000O0O0O00OO0O0 )),mode ='w')#line:587
-                 OO0OO00O0O000OO0O .write (str (O000O000O00O0OO0O ))#line:588
-                 OO0OO00O0O000OO0O .close ()#line:589
-    dialog .ok (MainTitle ,'All physical (home) paths have been converted to special','To complete this process Kodi will force close now!')#line:591
-    Common .killKodi ()#line:592
-def xvbmcLog ():#line:599
-    OO000O000000OO00O =xbmc .translatePath ('special://logpath/kodi.log')#line:600
-    O0O00OO00OOOOO0O0 =xbmc .translatePath ('special://logpath/spmc.log')#line:601
-    O0OO00O0OO0OOOOO0 =xbmc .translatePath ('special://logpath/spmc.log')#line:602
-    O00OO0000OOO000OO =xbmc .translatePath ('special://logpath/kodi.old.log')#line:603
-    O0O0000OOOO00O00O =xbmc .translatePath ('special://logpath/spmc.old.log')#line:604
-    OOO0OOOOOOOO0O00O =xbmc .translatePath ('special://logpath/kodi.old.log')#line:605
-    if os .path .exists (O0O00OO00OOOOO0O0 ):#line:607
-        if os .path .exists (O0O00OO00OOOOO0O0 )and os .path .exists (O0O0000OOOO00O00O ):#line:608
-            OO0OOO00O00O0000O =xbmcgui .Dialog ().yesno (MainTitle ,'[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.','Which \'log file\' would you like to view?','NL: wilt u de oude/vorige- OF actuele log file bekijken?',yeslabel ='old/oud',nolabel ='current/recent')#line:609
-            if OO0OOO00O00O0000O ==0 :#line:610
-                O0O00O0OO0OOO0O00 =open (O0O00OO00OOOOO0O0 ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:611
-                Common .TextBoxes ("%s - spmc.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:612
-            else :#line:613
-                O0O00O0OO0OOO0O00 =open (O0O0000OOOO00O00O ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:614
-                Common .TextBoxes ("%s - spmc.old.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:615
-        else :#line:616
-            O0O00O0OO0OOO0O00 =open (O0O00OO00OOOOO0O0 ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:617
-            Common .TextBoxes ("%s - spmc.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:618
-    if os .path .exists (OO000O000000OO00O ):#line:620
-        if os .path .exists (OO000O000000OO00O )and os .path .exists (O00OO0000OOO000OO ):#line:621
-            OO0OOO00O00O0000O =xbmcgui .Dialog ().yesno (MainTitle ,'[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.','Which \'log file\' would you like to view?','NL: wilt u de oude/vorige- OF actuele log file bekijken?',yeslabel ='old/oud',nolabel ='current/recent')#line:622
-            if OO0OOO00O00O0000O ==0 :#line:623
-                O0O00O0OO0OOO0O00 =open (OO000O000000OO00O ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:624
-                Common .TextBoxes ("%s - kodi.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:625
-            else :#line:626
-                O0O00O0OO0OOO0O00 =open (O00OO0000OOO000OO ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:627
-                Common .TextBoxes ("%s - kodi.old.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:628
-        else :#line:629
-            O0O00O0OO0OOO0O00 =open (OO000O000000OO00O ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:630
-            Common .TextBoxes ("%s - kodi.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:631
-    if os .path .exists (O0OO00O0OO0OOOOO0 ):#line:633
-        if os .path .exists (O0OO00O0OO0OOOOO0 )and os .path .exists (OOO0OOOOOOOO0O00O ):#line:634
-            OO0OOO00O00O0000O =xbmcgui .Dialog ().yesno (MainTitle ,'[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.','Which \'log file\' would you like to view?','NL: wilt u de oude/vorige- OF actuele log file bekijken?',yeslabel ='old/oud',nolabel ='current/recent')#line:635
-            if OO0OOO00O00O0000O ==0 :#line:636
-                O0O00O0OO0OOO0O00 =open (O0OO00O0OO0OOOOO0 ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:637
-                Common .TextBoxes ("%s - dbmc.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:638
-            else :#line:639
-                O0O00O0OO0OOO0O00 =open (OOO0OOOOOOOO0O00O ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:640
-                Common .TextBoxes ("%s - dbmc.old.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:641
-        else :#line:642
-            O0O00O0OO0OOO0O00 =open (O0OO00O0OO0OOOOO0 ,mode ='r');O000O0000O0OO0OO0 =O0O00O0OO0OOO0O00 .read ();O0O00O0OO0OOO0O00 .close ()#line:643
-            Common .TextBoxes ("%s - dbmc.log"%"[COLOR white]"+O000O0000O0OO0OO0 +"[/COLOR]")#line:644
-    if os .path .isfile (OO000O000000OO00O )or os .path .isfile (O0O00OO00OOOOO0O0 )or os .path .isfile (O0OO00O0OO0OOOOO0 ):#line:646
-        return True #line:647
-    else :#line:648
-        dialog .ok (MainTitle ,'Sorry, No log file was found.','','[COLOR yellow]Sorry, er was geen log file gevonden.[/COLOR]')#line:649
-if Common .get_kversion ()>16.5 :#line:656
-    try :from sqlite3 import dbapi2 as db_lib #line:657
-    except :from pysqlite2 import dbapi2 as db_lib #line:658
-    db_dir =xbmc .translatePath ("special://profile/Database")#line:660
-    db_path =os .path .join (db_dir ,'Addons27.db')#line:661
-    conn =db_lib .connect (db_path )#line:662
-    conn .text_factory =str #line:663
-def AddonsEnable ():#line:665
-    if Common .get_kversion ()>16.5 :#line:666
-        OO000000O00000000 =sqlite3 .connect (xbmc .translatePath ("special://database/Addons27.db"))#line:667
-        O000000OOO0O0O0O0 =OO000000O00000000 .cursor ()#line:668
-        O000000OOO0O0O0O0 .execute ("UPDATE installed SET enabled = 1 WHERE addonID NOT LIKE '%audiodecoder.%' AND addonID NOT LIKE '%inputstream.%' AND addonID NOT LIKE '%pvr.%' AND addonID NOT LIKE '%screensaver.%' AND addonID NOT LIKE '%visualization.%';")#line:669
-        OO000000O00000000 .commit ()#line:670
-        OO000000O00000000 .close ()#line:671
-        xbmc .executebuiltin ('UpdateLocalAddons()')#line:672
-        xbmc .executebuiltin ('UpdateAddonRepos()')#line:673
-        O00OOO0000OOOO00O =xbmcgui .Dialog ().yesno (MainTitle +' : add-ons [B]enabled[/B]','[COLOR=green][B]!!!  FINISHED  !!![/B][/COLOR]','[B]Reboot[/B] Kodi to complete (\'yes\' is force close)','[B]Herstart[/B] Kodi ter afronding (ja is \'force close\')',yeslabel ='[COLOR lime]Ja/Yes[/COLOR]',nolabel ='[COLOR red]Nee/No[/COLOR]')#line:674
-        if O00OOO0000OOOO00O ==1 :#line:675
-            os ._exit (1 )#line:676
-        else :pass #line:677
-    else :pass #line:678
-def EnableRTMP ():#line:680
-        try :addon_able .set_enabled ("inputstream.adaptive")#line:681
-        except :pass #line:682
-        time .sleep (0.5 )#line:683
-        try :addon_able .set_enabled ("inputstream.rtmp")#line:684
-        except :pass #line:685
-        time .sleep (0.5 )#line:686
-        xbmc .executebuiltin ('XBMC.UpdateLocalAddons()')#line:687
-        dialog .ok ("Operation Complete!",'Live Streaming has been Enabled!','Brought To You By %s '%MainTitle )#line:689
+    if dialog .yesno (MainTitle ,'[COLOR red]This option also deletes all your thumbnails...[/COLOR]','[COLOR green]Are you sure you want to do this[B]?[/B][/COLOR]'):#line:483
+        if os .path .exists (thumbnailPath )==True :#line:484
+                for OO00O000OOO00O0OO ,O0OO0000O0000OOOO ,OOOOO0OO0O00O000O in os .walk (thumbnailPath ):#line:485
+                    O00000OOO00O0O00O =0 #line:486
+                    O00000OOO00O0O00O +=len (OOOOO0OO0O00O000O )#line:487
+                    if O00000OOO00O0O00O >0 :#line:488
+                        for O000O00OOOOOOOOOO in OOOOO0OO0O00O000O :#line:489
+                            try :#line:490
+                                os .unlink (os .path .join (OO00O000OOO00O0OO ,O000O00OOOOOOOOOO ))#line:491
+                            except :#line:492
+                                pass #line:493
+        else :pass #line:494
+        O0O0OO0O00000OO0O =os .path .join (databasePath ,"Textures13.db")#line:496
+        try :#line:497
+            os .unlink (O0O0OO0O00000OO0O )#line:498
+        except OSError :#line:499
+            try :#line:500
+                OO00O000O0OOOO0O0 =sqlite3 .connect (O0O0OO0O00000OO0O )#line:501
+                O00O0OOO0OOOO00O0 =OO00O000O0OOOO0O0 .cursor ()#line:502
+                O00O0OOO0OOOO00O0 .execute ('DROP TABLE IF EXISTS path')#line:503
+                O00O0OOO0OOOO00O0 .execute ('VACUUM')#line:504
+                OO00O000O0OOOO0O0 .commit ()#line:505
+                O00O0OOO0OOOO00O0 .execute ('DROP TABLE IF EXISTS sizes')#line:506
+                O00O0OOO0OOOO00O0 .execute ('VACUUM')#line:507
+                OO00O000O0OOOO0O0 .commit ()#line:508
+                O00O0OOO0OOOO00O0 .execute ('DROP TABLE IF EXISTS texture')#line:509
+                O00O0OOO0OOOO00O0 .execute ('VACUUM')#line:510
+                OO00O000O0OOOO0O0 .commit ()#line:511
+                O00O0OOO0OOOO00O0 .execute ("""CREATE TABLE path (id integer, url text, type text, texture text, primary key(id))""")#line:513
+                OO00O000O0OOOO0O0 .commit ()#line:514
+                O00O0OOO0OOOO00O0 .execute ("""CREATE TABLE sizes (idtexture integer,size integer, width integer, height integer, usecount integer, lastusetime text)""")#line:516
+                OO00O000O0OOOO0O0 .commit ()#line:517
+                O00O0OOO0OOOO00O0 .execute ("""CREATE TABLE texture (id integer, url text, cachedurl text, imagehash text, lasthashcheck text, PRIMARY KEY(id))""")#line:519
+                OO00O000O0OOOO0O0 .commit ()#line:520
+            except :#line:521
+                pass #line:522
+    O0O0O00OOO00O00O0 =xbmc .translatePath ('special://home/addons/packages')#line:524
+    for OO00O000OOO00O0OO ,O0OO0000O0000OOOO ,OOOOO0OO0O00O000O in os .walk (O0O0O00OOO00O00O0 ):#line:525
+            O00000OOO00O0O00O =0 #line:526
+            O00000OOO00O0O00O +=len (OOOOO0OO0O00O000O )#line:527
+    for OO00O000OOO00O0OO ,O0OO0000O0000OOOO ,OOOOO0OO0O00O000O in os .walk (O0O0O00OOO00O00O0 ):#line:528
+            O00000OOO00O0O00O =0 #line:529
+            O00000OOO00O0O00O +=len (OOOOO0OO0O00O000O )#line:530
+            if O00000OOO00O0O00O >0 :#line:531
+                try :#line:532
+                    for O000O00OOOOOOOOOO in OOOOO0OO0O00O000O :#line:533
+                        os .unlink (os .path .join (OO00O000OOO00O0OO ,O000O00OOOOOOOOOO ))#line:534
+                    for OOOOO00OO0OO0O0O0 in O0OO0000O0000OOOO :#line:535
+                        shutil .rmtree (os .path .join (OO00O000OOO00O0OO ,OOOOO00OO0OO0O0O0 ))#line:536
+                except :#line:537
+                    pass #line:538
+    if OOOOO00O0OOO0OO00 ==True :#line:540
+        AutoCrash ()#line:542
+    else :#line:543
+        xbmc .log (str (OOOOO00O0OOO0OO00 ))#line:545
+    O0OO0OOOO00O0O0O0 =xbmcgui .Dialog ().yesno (MainTitle ,'[COLOR white][B]A[/B]uto [B]C[/B]lean finished:[/COLOR]','[I]cache, crashlogs, packages & thumbnails are removed.[/I]','Reboot your device now to finish the process?',yeslabel ='[B][COLOR green]YES[/COLOR][/B]',nolabel ='[B][COLOR red]NO[/COLOR][/B]')#line:547
+    if O0OO0OOOO00O0O0O0 ==1 :#line:548
+         Common .killKodi ()#line:549
+def AutoCrash ():#line:551
+    O0O00OO0OO000OO00 =xbmc .translatePath ('special://home')#line:553
+    OO00O0OOO0O000O00 =os .path .join (xbmc .translatePath ('special://home'),'cache')#line:554
+    O0O000O0O00O0O0OO =os .path .join (xbmc .translatePath ('special://home'),'temp')#line:555
+    if os .path .exists (O0O00OO0OO000OO00 )==True :#line:557
+        O00O00O0O0OOOOOO0 =Windows #line:558
+        import glob as O0O0000000O0OOO0O #line:559
+        for O000OO0O0O0OO000O in O0O0000000O0OOO0O .glob (os .path .join (O00O00O0O0OOOOOO0 ,'*.dmp')):#line:560
+            OOO0O0O00O0OO000O =O000OO0O0O0OO000O #line:561
+            log (O000OO0O0O0OO000O )#line:562
+            os .remove (O000OO0O0O0OO000O )#line:563
+        for O000OO0O0O0OO000O in O0O0000000O0OOO0O .glob (os .path .join (O00O00O0O0OOOOOO0 ,'*.txt')):#line:565
+            OOO0O0O00O0OO000O =O000OO0O0O0OO000O #line:566
+            log (O000OO0O0O0OO000O )#line:567
+            os .remove (O000OO0O0O0OO000O )#line:568
+    if os .path .exists (OO00O0OOO0O000O00 )==True :#line:570
+        O00O00O0O0OOOOOO0 =OO00O0OOO0O000O00 #line:571
+        import glob as O0O0000000O0OOO0O #line:572
+        for O000OO0O0O0OO000O in O0O0000000O0OOO0O .glob (os .path .join (O00O00O0O0OOOOOO0 ,'*.dmp')):#line:573
+            OOO0O0O00O0OO000O =O000OO0O0O0OO000O #line:574
+            log (O000OO0O0O0OO000O )#line:575
+            os .remove (O000OO0O0O0OO000O )#line:576
+        for O000OO0O0O0OO000O in O0O0000000O0OOO0O .glob (os .path .join (O00O00O0O0OOOOOO0 ,'*.txt')):#line:578
+            OOO0O0O00O0OO000O =O000OO0O0O0OO000O #line:579
+            log (O000OO0O0O0OO000O )#line:580
+            os .remove (O000OO0O0O0OO000O )#line:581
+    if os .path .exists (O0O000O0O00O0O0OO )==True :#line:583
+        O00O00O0O0OOOOOO0 =O0O000O0O00O0O0OO #line:584
+        import glob as O0O0000000O0OOO0O #line:585
+        for O000OO0O0O0OO000O in O0O0000000O0OOO0O .glob (os .path .join (O00O00O0O0OOOOOO0 ,'*.dmp')):#line:586
+            OOO0O0O00O0OO000O =O000OO0O0O0OO000O #line:587
+            log (O000OO0O0O0OO000O )#line:588
+            os .remove (O000OO0O0O0OO000O )#line:589
+        for O000OO0O0O0OO000O in O0O0000000O0OOO0O .glob (os .path .join (O00O00O0O0OOOOOO0 ,'*.txt')):#line:591
+            OOO0O0O00O0OO000O =O000OO0O0O0OO000O #line:592
+            log (O000OO0O0O0OO000O )#line:593
+            os .remove (O000OO0O0O0OO000O )#line:594
+def Fix_Special (url ):#line:601
+    OO0O0OO000OOO00O0 =xbmc .translatePath ('special://home')#line:602
+    dp .create (MainTitle ,"Renaming paths...",'','Please Wait')#line:603
+    for O0O0OO0OOO0OO0O00 ,O00O0O0OOOO0O0000 ,O00O000OOOO00OOOO in os .walk (OO0O0OO000OOO00O0 ):#line:604
+        for OOO0O0O0O000OO00O in O00O000OOOO00OOOO :#line:605
+            if OOO0O0O0O000OO00O .endswith (".xml"):#line:606
+                 dp .update (0 ,"Fixing","[COLOR green]"+OOO0O0O0O000OO00O +"[/COLOR]","Please wait.....")#line:607
+                 OOO00OO000O00OO0O =open ((os .path .join (O0O0OO0OOO0OO0O00 ,OOO0O0O0O000OO00O ))).read ()#line:608
+                 OOO0O0000O000OO0O =OOO00OO000O00OO0O .replace (OO0O0OO000OOO00O0 ,'special://home/')#line:609
+                 O0OO00O000000O0OO =open ((os .path .join (O0O0OO0OOO0OO0O00 ,OOO0O0O0O000OO00O )),mode ='w')#line:610
+                 O0OO00O000000O0OO .write (str (OOO0O0000O000OO0O ))#line:611
+                 O0OO00O000000O0OO .close ()#line:612
+    dialog .ok (MainTitle ,'All physical (home) paths have been converted to special','To complete this process Kodi will force close now!')#line:614
+    Common .killKodi ()#line:615
+def xvbmcLog ():#line:622
+    O00000O00O00OO0O0 =xbmc .translatePath ('special://logpath/kodi.log')#line:623
+    O00OOOO00O0O0OO00 =xbmc .translatePath ('special://logpath/spmc.log')#line:624
+    O0OOO0OO00OOO00OO =xbmc .translatePath ('special://logpath/spmc.log')#line:625
+    OO0O000O000O0O00O =xbmc .translatePath ('special://logpath/kodi.old.log')#line:626
+    OO00OOOOO0000O000 =xbmc .translatePath ('special://logpath/spmc.old.log')#line:627
+    O000OO0O00OOOOO0O =xbmc .translatePath ('special://logpath/kodi.old.log')#line:628
+    if os .path .exists (O00OOOO00O0O0OO00 ):#line:630
+        if os .path .exists (O00OOOO00O0O0OO00 )and os .path .exists (OO00OOOOO0000O000 ):#line:631
+            OO000O0O0OO00000O =xbmcgui .Dialog ().yesno (MainTitle ,'[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.','Which \'log file\' would you like to view?','NL: wilt u de oude/vorige- OF actuele log file bekijken?',yeslabel ='old/oud',nolabel ='current/recent')#line:632
+            if OO000O0O0OO00000O ==0 :#line:633
+                O0OOO000OO00OO000 =open (O00OOOO00O0O0OO00 ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:634
+                Common .TextBoxes ("%s - spmc.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:635
+            else :#line:636
+                O0OOO000OO00OO000 =open (OO00OOOOO0000O000 ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:637
+                Common .TextBoxes ("%s - spmc.old.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:638
+        else :#line:639
+            O0OOO000OO00OO000 =open (O00OOOO00O0O0OO00 ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:640
+            Common .TextBoxes ("%s - spmc.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:641
+    if os .path .exists (O00000O00O00OO0O0 ):#line:643
+        if os .path .exists (O00000O00O00OO0O0 )and os .path .exists (OO0O000O000O0O00O ):#line:644
+            OO000O0O0OO00000O =xbmcgui .Dialog ().yesno (MainTitle ,'[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.','Which \'log file\' would you like to view?','NL: wilt u de oude/vorige- OF actuele log file bekijken?',yeslabel ='old/oud',nolabel ='current/recent')#line:645
+            if OO000O0O0OO00000O ==0 :#line:646
+                O0OOO000OO00OO000 =open (O00000O00O00OO0O0 ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:647
+                Common .TextBoxes ("%s - kodi.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:648
+            else :#line:649
+                O0OOO000OO00OO000 =open (OO0O000O000O0O00O ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:650
+                Common .TextBoxes ("%s - kodi.old.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:651
+        else :#line:652
+            O0OOO000OO00OO000 =open (O00000O00O00OO0O0 ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:653
+            Common .TextBoxes ("%s - kodi.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:654
+    if os .path .exists (O0OOO0OO00OOO00OO ):#line:656
+        if os .path .exists (O0OOO0OO00OOO00OO )and os .path .exists (O000OO0O00OOOOO0O ):#line:657
+            OO000O0O0OO00000O =xbmcgui .Dialog ().yesno (MainTitle ,'[COLOR lime]Current-[/COLOR] & [COLOR red]old[/COLOR] [B]Log[/B]\'s detected on your system.','Which \'log file\' would you like to view?','NL: wilt u de oude/vorige- OF actuele log file bekijken?',yeslabel ='old/oud',nolabel ='current/recent')#line:658
+            if OO000O0O0OO00000O ==0 :#line:659
+                O0OOO000OO00OO000 =open (O0OOO0OO00OOO00OO ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:660
+                Common .TextBoxes ("%s - dbmc.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:661
+            else :#line:662
+                O0OOO000OO00OO000 =open (O000OO0O00OOOOO0O ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:663
+                Common .TextBoxes ("%s - dbmc.old.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:664
+        else :#line:665
+            O0OOO000OO00OO000 =open (O0OOO0OO00OOO00OO ,mode ='r');O00O00O0O0OO00O00 =O0OOO000OO00OO000 .read ();O0OOO000OO00OO000 .close ()#line:666
+            Common .TextBoxes ("%s - dbmc.log"%"[COLOR white]"+O00O00O0O0OO00O00 +"[/COLOR]")#line:667
+    if os .path .isfile (O00000O00O00OO0O0 )or os .path .isfile (O00OOOO00O0O0OO00 )or os .path .isfile (O0OOO0OO00OOO00OO ):#line:669
+        return True #line:670
+    else :#line:671
+        dialog .ok (MainTitle ,'Sorry, No log file was found.','','[COLOR yellow]Sorry, er was geen log file gevonden.[/COLOR]')#line:672
+if Common .get_kversion ()>16.5 :#line:679
+    try :from sqlite3 import dbapi2 as db_lib #line:680
+    except :from pysqlite2 import dbapi2 as db_lib #line:681
+    db_dir =xbmc .translatePath ("special://profile/Database")#line:683
+    db_path =os .path .join (db_dir ,'Addons27.db')#line:684
+    conn =db_lib .connect (db_path )#line:685
+    conn .text_factory =str #line:686
+def AddonsEnable ():#line:688
+    if Common .get_kversion ()>16.5 :#line:689
+        OOO000O000O0OO000 =sqlite3 .connect (xbmc .translatePath ("special://database/Addons27.db"))#line:690
+        OOOOOO0O0OOOOO000 =OOO000O000O0OO000 .cursor ()#line:691
+        OOOOOO0O0OOOOO000 .execute ("UPDATE installed SET enabled = 1 WHERE addonID NOT LIKE '%audiodecoder.%' AND addonID NOT LIKE '%inputstream.%' AND addonID NOT LIKE '%pvr.%' AND addonID NOT LIKE '%screensaver.%' AND addonID NOT LIKE '%visualization.%';")#line:692
+        OOO000O000O0OO000 .commit ()#line:693
+        OOO000O000O0OO000 .close ()#line:694
+        xbmc .executebuiltin ('UpdateLocalAddons()')#line:695
+        xbmc .executebuiltin ('UpdateAddonRepos()')#line:696
+        OOO0OOOO0000OOOOO =xbmcgui .Dialog ().yesno (MainTitle +' : add-ons [B]enabled[/B]','[COLOR=green][B]!!!  FINISHED  !!![/B][/COLOR]','[B]Reboot[/B] Kodi to complete (\'yes\' is force close)','[B]Herstart[/B] Kodi ter afronding (ja is \'force close\')',yeslabel ='[COLOR lime]Ja/Yes[/COLOR]',nolabel ='[COLOR red]Nee/No[/COLOR]')#line:697
+        if OOO0OOOO0000OOOOO ==1 :#line:698
+            os ._exit (1 )#line:699
+        else :pass #line:700
+    else :pass #line:701
+def EnableRTMP ():#line:703
+        try :addon_able .set_enabled ("inputstream.adaptive")#line:704
+        except :pass #line:705
+        time .sleep (0.5 )#line:706
+        try :addon_able .set_enabled ("inputstream.rtmp")#line:707
+        except :pass #line:708
+        time .sleep (0.5 )#line:709
+        xbmc .executebuiltin ('XBMC.UpdateLocalAddons()')#line:710
+        dialog .ok ("Operation Complete!",'Live Streaming has been Enabled!','Brought To You By %s '%MainTitle )#line:712
 """
     IF you copy/paste 'huisvrouw.py' please keep the credits -2- EPiC -4- XvBMC-NL, Thx.
 """
