@@ -1,1 +1,75 @@
-exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("IyEvN2IvM2QvNjAKIiIjMDo2CjMwIDlhIDMxIDIgLDRiIDMxIDE1ICw1NiAzMSAzICw0OSAzMSAzNiAjMDoyNgozMCA4ZSAzMSA1ICw1ZCAzMSAzNSAsNjkgMzEgMzIgIzA6MjcKMzAgNWEgMzEgMzMgLDVmIDMxIDM0ICMwOjI4CmE2ID0nMWMuMjAuNycjMDozNwo4ZiA9MTUgLmIzIChiMiA9YTYgKSMwOjM4CjkgPTMgLjQ1ICgpIzA6NDAKNCA9IjE5IDRlIiMwOjQxCjJhID0nMTkgYSBbMWIgNDhdNGRbLzFiXScjMDo0Mgo5YiA9IiBbYl0tWy9iXSBbMWIgNjVdNGRbLzFiXSBbYl0tWy9iXSAjNGYjIiMwOjQzCjFmIDVlICgpOiMwOjQ2CgkiIiMwOjQ3CgkxID1bXSMwOjUwCgkxIC4xYSAoMmEgKycgW2JdLVsvYl1hYScpIzA6NTEKCTEgLjFhICgyYSArJyBbYl0tWy9iXTNjJykjMDo1MgoJMSAuMWEgKDJhICsnIFtiXS1bL2JdMmQnKSMwOjUzCgkxIC4xYSAoMmEgKycgW2JdLVsvYl00YycpIzA6NTQKCTEgLjFhICgiW2JdWzFiIDQ4XTY2Wy8xYl1bL2JdIikjMDo1NQoJYjQgPTMgLjQ1ICgpLjYxICg0ICs5YiAsMSApIzA6NTkKCTRhIDEgW2I0IF09PTJhICsnIFtiXS1bL2JdYWEnOiMwOjYzCgkgICA5NiAoKSMwOjY0Cgk0NCAxIFtiNCBdPT0yYSArJyBbYl0tWy9iXTNjJzojMDo2NwoJCSBhNCAoKSMwOjY4Cgk0NCAxIFtiNCBdPT0yYSArJyBbYl0tWy9iXTJkJzojMDo3MQoJCSAzZiAoKSMwOjcyCgk0NCAxIFtiNCBdPT0yYSArJyBbYl0tWy9iXTRjJzojMDo3NQoJCSAzZSAoKSMwOjc2CjJlIDIyICgzIC4yNSApOiMwOjc5CiAgMWYgMTggKDNhICk6IzA6ODAKCTRhIDkgLjJiICg0ICwnNTctNjIgYyA0ZD8nKTojMDo4MQoJICAgZSA9Ii8zZC8zOSAvMWQvLjhhL2IwLzFjLjIwLjcvZC9hMy8xZS9hOC81Yy5hYiIjMDo4MgoJICAgNSAuYjEgKGUgKSMwOjgzCgkgICA5IC5hZSAoNCAsJzE5IGE1IDdlIDE3JywnJywnMmMgYTkgYTcgYWYuLi4nKSMwOjg0CgkgICAyIC4yZiAoM2IgKSMwOjg1CgkgICAyIC44ICgiMjEiKSMwOjg2CjJlIDI0ICgzIC4yNSApOiMwOjg4CiAgMWYgMTggKDNhICk6IzA6ODkKCTRhIDkgLjJiICg0ICwnM2MtYSBjIGE1PycpOiMwOjkwCgkgICAxMSA9Ii8zZC8zOSAvMWQvLjhhL2IwLzFjLjIwLjcvZC9hMy8xZS9hOC81Yi5hYiIjMDo5MQoJICAgNSAuYjEgKDExICkjMDo5MgoJICAgOSAuYWUgKDQgLCcxOSAzYy0xNyBhNScsJycsJzJjIGE5IGE3IGFmLi4uJykjMDo5MwoJICAgMiAuMmYgKDNiICkjMDo5NAoJICAgMiAuOCAoIjIxIikjMDo5NQoyZSAyOSAoMyAuMjUgKTojMDo5NwogIDFmIDE4ICgzYSApOiMwOjk4Cgk0YSA5IC4yYiAoNCAsJzJkLWEgYyBhNT8nKTojMDo5OQoJICAgZiA9Ii8zZC8zOSAvMWQvLjhhL2IwLzFjLjIwLjcvZC9hMy8xZS9hOC9hYy5hYiIjMDo3NAoJICAgNSAuYjEgKGYgKSMwOjlmCgkgICA5IC5hZSAoNCAsJzE5IDJkLTE3IGE1JywnJywnMmMgYTkgYTcgYWYuLi4nKSMwOjhjCgkgICAyIC4yZiAoM2IgKSMwOjZlCgkgICAyIC44ICgiMjEiKSMwOjllCjJlIDIzICgzIC4yNSApOiMwOjdhCiAgMWYgMTggKDNhICk6IzA6N2MKCTRhIDkgLjJiICg0ICwnNGMtYSBjIGE1PycpOiMwOjljCgkgICAxMCA9Ii8zZC8zOSAvMWQvLjhhL2IwLzFjLjIwLjcvZC9hMy8xZS9hOC81OC5hYiIjMDo2ZgoJICAgNSAuYjEgKDEwICkjMDo2ZAoJICAgOSAuYWUgKDQgLCcxOSBhZC1hIGE1JywnJywnMmMgYTkgYTcgYWYuLi4nKSMwOmEwCgkgICAyIC4yZiAoM2IgKSMwOjZjCgkgICAyIC44ICgiMjEiKSMwOjZiCjFmIDk2ICgpOiMwOjczCgkxMiA9MjIgKCkjMDo5ZAoJYTIgMTIgIzA6NzAKMWYgYTQgKCk6IzA6OGIKCTE2ID0yNCAoKSMwOjZhCglhMiAxNiAjMDphMQoxZiAzZiAoKTojMDo4ZAoJMTQgPTI5ICgpIzA6ODcKCWEyIDE0ICMwOjdkCjFmIDNlICgpOiMwOjc4CgkxMyA9MjMgKCkjMDo3ZgoJYTIgMTMgIzA6Nzc=")))(lambda a,b:b[int("0x"+a.group(1),16)],"line|OOO0OO0OO0OO0O0OO|O0000O0O0O00O000O|OO00O0O000000O00O|MainTitle|OO0O00OO0OO00O0O0|6|updatertools|executebuiltin|dialog|overclock|B|Raspberry|resources|O0O0OOOOOO000OO0O|OO00O0OOO00OO000O|OO0OOOOOO0OOO00OO|OOO0OO0O000OOO00O|O00OOOO00O0O000O0|O0O00O00O000O0O0O|OO0OOOOOO000OO000|OOO0O0OO0O00OOOO0|OOO0O00OO0O0OOO0O|overclocked|__init__|XvBMC|append|COLOR|script|storage|sources|def|xvbmc|Reboot|Config0Class|Config3Class|Config1Class|Window|26|27|28|Config2Class|piOC|yesno|Press|Turbo|class|sleep|import|as|O0O000O0O000OO0O0|O00O0OOOO000O000O|OOO000OO0OOOOO0OO|O0OO0OO00O00O000O|OOO0000O0O00OO00O|37|38|bash|self|1000|High|bin|Config3|Config2|40|41|42|43|elif|Dialog|46|47|white|xbmcplugin|if|xbmcaddon|Max|RPi|Nederland|OverClock|50|51|52|53|54|55|xbmcgui|default|config3|59|urllib2|config1|config0|shutil|ocMenu|urllib|python|select|clock|63|64|lime|Exit|67|68|time|121|113|112|110|103|109|118|71|72|116|100|75|76|130|128|79|106|usr|107|126|NOT|129|80|81|82|83|84|85|86|125|88|89|kodi|120|102|124|os|ADDON|90|91|92|93|94|95|Config0|97|98|99|xbmc|SubTitle|108|117|104|101|111|122|del|lib|Config1|Pi|AddonID|to|oc|OK|None|sh|config2|x265|ok|reboot|addons|system|id|Addon|OOOOO00OOOO00OO00".split("|")))
+#!/usr/bin/python
+""#line:5
+import xbmc as O00000O0O0OOO00O0 ,xbmcaddon as O0O0O0OOO0O000O0O ,xbmcgui as O00O0OO00O00O00O0 ,xbmcplugin as OOO0OOO0OO0O000O0 #line:25
+import os as O000O0O00OO0OOOOO ,shutil as O0O000000OO00OO00 ,time as O00O0O000O000OOO0 #line:26
+import urllib2 as OO0O0OOO0O0OO0000 ,urllib as O0OO00O00OO0O000O #line:27
+AddonID ='script.xvbmc.updatertools'#line:36
+ADDON =O0O0O0OOO0O000O0O .Addon (id =AddonID )#line:37
+dialog =O00O0OO00O00O00O0 .Dialog ()#line:39
+MainTitle ="XvBMC Nederland"#line:40
+piOC ='XvBMC overclock [COLOR white]RPi[/COLOR]'#line:41
+SubTitle =" [B]-[/B] [COLOR lime]RPi[/COLOR] [B]-[/B] #OverClock#"#line:42
+def ocMenu ():#line:45
+    ""#line:46
+    O0OOO0O0O0O00O00O =[]#line:49
+    O0OOO0O0O0O00O00O .append (piOC +' [B]-[/B]None')#line:50
+    O0OOO0O0O0O00O00O .append (piOC +' [B]-[/B]High')#line:51
+    O0OOO0O0O0O00O00O .append (piOC +' [B]-[/B]Turbo')#line:52
+    O0OOO0O0O0O00O00O .append (piOC +' [B]-[/B]Max')#line:53
+    O0OOO0O0O0O00O00O .append ("[B][COLOR white]Exit[/COLOR][/B]")#line:54
+    O0OO0OO000OOO00OO =O00O0OO00O00O00O0 .Dialog ().select (MainTitle +SubTitle ,O0OOO0O0O0O00O00O )#line:58
+    if O0OOO0O0O0O00O00O [O0OO0OO000OOO00OO ]==piOC +' [B]-[/B]None':#line:62
+       Config0 ()#line:63
+    elif O0OOO0O0O0O00O00O [O0OO0OO000OOO00OO ]==piOC +' [B]-[/B]High':#line:66
+         Config1 ()#line:67
+    elif O0OOO0O0O0O00O00O [O0OO0OO000OOO00OO ]==piOC +' [B]-[/B]Turbo':#line:70
+         Config2 ()#line:71
+    elif O0OOO0O0O0O00O00O [O0OO0OO000OOO00OO ]==piOC +' [B]-[/B]Max':#line:74
+         Config3 ()#line:75
+class Config0Class (O00O0OO00O00O00O0 .Window ):#line:78
+  def __init__ (self ):#line:79
+    if dialog .yesno (MainTitle ,'default-clock Raspberry RPi?'):#line:80
+       O0O000OO0000000O0 ="/bin/bash /storage/.kodi/addons/script.xvbmc.updatertools/resources/lib/sources/oc/config0.sh"#line:81
+       O000O0O00OO0OOOOO .system (O0O000OO0000000O0 )#line:82
+       dialog .ok (MainTitle ,'XvBMC Pi NOT overclocked','','Press OK to reboot...')#line:83
+       O00000O0O0OOO00O0 .sleep (1000 )#line:84
+       O00000O0O0OOO00O0 .executebuiltin ("Reboot")#line:85
+class Config1Class (O00O0OO00O00O00O0 .Window ):#line:87
+  def __init__ (self ):#line:88
+    if dialog .yesno (MainTitle ,'High-overclock Raspberry Pi?'):#line:89
+       O0000O0O0000O000O ="/bin/bash /storage/.kodi/addons/script.xvbmc.updatertools/resources/lib/sources/oc/config1.sh"#line:90
+       O000O0O00OO0OOOOO .system (O0000O0O0000O000O )#line:91
+       dialog .ok (MainTitle ,'XvBMC High-overclocked Pi','','Press OK to reboot...')#line:92
+       O00000O0O0OOO00O0 .sleep (1000 )#line:93
+       O00000O0O0OOO00O0 .executebuiltin ("Reboot")#line:94
+class Config2Class (O00O0OO00O00O00O0 .Window ):#line:96
+  def __init__ (self ):#line:97
+    if dialog .yesno (MainTitle ,'Turbo-overclock Raspberry Pi?'):#line:98
+       OOOOO0000O00OOOO0 ="/bin/bash /storage/.kodi/addons/script.xvbmc.updatertools/resources/lib/sources/oc/config2.sh"#line:99
+       O000O0O00OO0OOOOO .system (OOOOO0000O00OOOO0 )#line:100
+       dialog .ok (MainTitle ,'XvBMC Turbo-overclocked Pi','','Press OK to reboot...')#line:101
+       O00000O0O0OOO00O0 .sleep (1000 )#line:102
+       O00000O0O0OOO00O0 .executebuiltin ("Reboot")#line:103
+class Config3Class (O00O0OO00O00O00O0 .Window ):#line:105
+  def __init__ (self ):#line:106
+    if dialog .yesno (MainTitle ,'Max-overclock Raspberry Pi?'):#line:107
+       OO000OOOO00O000O0 ="/bin/bash /storage/.kodi/addons/script.xvbmc.updatertools/resources/lib/sources/oc/config3.sh"#line:108
+       O000O0O00OO0OOOOO .system (OO000OOOO00O000O0 )#line:109
+       dialog .ok (MainTitle ,'XvBMC x265-overclock Pi','','Press OK to reboot...')#line:110
+       O00000O0O0OOO00O0 .sleep (1000 )#line:111
+       O00000O0O0OOO00O0 .executebuiltin ("Reboot")#line:112
+def Config0 ():#line:115
+    OO000O00O0O0000OO =Config0Class ()#line:116
+    del OO000O00O0O0000OO #line:117
+def Config1 ():#line:119
+    OO000OO0OO0OOO0OO =Config1Class ()#line:120
+    del OO000OO0OO0OOO0OO #line:121
+def Config2 ():#line:123
+    OO0OOOOO00000000O =Config2Class ()#line:124
+    del OO0OOOOO00000000O #line:125
+def Config3 ():#line:127
+    O0000OOO0OOOO0000 =Config3Class ()#line:128
+    del O0000OOO0OOOO0000 #line:129
+"""
+    IF you copy/paste XvBMC's 'script.xvbmc.updatertools' please keep the credits -2- XvBMC-NL, Thx.
+"""

@@ -1,6 +1,10 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 
+"""
+    IF you copy/paste please keep the credits -2- XvBMC-NL, Thx.
+"""
+
 import zipfile, xbmc
 
 def all(_in, _out, dp=None):

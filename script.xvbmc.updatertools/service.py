@@ -1,1 +1,32 @@
-exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("IyEvNDcvNDYvMzQKNGEgNDkgMWYgMTMgLDNmIDFmIDIgLDI4IDFmIDVjICwyZCAxZiA5ICw1NCAxZiA0ZSAjMTo0CjRhIDNhIDFmIDVhICMxOjUKNGIgPSc0Zi40ZC42JyMxOjcKM2MgPTVjIC4zYiAoNTggPTRiICkjMTo4CmUgPTkgLjMyICgpIzE6MTAKMiAuM2QgKDQ0ICkjMToxMgpmICwyZiA9NWEgLjU2ICgpIzE6MTQKMzkgZiA9PSc1OSc6IzE6MTYKCTViID1lIC41MyAoIlswIDUwXVtiXTNbL2JdIDExWy8wXSIsJ1swIDQ4XTUyIDQ1IGEgMzggW2JdM1svYl0gNTkuLi5bLzBdJywnWzAgNDhdNDAgMWEgNTcgNDEgNTkgW2JdMyBbMCAxZV0zMFsvMF1bL2JdLCA0MyA1MVtiXT9bL2JdWy8wXScsJycsMTUgPSJbMCA1MF0zN1svMF0iLDRjID0iWzAgMmVdNTUgW2JdIDonKFsvYl1bLzBdIikjMToxNwoJMzkgNWIgOiMxOjE4CgkJMiAuZCAoJ2MoMjIsMWQ6Ly80Zi40ZC42LywxYiknKSMxOjE5CgkyYSA6IzE6MjAKCQllIC40MiAoJ1swIDUwXVtiXTNbL2JdIDExWy8wXScsJ1swIDQ4XTM1IDMxIDU5IFtiXTNbL2JdIDM2IDJjIDJiIDFhIDFjLi4uWy8wXScsJycsJycpIzE6MjEKM2UgZiA9PScyOSc6IzE6MjMKCSAgNWIgPWUgLjUzICgiWzAgNTBdW2JdM1svYl0gMTFbLzBdIiwnWzAgNDhdNTIgNDUgYSAzOCBbYl0zWy9iXSAzMyA1OS4uLlsvMF0nLCdbMCA0OF00MCAxYSA1NyA0MSA1OSBbYl0zIFswIDFlXTMwWy8wXVsvYl0sIDQzIDUxW2JdP1svYl1bLzBdJywnJywxNSA9IlswIDUwXTM3Wy8wXSIsNGMgPSJbMCAyZV01NSBbYl0gOicoWy9iXVsvMF0iKSMxOjI0CgkgIDM5IDViIDojMToyNQoJCSAgMiAuZCAoJ2MoMjIsMWQ6Ly80Zi40ZC42LywxYiknKSMxOjI2CgkgIDJhIDojMToyNwoJCSAgZSAuNDIgKCdbMCA1MF1bYl0zWy9iXSAxMVsvMF0nLCdbMCA0OF0zNSAzMSA1OSBbYl0zWy9iXSAzNiAyYyAyYiAxYSAxYy4uLlsvMF0nLCcnLCcnKQ==")))(lambda a,b:b[int("0x"+a.group(1),16)],"COLOR|line|OOOO0OO0O0OO0O0O0|XvBMC|4|5|updatertools|7|8|O0O0O00O000O0O0OO|a|B|ActivateWindow|executebuiltin|dialog|updatechk|10|Update|12|O0O00O00000OO0O0O|14|yeslabel|16|17|18|19|you|return|reboot|plugin|orange|as|20|21|10001|23|24|25|26|27|xbmcaddon|wizupdate|else|time|next|xbmcgui|red|versie|now|can|Dialog|wizard|python|You|the|NOW|new|if|utils|Addon|ADDON|sleep|elif|xbmc|Do|to|ok|or|5000|is|bin|usr|white|os|import|AddonID|nolabel|xvbmc|OO0000OO0OO00O00O|script|lime|later|There|yesno|xbmcplugin|Later|checkUpdate|whish|id|update|OO0OO0OOOO000OOO0|yes_pressed|OOOOO00OO0000O000".split("|")))
+#!/usr/bin/python
+""#line:6
+import os as O00O0OO0O00O0OOOO ,xbmc as OO00OO00OOO0OOO00 ,xbmcaddon as O0OO00OO0OOOO0OOO ,xbmcgui as O00OO0OO00O0OOO0O ,xbmcplugin as OO00O00000OO0OO00 #line:8
+import utils as O00O00O0O0O00000O #line:9
+AddonID ='script.xvbmc.updatertools'#line:11
+ADDON =O0OO00OO0OOOO0OOO .Addon (id =AddonID )#line:12
+dialog =O00OO0OO00O0OOO0O .Dialog ()#line:14
+MainTitle ="[COLOR lime][B]XvBMC[/B] Update[/COLOR]"#line:15
+Subtitle ='[COLOR white]There is a new [B]XvBMC[/B] update[/COLOR]'#line:16
+Updatevraag ='[COLOR white]Do you whish to update XvBMC [COLOR orange][B]now[/B][/COLOR], or later[B]?[/B][/COLOR]'#line:17
+NU ="[COLOR lime]NOW[/COLOR]"#line:19
+misschien ="[COLOR red]Later [B] :'([/B][/COLOR]"#line:20
+OO00OO00OOO0OOO00 .sleep (5000 )#line:22
+updatechk ,versie =O00O00O0O0O00000O .checkUpdate ()#line:24
+if updatechk =='update':#line:26
+   yes_pressed =dialog .yesno (MainTitle ,Subtitle +'[COLOR white] for your Portable[/COLOR]',Updatevraag ,'',yeslabel =NU ,nolabel =misschien )#line:27
+   if yes_pressed :#line:28
+      OO00OO00OOO0OOO00 .executebuiltin ('ActivateWindow(10001,plugin://script.xvbmc.updatertools/,return)')#line:29
+   else :#line:30
+      dialog .ok (MainTitle ,'[COLOR white]You can update [B]XvBMC[/B] the next time you reboot...[/COLOR]','','')#line:31
+elif updatechk =='wizupdate':#line:33
+     yes_pressed =dialog .yesno (MainTitle ,Subtitle +'[COLOR white] for your Wizard[/COLOR]',Updatevraag ,'',yeslabel =NU ,nolabel =misschien )#line:34
+     if yes_pressed :#line:35
+        OO00OO00OOO0OOO00 .executebuiltin ('ActivateWindow(10001,plugin://script.xvbmc.updatertools/,return)')#line:36
+     else :#line:37
+        dialog .ok (MainTitle ,'[COLOR white]You can update [B]XvBMC[/B] the next time you reboot...[/COLOR]','','')#line:38
+elif updatechk =='rpiupdate':#line:40
+     yes_pressed =dialog .yesno (MainTitle ,Subtitle +'[COLOR white] for your RPi[/COLOR]',Updatevraag ,'',yeslabel =NU ,nolabel =misschien )#line:41
+     if yes_pressed :#line:42
+        OO00OO00OOO0OOO00 .executebuiltin ('ActivateWindow(10001,plugin://script.xvbmc.updatertools/,return)')#line:43
+     else :#line:44
+        dialog .ok (MainTitle ,'[COLOR white]You can update [B]XvBMC[/B] the next time you reboot...[/COLOR]','','')

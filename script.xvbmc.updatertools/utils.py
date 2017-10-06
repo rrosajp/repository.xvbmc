@@ -1,1 +1,126 @@
-exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("IyEvYzUvYjMvOGIKMTFhIDNjICxkOCAsNWUgLGNjICNkZDo0CjExYSBlOSAsM2IgLDQ5ICwxMWQgI2RkOjUKYWUgNmUgLmFkIC44ZCAxMWEgMmMgLGM3ICwyYiAsMTFiICNkZDo2CjZhID0zYiAuZDYgKGNmID0nOGMuZWEuNTcnKSNkZDo4CmQ5ID0nMTBiLzUuMCAoNDg7IGNiOyA0OCBkMCA1LjE7IGYyLWI5OyBmMzoxLjkuMC4zKSAxMDcvNmMgN2UvMy4wLjMnI2RkOjEwCjEwZSA9NmEgLjExMyAoJzRhJykjZGQ6MTEKMTBlID1lOSAuZWMgKDEwZSApLmRlICgiYzAtOCIpI2RkOjEyCmQ3ID17J2I4LTZiJzpkOSAsJzVkJzonKi8qJywnZmEnOidhNC1lZCd9I2RkOjE1CmUgPWQ4IC4yNyAuYWYgKDEwZSAsJzdhLmM2JykjZGQ6MTYKMTBmID00OSAuZTEgKCkjZGQ6MTgKNGQgPWU5IC41NiAoImZmLjU5IikuZWIgKCIuIilbMCBdI2RkOjE5CjJhID0yYiAjZGQ6MjAKM2UgPTJjICNkZDoyMQplOCA9MTFiICNkZDoyMgoyZiA9YzcgI2RkOjIzCjExZiBkZiBkOCAuMjcgLmY0ICgxMGUgKTojZGQ6MjUKCWQ4IC43OCAoMTBlICkjZGQ6MjYKMTE4ID1jYyAuMTE4ICNkZDoyOApmNiA9M2MgLmJlIChlOSAuZWMgKGUgKSkjZGQ6MjkKMTQgPWNjIC4xNCAjZGQ6MzAKMTFmIGY2ICE9NWIgOiNkZDozMgoJMTFmIGQ4IC4yNyAuM2QgKGU5IC5lYyAoZSApKTojZGQ6MzMKCQkxMGMgOiNkZDozNAoJCQlmNiAuYTYgKCkjZGQ6MzUKCQlkMSA6I2RkOjM2CgkJCTEwYyA6I2RkOjM3CgkJCQlkOCAuZTIgKGU5IC5lYyAoZSApKSNkZDozOAoJCQkJMTBhICNkZDozOQoJCQlkMSA6I2RkOjQwCgkJCQkxMGEgI2RkOjQxCgliYyA9Y2MgLjNhIChmNiApI2RkOjQyCgkzZiA9Y2MgLjlmIChiYyAsY2MgLmZkICgpLGNjIC5mNyAoKSkjZGQ6NDMKZDUgOiNkZDo0NAoJM2YgPWNjIC45ZiAoKSNkZDo0NQpjYyAuNGMgKDNmICkjZGQ6NDcKNWMgMmQgKDQ2ICk6I2RkOjUwCglhNSA9MTQgKDQ2ICkjZGQ6NTEKCWQgPTExOCAoYTUgLDRmID02MCApI2RkOjUyCgkxZSA9ZCAuZmIgKCkjZGQ6NTMKCWQgLmQyICgpI2RkOjU0Cgk3IDFlICNkZDo1NQo1YyBiNCAoNDYgLGYgPXt9LGQ3ID17fSwzMSA9YjcgLDEwZCA9NWIgKTojZGQ6NTgKCWU3ID0nMTBiLzUuMCAoYWM7IGRhIGEyKSBmOC9kYy4xICcrJyg5YSwgYTMgMTA3KSA4Zi8xMy4wLmIwLjk5IGYxL2RjLjEnI2RkOjYwCgkyID1jYyAuMTQgKDQ2ICkjZGQ6NjEKCTExZiBmIDojZGQ6NjIKCQlmID01ZSAuNmQgKGYgKSNkZDo2MwoJCTIgPWNjIC4xNCAoNDYgLGYgKSNkZDo2NAoJMiAuMjQgKCdiOC02YicsZTcgKSNkZDo2NQoJZTAgMWIgLDFjIGFiIGQ3IC5hMSAoKTojZGQ6NjYKCQkyIC4yNCAoMWIgLDFjICkjZGQ6NjcKCTExZiAzMSA6I2RkOjY4CgkJMiAuMjQgKCc1ZC1jNCcsJ2E5JykjZGQ6NjkKCWNlID1jYyAuMTE4ICgyICw0ZiA9MzAgKSNkZDo3MAoJMWQgPWNlIC5mYiAoKSNkZDo3MQoJMTFmIGRmIDEwZCA6I2RkOjcyCgkJMTBjIDojZGQ6NzMKCQkJZjYgLjllIChlICkjZGQ6NzQKCQlkMSA6MTBhICNkZDo3NQoJY2UgLmQyICgpI2RkOjc2Cgk3IDFkICNkZDo3Nwo1YyBjZCAoMWYgPWVlICk6I2RkOjgwCgkxMWYgZDggLjI3IC4zZCAoMmEgKTojZGQ6ODEKCQliYiA9NzkgKDJhICwnZmUnKSNkZDo4MgoJCWVmID1iYiAuZmIgKCkjZGQ6ODMKCQliYiAuZDIgKCkjZGQ6ODQKCQkxMWYgMWYgOiNkZDo4NQoJCQk3IGVmICwnJyNkZDo4NgoJCTEwYyA6YyA9MmQgKDNlICkjZGQ6ODcKCQlkMSA6NyAnMTFjJyxlZiAjZGQ6ODgKCQkxMWYgNWEgKGMgKT41YSAoZWYgKTojZGQ6ODkKCQkJNyAnMmUnLGMgI2RkOjkwCgkJZDUgOiNkZDo5MQoJCQk3ICcxMWMnLGVmICNkZDo5MgoJOWQgZDggLjI3IC4zZCAoZTggKTojZGQ6OTMKCQkgIGJiID03OSAoZTggLCdmZScpI2RkOjk0CgkJICBlZiA9YmIgLmZiICgpI2RkOjk1CgkJICBiYiAuZDIgKCkjZGQ6OTYKCQkgIDExZiAxZiA6I2RkOjk3CgkJCSAgNyBlZiAsJycjZGQ6OTgKCQkgIDEwYyA6YWEgPTJkICgyZiApI2RkOjk5CgkJICBkMSA6NyAnMTFjJyxlZiAjZGQ6MTAwCgkJICAxMWYgNWEgKGFhICk+NWEgKGVmICk6I2RkOjEwMQoJCQkgIDcgJzZmJyxhYSAjZGQ6MTAyCgkJICBkNSA6I2RkOjEwMwoJCQkgIDcgJzExYycsZWYgI2RkOjEwNAoJZDUgOiNkZDoxMDUKCQk3ICc1ZicsJycjZGQ6MTA2CjVjIGI1ICg0YiA9NWIgLDJlID1iNyApOiNkZDoxMDkKCTExZiA0ZCA+MTYuNSA6I2RkOjExMAoJCTEwYyA6YWUgN2YgMTFhIGE3IGE4IGEgI2RkOjExMQoJCWQxIDphZSBjYSAxMWEgYTcgYTggYSAjZGQ6MTEyCgkJZTYgPWU5IC5lYyAoIjRlOi8vNGEvMTA4IikjZGQ6MTE0CgkJZTQgPWQ4IC4yNyAuYWYgKGU2ICwnYzMuZGInKSNkZDoxMTUKCQljMiA9YSAuN2QgKGU0ICkjZGQ6MTE2CgkJYzIgLmY5ID1iZiAjZGQ6MTE3CgkJMWEgPWU5IC5lYyAoZDggLjI3IC5hZiAoJzRlOi8vYTAnLCdiYScpKSNkZDoxMTkKCQllNSA9ZDggLjdiICgxYSApI2RkOjEyMAoJCWMyIC5mYyAoJzJlIGI2IGMxIGQzPTEgZjAgN2MgPSAoPyknLCgoMTcgLCllMCAxNyBhYiBlNSApKSNkZDoxMjEKCQljMiAuOGUgKCkjZGQ6MTIyCgkJMTFmIDJlIDojZGQ6MTIzCgkJCWU5IC4xMWUgKCdiMigpJykjZGQ6MTI0CgkJCWU5IC4xMWUgKCdmNSgpJykjZGQ6MTI1CgkJMTFmIDRiIDojZGQ6MTI2CgkJCTEwZiAuZTMgKCJbZDQgOWNdW2JdOGEgZDNbL2Q0XVsvYl0iLCdbZDQgOWJdYzhbL2Q0XSBiYSBiMSBbYl1kMyFbL2JdJykjZGQ6YzkKCWQ1IDojZGQ6YmQKCQkxMGE=")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|1|OOO00000O0O000OOO|3|4|5|6|return|8|9|O00OO000O00OO0OO0|B|OOOOO0OO0OOO0OO00|OOOO0OO0O0OO00O0O|cookiePath|form_data|10|11|12|13|Request|15|16|O0OO00OO00O000O00|18|19|O0OO0000000OOOOO0|O000O00OO0OOOOO0O|O0O0O00O00OOOO000|O0O0OOO0OO00000O0|OO0O0O00OOO00OOO0|onlycurrent|20|21|22|23|add_header|25|26|path|28|29|versietxt|uwspversietxt|currentsptxt|getHtml2|update|versieurlwiz|30|compression|32|33|34|35|36|37|38|39|HTTPCookieProcessor|xbmcaddon|cookielib|isfile|versieurl|opener|40|41|42|43|44|45|url|47|Windows|xbmcgui|profile|melding|install_opener|kodiver|special|timeout|50|51|52|53|54|55|getInfoLabel|updatertools|58|BuildVersion|int|None|def|Accept|urllib|notinstalled|60|61|62|63|64|65|66|67|68|69|ADDON|Agent|2008092417|urlencode|resources|wizupdate|70|71|72|73|74|75|76|77|makedirs|open|cookies|listdir|addonID|connect|Firefox|sqlite3|80|81|82|83|84|85|86|87|88|89|Addons|python|script|common|commit|Chrome|90|91|92|93|94|95|96|97|98|99|KHTML|white|lime|elif|save|build_opener|home|items|i686|like|keep|OOO00O00OOOOOOOO0|load|dbapi2|as|gzip|O0OOO0O00O00O0OO0|in|X11|lib|from|join|782|are|UpdateAddonRepos|bin|postHtml|enableAddons|installed|True|User|GB|addons|OO0O0OO00OOO00OOO|cookie_handler|128|LWPCookieJar|str|utf|set|OOOOOO0OO0O0OO00O|Addons27|Encoding|usr|lwp|currentsptxtwiz|ALL|127|pysqlite2|U|urllib2|checkUpdate|OO00O000OO0000OOO|id|NT|except|close|enabled|COLOR|else|Addon|headers|os|USER_AGENT|Linux|db|535|line|decode|not|for|Dialog|remove|ok|OO0OO0O00O00000O0|OOOO00O000O0O00O0|O0O0OOO00OO0O0000|_OO0OOOO000O0OO0O0|versietxtwiz|xbmc|xvbmc|split|translatePath|alive|False|O00OO00OOO0O0OOOO|WHERE|Safari|en|rv|exists|UpdateLocalAddons|cj|HTTPHandler|AppleWebKit|text_factory|Connection|read|executemany|HTTPBasicAuthHandler|r|System|100|101|102|103|104|105|106|Gecko|Database|109|pass|Mozilla|try|NoCookie|profileDir|dialog|110|111|112|getAddonInfo|114|115|116|117|urlopen|119|import|uwspversietxtwiz|noupdate|xbmcplugin|executebuiltin|if|120|121|122|123|124|125|126".split("|")))
+#!/usr/bin/python
+"""
+    IF you copy/paste XvBMC's -utils.py- please keep the credits -2- XvBMC-NL, Thx.
+"""#line:6
+import cookielib ,os ,urllib ,urllib2 #line:8
+import xbmc ,xbmcaddon ,xbmcgui ,xbmcplugin #line:9
+from resources .lib .common import currentsptxt ,currentsptxtrpi ,currentsptxtwiz ,uwspversietxt ,uwspversietxtrpi ,uwspversietxtwiz #line:10
+ADDON =xbmcaddon .Addon (id ='script.xvbmc.updatertools')#line:12
+USER_AGENT ='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'#line:14
+profileDir =ADDON .getAddonInfo ('profile')#line:15
+profileDir =xbmc .translatePath (profileDir ).decode ("utf-8")#line:16
+headers ={'User-Agent':USER_AGENT ,'Accept':'*/*','Connection':'keep-alive'}#line:19
+cookiePath =os .path .join (profileDir ,'cookies.lwp')#line:20
+dialog =xbmcgui .Dialog ()#line:22
+kodiver =xbmc .getInfoLabel ("System.BuildVersion").split (".")[0 ]#line:23
+versietxt =uwspversietxt #line:24
+versieurl =currentsptxt #line:25
+versietxtrpi =uwspversietxtrpi #line:26
+versieurlrpi =currentsptxtrpi #line:27
+versietxtwiz =uwspversietxtwiz #line:28
+versieurlwiz =currentsptxtwiz #line:29
+if not os .path .exists (profileDir ):#line:31
+    os .makedirs (profileDir )#line:32
+urlopen =urllib2 .urlopen #line:34
+cj =cookielib .LWPCookieJar (xbmc .translatePath (cookiePath ))#line:35
+Request =urllib2 .Request #line:36
+if cj !=None :#line:38
+    if os .path .isfile (xbmc .translatePath (cookiePath )):#line:39
+        try :#line:40
+            cj .load ()#line:41
+        except :#line:42
+            try :#line:43
+                os .remove (xbmc .translatePath (cookiePath ))#line:44
+                pass #line:45
+            except :#line:46
+                pass #line:47
+    cookie_handler =urllib2 .HTTPCookieProcessor (cj )#line:48
+    opener =urllib2 .build_opener (cookie_handler ,urllib2 .HTTPBasicAuthHandler (),urllib2 .HTTPHandler ())#line:49
+else :#line:50
+    opener =urllib2 .build_opener ()#line:51
+urllib2 .install_opener (opener )#line:53
+def getHtml2 (url ):#line:56
+    O00O0OO00OOO00OO0 =Request (url )#line:57
+    OO00O0O00OOOO0O00 =urlopen (O00O0OO00OOO00OO0 ,timeout =60 )#line:58
+    OOOO0OO0OOOOO0OOO =OO00O0O00OOOO0O00 .read ()#line:59
+    OO00O0O00OOOO0O00 .close ()#line:60
+    return OOOO0OO0OOOOO0OOO #line:61
+def postHtml (url ,form_data ={},headers ={},compression =True ,NoCookie =None ):#line:64
+    _O0O0OO00OOOOO0O0O ='Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 '+'(KHTML, like Gecko) Chrome/13.0.782.99 Safari/535.1'#line:66
+    OOO00OOOOO0OO0OOO =urllib2 .Request (url )#line:67
+    if form_data :#line:68
+        form_data =urllib .urlencode (form_data )#line:69
+        OOO00OOOOO0OO0OOO =urllib2 .Request (url ,form_data )#line:70
+    OOO00OOOOO0OO0OOO .add_header ('User-Agent',_O0O0OO00OOOOO0O0O )#line:71
+    for O0OO0OO00000O0O0O ,OO0O0OOO000OO000O in headers .items ():#line:72
+        OOO00OOOOO0OO0OOO .add_header (O0OO0OO00000O0O0O ,OO0O0OOO000OO000O )#line:73
+    if compression :#line:74
+        OOO00OOOOO0OO0OOO .add_header ('Accept-Encoding','gzip')#line:75
+    OOO00OOO000000OO0 =urllib2 .urlopen (OOO00OOOOO0OO0OOO ,timeout =30 )#line:76
+    O0000O0OO00OOOOOO =OOO00OOO000000OO0 .read ()#line:77
+    if not NoCookie :#line:78
+        try :#line:79
+            cj .save (cookiePath )#line:80
+        except :pass #line:81
+    OOO00OOO000000OO0 .close ()#line:82
+    return O0000O0OO00OOOOOO #line:83
+def checkUpdate (onlycurrent =False ):#line:86
+    if os .path .isfile (versietxt ):#line:87
+       O00000O0OOOO0OOO0 =open (versietxt ,'r')#line:88
+       OO000O00OOO0OOOO0 =O00000O0OOOO0OOO0 .read ()#line:89
+       O00000O0OOOO0OOO0 .close ()#line:90
+       if onlycurrent :return OO000O00OOO0OOOO0 ,''#line:91
+       try :O0O0OOOO000000000 =getHtml2 (versieurl )#line:92
+       except :return 'noupdate',OO000O00OOO0OOOO0 #line:93
+       try :#line:94
+           if int (O0O0OOOO000000000 )>int (OO000O00OOO0OOOO0 ):#line:95
+              return 'update',O0O0OOOO000000000 #line:96
+       except ValueError :#line:97
+              return 'notinstalled',''#line:99
+       else :return 'noupdate',OO000O00OOO0OOOO0 #line:100
+    elif os .path .isfile (versietxtwiz ):#line:101
+         O00000O0OOOO0OOO0 =open (versietxtwiz ,'r')#line:102
+         OO000O00OOO0OOOO0 =O00000O0OOOO0OOO0 .read ()#line:103
+         O00000O0OOOO0OOO0 .close ()#line:104
+         if onlycurrent :return OO000O00OOO0OOOO0 ,''#line:105
+         try :O0OO0O00000O00O0O =getHtml2 (versieurlwiz )#line:106
+         except :return 'noupdate',OO000O00OOO0OOOO0 #line:107
+         try :#line:108
+             if int (O0OO0O00000O00O0O )>int (OO000O00OOO0OOOO0 ):#line:109
+                return 'wizupdate',O0OO0O00000O00O0O #line:110
+         except ValueError :#line:111
+                return 'notinstalled',''#line:113
+         else :return 'noupdate',OO000O00OOO0OOOO0 #line:114
+    elif os .path .isfile (versietxtrpi ):#line:115
+         O00000O0OOOO0OOO0 =open (versietxtrpi ,'r')#line:116
+         OO000O00OOO0OOOO0 =O00000O0OOOO0OOO0 .read ()#line:117
+         O00000O0OOOO0OOO0 .close ()#line:118
+         if onlycurrent :return OO000O00OOO0OOOO0 ,''#line:119
+         try :OO0O0OOO0OO0OOO0O =getHtml2 (versieurlrpi )#line:120
+         except :return 'noupdate',OO000O00OOO0OOOO0 #line:121
+         try :#line:122
+             if int (OO0O0OOO0OO0OOO0O )>int (OO000O00OOO0OOOO0 ):#line:123
+                return 'rpiupdate',OO0O0OOO0OO0OOO0O #line:124
+         except ValueError :#line:125
+                return 'notinstalled',''#line:127
+         else :return 'noupdaterpi',OO000O00OOO0OOOO0 #line:128
+    else :return 'notinstalled',''#line:129
+def enableAddons (melding =None ,update =True ):#line:132
+    if kodiver >16.5 :#line:133
+        try :from sqlite3 import dbapi2 as OOO0O00O0O00OO00O #line:134
+        except :from pysqlite2 import dbapi2 as OOO0O00O0O00OO00O #line:135
+        O0O000O0OOO0000O0 =xbmc .translatePath ("special://profile/Database")#line:137
+        O00O00OOO0OO0O000 =os .path .join (O0O000O0OOO0000O0 ,'Addons27.db')#line:138
+        O0O0O00OO0OO0O0O0 =OOO0O00O0O00OO00O .connect (O00O00OOO0OO0O000 )#line:139
+        O0O0O00OO0OO0O0O0 .text_factory =str #line:140
+        OOOOO000OO0O0O0OO =xbmc .translatePath (os .path .join ('special://home','addons'))#line:142
+        O000OOO0O00000O0O =os .listdir (OOOOO000OO0O0O0OO )#line:143
+        O0O0O00OO0OO0O0O0 .executemany ('update installed set enabled=1 WHERE addonID = (?)',((OOO000OOO0O000O0O ,)for OOO000OOO0O000O0O in O000OOO0O00000O0O ))#line:144
+        O0O0O00OO0OO0O0O0 .commit ()#line:145
+        if update :#line:146
+            xbmc .executebuiltin ('UpdateAddonRepos()')#line:147
+            xbmc .executebuiltin ('UpdateLocalAddons()')#line:148
+        if melding :#line:149
+            dialog .ok ("[COLOR lime][B]Addons enabled[/COLOR][/B]",'[COLOR white]ALL[/COLOR] addons are [B]enabled![/B]')#line:150
+    else :#line:151
+        pass 
