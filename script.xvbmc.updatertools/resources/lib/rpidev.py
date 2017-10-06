@@ -1,1 +1,127 @@
-exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("IyEvZWYvMTExL2FmCiIiIzdkOjYKMjMgYjcgMTBjIGUxICxmZSAxMGMgMTBhICxhMCAxMGMgYjggLDdmIDEwYyAxMzUgIzdkOjI1CjIzIDdlIDEwYyBjYiAsYTMgMTBjIDEzYSAsYmEgMTBjIGMgIzdkOjI2CjIzIGExIDEwYyAxMzYgLGFkIDEwYyAxM2UgIzdkOjI3CjIzIDdjIDEwYyAxOSAjN2Q6MjgKOGIgNzggMjMgOGYgMTBjIGYgLDZkIDEwYyAxZiAsZjIgMTBjIGUgLGNmIDEwYyBkICM3ZDozMAo4YiA3OCAyMyBjOCAxMGMgMSAjN2Q6MzEKNjYgPSc0ZS42MC4yNCcjN2Q6MzQKYjMgPTEwYSAuYjQgKGViID02NiApIzdkOjM1CjEwID1iOCAuMTJhICgpIzdkOjM3CjljID0iNyAzZSIjN2Q6MzgKZDAgPScgW2JiIGFjXSpkMCpbL2JiXScjN2Q6MzkKMTFlID0nIFtiYiBkOF1bYl0qWy9iXWMxW2JdKlsvYl1bL2JiXScjN2Q6NDAKYWIgPScgW2JiIGE1XVtiXSpbL2JdYWJbYl0qWy9iXVsvYmJdJyM3ZDo0MQo0YSA9JyBbYmIgYTVdW2JdKlsvYl1hOVtiXSpbL2JdWy9iYl0nIzdkOjQyCjFkID0iIFtiXS1bL2JdIFtiYiBkOF1hOVsvYmJdIFtiXS1bL2JdICMzMiMiIzdkOjQzCjNkIDlmICgpOiM3ZDo0NgoJIiIjN2Q6NDcKCWRiID1bXSM3ZDo1MAoJZGIgLjM2ICgnNyAjMzIjIFtiXS1bL2JdIFtiYiA5XThlWy9iYl0gZjEgW2JdLVsvYl0gNjEgOWInKzExZSApIzdkOjUxCglkYiAuMzYgKCc3ICMzMiMgW2JdLVsvYl0gW2JiIDldOGVbL2JiXSBmMSBbYl0tWy9iXSA3IDU2JytkMCApIzdkOjUyCglkYiAuMzYgKCc3ICMzMiMgW2JdLVsvYl0gW2JiIDldMTEwWy9iYl1jNi04LjAuMicrNGEgKSM3ZDo1MwoJZGIgLjM2ICgnNyAjMzIjIFtiXS1bL2JdIFtiYiA5XTQ1Wy9iYl1jNi04LjAuNCcrNGEgKSM3ZDo1NAoJZGIgLjM2ICgnW2JdW2JiIDldYjZbL2JiXVsvYl0nKSM3ZDo1NQoJYSA9YjggLjEyYSAoKS5iMiAoOWMgKzFkICxkYiApIzdkOjU5CgkxMzcgZGIgW2EgXT09JzcgIzMyIyBbYl0tWy9iXSBbYmIgOV04ZVsvYmJdIGYxIFtiXS1bL2JdIDYxIDliJysxMWUgOiM3ZDo2MwoJCTNiICgpIzdkOjY0Cgk2YSBkYiBbYSBdPT0nNyAjMzIjIFtiXS1bL2JdIFtiYiA5XThlWy9iYl0gZjEgW2JdLVsvYl0gNyA1NicrZDAgOiM3ZDo2NwoJCWUzICgpIzdkOjY4Cgk2YSBkYiBbYSBdPT0nNyAjMzIjIFtiXS1bL2JdIFtiYiA5XTExMFsvYmJdYzYtOC4wLjInKzRhIDojN2Q6NzEKCQk1ZCAoKSM3ZDo3MgoJNmEgZGIgW2EgXT09JzcgIzMyIyBbYl0tWy9iXSBbYmIgOV00NVsvYmJdYzYtOC4wLjQnKzRhIDojN2Q6NzUKCQk0OSAoKSM3ZDo3Ngo0YiAyMSAoYjggLjQ0ICk6IzdkOjc5CiAgM2QgMzMgKDVhICk6IzdkOjgwCgkxNCA9ZiAoKSM3ZDo4MQoJMSAoIjEzOiAiKzZiICgxNCApKSM3ZDo4MgoJMTM3IDcwIDE0ID09JzIwJzojN2Q6ODMKCSAgIDEwIC41NyAoOWMgKzFkICwxZiAsZSAsZCApIzdkOjg0CgkgICAxICgiNWIgNDggMTJjIDhkLiA0NS0vMTEiKSM3ZDo4NQoJMTNiIDojN2Q6ODYKCQkxICgiMjAgN2UiKSM3ZDo4NwoJCTEzNyAxMCAuMTMyICgiNy0xMWYgNGQgYTYgMWUiLCdiMSBbYmIgOV0xMWQgMTNkWy9iYl0gZDYrMyAxZT8nKTojN2Q6ODgKCQkgICAyYyA9Ii8xMTEvMTFjIC8zYS8uMTJkLzZmLzRlLjYwLjI0LzRmL2FhLzYyL2E4L2QzLmI5IiM3ZDo4OQoJCSAgIGNiIC5kMiAoMmMgKSM3ZDo5MAoJCSAgIDEwIC41NyAoOWMgLCc3IFtiYiA5XTExZCAxM2RbL2JiXSAxZSA2NScsJycsJ2QxIGMyIDhjIDEzZi4uLicpIzdkOjkxCgkJICAgYyAuZDUgKDAuNSApIzdkOjkyCgkJICAgZTEgLjEyICgiMTM0IikjN2Q6OTMKNGIgZTkgKGI4IC40NCApOiM3ZDo5NQogIDNkIDMzICg1YSApOiM3ZDo5NgoJMWIgPWYgKCkjN2Q6OTcKCTEgKCIxMzogIis2YiAoMWIgKSkjN2Q6OTgKCTEzNyA3MCAxYiA9PScyMCc6IzdkOjk5CgkgICAxMCAuNTcgKDljICsxZCAsMWYgLGUgLGQgKSM3ZDoxMDAKCSAgIDEgKCI1YiA0OCAxMmMgOGQuIDQ1LS8xMSIpIzdkOjEwMQoJMTNiIDojN2Q6MTAyCgkJMSAoIjIwIDdlIikjN2Q6MTAzCgkJMTM3IDEwIC4xMzIgKCI3LTExZiA0ZCAxZSBkMCIsJzEwZC1iNSA3IFtiYiA5XVwiZThcIlsvYmJdIDFlPycpOiM3ZDoxMDQKCQkgICAyZCA9Ii8xMTEvMTFjIC8zYS8uMTJkLzZmLzRlLjYwLjI0LzRmL2FhLzYyL2E4L2VhLmI5IiM3ZDoxMDUKCQkgICBjYiAuZDIgKDJkICkjN2Q6MTA2CgkJICAgMTAgLjU3ICg5YyAsJzcgW2JiIDldXCJlOFwiWy9iYl0gMWUgYmMtNjUnLCcnLCdkMSBjMiA4YyAxM2YuLi4nKSM3ZDoxMDcKCQkgICBjIC5kNSAoMC41ICkjN2Q6MTA4CgkJICAgZTEgLjEyICgiMTM0IikjN2Q6MTA5CjRiIDNmIChiOCAuNDQgKTojN2Q6MTEyCiAgM2QgMzMgKDVhICk6IzdkOjExMwoJMWMgPWYgKCkjN2Q6MTE0CgkxICgiMTM6ICIrNmIgKDFjICkpIzdkOjExNQoJMTM3IDcwIDFjID09JzIwJzojN2Q6MTE2CgkgICAxMCAuNTcgKDljICsxZCAsMWYgLGUgLGQgKSM3ZDoxMTcKCSAgIDEgKCI1YiA0OCAxMmMgOGQuIDQ1LS8xMSIpIzdkOjExOAoJMTNiIDojN2Q6MTE5CgkJMSAoIjIwIDdlIikjN2Q6MTIwCgkJMTM3IDEwIC4xMzIgKCI3LTExZiAxMSBcJ1tiYiA5XTEyY1svYmJdLTIyXCciLCc0YyAxMGVbYmIgOV04LjAuMlsvYmJdIGFlIDEzZiA4YSBkNy4uLicpOiM3ZDoxMjEKCQkgICAyYiA9JzlhOi8vOWUuYzMuYmUvMTEtMTFiLmIwLTguMC4yLjEyYicjN2Q6MTIyCgkJICAgMTBiID1lMSAuZGQgKGNiIC5kYSAuNWYgKCcvM2EvLjIyLycsJycpKSM3ZDoxMjMKCQkgICAxNiA9YjggLjNjICgpIzdkOjEyNAoJCSAgIDE2IC43NyAoIjcgM2UiLCI3LTMyOiAxMGYgOTQgNmMuLi4iLCcnLCc3MyAxMmYnKSM3ZDoxMjUKCQkgICAxOCA9Y2IgLmRhIC41ZiAoMTBiICwnZmYuMTJiJykjN2Q6MTI2CgkJICAgYTcgOiM3ZDoxMjcKCQkJICAgY2IgLjdhICgxOCApIzdkOjEyOAoJCSAgIDY5IDojN2Q6MTI5CgkJCSAgIDlkICM3ZDoxMzAKCQkgICAxOSAuNWMgKDJiICwxOCAsMTYgKSM3ZDoxMzEKCQkgICBjIC5kNSAoMyApIzdkOjEzMwoJCSAgIDEwIC41NyAoOWMgLCcxMSA2ZSAyMiA1ZSEnLCcnLCdkMSBjMiA4YyAxM2YuLi4nKSM3ZDoxMzgKCQkgICBlMSAuZDUgKDExYSApIzdkOjEzOQoJCSAgIGUxIC4xMiAoIjEzNCIpIzdkOjE0MAo0YiBmYyAoYjggLjQ0ICk6IzdkOjE0MgogIDNkIDMzICg1YSApOiM3ZDoxNDMKCTE1ID1mICgpIzdkOjE0NAoJMSAoIjEzOiAiKzZiICgxNSApKSM3ZDplYwoJMTM3IDcwIDE1ID09JzIwJzojN2Q6ZDQKCSAgIDEwIC41NyAoOWMgKzFkICwxZiAsZSAsZCApIzdkOmVkCgkgICAxICgiNWIgNDggMTJjIDhkLiA0NS0vMTEiKSM3ZDplNQoJMTNiIDojN2Q6ZTYKCQkxICgiMjAgN2UiKSM3ZDpmOAoJCTEzNyAxMCAuMTMyICgiNy0xMWYgMTEgXCdbYmIgOV0xMmNbL2JiXS0yMlwnIiwnNGMgYzBbYmIgOV04LjAuNFsvYmJdIGFlIDEzZiA4YSBkNy4uLicpOiM3ZDplNwoJCSAgIDEyZSA9JzlhOi8vYmYuYTQuYTItZTIuMTNjLzU4LTExYi5iMC04LjAuNC4xMmInIzdkOmY3CgkJICAgMTQxID1lMSAuZGQgKGNiIC5kYSAuNWYgKCcvM2EvLjIyLycsJycpKSM3ZDpkZgoJCSAgIDFhID1iOCAuM2MgKCkjN2Q6ZmEKCQkgICAxYSAuNzcgKCI3IDNlIiwiNy0zMjogMTBmIDk0IDZjLi4uIiwnJywnNzMgMTJmJykjN2Q6YzQKCQkgICAxNyA9Y2IgLmRhIC41ZiAoMTQxICwnN2IuMTJiJykjN2Q6ZjkKCQkgICBhNyA6IzdkOmRjCgkJCSAgIGNiIC43YSAoMTcgKSM3ZDpjNwoJCSAgIDY5IDojN2Q6ZjYKCQkJICAgOWQgIzdkOmNhCgkJICAgMTkgLjVjICgxMmUgLDE3ICwxYSApIzdkOmYzCgkJICAgYyAuZDUgKDMgKSM3ZDpjNQoJCSAgIDEwIC41NyAoOWMgLCc1OCA2ZSAyMiA1ZSEnLCcnLCdkMSBjMiA4YyAxM2YuLi4nKSM3ZDpkOQoJCSAgIGUxIC5kNSAoMTFhICkjN2Q6ZWUKCQkgICBlMSAuMTIgKCIxMzQiKSM3ZDpmYgozZCAzYiAoKTojN2Q6ZTQKCTJhID0yMSAoKSM3ZDplMAoJNzQgMmEgIzdkOmM5CjNkIGUzICgpOiM3ZDpjZQoJMmUgPWU5ICgpIzdkOmRlCgk3NCAyZSAjN2Q6ZjAKM2QgNWQgKCk6IzdkOmZkCgkyOSA9M2YgKCkjN2Q6ZjQKCTc0IDI5ICM3ZDpiZAozZCA0OSAoKTojN2Q6Y2MKCTJmID1mYyAoKSM3ZDpjZAoJNzQgMmYgIzdkOmY1")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|OO0O0O0000O00OOO0|2|3|4|5|6|XvBMC|8|white|O0O00O00OOOO0O0OO|B|O0000O0O0O00OO000|OO0OOOO0O00OO0000|OOOO0OO0OOOO0OO0O|OO0O0O0O0O000OO0O|dialog|LibreELEC|executebuiltin|XvBMC_Platform|O00OO0000O00O00O0|O0OO0OOO0O00OO0O0|OOOO0O00OOO00000O|O0000OOOO0O00000O|OOO0O00O0OO0O0O0O|O0OOOO0O0OO0OOOOO|OO00000OO00O0O00O|OO00O0000O00OOO0O|OO0OO0000O00O0O0O|SubTitle|firmware|OOOOOO00O0O0O00O0|linux|FirmwareRecentClass|update|import|updatertools|25|26|27|28|OOO0OO0O0OOOO0O0O|OOO0O0O0O0OO0000O|O00O0O0O00OOO0OOO|OO00O0O00O0000O00|O0OO0OO0000O0O0O0|O0000O00O0OO00O00|OO0OO000OOOOOO000|30|31|DEV|__init__|34|35|append|37|38|39|storage|FirmwareRecent|DialogProgress|def|Nederland|SystemOSClass|40|41|42|43|Window|Open|46|47|Linux|OpenElecTV|piOS|class|Preparing|Raspberry|script|resources|50|51|52|53|54|55|Fallback|ok|OpenELEC|59|self|none|download|SystemOS|finished|join|xvbmc|Cutting|sources|63|64|flashed|AddonID|67|68|except|elif|str|VoOdOo|subtitleNope|SYSTEM|addons|not|71|72|Please|del|75|76|create|common|79|remove|openelec804|downloader|line|os|xbmcplugin|80|81|82|83|84|85|86|87|88|89|when|from|to|ie|Pi|platform|90|91|92|93|some|95|96|97|98|99|http|Edge|MainTitle|pass|releases|devMenu|xbmcgui|urllib2|triple|shutil|mirror|red|latest|try|dev|RPi|lib|OLD|orange|urllib|and|python|arm|Update|select|ADDON|Addon|Flash|Exit|xbmc|O00OO0OO000O0OOO0|sh|time|COLOR|re|183|tv|openelec|OE|NEW|OK|libreelec|155|163|ELEC_arm|158|log|175|160|O0OOOOOO00OO0OO0O|185|186|177|nonelecNL|reset|Press|system|firmwarerecent|146|sleep|PI2|done|lime|168|path|OO0OOO00OOOOO0OOO|157|translatePath|178|153|174|OOOOO0O00000O00O0|it|FirmwareXvbmc|173|148|149|151|default|FirmwareXvbmcClass|firmwarexvbmc|id|145|147|169|usr|179|Firmware|nonlinux|161|182|187|159|152|150|156|154|170|OpenElecTVClass|181|xbmcaddon|libreelec802|100|101|102|103|104|105|106|107|108|109|OOOO0000OOOO0000O|OO0O0O0O00O000O00|as|RE|LE|doing|Libre|bin|112|113|114|115|116|117|118|119|1000|RPi2|bash|most|New|NL|120|121|122|123|124|125|126|127|128|129|Dialog|tar|OS|kodi|O0O0OOO0O0OO0OOOO|Wait|130|131|yesno|133|Reboot|OOO00OO0O00OOO00O|OOO0OOOO000O00O0O|if|138|139|O00O0O0O00O0O0OOO|else|nl|recent|OO00OOOO00O0O0O0O|reboot|140|O0OO0OOOOO0O000O0|142|143|144".split("|")))
+#!/usr/bin/python
+""#line:6
+import xbmc as OOOOO00OOO00OO00O ,xbmcaddon as O0OO000000OOOO00O ,xbmcgui as O000OOOO0O000OOOO ,xbmcplugin as O00O0O0000O0OOO0O #line:25
+import os as O00O000O0OOO000OO ,shutil as OO00000000O000000 ,time as OO0OO0OO0OO00OO00 #line:26
+import urllib2 as O0O000O0000O0O0OO ,urllib as O0000OOOO00O000O0 #line:27
+import downloader as O0OO0OO0O0O0O0OO0 #line:28
+from common import platform as OO0O00O0000OO0O0O ,subtitleNope as OOO0OO0OO0O0OOOO0 ,nonlinux as O000O00000O0OOOOO ,nonelecNL as OO0O0O000O00OOOOO #line:30
+from common import log as O00OO0OO00OOO000O #line:31
+AddonID ='script.xvbmc.updatertools'#line:34
+ADDON =O0OO000000OOOO00O .Addon (id =AddonID )#line:35
+dialog =O000OOOO0O000OOOO .Dialog ()#line:37
+MainTitle ="XvBMC Nederland"#line:38
+reset =' [COLOR orange]*reset*[/COLOR]'#line:39
+New =' [COLOR lime][B]*[/B]NEW[B]*[/B][/COLOR]'#line:40
+OLD =' [COLOR red][B]*[/B]OLD[B]*[/B][/COLOR]'#line:41
+piOS =' [COLOR red][B]*[/B]RPi[B]*[/B][/COLOR]'#line:42
+SubTitle =" [B]-[/B] [COLOR lime]RPi[/COLOR] [B]-[/B] #DEV#"#line:43
+def devMenu ():#line:46
+    ""#line:47
+    OOO000O0O0OO0OOOO =[]#line:50
+    OOO000O0O0OO0OOOO .append ('XvBMC #DEV# [B]-[/B] [COLOR white]Pi[/COLOR] Firmware [B]-[/B] Cutting Edge'+New )#line:51
+    OOO000O0O0OO0OOOO .append ('XvBMC #DEV# [B]-[/B] [COLOR white]Pi[/COLOR] Firmware [B]-[/B] XvBMC Fallback'+reset )#line:52
+    OOO000O0O0OO0OOOO .append ('XvBMC #DEV# [B]-[/B] [COLOR white]Libre[/COLOR]ELEC_arm-8.0.2'+piOS )#line:53
+    OOO000O0O0OO0OOOO .append ('XvBMC #DEV# [B]-[/B] [COLOR white]Open[/COLOR]ELEC_arm-8.0.4'+piOS )#line:54
+    OOO000O0O0OO0OOOO .append ('[B][COLOR white]Exit[/COLOR][/B]')#line:55
+    OOO0000OOOOOOOO00 =O000OOOO0O000OOOO .Dialog ().select (MainTitle +SubTitle ,OOO000O0O0OO0OOOO )#line:59
+    if OOO000O0O0OO0OOOO [OOO0000OOOOOOOO00 ]=='XvBMC #DEV# [B]-[/B] [COLOR white]Pi[/COLOR] Firmware [B]-[/B] Cutting Edge'+New :#line:63
+        FirmwareRecent ()#line:64
+    elif OOO000O0O0OO0OOOO [OOO0000OOOOOOOO00 ]=='XvBMC #DEV# [B]-[/B] [COLOR white]Pi[/COLOR] Firmware [B]-[/B] XvBMC Fallback'+reset :#line:67
+        FirmwareXvbmc ()#line:68
+    elif OOO000O0O0OO0OOOO [OOO0000OOOOOOOO00 ]=='XvBMC #DEV# [B]-[/B] [COLOR white]Libre[/COLOR]ELEC_arm-8.0.2'+piOS :#line:71
+        SystemOS ()#line:72
+    elif OOO000O0O0OO0OOOO [OOO0000OOOOOOOO00 ]=='XvBMC #DEV# [B]-[/B] [COLOR white]Open[/COLOR]ELEC_arm-8.0.4'+piOS :#line:75
+        OpenElecTV ()#line:76
+class FirmwareRecentClass (O000OOOO0O000OOOO .Window ):#line:79
+  def __init__ (self ):#line:80
+    OOO0OOO00O000OOO0 =OO0O00O0000OO0O0O ()#line:81
+    O00OO0OO00OOO000O ("XvBMC_Platform: "+str (OOO0OOO00O000OOO0 ))#line:82
+    if not OOO0OOO00O000OOO0 =='linux':#line:83
+       dialog .ok (MainTitle +SubTitle ,OOO0OO0OO0O0OOOO0 ,O000O00000O0OOOOO ,OO0O0O000O00OOOOO )#line:84
+       O00OO0OO00OOO000O ("none Linux OS ie. Open-/LibreELEC")#line:85
+    else :#line:86
+        O00OO0OO00OOO000O ("linux os")#line:87
+        if dialog .yesno ("XvBMC-NL Raspberry latest firmware",'Update [COLOR white]most recent[/COLOR] PI2+3 firmware?'):#line:88
+           OOOO0O0000OOOOOO0 ="/bin/bash /storage/.kodi/addons/script.xvbmc.updatertools/resources/lib/sources/dev/firmwarerecent.sh"#line:89
+           O00O000O0OOO000OO .system (OOOO0O0000OOOOOO0 )#line:90
+           dialog .ok (MainTitle ,'XvBMC [COLOR white]most recent[/COLOR] firmware flashed','','Press OK to reboot...')#line:91
+           OO0OO0OO0OO00OO00 .sleep (0.5 )#line:92
+           OOOOO00OOO00OO00O .executebuiltin ("Reboot")#line:93
+class FirmwareXvbmcClass (O000OOOO0O000OOOO .Window ):#line:95
+  def __init__ (self ):#line:96
+    OO00O0OOO0O00000O =OO0O00O0000OO0O0O ()#line:97
+    O00OO0OO00OOO000O ("XvBMC_Platform: "+str (OO00O0OOO0O00000O ))#line:98
+    if not OO00O0OOO0O00000O =='linux':#line:99
+       dialog .ok (MainTitle +SubTitle ,OOO0OO0OO0O0OOOO0 ,O000O00000O0OOOOO ,OO0O0O000O00OOOOO )#line:100
+       O00OO0OO00OOO000O ("none Linux OS ie. Open-/LibreELEC")#line:101
+    else :#line:102
+        O00OO0OO00OOO000O ("linux os")#line:103
+        if dialog .yesno ("XvBMC-NL Raspberry firmware reset",'RE-Flash XvBMC [COLOR white]\"default\"[/COLOR] firmware?'):#line:104
+           OO0O00OOO0OOOO00O ="/bin/bash /storage/.kodi/addons/script.xvbmc.updatertools/resources/lib/sources/dev/firmwarexvbmc.sh"#line:105
+           O00O000O0OOO000OO .system (OO0O00OOO0OOOO00O )#line:106
+           dialog .ok (MainTitle ,'XvBMC [COLOR white]\"default\"[/COLOR] firmware re-flashed','','Press OK to reboot...')#line:107
+           OO0OO0OO0OO00OO00 .sleep (0.5 )#line:108
+           OOOOO00OOO00OO00O .executebuiltin ("Reboot")#line:109
+class SystemOSClass (O000OOOO0O000OOOO .Window ):#line:112
+  def __init__ (self ):#line:113
+    O0O0O00000OO0OOO0 =OO0O00O0000OO0O0O ()#line:114
+    O00OO0OO00OOO000O ("XvBMC_Platform: "+str (O0O0O00000OO0OOO0 ))#line:115
+    if not O0O0O00000OO0OOO0 =='linux':#line:116
+       dialog .ok (MainTitle +SubTitle ,OOO0OO0OO0O0OOOO0 ,O000O00000O0OOOOO ,OO0O0O000O00OOOOO )#line:117
+       O00OO0OO00OOO000O ("none Linux OS ie. Open-/LibreELEC")#line:118
+    else :#line:119
+        O00OO0OO00OOO000O ("linux os")#line:120
+        if dialog .yesno ("XvBMC-NL LibreELEC \'[COLOR white]OS[/COLOR]-update\'",'Preparing LE[COLOR white]8.0.2[/COLOR] and reboot when done...'):#line:121
+           OO00OOOOOO0O00OO0 ='http://releases.libreelec.tv/LibreELEC-RPi2.arm-8.0.2.tar'#line:122
+           O00OOO0O000000O0O =OOOOO00OOO00OO00O .translatePath (O00O000O0OOO000OO .path .join ('/storage/.update/',''))#line:123
+           O0OO00OOOO00O00OO =O000OOOO0O000OOOO .DialogProgress ()#line:124
+           O0OO00OOOO00O00OO .create ("XvBMC Nederland","XvBMC-DEV: doing some VoOdOo...",'','Please Wait')#line:125
+           O000OOOO0OO00O0OO =O00O000O0OOO000OO .path .join (O00OOO0O000000O0O ,'libreelec802.tar')#line:126
+           try :#line:127
+               O00O000O0OOO000OO .remove (O000OOOO0OO00O0OO )#line:128
+           except :#line:129
+               pass #line:130
+           O0OO0OO0O0O0O0OO0 .download (OO00OOOOOO0O00OO0 ,O000OOOO0OO00O0OO ,O0OO00OOOO00O00OO )#line:131
+           OO0OO0OO0OO00OO00 .sleep (3 )#line:133
+           dialog .ok (MainTitle ,'LibreELEC SYSTEM update finished!','','Press OK to reboot...')#line:138
+           OOOOO00OOO00OO00O .sleep (1000 )#line:139
+           OOOOO00OOO00OO00O .executebuiltin ("Reboot")#line:140
+class OpenElecTVClass (O000OOOO0O000OOOO .Window ):#line:142
+  def __init__ (self ):#line:143
+    O00000OOOOOOO000O =OO0O00O0000OO0O0O ()#line:144
+    O00OO0OO00OOO000O ("XvBMC_Platform: "+str (O00000OOOOOOO000O ))#line:145
+    if not O00000OOOOOOO000O =='linux':#line:146
+       dialog .ok (MainTitle +SubTitle ,OOO0OO0OO0O0OOOO0 ,O000O00000O0OOOOO ,OO0O0O000O00OOOOO )#line:147
+       O00OO0OO00OOO000O ("none Linux OS ie. Open-/LibreELEC")#line:148
+    else :#line:149
+        O00OO0OO00OOO000O ("linux os")#line:150
+        if dialog .yesno ("XvBMC-NL LibreELEC \'[COLOR white]OS[/COLOR]-update\'",'Preparing OE[COLOR white]8.0.4[/COLOR] and reboot when done...'):#line:151
+           OOOOOOO00OO000000 ='http://openelec.mirror.triple-it.nl/OpenELEC-RPi2.arm-8.0.4.tar'#line:152
+           O000O00OOOO0000OO =OOOOO00OOO00OO00O .translatePath (O00O000O0OOO000OO .path .join ('/storage/.update/',''))#line:153
+           OO00O0OOO000O0000 =O000OOOO0O000OOOO .DialogProgress ()#line:154
+           OO00O0OOO000O0000 .create ("XvBMC Nederland","XvBMC-DEV: doing some VoOdOo...",'','Please Wait')#line:155
+           O000000O000O0O0OO =O00O000O0OOO000OO .path .join (O000O00OOOO0000OO ,'openelec804.tar')#line:156
+           try :#line:157
+               O00O000O0OOO000OO .remove (O000000O000O0O0OO )#line:158
+           except :#line:159
+               pass #line:160
+           O0OO0OO0O0O0O0OO0 .download (OOOOOOO00OO000000 ,O000000O000O0O0OO ,OO00O0OOO000O0000 )#line:161
+           OO0OO0OO0OO00OO00 .sleep (3 )#line:163
+           dialog .ok (MainTitle ,'OpenELEC SYSTEM update finished!','','Press OK to reboot...')#line:168
+           OOOOO00OOO00OO00O .sleep (1000 )#line:169
+           OOOOO00OOO00OO00O .executebuiltin ("Reboot")#line:170
+def FirmwareRecent ():#line:173
+    OOO0O000O0OO0OOO0 =FirmwareRecentClass ()#line:174
+    del OOO0O000O0OO0OOO0 #line:175
+def FirmwareXvbmc ():#line:177
+    O0O0O00O0O0OO00O0 =FirmwareXvbmcClass ()#line:178
+    del O0O0O00O0O0OO00O0 #line:179
+def SystemOS ():#line:181
+    OOO0O00000O0OO0O0 =SystemOSClass ()#line:182
+    del OOO0O00000O0OO0O0 #line:183
+def OpenElecTV ():#line:185
+    OO00O0OO0OOOOO0O0 =OpenElecTVClass ()#line:186
+    del OO00O0OO0OOOOO0O0 #line:187
+"""
+    IF you copy/paste XvBMC's 'script.xvbmc.updatertools' please keep the credits -2- XvBMC-NL, Thx.
+"""

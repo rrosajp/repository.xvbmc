@@ -1,1 +1,37 @@
-exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("IyEvNTQvNTAvNjEKNzcgNzQgIzA6NAo3NyBmICwxMSAsMmMgLDZmICMwOjUKNzcgNDIgNDMgMiAjMDo3CjFhID0nNjkuNDUuMWUnIzA6OQo0OCA9MTEgLjQ2ICg3NSA9MWEgKSMwOjEwCjVkIDIgLjMgKCk+MTYuNSA6IzA6MTIKCTUzIDoyYSA1ZiA3NyA3MCA0MyA2NyAjMDoxMwoJNWUgOjJhIDZjIDc3IDcwIDQzIDY3ICMwOjE0CgkyMCA9ZiAuYyAoIjYyOi8vNTgvMmYiKSMwOjE2Cgk2MyA9NzQgLjczIC42ZCAoMjAgLCcyZS42YicpIzA6MTcKCWQgPTY3IC41OSAoNjMgKSMwOjE4CglkIC4xZiA9NGUgIzA6MTkKM2UgNzEgKGUgLDFjID0yZCApOiMwOjIxCgk1ZCAyIC4zICgpPjE2LjUgOiMwOjIyCgkJMiAuM2IgKCIzMCAiK2UgKSMwOjIzCgkJNGIgPTEgIzA6MjQKCQk1ZCAxYyA2YSAyZCA6MWMgPScnIzA6MjUKCQk2ID0nNWMgNGMgNjYgKDY0LDRkKSAzYyg/LD8pJyMwOjI2CgkJZCAuNTcgKDYgLChlICw0YiAsKSkjMDoyNwoJCWQgLjFkICgpIzA6MjgKCTJiIDo1YiAjMDoyOQozZSAxYiAoKTojMDozMQoJNWQgMiAuMyAoKT4xNi41IDojMDozMgoJCTggPWYgLmMgKDc0IC43MyAuNmQgKCc2MjovLzRhJywnNzInKSkjMDozMwoJCTU2ID03NCAuNWEgKDggKSMwOjM0CgkJMiAuM2IgKDU2ICkjMDozNQoJCWQgLjZlICgnM2EgNjYgNTEgNGQ9MSA0NyA2NCA9ICg/KScsKCg3OSAsKTUyIDc5IDc2IDU2ICkpIzA6MzYKCQlkIC4xZCAoKSMwOjM3CgkJNzggPTJjIC4zZCAoKSMwOjM4CgkJNzggLjYwICgiWzY4IDQ5XVtiXTNmIDRkWy82OF1bL2JdIiwnWzY4IDQ0XTRmWy82OF0gNzIgNTUgW2JdNGQhWy9iXScpIzA6MzkKCQlmIC5hICgnNjUoKScpIzA6NDAKCQlmIC5hICgnMTUoKScpIzA6NDEKCTJiIDo1Yg==")))(lambda a,b:b[int("0x"+a.group(1),16)],"line|1|Common|get_kversion|4|5|OOO0OOOOO0OO0OOO0|7|O0O0O0O0000O00OO0|9|executebuiltin|B|translatePath|conn|newaddon|xbmc|10|xbmcaddon|12|13|14|UpdateAddonRepos|16|17|18|19|AddonID|setall_enable|data|commit|updatertools|text_factory|db_dir|21|22|23|24|25|26|27|28|29|from|else|xbmcgui|None|Addons27|Database|Enabling|31|32|33|34|35|36|37|38|39|update|log|VALUES|Dialog|def|Addons|40|41|common|as|white|xvbmc|Addon|WHERE|ADDON|lime|home|OOOO0OOO0O0OOOO0O|INTO|enabled|str|ALL|bin|set|for|try|usr|are|O0O00OOOO0OO000O0|execute|profile|connect|listdir|pass|REPLACE|if|except|sqlite3|ok|python|special|db_path|addonID|UpdateLocalAddons|installed|db_lib|COLOR|script|is|db|pysqlite2|join|executemany|xbmcplugin|dbapi2|set_enabled|addons|path|os|id|in|import|O0OO0O0O00OOO0OO0|O000OOOOOOO000OOO".split("|")))
+#!/usr/bin/python
+"""
+    IF you copy/paste please keep the credits -2- XvBMC-NL, Thx.
+"""#line:6
+import os #line:8
+import xbmc ,xbmcaddon ,xbmcgui ,xbmcplugin #line:9
+import common as Common #line:11
+AddonID ='script.xvbmc.updatertools'#line:13
+ADDON =xbmcaddon .Addon (id =AddonID )#line:14
+if Common .get_kversion ()>16.5 :#line:16
+    try :from sqlite3 import dbapi2 as db_lib #line:17
+    except :from pysqlite2 import dbapi2 as db_lib #line:18
+    db_dir =xbmc .translatePath ("special://profile/Database")#line:20
+    db_path =os .path .join (db_dir ,'Addons27.db')#line:21
+    conn =db_lib .connect (db_path )#line:22
+    conn .text_factory =str #line:23
+def set_enabled (newaddon ,data =None ):#line:25
+    if Common .get_kversion ()>16.5 :#line:26
+        Common .log ("Enabling "+newaddon )#line:27
+        OO00OO0OO0OO0OO00 =1 #line:28
+        if data is None :data =''#line:29
+        OO0O0O0O00000O0OO ='REPLACE INTO installed (addonID,enabled) VALUES(?,?)'#line:30
+        conn .execute (OO0O0O0O00000O0OO ,(newaddon ,OO00OO0OO0OO0OO00 ,))#line:31
+        conn .commit ()#line:32
+    else :pass #line:33
+def setall_enable ():#line:35
+    if Common .get_kversion ()>16.5 :#line:36
+        OOOOOO000000OOO0O =xbmc .translatePath (os .path .join ('special://home','addons'))#line:37
+        OO000OOO000OO0O00 =os .listdir (OOOOOO000000OOO0O )#line:38
+        Common .log (OO000OOO000OO0O00 )#line:39
+        conn .executemany ('update installed set enabled=1 WHERE addonID = (?)',((O0O00O00O0OO00O00 ,)for O0O00O00O0OO00O00 in OO000OOO000OO0O00 ))#line:40
+        conn .commit ()#line:41
+        OOO00OOOO00O00000 =xbmcgui .Dialog ()#line:42
+        OOO00OOOO00O00000 .ok ("[COLOR lime][B]Addons enabled[/COLOR][/B]",'[COLOR white]ALL[/COLOR] addons are [B]enabled![/B]')#line:43
+        xbmc .executebuiltin ('UpdateLocalAddons()')#line:44
+        xbmc .executebuiltin ('UpdateAddonRepos()')#line:45
+    else :pass 

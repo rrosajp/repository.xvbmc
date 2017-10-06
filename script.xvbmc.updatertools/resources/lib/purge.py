@@ -1,1 +1,73 @@
-exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("IyEvYjEvYzgvNmEKIiIjN2Q6NgoyZSA3YSBkYSA5ICw0YyBkYSAxZCAsNTcgZGEgMjMgLDQ3IGRhIDM1ICw1ZSBkYSBjMiAjN2Q6MjYKMmUgYzcgZGEgZGUgLGNhIGRhIDMzICw2ZCBkYSAxOSAsOTQgZGEgYzMgLDYwIGRhIGUyICM3ZDoyNwoyZSA2YyBkYSAzICM3ZDoyOAozYSA9JzZiLjcyLjNlJyM3ZDozMQpjYyA9MWQgLmNkIChkYyA9M2EgKSM3ZDozMgozYyA9MjMgLjY1ICgpIzdkOjM0Cjc1IDJkIDojN2Q6NDAKCTRmIDU0IChkMiAsNDggLDQ1ICk6IzdkOjQxCgkJZDIgLjgyID00OCAjN2Q6NDIKCQlkMiAuMjQgPTQ1ICM3ZDo0Mwo0ZiAxYSAoKTojN2Q6NTAKCTFlID0xNiAjN2Q6NTEKCTIyID1bIjViIiwiMmYiLCI2MyIsIjNiLWQxIiwiM2ItMzkiLCI1NSIsImQ5IiwiNDktNGQiLCI0NCIsIjRhIiwiODAiLCI4NCIsIjgxIiwiNTkiLCJkOCIsIjg1Il0jN2Q6NTIKCTFmID1bImUxOi8vZS84LyIrIjE0LmM2LjM4IiwiZTE6Ly9lLzgvIisiMTQuYzYuMmYiLCJlMTovL2UvOC8iKyIxNC5jNi4zZCIsImUxOi8vZS84LyIrIjE0LmM2LjNiLWQxIiwiZTE6Ly9lLzgvIisiMTQuYzYuM2ItMzkiLCJlMTovL2UvOC8iKyIxNC5jNi41NSIsImUxOi8vZS84LyIrIjE0LmM2LmQ5IiwiZTE6Ly9lLzgvIisiMTQuYzYuNDkiLCJlMTovL2UvOC8iKyJkLjM4IiwiZTE6Ly9lLzgvIisiZC4zZCIsImUxOi8vZS84LyIrImQuNjciLCJlMTovL2UvOC8iKyJkLmRmLWE1LjNiIiwiZTE6Ly9lLzgvIisiZC40ZS4zYiIsImUxOi8vZS84LyIrImQuNmYiLCJlMTovL2UvOC8iKyJkLjVhIiwiZTE6Ly9lLzgvIisiZC41My4zYiJdIzdkOjY5CgkxMiA9W10jN2Q6NzEKCTJhIDEzIDM3IDZlICgxZSApOiM3ZDo3MwoJCTEyIC42MSAoMmQgKDIyIFsxMyBdLDFmIFsxMyBdKSkjN2Q6NzQKCTY0IDEyICM3ZDo3Ngo0ZiA1NiAoKTojN2Q6ODMKCTIwID0xYSAoKSM3ZDo5OAoJMmEgMjEgMzcgMjAgOiM3ZDphMQoJCTUgPTkgLjI1ICgyMSAuMjQgKSM3ZDo5MAoJCTg3IGRlIC4yNCAuNWYgKDUgKT09MTggOiM3ZDo5MQoJCQkyYSBiICxkZCAsYyAzNyBkZSAuN2IgKDUgKTojN2Q6OTIKCQkJCTg3IGQ0IChkZCApPjAgNjggZDQgKGMgKT4wIDojN2Q6OTUKCQkJCQkyYSAxMCAzNyBjIDojN2Q6YTAKCQkJCQkJMzAgOiM3ZDo5ZgoJCQkJCQkJZGUgLjNmIChkZSAuMjQgLjJjIChiICwxMCApKSM3ZDo5ZQoJCQkJCQkxNyA6ZGIgIzdkOjlkCgkJCQkJMmEgZiAzNyBkZCA6IzdkOjljCgkJCQkJCTMwIDojN2Q6OWIKCQkJCQkJCWUyIC4xMSAoZGUgLjI0IC4yYyAoYiAsZiApKSM3ZDo5YQoJCQkJCQkxNyAyYiA6IzdkOjk5CgkJCQkJCQllMiAuMTEgKDUgLDcgPTE4ICkjN2Q6OTYKCQkJCQkJZDMgOiM3ZDo5MwoJCQkJCQkJZTIgLjExICg1ICw3ID0xOCApIzdkOmJmCgkJCQkJCQlkYiAjN2Q6YzAKCQkJCTc5IGQ0IChkZCApPT0wIDY4IGQ0IChjICk9PTAgOiM3ZDpiZQoJCQkJCTJhIDEwIDM3IGMgOiM3ZDpiYgoJCQkJCQkzMCA6IzdkOmJjCgkJCQkJCQlkZSAuM2YgKGRlIC4yNCAuMmMgKGIgLDEwICkpIzdkOmJkCgkJCQkJCTE3IDpkYiAjN2Q6OGEKCQkJCQkyYSBmIDM3IGRkIDojN2Q6YTgKCQkJCQkJMzAgOiM3ZDo4YwoJCQkJCQkJZTIgLjExIChkZSAuMjQgLjJjIChiICxmICkpIzdkOjhiCgkJCQkJCTE3IDJiIDojN2Q6ODgKCQkJCQkJCWUyIC4xMSAoNSAsNyA9MTggKSM3ZDphOQoJCQkJCQlkMyA6IzdkOmFiCgkJCQkJCQllMiAuMTEgKDUgLDcgPTE4ICkjN2Q6OGQKCQkJCQkJCWRiICM3ZDo4OQoJCTMwIDojN2Q6YWQKCQkJZTIgLjExICg1ICw3ID0xOCApIzdkOmFlCgkJMTcgMmIgOiM3ZDphZgoJCQllMiAuMTEgKDUgLDcgPTE4ICkjN2Q6OGYKCQlkMyA6IzdkOmIwCgkJCWUyIC4xMSAoNSAsNyA9MTggKSM3ZDphYwoJCQlkYiAjN2Q6YTQKCTNjIC5jNCAoIi09IGI2IDdjID0tICIsJ2M1IDYyIDg2IDM3IDc3IGQ1JywnJywnKDRiIDg2IGRhIGNlIGRhIGEgNTgpJykjN2Q6YjUKCTkgLjE1ICgiZDcuNWMiKSM3ZDpiNAoJMyAuMSAoKTszIC4xICgpOzMgLjEgKCk7MyAuMSAoKTszIC4xICgpOyM3ZDphNwoJMyAuMSAoKTszIC4xICgpOzMgLjEgKCk7MyAuMSAoKTszIC4xICgpIzdkOmI5Cgk5IC4xNSAoJ2MxKCknKSM3ZDpiOAoJMWIgPTkgLjI1IChkZSAuMjQgLjJjICgnZTE6Ly9lLzgvJykpIzdkOmI3CgkxYyA9MTkgLmQ2ICgnMjk9JykjN2Q6YTIKCTMwIDojN2Q6OGUKCQllMiAuMTEgKDFiICsxYyAsNyA9MTggKSM3ZDpiMwoJMTcgOmRiICM3ZDpiMgoJOSAuMTUgKCczNigpJykjN2Q6OTcKIiIiCgljYiBhNiA3OC83MCA0NidlMCAnYzkuZDAnIDY2IDdlIGJhIDVkIC0yLSA3ZiAtNC0gNDYtY2YsIGFhLgoiIiIjN2Q6YTM=")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|REMOVE_EMPTY_FOLDERS|2|OOO0OOO00OO0O0OO0|4|O00O000O000O0O00O|6|ignore_errors|addons|OO0OOO0OO00O0OOOO|a|O0OO00OOOO00O000O|O000O000OO0O00O00|repository|home|O0O0000OO00O0OO00|O000OO000000OOOOO|rmtree|O00O0O0O0OOO00OO0|O0OOO0OO000O0OOO0|plugin|executebuiltin|16|except|True|O0O0O00O00OOO0OOO|setupXvbmcEntries|O00O00OOOOO00OO0O|OO0O0OOOOOOO000OO|O0O0OO0000OOO0O0O|O000OO000OOO0OO00|O0O0OO000OO0O0O0O|OO0OOO0OO0OO0000O|O0000O0000O00O00O|OO0OO0O00O0O0O0OO|OOO00OO0OO00O0OOO|path|translatePath|26|27|28|cmVwb3NpdG9yeS5kb2tpbmw|for|OSError|join|cacheEntry|import|kidsplace|try|31|32|OO0O0000000O0O0O0|34|OO0O0O0OO000000O0|UpdateAddonRepos|in|jericho|viewer2|AddonID|nl|dialog|NLVIEW|updatertools|unlink|40|41|42|43|jehricorepo|pathi|XvBMC|xbmcplugin|namei|troma|nlviewrepo|everything|xbmcaddon|copypaste|kijkalles|def|50|51|52|tvaddons|__init__|nlv3|purgeOLD|xbmcgui|whistle|adelaar|ditistv|jehrico|Refresh|credits|xbmcvfs|exists|shutil|append|system|nlview|return|Dialog|please|dokinl|and|69|python|script|common|base64|range|eagle|paste|71|xvbmc|73|74|class|76|good|copy|elif|xbmc|walk|DONE|line|keep|EPiC|doki|kijk|name|83|xodi|tvad|is|if|134|138|130|133|132|137|158|146|101|102|103|119|sys|109|118|161|98|117|116|115|114|113|112|111|110|100|157|165|149|odi|you|153|131|135|Thx|136|148|140|144|145|147|usr|160|159|152|151|ALL|156|155|154|the|127|128|129|123|120|121|UpdateLocalAddons|O00O0OOOOO00O0000|O0OO000OO0OOOOOO0|ok|your|video|os|bin|purge|re|IF|ADDON|Addon|clean|NL|py|viewer|self|else|len|condition|b64decode|Container|geentv|sportcenterhd|as|pass|id|OO00O0OO0O00000OO|OOOOOOO0000OOOO00|x|s|special|OOOOO0O00OOOO00O0".split("|")))
+#!/usr/bin/python
+""#line:6
+import xbmc as O000O0000O00O0O0O ,xbmcaddon as O000O00OOO000OO0O ,xbmcgui as OO00000O0OO00O00O ,xbmcplugin as OOO0OO0000O00000O ,xbmcvfs as O000OO0OO0OOOO0O0 #line:26
+import os as OO000000O000OO0OO ,re as OO0OO00OOOO00OOO0 ,base64 as O00O000OO000000O0 ,sys as OO000000O0OOO0OO0 ,shutil as O0O00OO0O000OO0O0 #line:27
+import common as OOOOOOOOO000O00O0 #line:28
+AddonID ='script.xvbmc.updatertools'#line:31
+ADDON =O000O00OOO000OO0O .Addon (id =AddonID )#line:32
+dialog =OO00000O0OO00O00O .Dialog ()#line:34
+class cacheEntry :#line:40
+    def __init__ (self ,namei ,pathi ):#line:41
+        self .name =namei #line:42
+        self .path =pathi #line:43
+def setupXvbmcEntries ():#line:50
+    OOOO00O000OO0000O =16 #line:51
+    OOO0OO000O00OO0OO =["jehrico","kidsplace","nlview","nl-viewer","nl-viewer2","nlv3","sportcenterhd","troma-copypaste","jehricorepo","nlviewrepo","doki","xodi","kijk","adelaar","geentv","tvad"]#line:52
+    OO00OOOO0000OO00O =["special://home/addons/"+"plugin.video.jericho","special://home/addons/"+"plugin.video.kidsplace","special://home/addons/"+"plugin.video.NLVIEW","special://home/addons/"+"plugin.video.nl-viewer","special://home/addons/"+"plugin.video.nl-viewer2","special://home/addons/"+"plugin.video.nlv3","special://home/addons/"+"plugin.video.sportcenterhd","special://home/addons/"+"plugin.video.troma","special://home/addons/"+"repository.jericho","special://home/addons/"+"repository.NLVIEW","special://home/addons/"+"repository.dokinl","special://home/addons/"+"repository.x-odi.nl","special://home/addons/"+"repository.kijkalles.nl","special://home/addons/"+"repository.eagle","special://home/addons/"+"repository.ditistv","special://home/addons/"+"repository.tvaddons.nl"]#line:69
+    O0O0OOOOO0OO0O000 =[]#line:71
+    for O0OO00OO000OO000O in range (OOOO00O000OO0000O ):#line:73
+        O0O0OOOOO0OO0O000 .append (cacheEntry (OOO0OO000O00OO0OO [O0OO00OO000OO000O ],OO00OOOO0000OO00O [O0OO00OO000OO000O ]))#line:74
+    return O0O0OOOOO0OO0O000 #line:76
+def purgeOLD ():#line:83
+    OO00OOOOO0OO0000O =setupXvbmcEntries ()#line:98
+    for O00OOOOO0O0OOOOO0 in OO00OOOOO0OO0000O :#line:100
+        OO000O0OO00O0000O =O000O0000O00O0O0O .translatePath (O00OOOOO0O0OOOOO0 .path )#line:101
+        if OO000000O000OO0OO .path .exists (OO000O0OO00O0000O )==True :#line:102
+            for O0O0OO0OO0000OO0O ,O0O00O00OO000OOOO ,OO00O0O00OOO00O00 in OO000000O000OO0OO .walk (OO000O0OO00O0000O ):#line:103
+                if len (O0O00O00OO000OOOO )>0 and len (OO00O0O00OOO00O00 )>0 :#line:109
+                    for OOOOOO0O00O0O00OO in OO00O0O00OOO00O00 :#line:110
+                        try :#line:111
+                            OO000000O000OO0OO .unlink (OO000000O000OO0OO .path .join (O0O0OO0OO0000OO0O ,OOOOOO0O00O0O00OO ))#line:112
+                        except :pass #line:113
+                    for O0O0O00000OOOOOOO in O0O00O00OO000OOOO :#line:114
+                        try :#line:115
+                            O0O00OO0O000OO0O0 .rmtree (OO000000O000OO0OO .path .join (O0O0OO0OO0000OO0O ,O0O0O00000OOOOOOO ))#line:116
+                        except OSError :#line:117
+                            O0O00OO0O000OO0O0 .rmtree (OO000O0OO00O0000O ,ignore_errors =True )#line:118
+                        else :#line:119
+                            O0O00OO0O000OO0O0 .rmtree (OO000O0OO00O0000O ,ignore_errors =True )#line:120
+                            pass #line:121
+                elif len (O0O00O00OO000OOOO )==0 and len (OO00O0O00OOO00O00 )==0 :#line:123
+                    for OOOOOO0O00O0O00OO in OO00O0O00OOO00O00 :#line:127
+                        try :#line:128
+                            OO000000O000OO0OO .unlink (OO000000O000OO0OO .path .join (O0O0OO0OO0000OO0O ,OOOOOO0O00O0O00OO ))#line:129
+                        except :pass #line:130
+                    for O0O0O00000OOOOOOO in O0O00O00OO000OOOO :#line:131
+                        try :#line:132
+                            O0O00OO0O000OO0O0 .rmtree (OO000000O000OO0OO .path .join (O0O0OO0OO0000OO0O ,O0O0O00000OOOOOOO ))#line:133
+                        except OSError :#line:134
+                            O0O00OO0O000OO0O0 .rmtree (OO000O0OO00O0000O ,ignore_errors =True )#line:135
+                        else :#line:136
+                            O0O00OO0O000OO0O0 .rmtree (OO000O0OO00O0000O ,ignore_errors =True )#line:137
+                            pass #line:138
+        try :#line:140
+            O0O00OO0O000OO0O0 .rmtree (OO000O0OO00O0000O ,ignore_errors =True )#line:144
+        except OSError :#line:145
+            O0O00OO0O000OO0O0 .rmtree (OO000O0OO00O0000O ,ignore_errors =True )#line:146
+        else :#line:147
+            O0O00OO0O000OO0O0 .rmtree (OO000O0OO00O0000O ,ignore_errors =True )#line:148
+            pass #line:149
+    dialog .ok ("-= ALL DONE =- ",'your system is in good condition','','(everything is as clean as a whistle)')#line:151
+    O000O0000O00O0O0O .executebuiltin ("Container.Refresh")#line:152
+    OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();#line:153
+    OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ();OOOOOOOOO000O00O0 .REMOVE_EMPTY_FOLDERS ()#line:154
+    O000O0000O00O0O0O .executebuiltin ('UpdateLocalAddons()')#line:155
+    OO00O0O000OOOO0O0 =O000O0000O00O0O0O .translatePath (OO000000O000OO0OO .path .join ('special://home/addons/'))#line:156
+    O00000OOOO00OOOO0 =O00O000OO000000O0 .b64decode ('cmVwb3NpdG9yeS5kb2tpbmw=')#line:157
+    try :#line:158
+        O0O00OO0O000OO0O0 .rmtree (OO00O0O000OOOO0O0 +O00000OOOO00OOOO0 ,ignore_errors =True )#line:159
+    except :pass #line:160
+    O000O0000O00O0O0O .executebuiltin ('UpdateAddonRepos()')#line:161
+"""
+    IF you copy/paste XvBMC's 'script.xvbmc.updatertools' please keep the credits -2- XvBMC-NL, Thx.
+"""
