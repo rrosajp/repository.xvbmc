@@ -166,6 +166,28 @@
     </extension>
 </addon>
 
+<addon id="repository.kaosbox2" name="KAOSbox Repo" version="666" provider-name="KAOSbox STOPPED">
+    <extension point="xbmc.addon.repository" name="KAOSbox Repo">
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>KAOSbox STOPPED, uninstall (t)his repo...</summary>
+        <description>KAOSbox STOPPED (info: www.kaosbox.tv)</description>
+        <disclaimer>KAOSbox STOPPED, see: www.kaosbox.tv for more info, please uninstall (t)his repo.</disclaimer>
+        <platform>all</platform>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+        <forum>https://bit.ly/XvBMC-NL</forum>
+        <website>https://bit.ly/XvBMC-NL</website>
+        <source>https://bit.ly/XvBMC-NL</source>
+        <news>KAOSbox ABANDONED (t)his repo</news>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart></fanart>
+            <screenshot></screenshot>
+        </assets>
+        <broken>KAOSbox STOPPED! (t)his repo is ABANDONED!</broken>
+    </extension>
+</addon>
+
 <addon id="repository.kodil" name=".[COLOR blue].Kodil [/COLOR][COLOR white] Repository [/COLOR]" version="1.3" provider-name="kodil">
     <extension point="xbmc.addon.repository" name=".Kodil  Repository ">
         <info compressed="false">https://raw.githubusercontent.com/kodil/kodil/master/addons.xml</info>
@@ -420,22 +442,28 @@ Kodi is a registered trademark of the XBMC Foundation. We are not connected to o
 	</extension>
 </addon>
 
-<addon id="repository.xvbmc" name=" [COLOR lime][B]X[/B][/COLOR]vBMC (Add-ons) REPOsitory" version="4.1.0" provider-name="XvBMC Nederland">
+<addon id="repository.xvbmc" name=" [COLOR lime][B]X[/B][/COLOR]vBMC (Add-ons) REPOsitory" version="4.2.0" provider-name="XvBMC Nederland">
     <extension point="xbmc.addon.repository" name=" [COLOR lime][B]X[/B][/COLOR]vBMC (Add-ons) REPOsitory">
-        <dir>
-            <info compressed="false">https://github.com/tvaddonsco/tva-resolvers-repo/raw/master/addons.xml</info>
-            <checksum>https://github.com/tvaddonsco/tva-resolvers-repo/raw/master/addons.xml.md5</checksum>
-            <datadir zip="true">https://github.com/tvaddonsco/tva-resolvers-repo/raw/master/zips/</datadir>
-        </dir>
         <dir>
             <info compressed="false">https://raw.githubusercontent.com/noobsandnerds/modules4all/master/zips/addons.xml</info>
             <checksum>https://raw.githubusercontent.com/noobsandnerds/modules4all/master/zips/addons.xml.md5</checksum>
             <datadir zip="true">https://raw.githubusercontent.com/noobsandnerds/modules4all/master/zips/</datadir>
         </dir>
         <dir>
+            <info compressed="false">https://github.com/tvaddonsco/tva-resolvers-repo/raw/master/addons.xml</info>
+            <checksum>https://github.com/tvaddonsco/tva-resolvers-repo/raw/master/addons.xml.md5</checksum>
+            <datadir zip="true">https://github.com/tvaddonsco/tva-resolvers-repo/raw/master/zips/</datadir>
+        </dir>
+        <dir>
             <info compressed="false">https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/Dependencies/xvbmc-addons.xml</info>
             <checksum>https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/Dependencies/xvbmc-addons.xml.md5</checksum>
             <datadir zip="true">https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/Dependencies/zips/</datadir>
+            <hashes>false</hashes>
+        </dir>
+        <dir>
+            <info compressed="false">https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/Look-and-Feel/xvbmc-addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/Look-and-Feel/xvbmc-addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/Look-and-Feel/zips/</datadir>
             <hashes>false</hashes>
         </dir>
         <dir>
@@ -461,7 +489,7 @@ Kodi is a registered trademark of the XBMC Foundation. We are not connected to o
         <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
         <website>http://bit.ly/XvBMC-NL</website>
         <source>https://archive.org/download/repository.xvbmc/</source>
-        <news>Release v4.1.0</news>
+        <news>Release v4.2.0</news>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
