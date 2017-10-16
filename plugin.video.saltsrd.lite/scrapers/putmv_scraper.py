@@ -26,7 +26,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://putmv.com'
+BASE_URL = 'http://putlocker.is'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

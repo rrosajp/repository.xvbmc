@@ -29,7 +29,7 @@ import scraper
 
 logger = log_utils.Logger.get_logger()
 
-BASE_URL = 'http://opentuner.is'
+BASE_URL = 'http://www.tvonliine.cc'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

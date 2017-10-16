@@ -28,7 +28,7 @@ import scraper
 
 logger = log_utils.Logger.get_logger()
 
-BASE_URL = 'http://tvshows-hdtv.org'
+BASE_URL = 'https://tvshows-hdtv.org'
 EP_PAGE = '/_new.episodes.%s.html'
 
 class Scraper(scraper.Scraper):

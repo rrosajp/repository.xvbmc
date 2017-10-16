@@ -40,7 +40,7 @@ class Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.MOVIE])
+        return frozenset([VIDEO_TYPES.MOVIE, VIDEO_TYPES.TVSHOW, VIDEO_TYPES.SEASON])
 
     @classmethod
     def get_name(cls):
@@ -109,7 +109,7 @@ class Scraper(scraper.Scraper):
     
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
         results = []
-        data = {'hash': 'indexert', 'do': 'search', 'subaction': 'search', 'search_start': 0, 'full_search': 0, 'result_from': 1, 'story': title}
+        data = {'hash': 'indexert', 'do': 'search', 'subaction': 'search', 'search_start': 0, 'full_search': 0, 'result_from': 3, 'story': title}
         search_url = scraper_utils.urljoin(self.base_url, 'index.php')
         html = self._http_get(search_url, params={'do': 'search'}, data=data, cache_limit=8)
         if dom_parser2.parse_dom(html, 'div', {'class': 'sresult'}):

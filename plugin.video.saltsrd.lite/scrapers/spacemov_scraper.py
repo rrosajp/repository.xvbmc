@@ -25,7 +25,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 
-BASE_URL = 'http://www.spacemov.ag'
+BASE_URL = 'http://spacemov.io/'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

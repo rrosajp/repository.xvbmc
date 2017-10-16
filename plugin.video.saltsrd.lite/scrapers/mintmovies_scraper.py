@@ -25,7 +25,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://www.mintmovies.net'
+BASE_URL = 'https://www.mintmovies.to'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

@@ -28,7 +28,7 @@ import scraper
 
 logger = log_utils.Logger.get_logger(__name__)
 
-BASE_URL = 'http://www.dizigold1.com'
+BASE_URL = 'http://www.dizigold2.com'
 AJAX_URL = '/sistem/ajax.php'
 
 class Scraper(scraper.Scraper):

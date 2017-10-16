@@ -1,5 +1,5 @@
 """
-    SALTS XBMC Addon
+    SaltsRD XBMC Addon
     Copyright (C) 2014 tknorris
 
     This program is free software: you can redistribute it and/or modify
@@ -89,22 +89,22 @@ class Service(xbmc.Player):
             kodi.sleep(1000)
 
         if salts_resume:
-            logger.log("Salts Local Resume: Resume Time: %s Total Time: %s" % (salts_resume, self._totalTime), log_utils.LOGDEBUG)
+            logger.log("SaltsRD Local Resume: Resume Time: %s Total Time: %s" % (salts_resume, self._totalTime), log_utils.LOGDEBUG)
             self.seekTime(float(salts_resume))
         elif trakt_resume:
             resume_time = float(trakt_resume) * self._totalTime / 100
-            logger.log("Salts Trakt Resume: Percent: %s, Resume Time: %s Total Time: %s" % (trakt_resume, resume_time, self._totalTime), log_utils.LOGDEBUG)
+            logger.log("SaltsRD Trakt Resume: Percent: %s, Resume Time: %s Total Time: %s" % (trakt_resume, resume_time, self._totalTime), log_utils.LOGDEBUG)
             self.seekTime(resume_time)
 
     def onPlayBackStopped(self):
         logger.log('Service: Playback Stopped', log_utils.LOGNOTICE)
         if self.tracked:
-            # clear the playlist if SALTS was playing and only one item in playlist to
+            # clear the playlist if SaltsRD was playing and only one item in playlist to
             # use playlist to determine playback method in get_sources
             pl = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
             plugin_url = 'plugin://%s/' % (kodi.get_id())
             if pl.size() == 1 and pl[0].getfilename().lower().startswith(plugin_url):
-                logger.log('Service: Clearing Single Item SALTS Playlist', log_utils.LOGDEBUG)
+                logger.log('Service: Clearing Single Item SaltsRD Playlist', log_utils.LOGDEBUG)
                 pl.clear()
                 
             playedTime = float(self._lastPos)
@@ -136,11 +136,11 @@ def disable_global_cx(was_on):
         sf = xbmcaddon.Addon('plugin.program.super.favourites')
         if active_plugin == kodi.get_id():
             if sf.getSetting('CONTEXT') == 'true':
-                logger.log('Disabling Global CX while SALTS is active', log_utils.LOGDEBUG)
+                logger.log('Disabling Global CX while SaltsRD is active', log_utils.LOGDEBUG)
                 was_on = True
                 sf.setSetting('CONTEXT', 'false')
         elif was_on:
-            logger.log('Re-enabling Global CX while SALTS is not active', log_utils.LOGDEBUG)
+            logger.log('Re-enabling Global CX while SaltsRD is not active', log_utils.LOGDEBUG)
             sf.setSetting('CONTEXT', 'true')
             was_on = False
     

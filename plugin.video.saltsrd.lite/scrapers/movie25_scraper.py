@@ -28,7 +28,7 @@ import scraper
 
 
 QUALITY_MAP = {'DVD': QUALITIES.HIGH, 'TS': QUALITIES.MEDIUM, 'CAM': QUALITIES.LOW}
-BASE_URL = 'http://www.movie25.me'
+BASE_URL = 'https://movie25.biz'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

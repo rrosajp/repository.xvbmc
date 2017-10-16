@@ -25,7 +25,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import QUALITIES
 from salts_lib.constants import XHR
 
-BASE_URL = 'https://api.streamdor.com'
+BASE_URL = 'https://www.streamdor.com'
 Q_MAP = {'hd': QUALITIES.HD720, 'sd': QUALITIES.HIGH}
 
 class Scraper(scraper.Scraper):

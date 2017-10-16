@@ -48,7 +48,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
         url = scraper_utils.urljoin(self.base_url, source_url)
-        html = self._http_get(url, require_debrid=True, cache_limit=.5)
+        html = self._http_get(url, require_debrid=false, cache_limit=.5)
         sources = self.__get_post_links(html, video)
         for source in sources:
             if scraper_utils.excluded_link(source): continue
@@ -84,7 +84,7 @@ class Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
-        html = self._http_get(self.base_url, params={'s': title}, require_debrid=True, cache_limit=1)
+        html = self._http_get(self.base_url, params={'s': title}, require_debrid=False, cache_limit=1)
         post_pattern = 'class="entry-title">\s*<a[^>]+href="(?P<url>[^"]*/(?P<date>\d{4}/\d{1,2}/\d{1,2})/[^"]*)[^>]+>(?P<post_title>[^<]+)'
         date_format = '%Y/%m/%d'
         return self._blog_proc_results(html, post_pattern, date_format, video_type, title, year)

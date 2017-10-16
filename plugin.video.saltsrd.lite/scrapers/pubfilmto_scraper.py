@@ -25,8 +25,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import FORCE_NO_MATCH
 
 logger = log_utils.Logger.get_logger(__name__)
-BASE_URL = 'http://www.pubfilm.to'
-MAX_PAGES = 10
+BASE_URL = 'http://pubfilm.to'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

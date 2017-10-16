@@ -38,7 +38,7 @@ except ImportError:
 
 logger = log_utils.Logger.get_logger()
 BASE_URL = 'http://dizipas.net'
-AJAX_URL = 'http://dizipas.org/player/ajax.php'
+AJAX_URL = 'http://dizipas.com/player/ajax.php'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 

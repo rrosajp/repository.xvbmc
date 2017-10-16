@@ -30,7 +30,7 @@ from salts_lib.constants import QUALITIES
 import scraper
 
 BASE_URL = 'http://sezonlukdizi.net'
-SEASON_URL = '/ajax/dataDizi.asp'
+SEASON_URL = '/js/series1.js'
 EMBED_URL = '/ajax/dataEmbed.asp'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 

@@ -26,7 +26,7 @@ from salts_lib.constants import XHR
 import scraper
 
 
-BASE_URL = 'https://fmovie.co'
+BASE_URL = 'https://cmovieshd.com/'
 INFO_URL = BASE_URL + '/video_info/iframe'
 
 class Scraper(scraper.Scraper):

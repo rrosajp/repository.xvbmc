@@ -27,7 +27,7 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 logger = log_utils.Logger.get_logger(__name__)
-BASE_URL = 'http://watchseries-online.pl'
+BASE_URL = 'https://watchseries-online.pl'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

@@ -47,7 +47,7 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
         url = scraper_utils.urljoin(self.base_url, source_url)
-        html = self._http_get(url, require_debrid=True, cache_limit=.5)
+        html = self._http_get(url, require_debrid=False, cache_limit=.5)
         
         q_str = ''
         match = re.search('class="entry-title">([^<]+)', html)
@@ -80,7 +80,7 @@ class Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
-        html = self._http_get(self.base_url, params={'s': title, 'go': 'Search'}, require_debrid=True, cache_limit=1)
+        html = self._http_get(self.base_url, params={'s': title, 'go': 'Search'}, require_debrid=False, cache_limit=1)
         posts = []
         for post in dom_parser2.parse_dom(html, 'div', {'id': re.compile('post-\d+')}):
             match = dom_parser2.parse_dom(post.content, 'a', req='href')

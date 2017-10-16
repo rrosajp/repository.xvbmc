@@ -27,7 +27,7 @@ from salts_lib.constants import QUALITIES
 import scraper
 
 logger = log_utils.Logger.get_logger(__name__)
-BASE_URL = 'https://seriesonline.is'
+BASE_URL = 'https://series9.io'
 Q_MAP = {'TS': QUALITIES.LOW, 'CAM': QUALITIES.LOW, 'HDTS': QUALITIES.LOW, 'HD-720P': QUALITIES.HD720}
 
 class Scraper(scraper.Scraper):

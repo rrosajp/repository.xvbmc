@@ -422,7 +422,7 @@ class DB_Connection():
                 progress.update(0, line2='Importing Saved Data', line3='Importing 0 of %s' % (num_lines))
             else:
                 progress = xbmcgui.DialogProgress()
-                progress.create('SALTS', line2='Import from %s' % (full_path), line3='Importing 0 of %s' % (num_lines))
+                progress.create('Salts RD Lite', line2='Import from %s' % (full_path), line3='Importing 0 of %s' % (num_lines))
             with open(temp_path, 'r') as f:
                     reader = csv.reader(f)
                     mode = ''
@@ -478,11 +478,11 @@ class DB_Connection():
             if db_version is not None and cur_version != db_version:
                 logger.log('DB Upgrade from %s to %s detected.' % (db_version, cur_version), log_utils.LOGNOTICE)
                 self.progress = xbmcgui.DialogProgress()
-                self.progress.create('SALTS', line1='Migrating from %s to %s' % (db_version, cur_version), line2='Saving current data.')
+                self.progress.create('Salts RD Lite', line1='Migrating from %s to %s' % (db_version, cur_version), line2='Saving current data.')
                 self.progress.update(0)
                 self.__prep_for_reinit()
     
-            logger.log('Building SALTS Database', log_utils.LOGDEBUG)
+            logger.log('Building Salts RD Lite Database', log_utils.LOGDEBUG)
             if self.db_type == DB_TYPES.MYSQL:
                 self.__execute('CREATE TABLE IF NOT EXISTS url_cache (url VARBINARY(%s) NOT NULL, data VARBINARY(%s) NOT NULL, \
                 response MEDIUMBLOB, res_header TEXT, timestamp TEXT, PRIMARY KEY(url, data))' % (MYSQL_URL_SIZE, MYSQL_DATA_SIZE))

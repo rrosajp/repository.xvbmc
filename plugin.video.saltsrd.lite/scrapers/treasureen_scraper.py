@@ -47,7 +47,7 @@ class Scraper(scraper.Scraper):
         hosters = []
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
         url = scraper_utils.urljoin(self.base_url, source_url)
-        html = self._http_get(url, require_debrid=True, cache_limit=.5)
+        html = self._http_get(url, require_debrid=False, cache_limit=.5)
         title = dom_parser2.parse_dom(html, 'meta', {'property': 'og:title'}, req='content')
         meta = scraper_utils.parse_movie_link(title[0].attrs['content']) if title else {}
         fragment = dom_parser2.parse_dom(html, 'p', {'class': 'download_message'})
@@ -57,7 +57,7 @@ class Scraper(scraper.Scraper):
                 if scraper_utils.excluded_link(source): continue
                 host = urlparse.urlparse(source).hostname
                 quality = scraper_utils.height_get_quality(meta.get('height', 480))
-                hoster = {'multi-part': False, 'host': host, 'class': self, 'views': None, 'url': source, 'rating': None, 'quality': quality, 'direct': False}
+                hoster = {'multi-part': False, 'host': host, 'class': self, 'views': None, 'url': source, 'rating': None, 'quality': quality, 'direct': True}
                 if 'format' in meta: hoster['format'] = meta['format']
                 hosters.append(hoster)
         return hosters
@@ -75,7 +75,7 @@ class Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
-        html = self._http_get(self.base_url, params={'s': title}, require_debrid=True, cache_limit=8)
+        html = self._http_get(self.base_url, params={'s': title}, require_debrid=False, cache_limit=8)
         post_pattern = 'class="post-thumbnail">\s*<a[^>]+href="(?P<url>[^"]+)[^>]*[^>]+title="(?P<post_title>[^"]+).*?datetime="(?P<date>[^"]+)'
         date_format = '%Y-%m-%d %H:%M:%S'
         return self._blog_proc_results(html, post_pattern, date_format, video_type, title, year)

@@ -1,6 +1,6 @@
 """
-    SALTS XBMC Addon
-    Copyright (C) 2014 tknorris
+    Death Streams Addon
+    Copyright (C) 2017 Mr.Blamo
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ from salts_lib.constants import VIDEO_TYPES
 import scraper
 
 logger = log_utils.Logger.get_logger(__name__)
-BASE_URL = 'http://putlocker9.is'
+BASE_URL = 'http://putlockers.net'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

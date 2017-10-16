@@ -58,10 +58,10 @@ class Scraper(scraper.Scraper):
         sources = {}
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
         url = scraper_utils.urljoin(self.base_url, source_url)
-        html = self._http_get(url, require_debrid=True, cache_limit=.5)
+        html = self._http_get(url, require_debrid=False, cache_limit=.5)
         if not html:
             url = scraper_utils.urljoin(self.old_base_url, source_url)
-            html = self._http_get(url, require_debrid=True, cache_limit=.5)
+            html = self._http_get(url, require_debrid=False, cache_limit=.5)
             
         sources.update(self.__get_post_links(html, video))
         
@@ -129,7 +129,7 @@ class Scraper(scraper.Scraper):
         headers.update(XHR)
         search_url = scraper_utils.urljoin(SEARCH_BASE_URL, '/lib/search526049.php')
         params = {'phrase': title, 'pindex': 1}
-        html = self._http_get(search_url, params=params, headers=headers, require_debrid=True, cache_limit=1)
+        html = self._http_get(search_url, params=params, headers=headers, require_debrid=False, cache_limit=1)
         js_data = scraper_utils.parse_json(html, search_url)
         for post in js_data.get('results', []):
             if self.__too_old(post): continue
