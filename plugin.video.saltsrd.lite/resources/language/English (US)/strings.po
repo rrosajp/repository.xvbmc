@@ -1,11 +1,11 @@
-# Addon Name: SALTS
-# Addon id: plugin.video.salts
+# Addon Name: Salts RD Lite
+# Addon id: plugin.video.saltsrd.lite
 # Addon Provider: TV Addons
 # Translators:
 # tknorris, 2015-2017
 msgid ""
 msgstr ""
-"Project-Id-Version: SALTS\n"
+"Project-Id-Version: Salts RD Lite\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2017-03-28 19:56+0000\n"
 "Last-Translator: tknorris\n"
@@ -49,12 +49,12 @@ msgid "Add-on Settings"
 msgstr "Add-on Settings"
 
 msgctxt "#30008"
-msgid "Auto-Configure SALTS"
-msgstr "Auto-Configure SALTS"
+msgid "Auto-Configure Salts RD Lite"
+msgstr "Auto-Configure Salts RD Lite"
 
 msgctxt "#30009"
-msgid "Authorize SALTS to access my trakt.tv account"
-msgstr "Authorize SALTS to access my trakt.tv account"
+msgid "Authorize Salts RD Lite to access my trakt.tv account"
+msgstr "Authorize Salts RD Lite to access my trakt.tv account"
 
 msgctxt "#30010"
 msgid "Set Default Views"
@@ -519,12 +519,12 @@ msgid "Next Week"
 msgstr "Next Week"
 
 msgctxt "#30125"
-msgid "Mark as Unwatched (SALTS)"
-msgstr "Mark as Unwatched (SALTS)"
+msgid "Mark as Unwatched (Salts RD Lite)"
+msgstr "Mark as Unwatched (Salts RD Lite)"
 
 msgctxt "#30126"
-msgid "Mark as Watched (SALTS)"
-msgstr "Mark as Watched (SALTS)"
+msgid "Mark as Watched (Salts RD Lite)"
+msgstr "Mark as Watched (Salts RD Lite)"
 
 msgctxt "#30127"
 msgid "Rate on trakt.tv"
@@ -959,25 +959,25 @@ msgid "Automatically Select Best Source"
 msgstr "Automatically Select Best Source"
 
 msgctxt "#30246"
-msgid "SALTS Database Issue Recovery"
-msgstr "SALTS Database Issue Recovery"
+msgid "Salts RD Lite Database Issue Recovery"
+msgstr "Salts RD Lite Database Issue Recovery"
 
 msgctxt "#30247"
 msgid ""
-"The SALTS DB has an issue that may be correctable by a forced DB migration."
-msgstr "The SALTS DB has an issue that may be correctable by a forced DB migration."
+"The Salts RD Lite DB has an issue that may be correctable by a forced DB migration."
+msgstr "The Salts RD Lite DB has an issue that may be correctable by a forced DB migration."
 
 msgctxt "#30248"
-msgid "Should SALTS attempt a DB migration?"
-msgstr "Should SALTS attempt a DB migration?"
+msgid "Should Salts RD Lite attempt a DB migration?"
+msgstr "Should Salts RD Lite attempt a DB migration?"
 
 msgctxt "#30249"
 msgid "DB Migration Failed but a DB reset may succeed."
 msgstr "DB Migration Failed but a DB reset may succeed."
 
 msgctxt "#30250"
-msgid "Should SALTS attempt a DB reset?"
-msgstr "Should SALTS attempt a DB reset?"
+msgid "Should Salts RD Lite attempt a DB reset?"
+msgstr "Should Salts RD Lite attempt a DB reset?"
 
 msgctxt "#30251"
 msgid "([COLOR red]***All DB data will be lost.***[/COLOR])"
@@ -1088,8 +1088,8 @@ msgid "Set as Watch It Again List"
 msgstr "Set as Watch It Again List"
 
 msgctxt "#30278"
-msgid "Playback only allowed from Library & SALTS"
-msgstr "Playback only allowed from Library & SALTS"
+msgid "Playback only allowed from Library & Salts RD Lite"
+msgstr "Playback only allowed from Library & Salts RD Lite"
 
 msgctxt "#30279"
 msgid "Maximum Allowed Size (GB) (0 = No Limit)"
@@ -1152,8 +1152,8 @@ msgid "Torba Authorization Failed"
 msgstr "Torba Authorization Failed"
 
 msgctxt "#30294"
-msgid "Authorize SALTS to access my torba account"
-msgstr "Authorize SALTS to access my torba account"
+msgid "Authorize Salts RD Lite to access my torba account"
+msgstr "Authorize Salts RD Lite to access my torba account"
 
 msgctxt "#30295"
 msgid "and login when prompted"
@@ -1392,8 +1392,8 @@ msgid "User Interface"
 msgstr "User Interface"
 
 msgctxt "#30547"
-msgid "How do I authorize SALTS to access my trakt.tv account?"
-msgstr "How do I authorize SALTS to access my trakt.tv account?"
+msgid "How do I authorize Salts RD Lite to access my trakt.tv account?"
+msgstr "How do I authorize Salts RD Lite to access my trakt.tv account?"
 
 msgctxt "#30548"
 msgid "Use HTTPS"
@@ -1716,16 +1716,16 @@ msgid "Flush webpage cache..."
 msgstr "Flush webpage cache..."
 
 msgctxt "#30631"
-msgid "Reset SALTS DB ([COLOR red]SQLITE Only[/COLOR])"
-msgstr "Reset SALTS DB ([COLOR red]SQLITE Only[/COLOR])"
+msgid "Reset Salts RD Lite DB ([COLOR red]SQLITE Only[/COLOR])"
+msgstr "Reset Salts RD Lite DB ([COLOR red]SQLITE Only[/COLOR])"
 
 msgctxt "#30632"
-msgid "Export data from SALTS DB"
-msgstr "Export data from SALTS DB"
+msgid "Export data from Salts RD Lite DB"
+msgstr "Export data from Salts RD Lite DB"
 
 msgctxt "#30633"
-msgid "Import data into SALTS DB"
-msgstr "Import data into SALTS DB"
+msgid "Import data into Salts RD Lite DB"
+msgstr "Import data into Salts RD Lite DB"
 
 msgctxt "#30634"
 msgid "Subtitles"
@@ -1856,8 +1856,8 @@ msgid "Automatically pick first matching subtitle"
 msgstr "Automatically pick first matching subtitle"
 
 msgctxt "#30666"
-msgid "SALTS Auto Configuration"
-msgstr "SALTS Auto Configuration"
+msgid "Salts RD Lite Auto Configuration"
+msgstr "Salts RD Lite Auto Configuration"
 
 msgctxt "#30667"
 msgid "Continue"
@@ -1868,8 +1868,8 @@ msgid "Cancel"
 msgstr "Cancel"
 
 msgctxt "#30669"
-msgid "Select this item to Install the SALTS Themepak"
-msgstr "Select this item to Install the SALTS Themepak"
+msgid "Select this item to Install the Salts RD Lite Themepak"
+msgstr "Select this item to Install the Salts RD Lite Themepak"
 
 msgctxt "#30670"
 msgid "Show Settings"

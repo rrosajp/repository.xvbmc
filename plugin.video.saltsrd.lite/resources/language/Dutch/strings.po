@@ -1,4 +1,4 @@
-# Addon Name: SALTS
+# Addon Name: Salts RD Lite
 # Addon id: plugin.video.saltsrd.lite
 # Addon Provider: TV Addons
 # Translators:
@@ -10,7 +10,7 @@
 # EPiC, 2016-2017
 msgid ""
 msgstr ""
-"Project-Id-Version: SALTS\n"
+"Project-Id-Version: Salts RD Lite\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2017-03-28 19:56+0000\n"
 "Last-Translator: tknorris\n"
@@ -54,12 +54,12 @@ msgid "Add-on Settings"
 msgstr "Add-on Instellingen"
 
 msgctxt "#30008"
-msgid "Auto-Configure SALTS"
-msgstr "Configureer Automatisch SALTS"
+msgid "Auto-Configure Salts RD Lite"
+msgstr "Configureer Automatisch Salts RD Lite"
 
 msgctxt "#30009"
-msgid "Authorize SALTS to access my trakt.tv account"
-msgstr "Authoriseer SALTS om mijn trakt.tv account te gebruiken"
+msgid "Authorize Salts RD Lite to access my trakt.tv account"
+msgstr "Authoriseer Salts RD Lite om mijn trakt.tv account te gebruiken"
 
 msgctxt "#30010"
 msgid "Set Default Views"
@@ -524,12 +524,12 @@ msgid "Next Week"
 msgstr "Volgende Week"
 
 msgctxt "#30125"
-msgid "Mark as Unwatched (SALTS)"
-msgstr "Markeer als niet bekeken (SALTS)"
+msgid "Mark as Unwatched (Salts RD Lite)"
+msgstr "Markeer als niet bekeken (Salts RD Lite)"
 
 msgctxt "#30126"
-msgid "Mark as Watched (SALTS)"
-msgstr "Markeer als Bekeken (SALTS)"
+msgid "Mark as Watched (Salts RD Lite)"
+msgstr "Markeer als Bekeken (Salts RD Lite)"
 
 msgctxt "#30127"
 msgid "Rate on trakt.tv"
@@ -964,25 +964,25 @@ msgid "Automatically Select Best Source"
 msgstr "Automatisch slecteren van Beste Bron"
 
 msgctxt "#30246"
-msgid "SALTS Database Issue Recovery"
-msgstr "SALTS Database Fout Herstellen"
+msgid "Salts RD Lite Database Issue Recovery"
+msgstr "Salts RD Lite Database Fout Herstellen"
 
 msgctxt "#30247"
 msgid ""
-"The SALTS DB has an issue that may be correctable by a forced DB migration."
-msgstr "De SALTS DB heeft een Fout die hersteld kan worden door een DB migratie"
+"The Salts RD Lite DB has an issue that may be correctable by a forced DB migration."
+msgstr "De Salts RD Lite DB heeft een Fout die hersteld kan worden door een DB migratie"
 
 msgctxt "#30248"
-msgid "Should SALTS attempt a DB migration?"
-msgstr "Moet SALTS een DB migratie uitvoeren?"
+msgid "Should Salts RD Lite attempt a DB migration?"
+msgstr "Moet Salts RD Lite een DB migratie uitvoeren?"
 
 msgctxt "#30249"
 msgid "DB Migration Failed but a DB reset may succeed."
 msgstr "DB Migratie Mislukt maar DB is succesvol reset."
 
 msgctxt "#30250"
-msgid "Should SALTS attempt a DB reset?"
-msgstr "Moet SALTS een DB reset uitvoeren?"
+msgid "Should Salts RD Lite attempt a DB reset?"
+msgstr "Moet Salts RD Lite een DB reset uitvoeren?"
 
 msgctxt "#30251"
 msgid "([COLOR red]***All DB data will be lost.***[/COLOR])"
@@ -1093,8 +1093,8 @@ msgid "Set as Watch It Again List"
 msgstr "Instellen als Nogmaals Bekijken Lijst"
 
 msgctxt "#30278"
-msgid "Playback only allowed from Library & SALTS"
-msgstr "Afspelen alleen geldig van Bibliotheek & SALTS"
+msgid "Playback only allowed from Library & Salts RD Lite"
+msgstr "Afspelen alleen geldig van Bibliotheek & Salts RD Lite"
 
 msgctxt "#30279"
 msgid "Maximum Allowed Size (GB) (0 = No Limit)"
@@ -1157,8 +1157,8 @@ msgid "Torba Authorization Failed"
 msgstr "Torba Authorisatie Mislukt"
 
 msgctxt "#30294"
-msgid "Authorize SALTS to access my torba account"
-msgstr "Authoriseer SALTS om mijn torba account te benaderen"
+msgid "Authorize Salts RD Lite to access my torba account"
+msgstr "Authoriseer Salts RD Lite om mijn torba account te benaderen"
 
 msgctxt "#30295"
 msgid "and login when prompted"
@@ -1385,8 +1385,8 @@ msgid "User Interface"
 msgstr "Gebruikers interface"
 
 msgctxt "#30547"
-msgid "How do I authorize SALTS to access my trakt.tv account?"
-msgstr "Hoe Authoriseer ik SALTS om mijn trakt.tv account te gebruiken?"
+msgid "How do I authorize Salts RD Lite to access my trakt.tv account?"
+msgstr "Hoe Authoriseer ik Salts RD Lite om mijn trakt.tv account te gebruiken?"
 
 msgctxt "#30548"
 msgid "Use HTTPS"
@@ -1709,16 +1709,16 @@ msgid "Flush webpage cache..."
 msgstr "Opschonen webpagina cache..."
 
 msgctxt "#30631"
-msgid "Reset SALTS DB ([COLOR red]SQLITE Only[/COLOR])"
-msgstr "Reset SALTS DataBase ([COLOR red]Alleen SQLITE[/COLOR])"
+msgid "Reset Salts RD Lite DB ([COLOR red]SQLITE Only[/COLOR])"
+msgstr "Reset Salts RD Lite DataBase ([COLOR red]Alleen SQLITE[/COLOR])"
 
 msgctxt "#30632"
-msgid "Export data from SALTS DB"
-msgstr "Exporteer data van SALTS DataBase"
+msgid "Export data from Salts RD Lite DB"
+msgstr "Exporteer data van Salts RD Lite DataBase"
 
 msgctxt "#30633"
-msgid "Import data into SALTS DB"
-msgstr "Importeer data naar SALTS DataBase"
+msgid "Import data into Salts RD Lite DB"
+msgstr "Importeer data naar Salts RD Lite DataBase"
 
 msgctxt "#30634"
 msgid "Subtitles"
@@ -1849,8 +1849,8 @@ msgid "Automatically pick first matching subtitle"
 msgstr "Automatisch eerste Ondertiteling Selecteren"
 
 msgctxt "#30666"
-msgid "SALTS Auto Configuration"
-msgstr "SALTS Automatisch Configureren"
+msgid "Salts RD Lite Auto Configuration"
+msgstr "Salts RD Lite Automatisch Configureren"
 
 msgctxt "#30667"
 msgid "Continue"
@@ -1861,8 +1861,8 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 msgctxt "#30669"
-msgid "Select this item to Install the SALTS Themepak"
-msgstr "Selecteer deze om SALTS Themepak te installeren"
+msgid "Select this item to Install the Salts RD Lite Themepak"
+msgstr "Selecteer deze om Salts RD Lite Themepak te installeren"
 
 msgctxt "#30670"
 msgid "Show Settings"

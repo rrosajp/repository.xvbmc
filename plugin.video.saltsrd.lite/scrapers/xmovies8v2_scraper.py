@@ -30,7 +30,7 @@ import scraper
 
 logger = log_utils.Logger.get_logger(__name__)
 BASE_URL = 'https://xmovies8.ru'
-PLAYER_URL = '/ajax/movie/load_player_v3'
+PLAYER_URL = '/ajax/movie/load_player_v3?id=%s'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

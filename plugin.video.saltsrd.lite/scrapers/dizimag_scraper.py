@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
     SALTS XBMC Addon
     Copyright (C) 2014 tknorris
@@ -28,7 +28,7 @@ import scraper
 
 logger = log_utils.Logger.get_logger(__name__)
 
-BASE_URL = 'http://dizimag2.co'
+BASE_URL = 'http://dizimag4.co'
 XHR = {'X-Requested-With': 'XMLHttpRequest'}
 
 class Scraper(scraper.Scraper):

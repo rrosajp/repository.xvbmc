@@ -47,16 +47,23 @@ class TransientTraktError(Exception):
     pass
 
 BASE_URL = 'api.trakt.tv'
-# V2_API_KEY = 'eb41e95243d8c95152ed72a1fc0394c93cb785cb33aed609fdde1a07454584b4'
-# CLIENT_SECRET = '96611f3e712a37bd8d3cac9316c4643e0e5fd0a0c02b4eaf4bba8fd57024c72e'
-V2_API_KEY = 'd4161a7a106424551add171e5470112e4afdaf2438e6ef2fe0548edc75924868'
-CLIENT_SECRET = 'b5fcd7cb5d9bb963784d11bbf8535bc0d25d46225016191eb48e50792d2155c0'
+# V2_API_KEY = 'eb41e95243d8c95152ed72a1fc0394c93cb785cb33aed609fdde1a07454584b4'       -TKnorris
+# CLIENT_SECRET = '96611f3e712a37bd8d3cac9316c4643e0e5fd0a0c02b4eaf4bba8fd57024c72e'    -TKnorris
+# V2_API_KEY = 'd4161a7a106424551add171e5470112e4afdaf2438e6ef2fe0548edc75924868'       -TKnorris+Ares+Cypher
+# CLIENT_SECRET = 'b5fcd7cb5d9bb963784d11bbf8535bc0d25d46225016191eb48e50792d2155c0'    -TKnorris+Ares+Cypher
+# V2_API_KEY = '2978386ad4013e0271dda0228e6f911def22df89e570ad655e4a8e95a771e586'       -Cypher
+# CLIENT_SECRET = '568350da63bd888c2a027ed642b0ebb7acdbf1653ee7bb0075242f8b2cb34f79'    -Cypher
+# V2_API_KEY = '42ba0ac8504dac7f3085240bb205c351b3e149734dae928b9b6be77e0e14fc6b'       -Mr.Blamo
+# CLIENT_SECRET = 'b00aff93743ca066542d329eefed5a5a76789392a53c6d1f3a194452349466c7'    -Mr.Blamo
+V2_API_KEY = '9a45c56f8855b4704190b85eb12ec2fac2d7e26a66d33622324793366e4929e8'
+CLIENT_SECRET = 'bd846bb45a9ecbc6284e187bfe4368c3aa749da44f12256bc15c070d128880e0'
 REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
-RESULTS_LIMIT = 10
+# RESULTS_LIMIT = 10
+RESULTS_LIMIT = 100
 HIDDEN_SIZE = 100
 
 class Trakt_API():
-    def __init__(self, token=None, use_https=False, list_size=RESULTS_LIMIT, timeout=5, offline=False):
+    def __init__(self, token=None, use_https=False, list_size=RESULTS_LIMIT, timeout=10, offline=False):
         self.token = token
         self.protocol = 'https://' if use_https else 'http://'
         self.timeout = None if timeout == 0 else timeout

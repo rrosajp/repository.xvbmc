@@ -1,6 +1,6 @@
 """
-    SALTS XBMC Addon
-    Copyright (C) 2014 tknorris
+    Death Streams Addon
+    Copyright (C) 2017 Mr.Blamo
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ from salts_lib.constants import XHR
 from salts_lib.constants import QUALITIES
 
 logger = log_utils.Logger.get_logger()
-BASE_URL = 'http://iomovies.net'
+BASE_URL = 'https://iomovies.net'
 VID_URL = '/api/get_episode/{data_i}/{data_e}'
 
 class Scraper(scraper.Scraper):

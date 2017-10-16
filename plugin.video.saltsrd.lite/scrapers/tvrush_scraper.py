@@ -24,7 +24,7 @@ from salts_lib.constants import VIDEO_TYPES
 from salts_lib.constants import QUALITIES
 import scraper
 
-BASE_URL = 'http://tvrush.eu'
+BASE_URL = 'http://primeseries.to'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -35,11 +35,11 @@ class Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE])
+        return frozenset([VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE, VIDEO_TYPES.SEASON, VIDEO_TYPES.MOVIE])
 
     @classmethod
     def get_name(cls):
-        return 'tvrush'
+        return 'primeseries'
 
     def resolve_link(self, link):
         url = scraper_utils.urljoin(self.base_url, link)

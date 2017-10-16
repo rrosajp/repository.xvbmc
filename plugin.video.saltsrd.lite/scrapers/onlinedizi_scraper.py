@@ -28,7 +28,7 @@ from salts_lib.constants import QUALITIES
 import scraper
 
 
-BASE_URL = 'http://onlinedizi.com'
+BASE_URL = 'https://onlinedizi.com'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

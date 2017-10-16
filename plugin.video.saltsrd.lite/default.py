@@ -88,7 +88,7 @@ def settings_menu():
     kodi.create_item({'mode': MODES.REPAIR_URLRESOLVER}, i18n('repair_urlresolver'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.SHOW_VIEWS}, i18n('set_default_views'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.create_item({'mode': MODES.BROWSE_URLS}, i18n('remove_cached_urls'), thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
-    kodi.create_item({'mode': MODES.SETTINGS}, 'This is a \'Lite MOD\' of the original Salts (dev+support @ www.tvaddons.ag)', thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
+    kodi.create_item({'mode': MODES.SETTINGS}, 'This is a \'Lite MOD\' of the original Salts (i\'m orphan, are you my new DEV?)', thumb=utils2.art('settings.png'), fanart=utils2.art('fanart.jpg'))
     kodi.set_content(CONTENT_TYPES.ADDONS)
     kodi.end_of_directory()
 
@@ -260,13 +260,13 @@ def addon_settings():
 def auth_trakt():
     utils.auth_trakt(Trakt_API, kodi.Translations(strings.STRINGS))
 
-@url_dispatcher.register(MODES.INSTALL_THEMES)
-def install_themepak():
-    xbmc.executebuiltin('RunPlugin(plugin://script.salts.themepak)')
+#@url_dispatcher.register(MODES.INSTALL_THEMES)
+#def install_themepak():
+#    xbmc.executebuiltin('RunPlugin(plugin://script.salts.themepak)')
 
-@url_dispatcher.register(MODES.INSTALL_CACHE)
-def install_cache():
-    xbmc.executebuiltin('RunPlugin(plugin://script.module.image_cache)')
+#@url_dispatcher.register(MODES.INSTALL_CACHE)
+#def install_cache():
+#    xbmc.executebuiltin('RunPlugin(plugin://script.module.image_cache)')
 
 @url_dispatcher.register(MODES.REPAIR_URLRESOLVER)
 def repair_urlresolver():

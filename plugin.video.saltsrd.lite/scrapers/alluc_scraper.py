@@ -112,7 +112,7 @@ class Scraper(scraper.Scraper):
         return hosters
         
     def _get_title_quality(self, title):
-        post_quality = QUALITIES.HIGH
+        post_quality = QUALITIES.HD720
         title = title.upper()
         for key in Q_LIST:
             if any(q in title for q in QUALITY_MAP[key]):
@@ -151,7 +151,7 @@ class Scraper(scraper.Scraper):
         query = scraper_utils.parse_query(url)
         query = query['query'] + ' lang:en'
         url = scraper_utils.urljoin(self.base_url, SEARCH_URL % (search_type))
-        params = {'query': query, 'count': 100, 'from': 0, 'getmeta': 0}
+        params = {'query': query, 'count': 200, 'from': 0, 'getmeta': 0}
         if self.username and self.password:
             params.update({'user': self.username, 'password': self.password})
         else:

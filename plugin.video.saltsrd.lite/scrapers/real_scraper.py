@@ -76,7 +76,7 @@ class Scraper(scraper.Scraper):
         for page_url in folders:
             xml_file = os.path.basename(page_url)
             page_url = scraper_utils.urljoin(self.base_url, page_url)
-            xml = self._http_get(page_url, require_debrid=True, cache_limit=48)
+            xml = self._http_get(page_url, require_debrid=False, cache_limit=48)
             new_folders = re.findall('<folder>(.*?)</folder>', xml, re.I)
             if new_folders:
                 folders += [folder for folder in new_folders if folder]

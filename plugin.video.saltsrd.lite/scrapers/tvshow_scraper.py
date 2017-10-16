@@ -28,7 +28,7 @@ from salts_lib.constants import Q_ORDER
 from salts_lib.utils2 import i18n
 import scraper
 
-BASE_URL = 'http://www.tvshow.me'
+BASE_URL = 'http://tvseries.net'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

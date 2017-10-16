@@ -28,7 +28,7 @@ from salts_lib.constants import Q_ORDER
 import scraper
 
 logger = log_utils.Logger.get_logger(__name__)
-BASE_URL = 'http://toptvseries.co'
+BASE_URL = 'http://www.ddlseries.pw/'
 QUALITY_MAP = {'SD-XVID': QUALITIES.MEDIUM, 'DVD9': QUALITIES.HIGH, 'SD-X264': QUALITIES.HIGH,
                'HD-720P': QUALITIES.HD720, 'HD-1080P': QUALITIES.HD1080, '720P': QUALITIES.HD720, 'XVID': QUALITIES.MEDIUM,
                'X264': QUALITIES.HIGH, '1080P': QUALITIES.HD1080}
@@ -51,7 +51,7 @@ class Scraper(scraper.Scraper):
 
     def resolve_link(self, link):
         if 'protect-links' in link:
-            html = self._http_get(link, require_debrid=True, cache_limit=.25)
+            html = self._http_get(link, require_debrid=False, cache_limit=.25)
             item = dom_parser2.parse_dom(html, 'li')
             if item:
                 stream_url = dom_parser2.parse_dom(item[0].content, 'a', req='href')
@@ -68,7 +68,7 @@ class Scraper(scraper.Scraper):
     def __get_sources(self, season_url, video):
         hosters = []
         url = scraper_utils.urljoin(self.base_url, season_url)
-        html = self._http_get(url, require_debrid=True, cache_limit=.5)
+        html = self._http_get(url, require_debrid=False, cache_limit=.5)
         match = dom_parser2.parse_dom(html, 'link', {'rel': 'canonical'}, req='href')
         if match: url = match[0].attrs['href']
         _part, quality = self.__get_quality(url)
@@ -120,7 +120,7 @@ class Scraper(scraper.Scraper):
         results = []
         search_url = scraper_utils.urljoin(self.base_url, 'index.php')
         params = {'do': 'charmap', 'name': 'series-list', 'args': '/' + title[0]}
-        html = self._http_get(search_url, params=params, require_debrid=True, cache_limit=48)
+        html = self._http_get(search_url, params=params, require_debrid=False, cache_limit=48)
         
         fragment = dom_parser2.parse_dom(html, 'div', {'class': 'downpara-list'})
         if not fragment: return results
@@ -140,7 +140,7 @@ class Scraper(scraper.Scraper):
         results = []
         query = '%s season %s' % (title, season)
         data = {'story': query, 'do': 'search', 'subaction': 'search'}
-        html = self._http_get(self.base_url + '/?q=', data=data, require_debrid=True, cache_limit=8)
+        html = self._http_get(self.base_url + '/?q=', data=data, require_debrid=False, cache_limit=8)
         for attrs, content in dom_parser2.parse_dom(html, 'a', {'class': 'short-poster'}, req='href'):
             match_url = attrs['href']
             match_title = dom_parser2.parse_dom(content, 'div', {'class': 'short-title'})

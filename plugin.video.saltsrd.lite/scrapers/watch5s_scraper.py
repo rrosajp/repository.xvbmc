@@ -31,8 +31,8 @@ import scraper
 
 logger = log_utils.Logger.get_logger()
 
-BASE_URL = 'https://watch5s.rs'
-Q_MAP = {'TS': QUALITIES.LOW, 'CAM': QUALITIES.LOW, 'HDTS': QUALITIES.LOW, 'HD-720P': QUALITIES.HD720}
+BASE_URL = 'https://watch5s.rs' 
+Q_MAP = {'TS': QUALITIES.LOW, 'CAM': QUALITIES.LOW, 'HDTS': QUALITIES.HIGH, 'HD-720P': QUALITIES.HD720}
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

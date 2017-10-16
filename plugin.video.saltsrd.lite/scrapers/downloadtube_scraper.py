@@ -30,7 +30,7 @@ from salts_lib.constants import QUALITIES
 from salts_lib.constants import Q_ORDER
 from salts_lib.constants import XHR
 
-BASE_URL = 'http://www.mydownloadtube.com'
+BASE_URL = 'https://mydownloadtube.to'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL
@@ -41,7 +41,7 @@ class Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.MOVIE])
+        return frozenset([VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE, VIDEO_TYPES.MOVIE])
 
     @classmethod
     def get_name(cls):

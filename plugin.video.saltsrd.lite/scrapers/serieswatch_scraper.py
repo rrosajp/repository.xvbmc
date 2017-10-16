@@ -24,7 +24,7 @@ from salts_lib.constants import FORCE_NO_MATCH
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://dl.hastidownload.biz/2'
+BASE_URL = 'http://dl.dlfile.pro/2/'
 
 class Scraper(scraper.Scraper):
     base_url = BASE_URL

@@ -28,7 +28,7 @@ from salts_lib.constants import MONTHS
 from salts_lib.constants import VIDEO_TYPES
 import scraper
 
-BASE_URL = 'http://myddl.pw'
+BASE_URL = 'http://xtremeli.pw'
 EXCLUDE_LINKS = ['adf.ly', urlparse.urlparse(BASE_URL).hostname]
 
 class Scraper(scraper.Scraper):

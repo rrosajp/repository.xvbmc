@@ -49,7 +49,7 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
         page_url = scraper_utils.urljoin(self.base_url, source_url)
-        html = self._http_get(page_url, require_debrid=True, cache_limit=.5)
+        html = self._http_get(page_url, require_debrid=False, cache_limit=.5)
         fragment = dom_parser2.parse_dom(html, 'table', {'class': 'links-table'})
         if not fragment: return hosters
         for _attrs, row in dom_parser2.parse_dom(fragment[0].content, 'tr'):
@@ -83,7 +83,7 @@ class Scraper(scraper.Scraper):
 
     def _get_episode_url(self, show_url, video):
         show_url = scraper_utils.urljoin(self.base_url, show_url)
-        html = self._http_get(show_url, require_debrid=True, cache_limit=8)
+        html = self._http_get(show_url, require_debrid=False, cache_limit=8)
         fragment = dom_parser2.parse_dom(html, 'div', {'class': 'seasons'})
         if not fragment: return
         match = re.search('href="([^"]+)[^>]*>%s<' % (video.season), fragment[0].content)
@@ -101,7 +101,7 @@ class Scraper(scraper.Scraper):
         search_url = scraper_utils.urljoin(self.base_url, '/typeahead/%s' % (urllib.quote(title)))
         headers = {'Referer': self.base_url}
         headers.update(XHR)
-        html = self._http_get(search_url, headers=headers, require_debrid=True, cache_limit=.5)
+        html = self._http_get(search_url, headers=headers, require_debrid=False, cache_limit=.5)
         for item in scraper_utils.parse_json(html, search_url):
             match_title = item.get('title')
             match_url = item.get('link')

@@ -38,7 +38,7 @@ class Scraper(scraper.Scraper):
 
     @classmethod
     def provides(cls):
-        return frozenset([VIDEO_TYPES.MOVIE, VIDEO_TYPES.EPISODE])
+        return frozenset([VIDEO_TYPES.MOVIE, VIDEO_TYPES.TVSHOW, VIDEO_TYPES.EPISODE])
 
     @classmethod
     def get_name(cls):
@@ -49,7 +49,7 @@ class Scraper(scraper.Scraper):
         source_url = self.get_url(video)
         if not source_url or source_url == FORCE_NO_MATCH: return hosters
         url = scraper_utils.urljoin(self.base_url, source_url)
-        html = self._http_get(url, require_debrid=True, cache_limit=.5)
+        html = self._http_get(url, require_debrid=False, cache_limit=.5)
         for source, values in self.__get_post_links(html).iteritems():
             if scraper_utils.excluded_link(source): continue
             host = urlparse.urlparse(source).hostname
@@ -88,7 +88,7 @@ class Scraper(scraper.Scraper):
         return settings
 
     def search(self, video_type, title, year, season=''):  # @UnusedVariable
-        html = self._http_get(self.base_url, params={'s': title}, require_debrid=True, cache_limit=1)
+        html = self._http_get(self.base_url, params={'s': title}, require_debrid=False, cache_limit=1)
         post_pattern = 'class="post-box-title">.*?href="(?P<url>[^"]+)[^>]*>(?P<post_title>[^<]+).*?<span>(?P<date>[^ ]+ 0*\d+, \d{4})'
         date_format = '%B %d, %Y'
         return self._blog_proc_results(html, post_pattern, date_format, video_type, title, year)
