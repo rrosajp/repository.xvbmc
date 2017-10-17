@@ -97,7 +97,7 @@
 
     <category label="30723">
         <setting type="lsep" label="30730"/>
-        <setting id="proxy_port" type="number" label="30732" default="8080"/>
+        <setting id="proxy_port" type="number" label="30732" default="666"/>
         <setting type="lsep" label="30725"/>
         <setting id="bg_enable" label="30719" type="bool" default="true"/>
         <setting id="poster_enable" label="30720" type="bool" default="true"/>
