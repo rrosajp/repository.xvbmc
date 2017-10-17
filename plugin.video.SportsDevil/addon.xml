@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="plugin.video.SportsDevil"
-  version="2017.07.16.NL0715"
+  version="2017.10.17.NL1017"
   name="SportsDevil"
   provider-name="MaxMustermann, Al101, Hubbab3, Jairox, Sattekop">
   <requires>
    <import addon="xbmc.python" version="2.14.0"/>
-   <import addon="repository.xvbmc" version="4.0.2"/>
+   <import addon="repository.xvbmc" version="4.2"/>
    <import addon="script.module.dateutil" />
    <import addon="script.module.simplejson" />
    <import addon="script.module.six" />
    <import addon="script.module.requests" />
    <import addon="script.module.livestreamer" />
-   <!-- <import addon="script.video.F4mProxy" />
-   <import addon="plugin.video.f4mTester" /> -->
+   <!-- <import addon="script.video.F4mProxy" /> -->
+   <!-- <import addon="plugin.video.f4mTester"/> -->
    <!-- *broken* <import addon="repository.unofficialsportsdevil" version="1.0.0" optional="true"/> *broken* -->
   </requires>
   <extension 
@@ -36,7 +36,7 @@ For updates check the readme.
     <forum>http://forums.koditips.com/index.php?topic=11.0</forum>
     <website>http://forums.koditips.com/index.php?topic=11.0</website>
     <source>http://forums.koditips.com/index.php?topic=11.0</source>
-    <news>Sportsdevil (build_20170630NL) mirror@xvbmc</news>
+    <news>version="2017.03.28.NL1017" (mirror@xvbmc)</news>
   <assets>
     <icon>icon.png</icon>
     <fanart>fanart.jpg</fanart>
