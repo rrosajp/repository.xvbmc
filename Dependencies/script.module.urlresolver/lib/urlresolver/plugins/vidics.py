@@ -1,6 +1,6 @@
 """
     Kodi urlresolver plugin
-    Copyright (C) 2016  script.module.urlresolver
+    Copyright (C) 2017  script.module.urlresolver
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,35 +20,33 @@ from lib import helpers
 from urlresolver import common
 from urlresolver.resolver import UrlResolver, ResolverError
 
-class VidToDoResolver(UrlResolver):
-    name = 'vidtodo'
-    domains = ['vidtodo.com']
-    pattern = '(?://|\.)(vidtodo\.com)/(?:embed-)?([0-9a-zA-Z]+)'
+class VidicsResolver(UrlResolver):
+    name = 'vidics'
+    domains = ['vidics.tv']
+    pattern = '(?://|\.)(vidics\.tv)/embed/([0-9a-zA-Z]+)'
     
     def __init__(self):
         self.net = common.Net()
         
     def get_media_url(self, host, media_id):
         web_url = self.get_url(host, media_id)
-        headers = {'User-Agent': common.FF_USER_AGENT}
+        headers = {'User-Agent': common.RAND_UA}
         html = self.net.http_GET(web_url, headers=headers).content
         
         if html:
-            try:
-                data = helpers.get_hidden(html)
+            quals = re.findall("""href=["'].+?id=["'](\d{3,4})p""", html)
+            source = re.search("""mp4\d+\s*=\s*["']([^"']+)""", html)
+            if source:
                 headers.update({'Referer': web_url})
-                common.kodi.sleep(2000)
-                _html = self.net.http_POST(web_url, headers=headers, form_data=data).content
-                if _html:
-                    sources = helpers.scrape_sources(_html)
-                    if sources:
-                        if len(sources) > 1:
-                            sources = [source for source in sources if len(re.sub("\D", "", source[0])) <= 4]
-                        return helpers.pick_source(sources) + helpers.append_headers(headers)
-            except Exception as e:
-                raise ResolverError(e)
+                if len(quals) > 1:
+                    sources = [(qual, re.sub('-\d{3,4}\.', '-%s.' % qual, source.group(1))) for qual in quals]
+                    try: sources.sort(key=lambda x: int(re.sub("\D", "", x[0])), reverse=True)
+                    except: common.logger.log_debug('Scrape sources sort failed |int(re.sub("\D", "", x[0])|')
+                    return helpers.pick_source(sources) + helpers.append_headers(headers)
+                else:
+                    return source.group(1) + helpers.append_headers(headers)
             
         raise ResolverError('Unable to locate video')
         
     def get_url(self, host, media_id):
-        return self._default_get_url(host, media_id, template='https://vidtodo.com/{media_id}')
+        return self._default_get_url(host, media_id, template='https://embed1.{host}/embed/{media_id}/')
