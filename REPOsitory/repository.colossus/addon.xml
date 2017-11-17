@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="repository.colossus" name="[COLOR gold]Colossus Repository[/COLOR]" version="666.666.666" provider-name="Colossal STOPPED">
+<addon id="repository.colossus" name="[COLOR gold]Colossus Repository[/COLOR]" version="999.999.666" provider-name="Colossal STOPPED">
     <extension point="xbmc.addon.repository" name="[COLOR gold]Colossus Repository[/COLOR]">
     </extension>
     <extension point="xbmc.addon.metadata">
