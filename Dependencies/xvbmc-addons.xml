@@ -73,7 +73,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
   <extension library="lib" point="xbmc.python.module" />
 </addon>
 
-<addon id="script.covenant.artwork" version="1.0.2" name="Covenant Artwork" provider-name="Covenant">
+<addon id="script.covenant.artwork" version="1.0.3" name="Covenant Artwork" provider-name="Covenant">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0"/>
 	</requires>
@@ -85,7 +85,7 @@ this is an unofficial addon. please don't ask for support in openelec forum / ir
 	</extension>
 </addon>
 
-<addon id="script.covenant.metadata" version="1.0.0" name="Covenant Metadata" provider-name="Covenant">
+<addon id="script.covenant.metadata" version="1.0.2" name="Covenant Metadata" provider-name="Covenant">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0"/>
 	</requires>
