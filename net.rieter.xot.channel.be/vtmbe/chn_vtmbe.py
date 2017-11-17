@@ -1,4 +1,5 @@
 # coding=utf-8
+import base64
 import time
 import re
 import datetime
@@ -9,15 +10,16 @@ from logger import Logger
 from mediaitem import MediaItem
 from vault import Vault
 from urihandler import UriHandler
-from helpers.jsonhelper import JsonHelper
 from addonsettings import AddonSettings
-from helpers.htmlentityhelper import HtmlEntityHelper
-from helpers.datehelper import DateHelper
 from streams.m3u8 import M3u8
 from regexer import Regexer
 from xbmcwrapper import XbmcWrapper
-from helpers.languagehelper import LanguageHelper
 from parserdata import ParserData
+
+from helpers.jsonhelper import JsonHelper
+from helpers.htmlentityhelper import HtmlEntityHelper
+from helpers.datehelper import DateHelper
+from helpers.languagehelper import LanguageHelper
 
 
 class Channel(chn_class.Channel):
@@ -97,7 +99,7 @@ class Channel(chn_class.Channel):
 
             # self.mainListUri = "https://vod.medialaan.io/vod/v2/programs?offset=0&limit=0"
             self.mainListUri = "https://channels.medialaan.io/channels/v1/channels?preview=false"
-            self._AddDataParser("https://channels.medialaan.io/channels/v1/channels?preview=false",
+            self._AddDataParser(self.mainListUri,
                                 json=True,
                                 preprocessor=self.StievieMenu,
                                 name="JSON Channel overview",
@@ -183,6 +185,7 @@ class Channel(chn_class.Channel):
         self.__signatureTimeStamp = None
         self.__userId = None
         self.__cleanRegex = re.compile("<[^>]+>")
+        self.__dashStreamsSupported = AddonSettings.IsMinVersion(18)
 
         # Mappings from the normal URL (which has all shows with actual videos and very little
         # video-less shows) to the JSON ids. Loading can be done using:
@@ -358,6 +361,9 @@ class Channel(chn_class.Channel):
         """ Creates the main Stievie menu """
 
         items = []
+        if not self.__dashStreamsSupported:
+            return data, items
+
         programs = MediaItem("\b.: Programma's :.", "https://vod.medialaan.io/vod/v2/programs?offset=0&limit=0")
         programs.dontGroup = True
         items.append(programs)
@@ -373,7 +379,6 @@ class Channel(chn_class.Channel):
 
     def StievieChannelMenu(self, data):
         items = []
-        channelId = self.parentItem.metaData["channelId"]
         live = MediaItem("Live %s" % (self.parentItem.name, ), "#livestream")
         live.isLive = True
         live.type = "video"
@@ -382,9 +387,14 @@ class Channel(chn_class.Channel):
         live.thumb = self.parentItem.thumb
         items.append(live)
 
+        if not self.__dashStreamsSupported:
+            # Only list the channel content if DASH is supported
+            return data, items
+
         # https://epg.medialaan.io/epg/v2/schedule?date=2017-04-25&channels%5B%5D=vtm&channels%5B%5D=2be&channels%5B%5D=vitaya&channels%5B%5D=caz&channels%5B%5D=kzoom&channels%5B%5D=kadet&channels%5B%5D=qmusic
         # https://epg.medialaan.io/epg/v2/schedule?date=2017-04-25&channels[]=vtm&channels[]=2be&channels[]=vitaya&channels[]=caz&channels[]=kzoom&channels[]=kadet&channels[]=qmusic
         # https://epg.medialaan.io/epg/v2/schedule?date=2017-05-04&channels[]=vtm&channels[]=2be&channels[]=vitaya&channels[]=caz&channels[]=kzoom&channels[]=kadet&channels[]=qmusic
+        channelId = self.parentItem.metaData["channelId"]
         channels = (channelId, )
         query = "&channels%%5B%%5D=%s" % ("&channels%5B%5D=".join(channels), )
 
@@ -417,6 +427,9 @@ class Channel(chn_class.Channel):
 
     def StievieCreateChannelItem(self, resultSet):
         Logger.Trace(resultSet)
+
+        if resultSet['premium']:
+            return None
 
         item = MediaItem(resultSet["name"], "#channel")
         item.description = resultSet.get("slogan", None)
@@ -849,27 +862,8 @@ class Channel(chn_class.Channel):
 
     def __UpdateVideoItem(self, item, videoId):
         # we need a token:
-        # https://user.medialaan.io/user/v1/gigya/request_token?database=stievie-sso&uid=897b786c46e3462eac81549453680c0d&signature=BZCuW1%2FWZ6bMV4jPwyJEMfR%2BLn0%3D&timestamp=1493815113
-
-        # Using the v1.0 API
-        # https://user.medialaan.io/user/v1/gigya/request_token?uid=897b786c46e3462eac81549453680c0d&signature=Lfz8qNv9oeVst7I%2B8pHytr02QLU%3D&timestamp=1484682292&apikey=q2-html5-NNSMRSQSwGMDAjWKexV4e5Vm6eSPtupk&database=q2-sso&_=1484682287800
-        # mediaUrl = "https://vod.medialaan.io/api/1.0/item/" \
-        #            "%s" \
-        #            "/video?app_id=%s&user_network=%s" \
-        #            "&UID=%s" \
-        #            "&UIDSignature=%s" \
-        #            "&signatureTimestamp=%s" % (
-        #                videoId,
-        #                self.__app,
-        #                self.__sso,
-        #                self.__userId,
-        #                HtmlEntityHelper.UrlEncode(self.__signature),
-        #                self.__signatureTimeStamp
-        #            )
-        # data = UriHandler.Open(mediaUrl, proxy=self.proxy)
-
-        # https://vod.medialaan.io/vod/v2/videos/2be_20170430_VM0684A04_Stievie_free/watch?deviceId=0eeb27538e714527c2bab956f20d6757
         token = self.__GetToken()
+
         # deviceId = AddonSettings.GetClientId()
         mediaUrl = "https://vod.medialaan.io/vod/v2/videos/" \
                    "%s" \
@@ -883,30 +877,53 @@ class Channel(chn_class.Channel):
         data = UriHandler.Open(mediaUrl, proxy=self.proxy, additionalHeaders=headers)
 
         jsonData = JsonHelper(data)
-        m3u8Url = jsonData.GetValue("response", "hls-encrypted", "url")
-        if not m3u8Url:
-            m3u8Url = jsonData.GetValue("response", "uri")
-            # m3u8Url = jsonData.GetValue("response", "hls-drm-uri")  # not supported by Kodi
+        dashInfo = jsonData.GetValue("response", "dash-cenc")
+        if self.__dashStreamsSupported and dashInfo:
+            Logger.Debug("Using Dash streams to playback")
+            dashInfo = jsonData.GetValue("response", "dash-cenc")
+            licenseUrl = dashInfo["widevineLicenseServerURL"]
+            streamUrl = dashInfo["url"]
+            sessionId = jsonData.GetValue("request", "access_token")
 
-        part = item.CreateNewEmptyMediaPart()
-        # Set the Range header to a proper value to make all streams start at the beginning. Make
-        # sure that a complete TS part comes in a single call otherwise we get stuttering.
-        byteRange = 10 * 1024 * 1024
-        Logger.Debug("Setting an 'Range' http header of bytes=0-%d to force playback at the start "
-                     "of a stream and to include a full .ts part.", byteRange)
-        part.HttpHeaders["Range"] = 'bytes=0-%d' % (byteRange, )
+            licenseHeader = {
+                "merchant": "medialaan",
+                "userId": self.__userId,
+                "sessionId": sessionId
+            }
+            licenseHeader = JsonHelper.Dump(licenseHeader, False)
+            licenseHeaders = "x-dt-custom-data={0}&Content-Type=application/octstream".format(base64.b64encode(licenseHeader))
 
-        for s, b in M3u8.GetStreamsFromM3u8(m3u8Url, self.proxy):
-            item.complete = True
-            # s = self.GetVerifiableVideoUrl(s)
-            part.AppendMediaStream(s, b)
+            kodiProps = {
+                "inputstreamaddon": "inputstream.adaptive",
+                "inputstream.adaptive.manifest_type": "mpd",
+                "inputstream.adaptive.license_type": "com.widevine.alpha",
+                "inputstream.adaptive.license_key": "{0}?specConform=true|{1}|R{{SSM}}|".format(licenseUrl, licenseHeaders or "")
+            }
 
-        # http://vod.medialaan.io/api/1.0/item/
-        # vtm_20161124_VM0677613_vtmwatch
-        # /video?app_id=vtm_watch&user_network=vtm-sso
-        # &UID=897b786c46e3462eac81549453680c0d
-        # &UIDSignature=Hf4TrZ7TFwH5cjeJ8pqVwjFp25I%3D
-        # &signatureTimestamp=1481494782
+            part = item.CreateNewEmptyMediaPart()
+            stream = part.AppendMediaStream(streamUrl, 0)
+            for k, v in kodiProps.iteritems():
+                stream.AddProperty(k, v)
+        else:
+            Logger.Debug("No Dash streams supported or no Dash streams available. Using M3u8 streams")
+
+            m3u8Url = jsonData.GetValue("response", "hls-encrypted", "url")
+            if not m3u8Url:
+                m3u8Url = jsonData.GetValue("response", "uri")
+                # m3u8Url = jsonData.GetValue("response", "hls-drm-uri")  # not supported by Kodi
+
+            part = item.CreateNewEmptyMediaPart()
+            # Set the Range header to a proper value to make all streams start at the beginning. Make
+            # sure that a complete TS part comes in a single call otherwise we get stuttering.
+            byteRange = 10 * 1024 * 1024
+            Logger.Debug("Setting an 'Range' http header of bytes=0-%d to force playback at the start "
+                         "of a stream and to include a full .ts part.", byteRange)
+            part.HttpHeaders["Range"] = 'bytes=0-%d' % (byteRange, )
+
+            for s, b in M3u8.GetStreamsFromM3u8(m3u8Url, self.proxy):
+                item.complete = True
+                # s = self.GetVerifiableVideoUrl(s)
+                part.AppendMediaStream(s, b)
 
         return item
 
