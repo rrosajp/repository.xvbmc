@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# ------------------------------------------------------------
+
 import hashlib
 import base64
 import os
@@ -35,7 +38,7 @@ def evpKDF(passwd, salt, key_size=8, iv_size=4, iterations=1, hash_algorithm="md
         "iv": derived_bytes[key_size * 4:]
     }
 
-    
+
 def encode(plaintext,passphrase,saltsize=8):
     salt= os.urandom(saltsize)
     data = evpKDF(passphrase,salt)
@@ -55,7 +58,6 @@ def decode(ciphertext,passphrase,salt=None):
     decryptor = new(data['key'], MODE_CBC, IV=data['iv'])
     d= decryptor.decrypt(ciphertext)
     return PKCS7Encoder().decode(d)
-
 
 class PKCS7Encoder(object):
     '''

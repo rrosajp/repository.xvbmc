@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
+# dss - XBMC Plugin
+# Lib AADecode JS and scraper of the possible cases in the returns decoded.
+# File: /lib/aadecode.py
+# Use:
+#     from aadecode import decode as aadecode
+#     text_decode = aadecode(text_encode)
+# @robalo & @Cmos
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
+# ------------------------------------------------------------
 
 import re
 from core.scrapertools import *

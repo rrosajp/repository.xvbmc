@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # --------------------------------------------------------
-# deportesalacarta - XBMC Plugin
+# dss - XBMC Plugin
 # Conector para streamango
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
 # --------------------------------------------------------
 
 import re

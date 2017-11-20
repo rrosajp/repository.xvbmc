@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-#------------------------------------------------------------
-# deportesalacarta - XBMC Plugin
+# ------------------------------------------------------------
+# dss - XBMC Plugin
 # Conector para wholecloud
-#------------------------------------------------------------
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
+# ------------------------------------------------------------
 
 import re
 
@@ -17,14 +18,17 @@ def test_video_exists(page_url):
 
     if "This file no longer exists on our servers" in data:
         return False, "[wholecloud] El archivo ha sido eliminado o no existe"
-    
+    if "This video is not yet ready" in data:
+        return False, "[wholecloud] El archivo no está listo, se está subiendo o convirtiendo"
+
     return True, ""
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("url=" + page_url)
-    
+
     data = httptools.downloadpage(page_url).data
+
     video_urls = []
     media_urls = scrapertools.find_multiple_matches(data, '<source src="([^"]+)"')
     if not media_urls:
@@ -58,6 +62,6 @@ def find_videos(data):
             devuelve.append([titulo, url, 'wholecloud'])
             encontrados.add(url)
         else:
-            logger.info("  url duplicada="+url)
+            logger.info("  url duplicada=" + url)
 
     return devuelve

@@ -1,8 +1,27 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
+# dss 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
+#
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
+# This file is part of dss 4.
+#
+# dss 4 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# dss 4 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with dss 4.  If not, see <http://www.gnu.org/licenses/>.
+# --------------------------------------------------------------------------------
 # Zip Tools
 # --------------------------------------------------------------------------------
 
@@ -11,23 +30,14 @@ import zipfile
 
 import logger
 import config
-from platformcode import platformtools
-                        
+
 
 class ziptools:
 
-    def extract(self, file, dir, folder_to_extract="", overwrite_question=False, backup=False, update=False):
+    def extract(self, file, dir, folder_to_extract="", overwrite_question=False, backup=False):
         logger.info("file=%s" % file)
         logger.info("dir=%s" % dir)
         
-        if update:
-            progreso = platformtools.dialog_progress("Descomprimiendo", "Extrayendo archivos de la nueva versión")
-            zf = zipfile.ZipFile(file)
-            zf.extractall(dir)
-            progreso.close()
-            return
-            
-
         if not dir.endswith(':') and not os.path.exists(dir):
             os.mkdir(dir)
 
@@ -36,8 +46,7 @@ class ziptools:
             self._createstructure(file, dir)
         num_files = len(zf.namelist())
 
-        lenght = len(zf.namelist())
-        for i, name in enumerate(zf.namelist()):
+        for name in zf.namelist():
             logger.info("name=%s" % name)
             if not name.endswith('/'):
                 logger.info("no es un directorio")
@@ -54,11 +63,13 @@ class ziptools:
                     pass
                 if folder_to_extract:
                     outfilename = os.path.join(dir, filename)
+                    
                 else:
                     outfilename = os.path.join(dir, name)
                 logger.info("outfilename=%s" % outfilename)
                 try:
                     if os.path.exists(outfilename) and overwrite_question:
+                        from platformcode import platformtools
                         dyesno = platformtools.dialog_yesno("El archivo ya existe",
                                                             "El archivo %s a descomprimir ya existe" \
                                                             ", ¿desea sobrescribirlo?" \
@@ -77,7 +88,7 @@ class ziptools:
                     outfile = open(outfilename, 'wb')
                     outfile.write(zf.read(name))
                 except:
-                    logger.info("Error en fichero "+name)
+                    logger.error("Error en fichero "+name)
 
     def _createstructure(self, file, dir):
         self._makedirs(self._listdirs(file), dir)

@@ -1,33 +1,30 @@
 # -*- coding: utf-8 -*-
-#------------------------------------------------------------
+# ------------------------------------------------------------
 # tvalacarta - XBMC Plugin
 # Funciones para hacer canales a partir de un canal de YouTube
 # http://blog.tvalacarta.info/plugin-xbmc/tvalacarta/
-#------------------------------------------------------------
-import os,sys,re,urllib
+# ------------------------------------------------------------
+import urllib
 
-from core import logger
 from core import jsontools
+from core import logger
 from core import scrapertools
 from core.item import Item
 
-DEBUG = True
 CHANNELNAME = "youtube_channel"
-YOUTUBE_V3_API_KEY = "AIzaSyCDwjA0G1QcPd7KobFtW39XWkUj3CEF3OY"
+YOUTUBE_V3_API_KEY = "AIzaSyCjsmBT0JZy1RT-PLwB-Zkfba87sa2inyI"
 
-def isGeneric():
-    return True
 
 def youtube_api_call(method,parameters):
-    logger.info("youtube_api_call method="+method+", parameters="+repr(parameters))
+    logger.info("method="+method+", parameters="+repr(parameters))
 
     encoded_parameters = urllib.urlencode(parameters)
 
     url = "https://www.googleapis.com/youtube/v3/"+method+"?"+encoded_parameters+"&key="+YOUTUBE_V3_API_KEY;
-    logger.info("youtube_api_call url="+url)
+    logger.info("url="+url)
 
     data = scrapertools.cache_page(url)
-    logger.info("youtube_api_call data="+data)
+    logger.info("data="+data)
 
     json_object = jsontools.load_json(data)
 
@@ -52,7 +49,7 @@ def youtube_get_playlist_items(playlist_id,pageToken=""):
 
 # Show all YouTube playlists for the selected channel
 def playlists(item,channel_id,pageToken=""):
-    logger.info("youtube_channel.playlists ")
+    logger.info()
     itemlist=[]
 
     json_object = youtube_get_user_playlists(channel_id,pageToken)
@@ -73,7 +70,7 @@ def playlists(item,channel_id,pageToken=""):
         itemlist.extend( playlists(item,channel_id,nextPageToken) )
     except:
         import traceback
-        logger.info(traceback.format_exc())
+        logger.error(traceback.format_exc())
 
     return itemlist
 
@@ -83,7 +80,7 @@ def latest_videos(item,channel_id):
 
 # Show all YouTube videos for the selected playlist
 def videos(item,pageToken=""):
-    logger.info("youtube_channel.videos ")
+    logger.info()
     itemlist=[]
 
     json_object = youtube_get_playlist_items(item.url,pageToken)
@@ -93,12 +90,7 @@ def videos(item,pageToken=""):
         
         title = entry["snippet"]["title"]
         plot = entry["snippet"]["description"]
-
-        try:
-            thumbnail = entry["snippet"]["thumbnails"]["high"]["url"]
-        except:
-            thumbnail = ""
-
+        thumbnail = entry["snippet"]["thumbnails"]["high"]["url"]
         url = entry["snippet"]["resourceId"]["videoId"]
 
         # Appends a new item to the xbmc item list
@@ -109,7 +101,7 @@ def videos(item,pageToken=""):
         itemlist.extend( videos(item,nextPageToken) )
     except:
         import traceback
-        logger.info(traceback.format_exc())
+        logger.error(traceback.format_exc())
 
     return itemlist
 
