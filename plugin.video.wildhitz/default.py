@@ -142,40 +142,55 @@ def Adddays():
     addDir('Play Saturday Shuffle Clips' ,'saturday',3,icon ,  FANART,'','','','')
     addDir('Play Sunday Shuffle Clips' ,'sunday',3,icon ,  FANART,'','','','')
 
-def Wildhitz_playlist():   
+def Wildhitz_playlist():
+    scantime = False
     pl=xbmc.PlayList(1)
     pl.clear()
     ts = time.time()
     st = datetime.fromtimestamp(ts).strftime('%H')
     st = int(st)
+    now = datetime.now().time()
     readjsondata = 'http://wildhitz.nl/download.php?file=jsondata-wildhitz-'+week_day()+'.json'
     data = GetHTML(readjsondata)
     data = json.loads(data)
-    #print data
     for i in data['rss']['channel']['program']:
         start = i['start']
         start = start[11:13]
         start = int(start)
         if start >= st:
             for x in i['items']['item']:
-                title = x['title']['__cdata']
-                artist = x['artist']['__cdata']
-                source = x['source'][int(video_quality)]['_file']
-                if title:
-                    name = '|'+title+' - '+artist
+                airtime = x['airtime']
+                try:
+                    try:
+                        dt = datetime.strptime(airtime,"%H:%M:%S").time()
+                    except:
+                        dt = datetime(*(time.strptime(airtime,"%H:%M:%S")[0:6])).time()
+                except:
+                    dt=now
+                if scantime == False and dt < now :
+                    pass
                 else:
-                    name =''
-                url = source
-                listitem = xbmcgui.ListItem('WildHitz'+name,thumbnailImage=icon)
-                xbmc.PlayList(1).add(url, listitem)
+                    scantime = True
+                    title = x['title']['__cdata']
+                    artist = x['artist']['__cdata']
+                    source = x['source'][int(video_quality)]['_file']
+                    if title:
+                        name = '|'+title+' - '+artist
+                    else:
+                        name =''
+                    url = source
+                    listitem = xbmcgui.ListItem('WildHitz'+name,thumbnailImage=icon)
+                    xbmc.PlayList(1).add(url, listitem)
     xbmc.Player().play(pl)
 
 def Wildhitz_shuffle(url):   
+    scantime = False
     pl=xbmc.PlayList(1)
     pl.clear()
     ts = time.time()
     st = datetime.fromtimestamp(ts).strftime('%H')
     st = int(st)
+    now = datetime.now().time()
     readjsondata = 'http://wildhitz.nl/download.php?file=jsondata-wildhitz-'+url+'.json'
     data = GetHTML(readjsondata)
     data = json.loads(data)
@@ -185,13 +200,29 @@ def Wildhitz_shuffle(url):
         start = int(start)
         if start >= st:
             for x in i['items']['item']:
-                title = x['title']['__cdata']
-                artist = x['artist']['__cdata']
-                url = x['source'][int(video_quality)]['_file']
-                name = title+' - '+artist
-                if title:
-                    listitem = xbmcgui.ListItem('WildHitz|'+name,thumbnailImage=icon)
-                    xbmc.PlayList(1).add(url, listitem)
+                airtime = x['airtime']
+                try:
+                    try:
+                        dt = datetime.strptime(airtime,"%H:%M:%S").time()
+                    except:
+                        dt = datetime(*(time.strptime(airtime,"%H:%M:%S")[0:6])).time()
+                except:
+                    dt=now
+                if scantime == False and dt < now :
+                    pass
+                else:
+                    scantime = True
+                    title = x['title']['__cdata']
+                    artist = x['artist']['__cdata']
+                    source = x['source'][int(video_quality)]['_file']
+                    if title:
+                        name = '|'+title+' - '+artist
+                    else:
+                        name =''
+                    if name:
+                        url = source
+                        listitem = xbmcgui.ListItem('WildHitz'+name,thumbnailImage=icon)
+                        xbmc.PlayList(1).add(url, listitem)
     pl.shuffle()
     xbmc.Player().play(pl)
 

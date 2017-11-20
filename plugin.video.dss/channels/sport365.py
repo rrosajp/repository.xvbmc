@@ -27,7 +27,7 @@ def mainlist(item):
     itemlist = []
 
     itemlist.append(item.clone(title="Schedule", action="tickets", url="http://www.sport365.live/en/events/-/1/-/-/60", fanart="http://i.imgur.com/bCn8lHB.jpg?1"))
-    itemlist.append(item.clone(title="Live", action="tickets", url="http://www.sport365.live/en/events/1/-/-/-/-", fanart="http://i.imgur.com/bCn8lHB.jpg?1"))
+    itemlist.append(item.clone(title="Live", action="tickets", url="http://www.sport365.live/en/events/1/-/-/-/60", fanart="http://i.imgur.com/bCn8lHB.jpg?1"))
     itemlist.append(item.clone(title="Schedule by language", action="languages", url="http://www.sport365.live/en/sidebar", fanart="http://i.imgur.com/bCn8lHB.jpg?1"))
 
     #itemlist.append(item.clone(title="", action=""))

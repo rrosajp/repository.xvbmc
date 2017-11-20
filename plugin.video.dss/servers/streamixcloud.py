@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # --------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# dss - XBMC Plugin
 # Conector para streamixcloud
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
 # --------------------------------------------------------
 
 import re

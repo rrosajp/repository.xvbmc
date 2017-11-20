@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
-	<name>DutchSportStreams</name>
-	<tag>10.00</tag>
-	<version>10.00</version>
-	<date>26/07/2017</date>
+	<name>Dutch Stream Support</name>
+	<tag>11.0.4</tag>
+	<version>11.0.4</version>
+	<date>18/11/2017</date>
 	<changes>dss</changes>
 </version>

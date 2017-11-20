@@ -1,165 +1,117 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
+# dss 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
+#
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
+# ------------------------------------------------------------
+# This file is part of dss 4.
+#
+# dss 4 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# dss 4 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with dss 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
-# Updater
+# Updater process
 # --------------------------------------------------------------------------------
 
 import os
-import re
 import time
-import base64
-import urllib2
-import xbmc
 
 import config
-import downloadtools
-import httptools
 import logger
-import filetools
 import scrapertools
-from platformcode import platformtools
-bin = ""
-REMOTE_VERSION_FILE = "https://raw.githubusercontent.com/dutchsportstreams/DSS/master/plugin.video.dss/addon.xml"
-LOCAL_XML_FILE = os.path.join(config.get_runtime_path() , "version.xml" )
+import versiontools
 
+def update(item):
+    logger.info()
 
-def check():
-    logger.info("dss.channels.update_sports Comprobando versión")
+def update_channel(channel_name):
+    logger.info(channel_name)
+    
+    import channeltools
+    remote_channel_url , remote_version_url = channeltools.get_channel_remote_url(channel_name)
+    local_channel_path , local_version_path , local_compiled_path = channeltools.get_channel_local_path(channel_name)
+    
+    # Version remota
     try:
-        # Lee el fichero con la versión instalada
-        global bin
-        fichero = open(LOCAL_XML_FILE, "r")
-        data = fichero.read()
-        fichero.close()
-        version_local = scrapertools.find_single_match(data,"<version>([^<]+)</version>").strip()
-
-        url_repo = ""
-        server = ""
-        if float(version_local) > 1.15:
-            for i in range(3):
-                bin = base64.b64decode(bin)
-
-            data = eval(httptools.downloadpage(bin, hide=True).data)
-            version_publicada = data["version"]
-            message = data["changes"]
-            url_repo = data["link"]
-            server = data["server"]
-        else:
-            data = scrapertools.downloadpage(REMOTE_VERSION_FILE)
-            version_publicada = scrapertools.find_single_match(data,"<version>([^<]+)</version>").strip()
-            message = scrapertools.find_single_match(data,"<changes>([^<]+)</changes>").strip()
-            logger.info("dss.channels.update_sports Versión en el repositorio: %s" % version_publicada)
-
-        logger.info("dss.channels.update_sports Versión local: %s" % version_local)
-        if float(version_publicada) > float(version_local):
-            logger.info("dss.channels.update_sports Nueva versión encontrada")
-            return True, version_publicada, message, url_repo, server
-        else:
-            logger.info("dss.channels.update_sports No existe versión actualizada")
-            return False, "", "", "", ""
+        data = scrapertools.cachePage( remote_version_url )
+        logger.info("remote_data="+data)
+        remote_version = int( scrapertools.find_single_match(data,'<version>([^<]+)</version>') )
+        addon_condition = int(scrapertools.find_single_match(data, "<addon_version>([^<]*)</addon_version>")
+                              .replace(".", "").ljust(len(str(versiontools.get_current_plugin_version())), '0'))
     except:
-        import traceback
-        logger.error("dss.platformcode.launcher "+traceback.format_exc())
-        return False, "", "", "", ""
+        remote_version = 0
+        addon_condition = 0
 
+    logger.info("remote_version=%d" % remote_version)
 
+    # Version local
+    if os.path.exists( local_version_path ):
+        infile = open( local_version_path )
+        data = infile.read()
+        infile.close()
+        #logger.info("dss.core.updater local_data="+data)
 
-def actualiza(item):
-    logger.info("dss.channels.update_sports actualiza")
-
-    local_folder = os.path.join(xbmc.translatePath("special://home"), "addons")
-    error = False
-    if not item.url:
-        url = "https://github.com/dutchsportstreams/DSS/raw/master/repo/plugin.video.dss/plugin.video.dss-%s.zip" % item.version
+        local_version = int( scrapertools.find_single_match(data,'<version>([^<]+)</version>') )
     else:
-        import servertools
-        urls, puede, msg = servertools.resolve_video_urls_for_playing(item.server, item.url, "", False, True)
-        if puede:
-            data_ = httptools.downloadpage(urls[0], hide=True).data
-            url = scrapertools.find_single_match(data_, '"downloadUrl"\s*:\s*"([^"]+)"')
-            if not url:
-                url = scrapertools.find_single_match(data_, '<a id="download_button".*?href="([^"]+)"')
-            if not item.server and not url:
-                try:
-                    name, value = scrapertools.find_single_match(data_, 'method="post">.*?name="([^"]+)" value="([^"]+)"')
-                    post = "%s=%s" % (name, value)
-                    data_ = httptools.downloadpage(urls[0], post, hide=True).data
-                    url = scrapertools.find_single_match(data_, '"downloadUrl"\s*:\s*"([^"]+)"')
-                except:
-                    pass
+        local_version = 0
 
-            if not url:
-                urls, puede, msg = servertools.resolve_video_urls_for_playing(item.server, base64.b64decode(item.url))
-                url = urls[0][1]
+    logger.info("local_version=%d" % local_version)
 
-    progreso = platformtools.dialog_progress("Upgrade Progress", "Downloading...")
-    filename = 'plugin.video.dss-%s.zip' % item.version
-    localfilename = filetools.join(config.get_data_path(), filename)
+    # Comprueba si ha cambiado
+    updated = (remote_version > local_version) and (versiontools.get_current_plugin_version() >= addon_condition)
+
+    if updated:
+        logger.info("downloading...")
+        download_channel(channel_name)
+
+    return updated
+
+def download_channel(channel_name):
+    logger.info(channel_name)
+
+    import channeltools
+    remote_channel_url , remote_version_url = channeltools.get_channel_remote_url(channel_name)
+    local_channel_path , local_version_path , local_compiled_path = channeltools.get_channel_local_path(channel_name)
+
+    # Descarga el canal
     try:
-        result = downloadtools.downloadfile(url, localfilename, [], False, True, False)
-        progreso.update(50, "Downloading file", "Downloading...")
-        # Lo descomprime
-        logger.info("dss.channels.configuracion descomprime fichero...")
-        from core import ziptools
-        unzipper = ziptools.ziptools()
-        logger.info("dss.channels.configuracion destpathname=%s" % local_folder)
-        unzipper.extract(localfilename, local_folder, update=True)
-        progreso.close()
+        updated_channel_data = scrapertools.cachePage( remote_channel_url )
+        outfile = open(local_channel_path,"wb")
+        outfile.write(updated_channel_data)
+        outfile.flush()
+        outfile.close()
+        logger.info("Grabado a " + local_channel_path)
     except:
         import traceback
-        logger.info("Detalle del error: %s" % traceback.format_exc())
-        # Borra el zip descargado
-        try:
-            filetools.remove(localfilename)
-        except:
-            pass
-        progreso.close()
-        platformtools.dialog_ok("Error", "An error occurred while extracting the file")
-        return
-    
-    # Borra el zip descargado
-    logger.info("dss.channels.configuracion borra fichero...")
+        logger.error(traceback.format_exc())
+
+    # Descarga la version (puede no estar)
     try:
-        filetools.remove(localfilename)
-    except:
-        pass
-    logger.info("dss.channels.configuracion ...fichero borrado")
-
-    platformtools.dialog_notification("Correctly updated", "Version %s Successfully installed" % item.version)
-    
-    xbmc.executebuiltin("Container.Refresh")
-
-
-def do_download(url, localfilename):
-    # Corregimos el filename para que se adapte al sistema en el que se ejecuta
-    localfilename = os.path.normpath(localfilename)
-    logger.info("dss.channels.update_sports localfilename=%s" % localfilename)
-    logger.info("dss.channels.update_sports url=%s" % url)
-    logger.info("dss.channels.update_sports descarga fichero...")
-    inicio = time.clock()
-    
-    error = False
-    try:
-        folder = os.path.dirname(localfilename)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-        if os.path.exists(localfilename.rsplit(".",1)[0] + ".pyo"):
-            os.remove(localfilename.rsplit(".",1)[0] + ".pyo")
-        data = urllib2.urlopen(url).read()
-        outfile = open(localfilename ,"wb")
-        outfile.write(data)
+        updated_version_data = scrapertools.cachePage( remote_version_url )
+        outfile = open(local_version_path,"w")
+        outfile.write(updated_version_data)
+        outfile.flush()
         outfile.close()
-        logger.info("dss.channels.update_sports Grabado a " + localfilename)
-         
+        logger.info("Grabado a " + local_version_path)
     except:
-        logger.info("dss.channels.update_sports Error al grabar " + localfilename)
-        import sys
-        for line in sys.exc_info():
-            logger.error( "%s" % line )
-        error = True
-    
-    fin = time.clock()
-    logger.info("dss.channels.update_sports Descargado en %d segundos " % (fin-inicio+1))
-    return error
+        import traceback
+        logger.error(traceback.format_exc())
+
+    if os.path.exists(local_compiled_path):
+        os.remove(local_compiled_path)
+
+    from platformcode import platformtools
+    platformtools.dialog_notification(channel_name+" actualizado", "Se ha descargado una nueva versión")
+

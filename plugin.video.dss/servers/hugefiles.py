@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# deportesalacarta - XBMC Plugin
+# dss - XBMC Plugin
 # Conector para hugefiles
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
 # Based on the hugefiles resolver from script.modules.urlresolver
 # ------------------------------------------------------------
 

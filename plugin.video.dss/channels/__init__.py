@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# deportesalacarta - XBMC Plugin
+# dss - XBMC Plugin
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
 #------------------------------------------------------------
 
 import os

@@ -1,34 +1,59 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
+# dss 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
+#
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
+# ------------------------------------------------------------
+# This file is part of dss 4.
+#
+# dss 4 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# dss 4 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with dss 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Lista de vídeos favoritos
 # ------------------------------------------------------------
 
 import os
 import time
-import xbmc
 
-from core import scrapertools
 from core import config
 from core import filetools
 from core import logger
+from core import scrapertools
 from core.item import Item
 from platformcode import platformtools
 
-# Fijamos la ruta a favourites.xml
-FAVOURITES_PATH = xbmc.translatePath("special://home/userdata/favourites.xml")
+try:
+    # Fijamos la ruta a favourites.xml
+    if config.is_xbmc():
+        import xbmc
+        FAVOURITES_PATH = xbmc.translatePath("special://profile/favourites.xml")
+    else:
+        FAVOURITES_PATH = os.path.join(config.get_data_path(), "favourites.xml")
+except:
+    import traceback
+    logger.error(traceback.format_exc())
 
 
 def mainlist(item):
-    logger.info("pelisalacarta.core.favoritos mainlist")
+    logger.info()
     itemlist = []
-    #bookmarkpath = config.get_setting("bookmarkpath") #TODO si solo se usa para esto podriamos eliminarlo
 
-    for name,thumb,data in read_favourites():
+    for name, thumb, data in read_favourites():
         if "plugin://plugin.video.%s/?" % config.PLUGIN_NAME in data:
-            url = scrapertools.find_single_match(data, 'plugin://plugin.video.%s/\?([^;]*)'  % config.PLUGIN_NAME)\
+            url = scrapertools.find_single_match(data, 'plugin://plugin.video.%s/\?([^;]*)' % config.PLUGIN_NAME)\
                 .replace("&quot", "")
 
             item = Item().fromurl(url)
@@ -36,19 +61,25 @@ def mainlist(item):
             item.thumbnail = thumb
             item.isFavourite = True
 
-            item.context = [{"title": config.get_localized_string(30154), #"Quitar de favoritos"
-                             "action": "delFavourite",
-                             "channel": "favoritos",
-                             "from_title": item.title},
-                            {"title": "Renombrar",
-                             "action": "renameFavourite",
-                             "channel": "favoritos",
-                             "from_title": item.title}
-                            ]
-            #logger.debug(item.tostring('\n'))
+            if type(item.context) == str:
+                item.context = item.context.split("|")
+            elif type(item.context) != list:
+                item.context = []
+
+            item.context.extend([{"title": config.get_localized_string(30154),  # "Quitar de favoritos"
+                                  "action": "delFavourite",
+                                  "channel": "favoritos",
+                                  "from_title": item.title},
+                                 {"title": "Rename",
+                                  "action": "renameFavourite",
+                                  "channel": "favoritos",
+                                  "from_title": item.title}
+                               ])
+            # logger.debug(item.tostring('\n'))
             itemlist.append(item)
 
     return itemlist
+
 
 def read_favourites():
     favourites_list = []
@@ -60,44 +91,43 @@ def read_favourites():
             name = scrapertools.find_single_match(match, 'name="([^"]*)')
             thumb = scrapertools.find_single_match(match, 'thumb="([^"]*)')
             data = scrapertools.find_single_match(match, '[^>]*>([^<]*)')
-            favourites_list.append((name,thumb,data))
+            favourites_list.append((name, thumb, data))
 
     return favourites_list
 
 
 def save_favourites(favourites_list):
     raw = '<favourites>' + chr(10)
-    for name,thumb,data in favourites_list:
-        raw += '    <favourite name="%s" thumb="%s">%s</favourite>' %(name,thumb,data) + chr(10)
+    for name, thumb, data in favourites_list:
+        raw += '    <favourite name="%s" thumb="%s">%s</favourite>' % (name, thumb, data) + chr(10)
     raw += '</favourites>' + chr(10)
 
     return filetools.write(FAVOURITES_PATH, raw)
 
 
 def addFavourite(item):
-    logger.info("pelisalacarta.core.favoritos addFavourite")
-    #logger.debug(item.tostring('\n'))
+    logger.info()
+    # logger.debug(item.tostring('\n'))
 
     # Si se llega aqui mediante el menu contextual, hay que recuperar los parametros action y channel
     if item.from_action:
-        item.from_accion = item.from_action
         item.__dict__["action"] = item.__dict__.pop("from_action")
     if item.from_channel:
         item.__dict__["channel"] = item.__dict__.pop("from_channel")
 
     favourites_list = read_favourites()
     data = "ActivateWindow(10025,&quot;plugin://plugin.video.%s/?" % config.PLUGIN_NAME + item.tourl() + "&quot;,return)"
-    titulo = item.title.replace('"',"'")
-    favourites_list.append((titulo,item.thumbnail,data))
+    titulo = item.title.replace('"', "'")
+    favourites_list.append((titulo, item.thumbnail, data))
 
     if save_favourites(favourites_list):
-        platformtools.dialog_ok(config.get_localized_string(30102),titulo,
+        platformtools.dialog_ok(config.get_localized_string(30102), titulo,
                                 config.get_localized_string(30108))  # 'se ha añadido a favoritos'
 
 
 def delFavourite(item):
-    logger.info("pelisalacarta.core.favoritos delFavourite")
-    #logger.debug(item.tostring('\n'))
+    logger.info()
+    # logger.debug(item.tostring('\n'))
 
     if item.from_title:
         item.title = item.from_title
@@ -115,12 +145,12 @@ def delFavourite(item):
 
 
 def renameFavourite(item):
-    logger.info("pelisalacarta.core.favoritos renameFavourite")
-    #logger.debug(item.tostring('\n'))
+    logger.info()
+    # logger.debug(item.tostring('\n'))
 
-    #Buscar el item q queremos renombrar en favourites.xml
+    # Buscar el item q queremos renombrar en favourites.xml
     favourites_list = read_favourites()
-    for i,fav in enumerate(favourites_list):
+    for i, fav in enumerate(favourites_list):
         if fav[0] == item.from_title:
             # abrir el teclado
             new_title = platformtools.dialog_input(item.from_title, item.title)
@@ -128,16 +158,14 @@ def renameFavourite(item):
                 favourites_list[i] = (new_title, fav[1], fav[2])
                 if save_favourites(favourites_list):
                     platformtools.dialog_ok(config.get_localized_string(30102), item.from_title,
-                                            "se ha renombrado como:",new_title)  # 'Se ha quitado de favoritos'
+                                            "se ha renombrado como:", new_title)  # 'Se ha quitado de favoritos'
                     platformtools.itemlist_refresh()
-
-
 
 
 ##################################################
 # Funciones para migrar favoritos antiguos (.txt)
 def readbookmark(filepath):
-    logger.info("[favoritos.py] readbookmark")
+    logger.info()
     import urllib
 
     bookmarkfile = filetools.open_for_reading(filepath)
@@ -195,7 +223,7 @@ def check_bookmark(readpath):
     # Crea un listado con las entradas de favoritos
     itemlist = []
 
-    if readpath.startswith("special://"):
+    if readpath.startswith("special://") and config.is_xbmc():
         import xbmc
         readpath = xbmc.translatePath(readpath)
 
@@ -212,17 +240,24 @@ def check_bookmark(readpath):
             item = Item(channel=canal, action="play", url=url, server=server, title=fulltitle, thumbnail=thumbnail,
                         plot=plot, fanart=thumbnail, fulltitle=fulltitle, folder=False)
 
-            filetools.rename(filetools.join(readpath, fichero),fichero[:-4] + ".old")
+            filetools.rename(filetools.join(readpath, fichero), fichero[:-4] + ".old")
             itemlist.append(item)
 
     # Si hay Favoritos q guardar
     if itemlist:
         favourites_list = read_favourites()
         for item in itemlist:
-            data = "ActivateWindow(10025,&quot;plugin://plugin.video.pelisalacarta/?" + item.tourl() + "&quot;,return)"
+            data = "ActivateWindow(10025,&quot;plugin://plugin.video.dss/?" + item.tourl() + "&quot;,return)"
             favourites_list.append((item.title, item.thumbnail, data))
         if save_favourites(favourites_list):
             logger.debug("Conversion de txt a xml correcta")
 
 
-check_bookmark(config.get_setting("bookmarkpath"))
+# Esto solo funcionara al migrar de versiones anteriores, ya no existe "bookmarkpath"
+try:
+    if config.get_setting("bookmarkpath") != "":
+        check_bookmark(config.get_setting("bookmarkpath"))
+    else:
+        logger.info("No existe la ruta a los favoritos de versiones antiguas")
+except:
+    pass

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
+# dss - XBMC Plugin
+# http://blog.tvalacarta.info/plugin-xbmc/dss/
+#------------------------------------------------------------
 
 import os
 import sys
