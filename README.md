@@ -22,7 +22,7 @@
  
 ### XvBMC_retro-Games | .:C.T.R.L:. GamingRoom[NL]: 
 * https://bit.ly/XvBMC-Gaming 
-* https://www.facebook.com/groups/ctrlgamingroom/ 
+* https://www.fb.com/groups/ctrlgamingroom/ 
  
 ### XvBMC_Marktplaats: 
 * https://bit.ly/XvBMC-Marktplaats 
@@ -31,9 +31,9 @@
 ### XvBMC_YouTube: 
 * https://bit.ly/XvBMC-YouTube 
 * https://www.youtube.com/user/onlinefilmskijken/ 
-   
   
- 
+**  **
+  
 *With kind regards,*
  
 *Team X(v)BMC Nederland*
