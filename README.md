@@ -32,13 +32,12 @@
 * https://bit.ly/XvBMC-YouTube 
 * https://www.youtube.com/user/onlinefilmskijken/ 
   
-**  **
+----------
   
 *With kind regards,*
  
 *Team X(v)BMC Nederland*
- 
   
-   
 ----------
-(c) https://bit.ly/XvBMC-NL (r)
+  
+(c) [XvBMC Nederland](https://bit.ly/XvBMC-NL) (r)
