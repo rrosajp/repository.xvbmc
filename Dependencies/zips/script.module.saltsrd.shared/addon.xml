@@ -6,6 +6,6 @@
 	<extension point="xbmc.python.module" library="lib" />
 	<extension point="xbmc.addon.metadata">
 		<platform>all</platform>
-		<summary lang="en">Credits -2- TKnorris</summary>
+		<summary lang="en">Credits -2- TKnorris / Mr. Blamo</summary>
 	</extension>
 </addon>

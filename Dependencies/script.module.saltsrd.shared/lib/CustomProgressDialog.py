@@ -1,6 +1,6 @@
 """
     Salts RD Lite shared module
-    Copyright (C) 2016 credit -2- tknorris
+    Copyright (C) 2016 credits -2- tknorris / MR. Blamo 2017
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ class ProgressDialog(object):
     dialog = None
         
     def create(self, heading, line1='', line2='', line3=''):
-        addon = xbmcaddon.Addon('script.module.slatsrd.shared')
+        addon = xbmcaddon.Addon('script.module.saltsrd.shared')
         path_setting = addon.getSetting('xml_folder').decode('utf-8')
         addon_path = addon.getAddonInfo('path').decode('utf-8')
         # if a path is set, try to use it and fallback to the default if it fails

@@ -1,6 +1,6 @@
 """
     Salts RD Lite module
-    Copyright (C) 2017 with credits to TKnorris
+    Copyright (C) 2017 with credits -2- TKnorris / Mr. Blamo
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
