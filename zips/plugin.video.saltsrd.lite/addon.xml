@@ -13,7 +13,7 @@
         <import addon="script.module.myconnpy" version="1.1.7"/>
         <import addon="script.module.saltsrd.shared" version="0.0.23"/>  <!-- script.module.tknorris.shared -->
         <import addon="script.module.six" version="1.9.0"/>
-        <import addon="script.module.urlresolver" version="4.0.07"/>
+        <import addon="script.module.urlresolver" version="4.0.12"/>
         <!-- <import addon="script.module.image_cache" version="0.0.8" optional="true"/>    BROKEN !!!      -->
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
@@ -29,7 +29,7 @@
         <forum>https://www.facebook.com/groups/XvBMCnederland/</forum>
         <website>repository.xvbmc</website>
         <source>http://bit.ly/XvBMC-NL</source>
-        <news>[B]Version 2.0.233[/B]: VoOdOo</news>
+        <news>[B]Version 2.0.238[/B]: VoOdOo</news>
         <assets>
           <icon>icon.png</icon>
           <fanart>fanart.jpg</fanart>
