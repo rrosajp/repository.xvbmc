@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon
-  id="inputstream.rtmp"
-  version="1.0.4.20170223~ksv"
-  name="RTMP Input"
-  provider-name="spiff">
+<addon id="inputstream.adaptive" version="1.0.8.0" name="InputStream Adaptive" provider-name="peak3d">
   <requires>
     <import addon="kodi.inputstream" version="1.0.6"/>
   </requires>
-  <extension
-    point="kodi.inputstream"
-    name="rtmp"
-    protocols="rtmp|rtmpt|rtmpe|rtmpte|rtmps"
-    library_windows="inputstream.rtmp.dll" />
+  <extension point="kodi.inputstream" name="adaptive" extension="" tags="true" listitemprops="license_type|license_key|license_data|manifest_type|server_certificate" library_linux="inputstream.adaptive.so.1.0.8"/>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">InputStream client for adaptive streams</summary>
+    <description lang="en">InputStream client for adaptive streams</description>
+    <platform>linux</platform>
+  </extension>
+</addon>
+
+<addon id="inputstream.rtmp" version="1.0.4.SC" name="RTMP Input" provider-name="spiff (superceleron mod)">
+  <requires>
+    <import addon="kodi.inputstream" version="1.0.6"/>
+  </requires>
+  <extension point="kodi.inputstream" name="rtmp" protocols="rtmp|rtmpt|rtmpe|rtmpte|rtmps" library_linux="inputstream.rtmp.so.1.0.4.SC"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">InputStream Client for RTMP streams</summary>
-    <description lang="en">InputStream Client for RTMP streams using librtmp</description>
-    <platform>windows</platform>
+    <description lang="en">InputStream Client for RTMP streams using librtmp. Modified version compiled by superceleron and patched with KSV fixes.</description>
+    <platform>linux</platform>
   </extension>
 </addon>
 
