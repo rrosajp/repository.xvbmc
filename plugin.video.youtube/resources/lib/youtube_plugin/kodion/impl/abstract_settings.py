@@ -100,7 +100,18 @@ class AbstractSettings(object):
         return self.get_bool(constants.setting.DASH_SUPPORT_ADDON, False)
 
     def subtitle_languages(self):
-        return self.get_int(constants.setting.SUBTITLE_LANGUAGES, 0)
+        return self.get_int(constants.setting.SUBTITLE_LANGUAGE, 0)
 
     def requires_dual_login(self):
-        return self.get_bool('youtube.folder.my_subscriptions.show', True)
+        return self.get_bool('youtube.folder.my_subscriptions.show', True) or \
+               self.get_bool('youtube.folder.my_subscriptions_filtered.show', True)
+
+    def use_thumbnail_size(self):
+        size = self.get_int(constants.setting.THUMB_SIZE, 0)
+        sizes = {0: 'medium', 1: 'high'}
+        return sizes[size]
+
+    def safe_search(self):
+        index = self.get_int(constants.setting.SAFE_SEARCH, 0)
+        values = {0: 'moderate', 1: 'none', 2: 'strict'}
+        return values[index]
