@@ -1,27 +1,91 @@
-5.3.0
-    reduce overall footprint
-    use a dynamic config for key information
-    keys no longer plain-text in source
-    keys are no longer changed to a random set, user is now able to choose API key set to use from Settings - API
-    if keys have changed the user is signed out
-    require dual login if My Subscriptions folder enabled at sign-in
-    catch more (hopefully all) instances of unhandled api errors (Unknown kind ")
-    minor changes to error notifications, provide reason in title
-    set in Settings -> Folders or by (My) Playlists context menu set/remove
-    only provides a Kodi watch history list (local only) (not this does not effect your youtube history)
-    Add context menu to (my)Playlists for changing custom watch later list
-    'Remove as Watch Later' on current watch later list, and 'Set as Watch Later' on others confirmation of removal/replacement required
-    Update Norwegian translation [torstehu]
-    other minor updates
-    added Optional URLResolver (Debrid) support
-    add skin.estuary to view overrides
-    add success/fail notification to maintenance actions
-    Greek language strings update. [twilight0]
-    Portuguese (Brazil) strings update [Wanilton]
-    Dutch strings update. [flemlion]
-    added settings option to main menu
-    Add 'Subtitle language(s) to download' selection to 'General' settings
-    Add 'Maintenance' section in Settings
+5.4.5
+[fix] tighten regex for routing, resolving incorrect routing
+
+5.4.4
+[fix] overlapping regex causing no playlist videos
+
+5.4.3
+[add] mpeg-dash support for live content (requires inputstream.adaptive >= 2.0.12)
+[add] add route to update api keys
+    plugin://plugin.video.youtube/api/update/?enable=true&client_id=<client_id>&client_secret=<client_secret>&api_key=<api_key>
+[fix/upd] refactor subtitles ** subtitles setting will be reset
+[fix/upd] add My Subscriptions (Filtered) to dual login requirements
+[fix/upd] only show Browse Channels when logged in
+[upd] Greek strings [Twilight0]
+[upd] Polish strings [Etharr]
+
+5.4.2
+[fix/upd] My Subscriptions
+
+5.4.1
+[fix/upd] dash working for vevo/etc
+[upd] rework of auto subtitles
+[fix] leia nightly login issues
+[fix] 403 error on 'My Channel'/uploaded videos
+
+5.4.0
+[upd] Greek strings [Twilight0]
+[upd] Polish strings [Etharr]
+[upd] Finnish strings [teemue]
+[upd] Spanish strings [roliverosc]
+[fix/upd] resolve "Error Contents: 'q'" error [horstepipe]
+[fix/upd] resolve Play All/Play from here not starting playback
+[fix/upd] resolve playlists starting on second item
+[fix/upd] allow dash in quality choices
+[fix/upd] set content to files for menus, resolves mouse/scrolling
+[fix/upd] fix cipher
+[fix/upd] increase search history limit to 200
+[fix/upd] storage db
+[add] Safe Search to Settings -> General
+[add] Thumbnail size to Settings -> General
+[add] Auto-play suggested [mehdilauters]
+[add] Automatic subtitles [Uukrull]
+[add] My Subscriptions (Filtered) - whitelist/blacklist version of My Subscriptions [chhe]
+[add] module extension point:
+        add-ons can now add plugin.video.youtube dependency and resolve youtube video id's or make v3 api requests using the youtube plugin,
+        """ <addon.xml>
+        <import addon="plugin.video.youtube"/>
+        """
+        """ <example.py>
+        import youtube_resolver
+        streams = youtube_resolver.resolve(<video_id>)
+        import youtube_requests
+        videos = youtube_requests.get_videos([<video_id_1>, <video_id_2>, <video_id_3>])
+        """
+
+5.3.11
+[fix/upd] replace custom simple_requests with script.module.requests to resolve ssl and cross-platform issues
+[add] 'Reset access manager' added to Maintenance section, sign out process(available when logged out)  to clean up tokens in settings.xml
+[upd] set default for SSL certificate verification to 'true'
+
+5.3.10
+[fix/upd] resolve 'No video streams found' for age-gated content and other minor.
+[fix/upd] unescaping HTML entities in subtitles [mdmdmdmdmd]
+[upd] Polish strings [Etharr]
+
+5.3.6-9
+[fix/upd] resolve 'No video streams found'
+[fix/upd] SPMC dash support guidosarducci
+[upd] Italian strings [iz8mbw]
+[upd] Spanish strings [roliverosc]
+[upd] Dutch strings [Sjord]
+[fix/upd] Frodo backwards compat. setArt [lulol]
+
+5.3.5
+[add] MPEG-DASH support for Kodi 17 w/ inputstream.adaptive Add-on
+[add] optional History and Watch Later custom playlist to Settings -> Folders, or (My)Playlists context menu to set/remove
+[add] Maintenance section to Settings
+[add] 'Subtitle language(s) to download' selection to Settings -> General
+[add] 'Force SSL Certificate verification' to Settings -> Advanced
+[upd] API key set switching from Settings -> API (this will log you out)
+[upd] Dual login only required if My Subscriptions folder is enabled at sign-in
+[upd] setting content type from episodes, now videos
+[del] override view options
+[upd] Norwegian strings [torstehu]
+[upd] Greek strings [twilight0]
+[upd] Portuguese strings [Wanilton]
+[upd] Dutch strings [flemlion]
+[fix/upd] API tweaking and various other updates
 
 5.2.2 (2016-05-28)
 [upd] Insert old API-Keys from Bromix because of Quota-Exceed-Error
