@@ -110,8 +110,25 @@ ALL_VIEW_CODES = {
 }
 
 # Write something on XBMC log
-def log(message):
-    xbmc.log(message)
+def log(msg, level=xbmc.LOGNOTICE): # used-4-addon_able.py etc.etc.etc.etc.
+    name = 'XvBMC_NOTICE'
+    # override message level to force logging when addon logging turned on
+    level = xbmc.LOGNOTICE
+    #       xbmc.LOGDEBUG = 0
+    #       xbmc.LOGERROR = 4
+    #       xbmc.LOGFATAL = 6
+    #       xbmc.LOGINFO = 1
+    #       xbmc.LOGNONE = 7
+    #       xbmc.LOGNOTICE = 2
+    #       xbmc.LOGSEVERE = 5
+    #       xbmc.LOGWARNING = 3
+    try:
+        xbmc.log('%s: %s' % (name, msg), level)
+    except:
+        try:
+            xbmc.log('Logging Failure', level)
+        except:
+            pass    # just give up ;-p
 
 # Write this module messages on XBMC log
 def _log(message):
