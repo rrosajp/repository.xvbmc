@@ -1,1 +1,108 @@
-exec("import re;import base64");exec((lambda p,y:(lambda o,b,f:re.sub(o,b,f))(r"([0-9a-f]+)",lambda m:p(m,y),base64.b64decode("IyEvZjcvMTExL2MyCmY4IGM2IDEzZiAwICwxNWIgMTNmIDE1MSAsMTVkIDEzZiAxNDEgLGY5IDEzZiAxMmUgLGRjIDEzZiA5ICw5NyAxM2YgNDkgLGIxIDEzZiAxNTAgLDEzOSAxM2YgZTcgIzE3MDoxMQpmOCA4ZCAxM2YgMyAjMTcwOjEyCjdiID0nMmEuNWYuMTVlIScjMTcwOjE1CmEyID0nMmEuNWYuMTVlIScjMTcwOjE2CjIyID0nMmEuNWYuMTVlIScjMTcwOjE4CjEzNiA9NDkgLmNjICgxNGIgPTdiICkjMTcwOjE5CmE5ID0xMzYgLjEzNyAoJ2E5JykjMTcwOjIwCmExID0xMzYgLjEzNyAoJ2ExJykjMTcwOjIxCjE2YSAxYiAoKTojMTcwOjI0CgkzIC5iNiAoIjEzZC5iZCIpIzE3MDoyNQoJNmUgMjIgPT0iMmEuNWYuMTVlISI6IzE3MDoyNwoJCTQ3ID0wIC40ICgnMTRmPScpIzE3MDoyOAoJCTEyYSA9MCAuNCAoJzFkPT0nKSMxNzA6MjkKCQkxMzIgPTAgLjQgKCcxNz0nKSMxNzA6MzAKCQkzYyA9MCAuNCAoJzE0ZD09JykjMTcwOjMxCgkJMTRhID0wIC40ICgnMTRlJykjMTcwOjMyCgkJMTMwID0wIC40ICgnMTVmPT0nKSMxNzA6MzMKCQk0ZSA9WzEzMiAsMTRhICwxMmEgLDNjICw0NyAsMTMwIF0jMTcwOjM0CgkJMTJkID1iYyAoOSAuMTZmICgnMWMuMTYzKCU5MCknJSg0MCApKTk4IDQwIDlmIDRlICkjMTcwOjM1CgkJNmUgMTJkIDojMTcwOjM2CgkJCTE1MCAuODkgKCkuNjYgKCdbNWQgOWVdW2JdMTY1OiBbL2JdYTcgOGUgMTQyWy81ZF0nLCcxM2MgYTcgYjAuIDljIFtiXVwnZmMgMTZiXCdbL2JdLicpIzE3MDozNwoJCQk3MSA3NyAjMTcwOjM4CgkJZSA9MyAuNmMgKCkjMTcwOjQxCgkJNmUgZSAuODUgKCIxMzMiKWRhIGEzIDojMTcwOjQzCgkJCTJiIChlICkjMTcwOjQ0CgkJNjEgOiMxNzA6NDUKCQkJMTQ2ID1lIC44NSAoIjEzMyIpIzE3MDo0NgoJCTMgLjVlICgpIzE3MDo0OAoJNjEgOiMxNzA6NTAKCQllID0zIC42YyAoKSMxNzA6NTMKCQk2ZSBlIC44NSAoIjEzMyIpZGEgYTMgOiMxNzA6NTUKCQkJMmIgKGUgKSMxNzA6NTYKCQk2MSA6IzE3MDo1NwoJCQkxNDYgPWUgLjg1ICgiMTMzIikjMTcwOjU4CgkJMyAuNWUgKCkjMTcwOjU5CjE2YSAyYiAoNGIgKTojMTcwOjYyCgk2ZSA5IC4xNmYgKCcxYy4xNjMoOTMuY2QpJyk6IzE3MDo2MwoJCTdmICgnYzQnLCdkZCcpIzE3MDo2NQoJCTcgPTAgLjQgKCc3YT09JykjMTcwOjY3CgkJMmUgPTAgLjQgKCc1YycpKzcgIzE3MDo2OAoJCTNhID0wIC40ICgnNTEnKSs3ICMxNzA6NjkKCQkxMTMgPTAgLjQgKCcxNTMnKSs3ICMxNzA6NzAKCQkxNDggPTAgLjQgKCc1YicpKzcgIzE3MDo3MgoJCTEyZiA9MCAuNCAoJzVhJykrNyAjMTcwOjczCgkJMTQ3ID0wIC40ICgnMTU3JykrNyAjMTcwOjc0CgkJNGYgPTAgLjQgKCI2YT0iKSMxNzA6NzUKCQkxMmMgPTAgLjQgKCc1MicpKzcgIzE3MDo3NgoJCTRkID0wIC40ICgnMTU5JykrNyAjMTcwOjc4CgkJM2QgPTAgLjQgKCcxNTYnKSs3ICMxNzA6NzkKCQkzOSA9MCAuNCAoJzE1OCcpKzcgIzE3MDo4MAoJCTEyYiA9MCAuNCAoJzE1NCcpKzcgIzE3MDo4MQoJCTRjID0wIC40ICgnNTQnKSs3ICMxNzA6ODIKCQk0YSA9MCAuNCAoJzEzNT0nKSMxNzA6ODMKCQkxZSA9MCAuNCAoJ2E0JykjMTcwOjg0CgkJNSA9MCAuNCAoJzJjPScpIzE3MDo4NgoJCTggPTAgLjQgKCc4YScpIzE3MDo4NwoJCTMgLmI2ICgiMTNkLjJiICIrZTIgKDRiICkpIzE3MDo4OAoJCTMgLjEwICgxNjIgPSJhOCBkMCIsMTVjID01ICs4ICsyZSArMTYwICxmID0iZDovL2EuMTQvNi8xM2EvYTglYjQlMjMuMjYiLGExID0iZDovL2EuMTQvNi8xM2EvYTEuMTAyIiwxMyA9MWEgKSMxNzA6OTYKCQkzIC4xMCAoMTYyID0iMTEyIGI4IiwxNWMgPTUgKzggKzNhICsxNjAgLGYgPSJkOi8vYS4xNC82LzEzYS8xMTIlYWUlMjMuMjYiLGExID0iZDovL2EuMTQvNi8xM2EvYTEuMTAyIiwxMyA9MWEgKSMxNzA6MTAzCgkJMyAuMTAgKDE2MiA9IjExMiBlNCIsMTVjID01ICs4ICsxMTMgKzE2MCAsZiA9ImQ6Ly9hLjE0LzYvMTNhLzExMiVjNyUyMy4yNiIsYTEgPSJkOi8vYS4xNC82LzEzYS9hMS4xMDIiLDEzID0xYSApIzE3MDoxMTAKCQkzIC4xMCAoMTYyID0iMTEyIGM5IiwxNWMgPTUgKzggKzE0OCArMTYwICxmID0iZDovL2EuMTQvNi8xM2EvMTEyJWJhJTIzLjI2IixhMSA9ImQ6Ly9hLjE0LzYvMTNhL2ExLjEwMiIsMTMgPTFhICkjMTcwOjEyNAoJCTMgLjEwICgxNjIgPSIxMTIgZDMiLDE1YyA9NSArOCArMTJmICsxNjAgLGYgPSJkOi8vYS4xNC82LzEzYS8xMTIlYmUlMjMuMjYiLGExID0iZDovL2EuMTQvNi8xM2EvYTEuMTAyIiwxMyA9MWEgKSMxNzA6MTMxCgkJMyAuMTAgKDE2MiA9IjExMiBhYyIsMTVjID01ICs4ICsxNDcgKzE2MCAsZiA9ImQ6Ly9hLjE0LzYvMTNhLzExMiU5YiUyMy4yNiIsYTEgPSJkOi8vYS4xNC82LzEzYS9hMS4xMDIiLDEzID0xYSApIzE3MDoxMzgKCQkzIC4xMCAoMTYyID0iOTUgMTY5IiwxNWMgPTUgKzFlICs0ZiArMTYwICxmID0iZDovL2EuMTQvNi8xM2EvOTUlMTNlJTIzLjI2IixhMSA9ImQ6Ly9hLjE0LzYvMTNhL2ExLjEwMiIsMTMgPTFhICkjMTcwOjE0NQoJCTMgLjEwICgxNjIgPSJhZiBiMiIsMTVjID01ICs4ICsxMmMgKzE2MCAsZiA9ImQ6Ly9hLjE0LzYvMTNhL2M1JTIzLjI2IixhMSA9ImQ6Ly9hLjE0LzYvMTNhL2ExLjEwMiIsMTMgPTFhICkjMTcwOjE1MgoJCTMgLjEwICgxNjIgPSIuOmMuMTZlLjE2ZC4xNmM6LiBjOCBkYiIsMTVjID01ICs4ICs0ZCArMTYwICxmID0iZDovL2EuMTQvNi8xM2EvN2MuMjYiLGExID0iZDovL2EuMTQvNi8xM2EvYTEuMTAyIiwxMyA9MWEgKSMxNzA6MTY2CgkJMyAuMTAgKDE2MiA9ImJiIDEyOSBiNyIsMTVjID01ICs4ICszZCArMTYwICxmID0iZDovL2EuMTQvNi8xM2EvOTQuMjYiLGExID0iZDovL2EuMTQvNi8xM2EvYTEuMTAyIiwxMyA9MWEgKSMxNzA6MTE2CgkJMyAuMTAgKDE2MiA9IjExMiBiOSIsMTVjID01ICs4ICszOSArMTYwICxmID0iZDovL2EuMTQvNi8xM2EvYTAuMjYiLGExID0iZDovL2EuMTQvNi8xM2EvYTEuMTAyIiwxMyA9MWEgKSMxNzA6MTE1CgkJMyAuMTAgKDE2MiA9ImY2IGNhIDEzYiAxMjAgMTFmIDExMiIsMTVjID01ICs4ICsxMmIgKzE2MCAsZiA9ImQ6Ly9hLjE0LzYvMTNhL2E1LjI2IixhMSA9ImQ6Ly9hLjE0LzYvMTNhL2ExLjEwMiIsMTMgPTFhICkjMTcwOjExNAoJCTMgLjEwICgxNjIgPSJjMCBlNSBhZCIsMTVjID01ICs4ICs0YyArMTYwICxmID0iZDovL2EuMTQvNi8xM2EvMTY3LjI2IixhMSA9ImQ6Ly9hLjE0LzYvMTNhL2ExLjEwMiIsMTMgPTFhICkjMTcwOjExNwoJCTMgLjEwICgxNjIgPSI4YyAxNDQiLDE1YyA9NSArMWUgKzRhICsxNjAgLGYgPSJkOi8vYS4xNC82LzEzYS85OS4yNiIsYTEgPSJkOi8vYS4xNC82LzEzYS9hMS4xMDIiLDEzID0xYSApIzE3MDplYQoJNjEgOiMxNzA6ZWMKCQkxNTAgLjg5ICgpLjY2ICgnWzVkIDllXVtiXTdkOiBbL2JdNmIgMTQyKDJhKVsvNWRdJywnMTM0IDlkIGMxLiBiNSAxM2QgZTMuJykjMTcwOmViCgkJNzEgNzcgIzE3MDplOAoxNmEgN2YgKDFmICwzZiApOiMxNzA6ZTkKCThiIDE2MCAjMTcwOjEyMwoJMTYwID0wIC40ICgnMTRjPT0nKSMxNzA6MTAxCgk2ZSAxZiA6IzE3MDoxMjEKCQllNyAuOTIgKDExOCAoMTJlIC5lMSBbMSBdKSwxZiApIzE3MDoxMjIKCTZlIDEzNiAuNmYgKCdkNS1lMCcpPT0nZDYnOiMxNzA6MTI2CgkJOSAuNjAgKCI5YS44ZiglOTApIiUxMzYgLjZmICgzZiApKSMxNzA6MTI3CjE2YSA5MSAoKTojMTcwOjEyNQoJOGIgMjIgIzE3MDoxMjgKCTNlID0wIC40ICgnNjQnKSMxNzA6ZTYKCTE2MSA9MCAuNCAoJzE0MCcpIzE3MDoxMGYKCTJmID0xNTEgLmFiICg5IC4xNjggKDE1MSAuZDcgLmQyICgnYjM6Ly9kOS8xNmIvJykpKSMxNzA6MTBlCgk5OCAxNDkgOWYgMmYgOiMxNzA6MTBkCgkJNmUgKCdkOC5hYScpOWYgMTQ5IDojMTcwOjEwYwoJCQlmMiA6IzE3MDoxMGIKCQkJCTIyID0nMmEuNWYuMTVlJyMxNzA6MTBhCgkJCWMzIDojMTcwOjEwNQoJCQkJYTYgIzE3MDpmZgoJCTYxIDojMTcwOjEwMAoJCQlhNiAjMTcwOmZkCgk2ZSA5IC4xNmYgKCcxYy4xNjMoJTkwKSclKDNlICkpOiMxNzA6ZmUKCQkyMiA9JzJhLjVmLjE1ZScjMTcwOmZiCgkJMWIgKCkjMTcwOjExYQoJNmQgOSAuMTZmICgnMWMuMTYzKCU5MCknJSgxNjEgKycuZGUnKSk6IzE3MDplZAoJCTFiICgpIzE3MDoxMWIKCTZkIDkgLjE2ZiAoJzFjLjE2MyglOTApJyUoMTYxICsnLmQxJykpOiMxNzA6MTFjCgkJMWIgKCkjMTcwOjExZQoJNmQgOSAuMTZmICgnMWMuMTYzKCU5MCknJSgxNjEgKycyLmJmJykpOiMxNzA6MTFkCgkJMWIgKCkjMTcwOjExOQoJNmQgOSAuMTZmICgnMWMuMTYzKCU5MCknJSgxNjEgKycuN2UnKSk6IzE3MDoxMDkKCQkxYiAoKSMxNzA6MTA3Cgk2ZCA5IC4xNmYgKCcxYy4xNjMoJTkwKSclKDE2MSArJzIuN2UnKSk6IzE3MDoxMDgKCQkxYiAoKSMxNzA6MTA2Cgk2MSA6IzE3MDoxMDQKCQkzYiA9WzAgLjQgKCcxNz0nKSwwIC40ICgnMTRlJyksMCAuNCAoJzFkPT0nKSwwIC40ICgnMTRkPT0nKSwwIC40ICgnMTRmPScpLDAgLjQgKCcxNWY9PScpXSMxNzA6ZjQKCQk0MiA9YmMgKDkgLjE2ZiAoJzFjLjE2MyglOTApJyUoMmQgKSk5OCAyZCA5ZiAzYiApIzE3MDpmMwoJCTZlIDlkIDQyIDojMTcwOmY1CgkJCTFiICgpIzE3MDplZQoJCTYxIDojMTcwOmVmCgkJCTkgLjYwICgnMTY0KFs1ZCA5ZV1bYl03ZDogWy9iXTZiIFwnY2ZcXGNiKDkwKVwnLlsvNWRdLDEzNCA5ZCBjMS4gZGYgZmEtMTVhKDkwKSBjZS4sZDQsMTQzLjI2KScpIzE3MDpmMAoJCQk3MSA3NyAjMTcwOmYxCjkxICgpCiMxNTU=")))(lambda a,b:b[int("0x"+a.group(1),16)],"OO000O0OOO00OOOOO|1|2|O0000OOO0OO0O00OO|b64decode|OO0O00OOO000000O0|download|OOOOO00OO000000OO|O0OO0OOOOO000000O|O0OOOO000OO0OO000|archive|B|C|https|O0O0O00OO00O000OO|thumbnail|add_item|11|12|folder|org|15|16|cmVwb3NpdG9yeS5raWprYWxsZXMubmw|18|19|True|gasdrop|System|cmVwb3NpdG9yeS54LW9kaS5ubA|OOO0OO0O0O000OO00|OO000O000OOOO0O0O|20|21|AddonTitle|20icon|24|25|png|27|28|29|plugin|hoofdlijst|cGx1Z2luOi8vcGx1Z2luLnZpZGVvLnlvdXR1YmU|O0O000O0OO0OOOO00|O00OOO0OOO0000O0O|O0O00000OOO0O0000|30|31|32|33|34|35|36|37|38|O00O000O00OOO0OO0|O0OO0OO0OOOO000O0|OO0OOOOO00O00O000|O000O0O0O0OO0O0O0|OO00O0O0O0OOO0O00|OO0O0O00OOOO0O000|O0O00000OOOOOO0OO|OOO0O00OOO00OOO0O|41|O000O0OO00OO00000|43|44|45|46|OO00O0OO0OO00O0O0|48|OOO00O0O0O0OO0000|O00O0O0O00O0O0OO0|OO00OO000O0000OO0|O0000OOOO0OOOO000|O00OOO000O000O0O0|O0O0OOO0OOOO00000|OO00OOO0O0O000OO0|50|VUNCcERKVWxUeGR4bnI4b1FwNGZXOGpB|VUNyLUpCQzFYUHFKbV9POWlSMk0wV2pn|53|VUNVZnNyU0w2RHlXU2trcGRkbFkyMS1R|55|56|57|58|59|VUNKWTRFRDdCb2NWa3RpekFUa0VMM0Z3|VUNfeHc2WUJubHlMcVlub3BhYmJ6ZmlR|VUNWWDZlRWVJSVNjd0Fwek5zN1V1dnVn|COLOR|close_item_list|video|executebuiltin|else|62|63|c2tpbi5ub3g0YmVnaW5uZXJz|65|notification|67|68|69|b25saW5lZmlsbXNraWprZW4|unsupported|get_params|elif|if|getSetting|70|return|72|73|74|75|76|False|78|79|L3BsYXlsaXN0cw|addonID|CtrlGamingIcon|WARNING|krypton|setView|80|81|82|83|84|get|86|87|88|Dialog|L2NoYW5uZWwv|global|DanceTrippin|plugintools|ondersteund|SetViewMode|s|cache|setContent|repository|CircusIcon|Xvbmc|96|xbmcaddon|for|DanceIcon|Container|20CABARET|Verwijder|not|red|in|NlRacing|fanart|addon_id|None|L3VzZXIv|vanalles|pass|niet|Live|icon|kaosbox|listdir|Cabaret|Limburg|20SERIE|Vlaamse|voldaan|xbmcgui|Content|special|20Music|Missing|log|soleil|Series|Racing|20FILM|Cirque|any|VoOdOo|20Docu|jarvis|Muziek|met|python|except|movies|Vlaams|base64|20KIDS|Gaming|Films|alles|addon|Addon|xvbmc|found|build|Music|helix|join|Docu|5000|auto|true|path|skin|home|is|Room|xbmc|EPiC|beta|Evil|view|argv|repr|repo|Kids|Uit|220|O0O0O00OOOOOOOO0O|204|206|201|203|202|241|272|273|276|277|try|267|266|268|Van|usr|import|sys|add|239|bad|235|237|232|233|211|jpg|103|256|231|255|252|253|250|228|226|224|223|222|221|110|bin|NL|O00OOO0O0O0000OOO|187|180|173|194|int|249|240|243|244|247|246|wat|nog|212|213|210|124|217|214|215|219|du|OOO00O00000OO0000|OO0000OOOOOO0O0O0|O0OO0O0O0O00O0O00|O0OO00000000OO0OO|OOO0O0OO00O0000OO|O0O000OO000O0O0OO|O0OOOOOOOOOO0O00O|131|O00OO00O0O00OOOO0|action|Dependencies|RGFuY2VUcmlwcGluT2ZmaWNpYWw|local|getAddonInfo|138|xbmcplugin|fanart_20170116|en|Afhankelijkheden|XvBMC|20handleidingen|as|c2tpbi5rYW9zYm94|O0OOO00O0OOO00O0O|protocol|DefaultIconError|TV|145|OO000000O0OOO0OO0|O0O0O0000OO0000OO|OO00OO0OO000O00OO|OOO00O0000OO00O0O|OO0OOOO0OO00O0000|id|Lw|cmVwb3NpdG9yeS5lYWdsZQ|cmVwb3NpdG9yeS5kaXRpc3R2|cmVwb3NpdG9yeS5kb2tpbmw|O0O000OOO000OOO0O|OOO000O0O000OO0O0|152|VUMtWjhua2hwRzdEUXZPOHdlZ01IR0lR|VUMxa05lNTdGLTg1dHJyWUM3dGJPU1hB|e9015584e6a44b14988f13e2298bcbf9|VUMybjVBTTd2QWNNZVc4U0xta2pDZW5n|VUN2TDRnYjhoaXc3NC1PczFoSnlDTEln|VUMzY3h2UEYxbWZ1MWF2ZEhPNlk5Tm53|VUNoVndOQzI0aklsdTk4RzByR0Z0UVpR|on|os|url|re|Allesin1NL|cmVwb3NpdG9yeS50dmFkZG9ucy5ubA|poster|OO00000000OO0O0OO|title|HasAddon|Notification|WAARSCHUWING|166|NlLimburgIcon|translatePath|Handleidingen|def|addons|L|R|T|getCondVisibility|line".split("|")))
+#!/usr/bin/python
+import base64 as OO0000O0OO00O0O0O ,os as OO0OO0O0000O0OOO0 ,re as O00OO000OO0OO0O0O ,sys as O0000000O0OOOOO0O ,xbmc as OO0000O000OO00O00 ,xbmcaddon as OO0OOOO0O0O0000O0 ,xbmcgui as OOO00OO000O00O0O0 ,xbmcplugin as O00O00000O0OOOO00 #line:11
+import plugintools as O000O0O0O00O0O00O #line:12
+addonID ='plugin.video.Allesin1NL!'#line:14
+addon_id ='plugin.video.Allesin1NL!'#line:15
+AddonTitle ='plugin.video.Allesin1NL!'#line:17
+local =OO0OOOO0O0O0000O0 .Addon (id =addonID )#line:18
+icon =local .getAddonInfo ('icon')#line:19
+fanart =local .getAddonInfo ('fanart')#line:20
+def gasdrop ():#line:23
+    O000O0O0O00O0O00O .log ("XvBMC.VoOdOo")#line:24
+    if AddonTitle =="plugin.video.Allesin1NL!":#line:26
+        O00O0O0O0000O0OO0 =OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS5kb2tpbmw=')#line:27
+        OO0O000OO000000O0 =OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS54LW9kaS5ubA==')#line:28
+        OO000OO0000OOO000 =OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS5raWprYWxsZXMubmw=')#line:29
+        OOOOOO00O0O00O000 =OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS5lYWdsZQ==')#line:30
+        OO0O0O00OOO000000 =OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS5kaXRpc3R2')#line:31
+        OOO00OO0O000OOOOO =OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS50dmFkZG9ucy5ubA==')#line:32
+        OO000O000OO0000OO =[OO000OO0000OOO000 ,OO0O0O00OOO000000 ,OO0O000OO000000O0 ,OOOOOO00O0O00O000 ,O00O0O0O0000O0OO0 ,OOO00OO0O000OOOOO ]#line:33
+        O000O0O0OOOOO000O =any (OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(%s)'%(O0O0000O00OO000OO ))for O0O0000O00OO000OO in OO000O000OO0000OO )#line:34
+        if O000O0O0OOOOO000O :#line:35
+            OOO00OO000O00O0O0 .Dialog ().notification ('[COLOR red][B]WAARSCHUWING: [/B]niet ondersteund protocol[/COLOR]','Afhankelijkheden niet voldaan. Verwijder [B]\'bad addons\'[/B].')#line:36
+            return False #line:37
+        OOO0000OOOO000OO0 =O000O0O0O00O0O00O .get_params ()#line:40
+        if OOO0000OOOO000OO0 .get ("action")is None :#line:42
+            hoofdlijst (OOO0000OOOO000OO0 )#line:43
+        else :#line:44
+            OO00O0O0OOOOO00O0 =OOO0000OOOO000OO0 .get ("action")#line:45
+        O000O0O0O00O0O00O .close_item_list ()#line:47
+    else :#line:49
+        OOO0000OOOO000OO0 =O000O0O0O00O0O00O .get_params ()#line:52
+        if OOO0000OOOO000OO0 .get ("action")is None :#line:54
+            hoofdlijst (OOO0000OOOO000OO0 )#line:55
+        else :#line:56
+            OO00O0O0OOOOO00O0 =OOO0000OOOO000OO0 .get ("action")#line:57
+        O000O0O0O00O0O00O .close_item_list ()#line:58
+def hoofdlijst (OO000OOO0OOO0O000 ):#line:61
+    if OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(repository.xvbmc)'):#line:62
+        setView ('movies','EPiC')#line:64
+        O00O00OOOOOO0OO0O =OO0000O0OO00O0O0O .b64decode ('L3BsYXlsaXN0cw==')#line:66
+        O0O00000OOOOOO00O =OO0000O0OO00O0O0O .b64decode ('VUNWWDZlRWVJSVNjd0Fwek5zN1V1dnVn')+O00O00OOOOOO0OO0O #line:67
+        OOOO00000OO0000OO =OO0000O0OO00O0O0O .b64decode ('VUNCcERKVWxUeGR4bnI4b1FwNGZXOGpB')+O00O00OOOOOO0OO0O #line:68
+        OOO0O0O0O0OO0000O =OO0000O0OO00O0O0O .b64decode ('VUMtWjhua2hwRzdEUXZPOHdlZ01IR0lR')+O00O00OOOOOO0OO0O #line:69
+        O0O00OO0OOOO00O0O =OO0000O0OO00O0O0O .b64decode ('VUNfeHc2WUJubHlMcVlub3BhYmJ6ZmlR')+O00O00OOOOOO0OO0O #line:71
+        OO0O0000000O0O000 =OO0000O0OO00O0O0O .b64decode ('VUNKWTRFRDdCb2NWa3RpekFUa0VMM0Z3')+O00O00OOOOOO0OO0O #line:72
+        OOO0000000OOOO0O0 =OO0000O0OO00O0O0O .b64decode ('VUN2TDRnYjhoaXc3NC1PczFoSnlDTEln')+O00O00OOOOOO0OO0O #line:73
+        O00000OOOO00OO0O0 =OO0000O0OO00O0O0O .b64decode ("b25saW5lZmlsbXNraWprZW4=")#line:74
+        O0OOOO000OO000OO0 =OO0000O0OO00O0O0O .b64decode ('VUNyLUpCQzFYUHFKbV9POWlSMk0wV2pn')+O00O00OOOOOO0OO0O #line:75
+        O000OOOOO0OO0O0OO =OO0000O0OO00O0O0O .b64decode ('VUNoVndOQzI0aklsdTk4RzByR0Z0UVpR')+O00O00OOOOOO0OO0O #line:77
+        OOO0O00OOO00OOO00 =OO0000O0OO00O0O0O .b64decode ('VUMybjVBTTd2QWNNZVc4U0xta2pDZW5n')+O00O00OOOOOO0OO0O #line:78
+        O0OOOOOOOOOOO0OO0 =OO0000O0OO00O0O0O .b64decode ('VUMzY3h2UEYxbWZ1MWF2ZEhPNlk5Tm53')+O00O00OOOOOO0OO0O #line:79
+        O0O000O0OO00O000O =OO0000O0OO00O0O0O .b64decode ('VUMxa05lNTdGLTg1dHJyWUM3dGJPU1hB')+O00O00OOOOOO0OO0O #line:80
+        OO0OO000OOOOO0O0O =OO0000O0OO00O0O0O .b64decode ('VUNVZnNyU0w2RHlXU2trcGRkbFkyMS1R')+O00O00OOOOOO0OO0O #line:81
+        O00OOO0OO0OOOO0O0 =OO0000O0OO00O0O0O .b64decode ('RGFuY2VUcmlwcGluT2ZmaWNpYWw=')#line:82
+        O0OOOO00OOOO0OO00 =OO0000O0OO00O0O0O .b64decode ('L3VzZXIv')#line:83
+        O0OO0O0O000O0OOO0 =OO0000O0OO00O0O0O .b64decode ('cGx1Z2luOi8vcGx1Z2luLnZpZGVvLnlvdXR1YmU=')#line:85
+        O00OO0OO00OO0OOO0 =OO0000O0OO00O0O0O .b64decode ('L2NoYW5uZWwv')#line:86
+        O000O0O0O00O0O00O .log ("XvBMC.hoofdlijst "+repr (OO000OOO0OOO0O000 ))#line:87
+        O000O0O0O00O0O00O .add_item (title ="Live Music",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +O0O00000OOOOOO00O +poster ,thumbnail ="https://archive.org/download/fanart_20170116/Live%20Music%20icon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:95
+        O000O0O0O00O0O00O .add_item (title ="NL Series",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +OOOO00000OO0000OO +poster ,thumbnail ="https://archive.org/download/fanart_20170116/NL%20SERIE%20icon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:102
+        O000O0O0O00O0O00O .add_item (title ="NL Kids",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +OOO0O0O0O0OO0000O +poster ,thumbnail ="https://archive.org/download/fanart_20170116/NL%20KIDS%20icon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:109
+        O000O0O0O00O0O00O .add_item (title ="NL Films",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +O0O00OO0OOOO00O0O +poster ,thumbnail ="https://archive.org/download/fanart_20170116/NL%20FILM%20icon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:123
+        O000O0O0O00O0O00O .add_item (title ="NL Docu",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +OO0O0000000O0O000 +poster ,thumbnail ="https://archive.org/download/fanart_20170116/NL%20Docu%20icon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:130
+        O000O0O0O00O0O00O .add_item (title ="NL Cabaret",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +OOO0000000OOOO0O0 +poster ,thumbnail ="https://archive.org/download/fanart_20170116/NL%20CABARET%20icon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:137
+        O000O0O0O00O0O00O .add_item (title ="Xvbmc Handleidingen",url =O0OO0O0O000O0OOO0 +O0OOOO00OOOO0OO00 +O00000OOOO00OO0O0 +poster ,thumbnail ="https://archive.org/download/fanart_20170116/Xvbmc%20handleidingen%20icon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:144
+        O000O0O0O00O0O00O .add_item (title ="Vlaamse Content",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +O0OOOO000OO000OO0 +poster ,thumbnail ="https://archive.org/download/fanart_20170116/Vlaams%20icon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:151
+        O000O0O0O00O0O00O .add_item (title =".:C.T.R.L:. Gaming Room",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +O000OOOOO0OO0O0OO +poster ,thumbnail ="https://archive.org/download/fanart_20170116/CtrlGamingIcon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:165
+        O000O0O0O00O0O00O .add_item (title ="Cirque du soleil",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +OOO0O00OOO00OOO00 +poster ,thumbnail ="https://archive.org/download/fanart_20170116/CircusIcon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:172
+        O000O0O0O00O0O00O .add_item (title ="NL Racing",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +O0OOOOOOOOOOO0OO0 +poster ,thumbnail ="https://archive.org/download/fanart_20170116/NlRacing.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:179
+        O000O0O0O00O0O00O .add_item (title ="Van alles en nog wat NL",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +O0O000O0OO00O000O +poster ,thumbnail ="https://archive.org/download/fanart_20170116/vanalles.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:186
+        O000O0O0O00O0O00O .add_item (title ="Muziek Uit Limburg",url =O0OO0O0O000O0OOO0 +O00OO0OO00OO0OOO0 +OO0OO000OOOOO0O0O +poster ,thumbnail ="https://archive.org/download/fanart_20170116/NlLimburgIcon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:193
+        O000O0O0O00O0O00O .add_item (title ="DanceTrippin TV",url =O0OO0O0O000O0OOO0 +O0OOOO00OOOO0OO00 +O00OOO0OO0OOOO0O0 +poster ,thumbnail ="https://archive.org/download/fanart_20170116/DanceIcon.png",fanart ="https://archive.org/download/fanart_20170116/fanart.jpg",folder =True )#line:200
+    else :#line:201
+        OOO00OO000O00O0O0 .Dialog ().notification ('[COLOR red][B]WARNING: [/B]unsupported protocol(plugin)[/COLOR]','Dependencies not met. Missing XvBMC repo.')#line:202
+        return False #line:203
+def setView (O00OOO00OOO00000O ,OO0O00OOO0O00OOO0 ):#line:205
+    global poster #line:209
+    poster =OO0000O0OO00O0O0O .b64decode ('Lw==')#line:210
+    if O00OOO00OOO00000O :#line:211
+        O00O00000O0OOOO00 .setContent (int (O0000000O0OOOOO0O .argv [1 ]),O00OOO00OOO00000O )#line:212
+    if local .getSetting ('auto-view')=='true':#line:213
+        OO0000O000OO00O00 .executebuiltin ("Container.SetViewMode(%s)"%local .getSetting (OO0O00OOO0O00OOO0 ))#line:214
+def cache ():#line:216
+    global AddonTitle #line:218
+    O0O0O00O0OOOOO000 =OO0000O0OO00O0O0O .b64decode ('c2tpbi5ub3g0YmVnaW5uZXJz')#line:219
+    O00OOO00OO0OO0O0O =OO0000O0OO00O0O0O .b64decode ('c2tpbi5rYW9zYm94')#line:220
+    if OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(%s)'%(O0O0O00O0OOOOO000 )):#line:222
+        AddonTitle ='plugin.video.Allesin1NL'#line:224
+        gasdrop ()#line:225
+    elif OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(%s)'%(O00OOO00OO0OO0O0O +'.beta')):#line:226
+        gasdrop ()#line:228
+    elif OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(%s)'%(O00OOO00OO0OO0O0O +'.helix')):#line:229
+        gasdrop ()#line:231
+    elif OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(%s)'%(O00OOO00OO0OO0O0O +'2.jarvis')):#line:232
+        gasdrop ()#line:234
+    elif OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(%s)'%(O00OOO00OO0OO0O0O +'.krypton')):#line:235
+        gasdrop ()#line:237
+    elif OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(%s)'%(O00OOO00OO0OO0O0O +'2.krypton')):#line:238
+        gasdrop ()#line:240
+    else :#line:241
+        OO000O00OO0O0O0OO =[OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS5raWprYWxsZXMubmw='),OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS5kaXRpc3R2'),OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS54LW9kaS5ubA=='),OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS5lYWdsZQ=='),OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS5kb2tpbmw='),OO0000O0OO00O0O0O .b64decode ('cmVwb3NpdG9yeS50dmFkZG9ucy5ubA==')]#line:251
+        O0OO0O00O00O00000 =any (OO0000O000OO00O00 .getCondVisibility ('System.HasAddon(%s)'%(O0OO00000O0OOOO00 ))for O0OO00000O0OOOO00 in OO000O00OO0O0O0OO )#line:252
+        if not O0OO0O00O00O00000 :#line:253
+            gasdrop ()#line:256
+        else :#line:257
+            OO0000O000OO00O00 .executebuiltin ('Notification([COLOR red][B]WARNING: [/B]unsupported \'build\\addon(s)\'.[/COLOR],Dependencies not met. Evil add-on(s) found.,5000,DefaultIconError.png)')#line:259
+            return False #line:260
+cache ()
