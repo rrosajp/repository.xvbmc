@@ -17,7 +17,24 @@ icon     = local.getAddonInfo('icon')
 
 
 channellist=[
-        ("Best Car Music Mixes", "channel/UC830NkyfSaql_EFNkmtSXxQ", 'https://yt3.ggpht.com/-yzl2Jg0nISI/AAAAAAAAAAI/AAAAAAAAAAA/Vy0ZnBcpNF4/s900-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+        
+		("Armin van Buuren", "user/arminvanbuuren", 'https://yt3.ggpht.com/-bp-G-1ubrMA/AAAAAAAAAAI/AAAAAAAAAAA/lysFIFc6AaQ/s100-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("DJ Kensel Official", "channel/UCSP9jzPSR8n4_BD15PJIyEA", 'https://yt3.ggpht.com/-6kRR5mlPbf4/AAAAAAAAAAI/AAAAAAAAAAA/tbEH9cBPh7c/s100-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Hardwell", "user/robberthardwell", 'https://yt3.ggpht.com/-1T1SCHCg1FQ/AAAAAAAAAAI/AAAAAAAAAAA/8FY0PMmPr3I/s100-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Martin Garrix", "user/MartinGarrix", 'https://yt3.ggpht.com/-KRv6BJdFwk8/AAAAAAAAAAI/AAAAAAAAAAA/pQpuy_-RPhE/s100-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Tiesto", "user/officialtiesto", 'https://yt3.ggpht.com/-IKUxTd9MtfU/AAAAAAAAAAI/AAAAAAAAAAA/b26T9-6Y2qU/s100-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Venus Music", "channel/UCwfMdhb-f02OsYR8T78aKeQ", 'https://yt3.ggpht.com/-IPOer-Fbz-Y/AAAAAAAAAAI/AAAAAAAAAAA/8NAHhG3Ho9s/s100-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("W&W", "user/WandWmusic", 'https://yt3.ggpht.com/-XUlyqOk4meY/AAAAAAAAAAI/AAAAAAAAAAA/5I2gEh7OJ2Y/s100-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("DeepSense", "user/MrDeepSense", 'https://yt3.ggpht.com/-U15Ut65AO3I/AAAAAAAAAAI/AAAAAAAAAAA/wG_JGLcud7U/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Keep It Underground", "user/aliasmike2002", 'https://yt3.ggpht.com/--SezWJJO8q0/AAAAAAAAAAI/AAAAAAAAAAA/5SzkvVF1gZ8/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Spectrum Music", "user/SpectrumRecordings", 'https://yt3.ggpht.com/-vzLxO7i5Qgk/AAAAAAAAAAI/AAAAAAAAAAA/NvJaOyJCRGE/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Deep Space House", "user/DeepSpaceHouse", 'https://yt3.ggpht.com/-YFwLXVl_Vqc/AAAAAAAAAAI/AAAAAAAAAAA/XjzlD4yTbNk/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Deep House Amsterdam", "user/DeepHouseAmsterdam", 'https://yt3.ggpht.com/-INq4Js7Kn4c/AAAAAAAAAAI/AAAAAAAAAAA/E1hfqVmqVu8/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Indefinitely", "channel/UC3xS7KD-nL8dpireWEUIxNA", 'https://yt3.ggpht.com/-v-1eCp72Tfo/AAAAAAAAAAI/AAAAAAAAAAA/Ms6e0w5cEb8/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Viet Melodic", "channel/UCqaay_q0YERQBEg4o5EjvZw", 'https://yt3.ggpht.com/-U9lOTob88oI/AAAAAAAAAAI/AAAAAAAAAAA/s-MRRhKbRxA/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Deep Territory", "channel/UCnfmB-zAnhvM13i8CczCA6g/featured", 'https://yt3.ggpht.com/-QTChEDkSUEk/AAAAAAAAAAI/AAAAAAAAAAA/EGo9VWg3jJk/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("XDeep Music", "channel/UCSSEXzYHBijpCPJdiZbS7mw", 'https://yt3.ggpht.com/-kS8xy0vSVDU/AAAAAAAAAAI/AAAAAAAAAAA/bggfl99bU7o/s288-c-k-no-mo-rj-c0xffffff/photo.jpg'),
+		("Best Car Music Mixes", "channel/UC830NkyfSaql_EFNkmtSXxQ", 'https://yt3.ggpht.com/-yzl2Jg0nISI/AAAAAAAAAAI/AAAAAAAAAAA/Vy0ZnBcpNF4/s900-c-k-no-mo-rj-c0xffffff/photo.jpg'),
         ("DjRegard", "channel/UCw39ZmFGboKvrHv4n6LviCA", 'https://yt3.ggpht.com/-Z6Mnb8qdA7A/AAAAAAAAAAI/AAAAAAAAAAA/CeU6rdpFLHI/s900-c-k-no-mo-rj-c0xffffff/photo.jpg'),
         ("Dj Drop G", "channel/UCPg3xfvygstC-AkG2Fg3ZXw", 'https://yt3.ggpht.com/-0cirbz4I_PU/AAAAAAAAAAI/AAAAAAAAAAA/7nigAQzB9Tc/s900-c-k-no-mo-rj-c0xffffff/photo.jpg'),
         ("DJ ekki Music", "user/DJEkkiMusic", 'https://yt3.ggpht.com/-q2uL4uvohU8/AAAAAAAAAAI/AAAAAAAAAAA/dz13xu82IaA/s900-c-k-no-mo-rj-c0xffffff/photo.jpg'),
