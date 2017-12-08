@@ -696,7 +696,7 @@
 </addon>
 
 <addon id="plugin.video.epicjijbuis"
-	   name=" [B][COLOR white]EP[/B][COLOR dodgerblue]i[/COLOR][B]C[/B][/COLOR]] JijBuis [COLOR dimgray]C.B.S.[/COLOR] [COLOR red][8bit][/COLOR]"
+	   name=" [B][COLOR white]EP[/B][COLOR dodgerblue]i[/COLOR][B]C[/B][/COLOR] JijBuis [COLOR dimgray]C.B.S.[/COLOR] [COLOR red][8bit][/COLOR]"
 	   version="1.1.1"
        provider-name="XvBMC-NL">
   <requires>
