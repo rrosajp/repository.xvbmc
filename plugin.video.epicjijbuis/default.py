@@ -132,6 +132,7 @@ def epicxvbmcnl():
     elif mode==2: disabled()
     elif mode==3: NoxMusic()
     elif mode==4: randomizer(params)
+    elif mode==5: xvbmcnl(params)
     else:
         pass
     plugintools.close_item_list()
@@ -141,7 +142,7 @@ def main_list(params):
     addDir(whoami,BASEURL,2,icondir,fanartdir,'')
     addDir('',BASEURL,2,icondir,fanartdir,'')
     plugintools.add_item( 
-        title="[B][COLOR purple]EP[/B][COLOR dodgerblue]i[/COLOR][B]C[/B][/COLOR] [COLOR dimgray][B][COLOR darkmagenta]M[/COLOR][/B]usic [B][COLOR darkmagenta]V[/COLOR][/B]ideo [B][COLOR darkmagenta]C[/COLOR][/B]hannel (...it\'s like [COLOR mediumvioletred]MTV[/COLOR], [B]but[/B] bettâh...)[/COLOR]",
+        title="[B][COLOR indigo]EP[/B][COLOR darkmagenta]i[/COLOR][B]C[/B][/COLOR] [COLOR dimgray][B][COLOR purple]M[/COLOR][/B]usic [B][COLOR purple]V[/COLOR][/B]ideo [B][COLOR purple]C[/COLOR][/B]hannel[B] - [/B]it\'s like MTV, [B]but[/B] bettâh[/COLOR][COLOR white]...[/COLOR]",
         url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_1+"/",
         thumbnail=icon,
         fanart=epicartwrk+'hooligan.jpg',
@@ -159,38 +160,20 @@ def main_list(params):
         fanart=epicartwrk+'RaR.jpg',
         folder=True )
     addDir('',BASEURL,2,icondir,fanartdir,'')
-    addDir('TOP[COLOR white]40[/COLOR] | [B]R[/B][COLOR white]&[/COLOR][B]B[/B] | miscellaneous | various | mo[COLOR white]\'[/COLOR] full-concerts | etc[COLOR white]...[/COLOR]',BASEURL,4,epicartwrk+'cbs.png',epicartwrk+'CBS.jpg','')
+    addDir('[COLOR white][B]X[/B][/COLOR]v[COLOR white][B]BMC[/B][/COLOR]-[COLOR white]NL[/COLOR]\'s[B] - [/B](live) [B]M[/B]usic [B]V[/B]ideo [B]C[/B]lip Channels & Stations[COLOR white]...[/COLOR]',BASEURL,5,epicartwrk+'cbs.png',epicartwrk+'CBS.jpg','')
+    addDir('TOP[COLOR white][B]40[/B][/COLOR] | Top [B]R[/B][COLOR white]&[/COLOR][B]B[/B] clips | Various | Misc. | Mo[COLOR white][B]\'[/B][/COLOR] full-concerts | etc[COLOR white]...[/COLOR]',BASEURL,4,epicartwrk+'cbs.png',epicartwrk+'CBS.jpg','')
     addDir('',BASEURL,2,icondir,fanartdir,'')
     plugintools.add_item( 
-        title="[COLOR red][8bit][/COLOR] RetroBit Music [COLOR dimgray](.:C.T.R.L:.)[/COLOR]",
-        url="plugin://plugin.video.youtube/playlist/PLxQ6orh4rPn6F2ZkpEYlZ6VyopXNuGmQT/",
-        thumbnail=epicartwrk+'8bit.png',
-        fanart=epicartwrk+'RetroBits.jpg',
-        folder=True )
-    addDir('[COLOR dimgray][B]\'[/B][/COLOR][COLOR white]N[/COLOR]ox [COLOR white]M[/COLOR]usic[COLOR dimgray][B]\'[/B][/COLOR][B]  - [/B]Deep House, trance, electro... [COLOR dimgray](XvBMC-NL)[/COLOR]',BASEURL,3,noxartwork+'icon.png',noxartwork+'fanart.jpg','')
-    plugintools.add_item( 
-        title="Alles in [COLOR orange] [B]1 [/B][/COLOR]NL[B] - [/B]Live Music [COLOR dimgray](XvBMC-NL)[/COLOR]",
-        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_2+"/",
-        thumbnail="https://archive.org/download/fanart_20170116/Live%20Music%20icon.png",
-        fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        title="Tiny Desk Concerts [COLOR dimgray](NPR Music)[/COLOR]",
+        url="plugin://plugin.video.youtube/playlist/PL1B627337ED6F55F0/",
+        thumbnail=icon,
+        fanart=fanart,
         folder=True )
     plugintools.add_item( 
-        title="Alles in [COLOR orange] [B]1 [/B][/COLOR]NL[B] - [/B]DanceTrippin TV [COLOR dimgray](XvBMC-NL)[/COLOR]",
-        url="plugin://plugin.video.youtube/user/"+YOUTUBE_CHANNEL_ID_3+"/",
-        thumbnail="https://archive.org/download/fanart_20170116/DanceIcon.png",
-        fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
-        folder=True )
-    plugintools.add_item( 
-        title="Carpool Karaoke by James Corden & guests [COLOR dimgray](XvBMC-NL)[/COLOR]",
-        url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_5+"/",
-        thumbnail="http://i4.mirror.co.uk/incoming/article4843959.ece/ALTERNATES/s615b/James-Corden.jpg",
-        fanart=base64.b64decode(base)+'plugin.video.carpool-karaoke/'+'fanart.jpg',
-        folder=True )
-    plugintools.add_item( 
-        title="DjRegard Official [COLOR dimgray](XvBMC-NL)[/COLOR]",
-        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_4+"/",
-        thumbnail="https://yt3.ggpht.com/-Z6Mnb8qdA7A/AAAAAAAAAAI/AAAAAAAAAAA/CeU6rdpFLHI/s900-c-k-no-rj-c0xffffff/photo.jpg",
-        fanart=base64.b64decode(base)+'plugin.video.djRegard/'+'fanart.jpg',
+        title="The Vibe Guide [COLOR dimgray](TVG)[/COLOR]",
+        url="plugin://plugin.video.youtube/channel/UCxH0sQJKG6Aq9-vFIPnDZ2A/",
+        thumbnail=icon,
+        fanart=fanart,
         folder=True )
     addDir('',BASEURL,2,icondir,fanartdir,'')
     addDir(Terug,BASEURL,1,icondir,fanartdir,'')
@@ -211,7 +194,7 @@ def randomizer(params):
     addDir(whoami,BASEURL,2,icondir,fanartdir,'')
     addDir('',BASEURL,2,icondir,fanartdir,'')
     plugintools.add_item( 
-        title="Miscellaneous \'[B]F[/B]ull [B]C[/B]oncerts\' [COLOR dimgray](\'ik doe een gok\' [COLOR white];-p[/COLOR])[/COLOR]",
+        title="Miscellaneous \'[B]F[/B]ull [B]C[/B]oncerts\' [COLOR dimgray](Google\'s \'ik doe een gok\' [COLOR white];-p[/COLOR])[/COLOR]",
         url='plugin://plugin.video.youtube/search/?q=full+concert&sp=CAMSBhABGAIgAQ%253D%253D',
         thumbnail=icon,
         fanart=fanart,
@@ -228,19 +211,56 @@ def randomizer(params):
         thumbnail=epicartwrk+'topNL.png',
         fanart=epicartwrk+'headphones40.jpg',
         folder=True )
-    addDir('',BASEURL,2,icondir,fanartdir,'')
-    plugintools.add_item( 
-        title="[COLOR red][B]R[/B][/COLOR]ed[COLOR red] [B]M[/B][/COLOR]usic -MusicHits[B]\'[/B]17- Best Songs Playlist [COLOR dimgray](OneLoveCunt)[/COLOR]",
-        url="plugin://plugin.video.youtube/playlist/PLw-VjHDlEOgvtnnnqWlTqByAtC7tXBg6D/",
-        thumbnail=redartwork+'icon.png',
-        fanart=redartwork+'fanart.jpg',
-        folder=True )
-    addDir('',BASEURL,2,icondir,fanartdir,'')
     plugintools.add_item( 
         title="Top [B]R[COLOR white]&[/COLOR]B[/B] Clips [COLOR dimgray](XvBMC-NL)[/COLOR]",
         url="plugin://plugin.video.youtube/playlist/PLPXmmKS-D--am3Ai7GjiyhrXk18worMAH/",
         thumbnail=icon,
         fanart=fanart,
+        folder=True )
+    addDir('',BASEURL,2,icondir,fanartdir,'')
+    addDir(Terug,BASEURL,1,icondir,fanartdir,'')
+    addDir('',BASEURL,69,icondir,fanartdir,'')
+def xvbmcnl(params):
+    setView('movies', 'EPiC')
+    plugintools.log("XvBMC-NL_list "+repr(params))
+    addDir(whoami,BASEURL,2,icondir,fanartdir,'')
+    addDir('',BASEURL,2,icondir,fanartdir,'')
+    plugintools.add_item( 
+        title="[COLOR red][8bit][/COLOR] RetroBit Music [COLOR dimgray](.:C.T.R.L:.)[/COLOR]",
+        url="plugin://plugin.video.youtube/playlist/PLxQ6orh4rPn6F2ZkpEYlZ6VyopXNuGmQT/",
+        thumbnail=epicartwrk+'8bit.png',
+        fanart=epicartwrk+'RetroBits.jpg',
+        folder=True )
+    addDir('[COLOR dimgray][B]\'[/B][/COLOR][COLOR white]N[/COLOR]ox [COLOR white]M[/COLOR]usic[COLOR dimgray][B]\'[/B][/COLOR][B]    - [/B]Deep House, trance, electro... [COLOR dimgray](XvBMC-NL)[/COLOR]',BASEURL,3,noxartwork+'icon.png',noxartwork+'fanart.jpg','')
+    plugintools.add_item( 
+        title="Alles in [COLOR orange] [B]1[/B]  [/COLOR]NL[B] - [/B]Live Music [COLOR dimgray](XvBMC-NL)[/COLOR]",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_2+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/Live%20Music%20icon.png",
+        fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )
+    plugintools.add_item( 
+        title="Alles in [COLOR orange] [B]1[/B]  [/COLOR]NL[B] - [/B]DanceTrippin TV [COLOR dimgray](XvBMC-NL)[/COLOR]",
+        url="plugin://plugin.video.youtube/user/"+YOUTUBE_CHANNEL_ID_3+"/",
+        thumbnail="https://archive.org/download/fanart_20170116/DanceIcon.png",
+        fanart="https://archive.org/download/fanart_20170116/fanart.jpg",
+        folder=True )
+    plugintools.add_item( 
+        title="Carpool Karaoke by James Corden & guests [COLOR dimgray](XvBMC-NL)[/COLOR]",
+        url="plugin://plugin.video.youtube/playlist/"+YOUTUBE_CHANNEL_ID_5+"/",
+        thumbnail="http://i4.mirror.co.uk/incoming/article4843959.ece/ALTERNATES/s615b/James-Corden.jpg",
+        fanart=base64.b64decode(base)+'plugin.video.carpool-karaoke/'+'fanart.jpg',
+        folder=True )
+    plugintools.add_item( 
+        title="DjRegard Official [COLOR dimgray](XvBMC-NL)[/COLOR]",
+        url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_4+"/",
+        thumbnail="https://yt3.ggpht.com/-Z6Mnb8qdA7A/AAAAAAAAAAI/AAAAAAAAAAA/CeU6rdpFLHI/s900-c-k-no-rj-c0xffffff/photo.jpg",
+        fanart=base64.b64decode(base)+'plugin.video.djRegard/'+'fanart.jpg',
+        folder=True )
+    plugintools.add_item( 
+        title="[COLOR red][B]R[/B][/COLOR]ed[COLOR red] [B]M[/B][/COLOR]usic -MusicHits[B]\'[/B]17- Best Songs Playlist [COLOR dimgray](OneLoveCunt)[/COLOR]",
+        url="plugin://plugin.video.youtube/playlist/PLw-VjHDlEOgvtnnnqWlTqByAtC7tXBg6D/",
+        thumbnail=redartwork+'icon.png',
+        fanart=redartwork+'fanart.jpg',
         folder=True )
     addDir('',BASEURL,2,icondir,fanartdir,'')
     addDir(Terug,BASEURL,1,icondir,fanartdir,'')
