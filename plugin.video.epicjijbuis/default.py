@@ -142,7 +142,7 @@ def main_list(params):
     addDir(whoami,BASEURL,2,icondir,fanartdir,'')
     addDir('',BASEURL,2,icondir,fanartdir,'')
     plugintools.add_item( 
-        title="[B][COLOR indigo]EP[/B][COLOR darkmagenta]i[/COLOR][B]C[/B][/COLOR] [COLOR dimgray][B][COLOR purple]M[/COLOR][/B]usic [B][COLOR purple]V[/COLOR][/B]ideo [B][COLOR purple]C[/COLOR][/B]hannel[B] - [/B]it\'s like MTV, [B]but[/B] bettâh[/COLOR][COLOR white]...[/COLOR]",
+        title="[B][COLOR purple]EP[/B][COLOR dodgerblue]i[/COLOR][B]C[/B][/COLOR] [COLOR dimgray][B][COLOR darkmagenta]M[/COLOR][/B]usic [B][COLOR darkmagenta]V[/COLOR][/B]ideo [B][COLOR darkmagenta]C[/COLOR][/B]hannel (...it\'s like [COLOR mediumvioletred]MTV[/COLOR], [B]but[/B] bettâh...)[/COLOR]",
         url="plugin://plugin.video.youtube/channel/"+YOUTUBE_CHANNEL_ID_1+"/",
         thumbnail=icon,
         fanart=epicartwrk+'hooligan.jpg',
