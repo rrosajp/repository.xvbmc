@@ -727,7 +727,7 @@
 
 <addon id="plugin.video.kindertube"
        name="KinderTube"
-       version="1.0.1"
+       version="1.0.2"
        provider-name="Highway+KAOSbox+XvBMC-NL">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -752,7 +752,7 @@
     <forum>https://www.fb.com/groups/XvBMCnederland/</forum>
     <website>http://bit.ly/XvBMC-NL</website>
     <source>http://bit.ly/XvBMC-Pi</source>
-    <news>[B]Version 1.0.1[/B]: VoOdOo+CodeCosmetics</news>
+    <news>[B]Version 1.0.2[/B]: CodeCosmetics+VoOdOo</news>
     <assets>
         <icon>icon.png</icon>
         <fanart>fanart.jpg</fanart>
