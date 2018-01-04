@@ -383,11 +383,11 @@ def String2TextBox(message='',HeaderMessage=''): TextBox2().load_string(message,
 ### ############################################################################################################
 ##### Player Functions #####
 def PlayItCustomL(url,stream_url,img,title,studio=''):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
 	listitem=xbmcgui.ListItem(title,iconImage=img,thumbnailImage=img); listitem.setInfo('video',{'Title':title,'Genre':'Live','Studio':studio})
 	PL=xbmc.PlayList(xbmc.PLAYLIST_VIDEO); PL.clear(); #PL.add(stream_url,listitem)
 	#
@@ -401,15 +401,16 @@ def PlayItCustomL(url,stream_url,img,title,studio=''):
 	#
 	try: _addon.resolve_url(url)
 	except: t=''
-	try: play=xbmc.Player(PlayerMeth); play.play(PL)
+#	try: play=xbmc.Player(PlayerMeth); play.play(PL)
+	try: play=xbmc.Player(); play.play(PL)
 	except: t=''
 
 def PlayItCustomL2A(url,stream_url,img,title,studio=''):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
 	listitem=xbmcgui.ListItem(title,iconImage=img,thumbnailImage=img); listitem.setInfo('video',{'Title':title,'Genre':'Live','Studio':studio})
 	PL=xbmc.PlayList(xbmc.PLAYLIST_VIDEO); PL.clear(); #PL.add(stream_url,listitem)
 	html=nURL(stream_url); deb('Length of html',str(len(html))); 
@@ -419,29 +420,32 @@ def PlayItCustomL2A(url,stream_url,img,title,studio=''):
 	PL.add(PlaylistFile,listitem)
 	try: _addon.resolve_url(url)
 	except: t=''
-	try: play=xbmc.Player(PlayerMeth); play.play(PL)
+#	try: play=xbmc.Player(PlayerMeth); play.play(PL)
+	try: play=xbmc.Player(); play.play(PL)
 	except: t=''
 
 def PlayItCustom(url,stream_url,img,title,studio=''):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
 	listitem=xbmcgui.ListItem(thumbnailImage=img); listitem.setInfo('video',{'Title':title,'Genre':'Live','Studio':studio})
 	PL=xbmc.PlayList(xbmc.PLAYLIST_VIDEO); PL.clear(); PL.add(stream_url,listitem)
 	try: _addon.resolve_url(url)
 	except: t=''
-	try: play=xbmc.Player(PlayerMeth); play.play(PL)
+#	try: play=xbmc.Player(PlayerMeth); play.play(PL)
+	try: play=xbmc.Player(); play.play(PL)
 	except: t=''
 
 def PlayURL(url):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
-	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+	play=xbmc.Player() ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	#play=xbmc.Player(xbmc.PLAYER_CORE_AUTO) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	try: _addon.resolve_url(url)
 	except: t=''
@@ -449,12 +453,13 @@ def PlayURL(url):
 	except: t=''
 
 def PlayURLs(url):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
-	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+	play=xbmc.Player() ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	#play=xbmc.Player(xbmc.PLAYER_CORE_AUTO) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	filename=xbmc.translatePath(os.path.join(_addonPath,'resources','test.strm'))
 	try: _addon.resolve_url(url)
@@ -480,12 +485,13 @@ def PlayURLs(url):
 	#
 
 def PlayURLs2(url):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
-	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+	play=xbmc.Player() ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	#play=xbmc.Player(xbmc.PLAYER_CORE_AUTO) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	filename=xbmc.translatePath(os.path.join(_addonPath,'resources','test.strm'))
 	try: _addon.resolve_url(url)
@@ -501,12 +507,13 @@ def PlayURLs2(url):
 		except: pass
 
 def PlayURLstrm(url):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
-	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+	play=xbmc.Player() ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	#play=xbmc.Player(xbmc.PLAYER_CORE_AUTO) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	filename=xbmc.translatePath(os.path.join(_addonPath,'resources','test.strm'))
 	_SaveFile(filename,url)
@@ -516,12 +523,13 @@ def PlayURLstrm(url):
 	except: t=''
 
 def PlayVideo(url):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
-	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+	play=xbmc.Player() ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	#play=xbmc.Player(xbmc.PLAYER_CORE_AUTO) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	#import urlresolver
 	infoLabels={"Studio":addpr('studio',''),"ShowTitle":addpr('showtitle',''),"Title":addpr('title','')}
@@ -534,12 +542,13 @@ def PlayVideo(url):
 	except: t=''
 
 def PlayFromHost(url):
-	PlayerMethod=addst("core-player")
-	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
-	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
-	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
-	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
-	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+#	PlayerMethod=addst("core-player")
+#	if   (PlayerMethod=='DVDPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_DVDPLAYER
+#	elif (PlayerMethod=='MPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_MPLAYER
+#	elif (PlayerMethod=='PAPLAYER'): PlayerMeth=xbmc.PLAYER_CORE_PAPLAYER
+#	else: PlayerMeth=xbmc.PLAYER_CORE_AUTO
+#	play=xbmc.Player(PlayerMeth) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
+	play=xbmc.Player() ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	#play=xbmc.Player(xbmc.PLAYER_CORE_AUTO) ### xbmc.PLAYER_CORE_AUTO | xbmc.PLAYER_CORE_DVDPLAYER | xbmc.PLAYER_CORE_MPLAYER | xbmc.PLAYER_CORE_PAPLAYER
 	import urlresolver
 	infoLabels={"Studio":addpr('studio',''),"ShowTitle":addpr('showtitle',''),"Title":addpr('title','')}
