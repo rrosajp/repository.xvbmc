@@ -1046,7 +1046,7 @@ v5.2.14 (2017-01-23)
 
 <addon id="service.subtitles.podnapisi"
        name="Podnapisi.net"
-       version="5.4.0"
+       version="5.4.2"
        provider-name="amet">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -1059,7 +1059,7 @@ v5.2.14 (2017-01-23)
     <disclaimer lang="en"></disclaimer>
     <platform>all</platform>
     <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-    <forum></forum>
+    <forum>http://forum.kodi.tv/showthread.php?tid=192563</forum>
     <website></website>
     <email></email>
     <source>https://github.com/amet/service.subtitles.podnapisi</source>
