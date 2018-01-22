@@ -1,3 +1,0 @@
-v4.1.1
- ! this addon is no longer supported...
- * get the new one from our REPO @ https://archive.org/download/repository.xvbmc/
