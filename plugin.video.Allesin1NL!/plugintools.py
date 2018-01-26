@@ -1,12 +1,31 @@
 # -*- coding: utf-8 -*-
+#------------------------------------------------------------
+# Plugin Tools
+# Copyright 2015 tvalacarta@gmail.com
+#
+# Distributed under the terms of GNU General Public License v3 (GPLv3)
+# http://www.gnu.org/licenses/gpl-3.0.html
+#------------------------------------------------------------
+# This file is part of Plugin Tools.
+#
+# Plugin Tools is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# streamondemand-pureita is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with streamondemand-pureita.  If not, see <http://www.gnu.org/licenses/>.
+#------------------------------------------------------------
+# Plugin Tools v1.1.1
 #---------------------------------------------------------------------------
-# Plugin Tools v1.0.8
-#---------------------------------------------------------------------------
-# License: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
-# Based on code from youtube, parsedom and pelisalacarta addons
+# Based on code from youtube, parsedom and streamondemand-pureita addons
 # Author: 
-# Jesús
-# tvalacarta@gmail.com
+# Jesús (tvalacarta@gmail.com)
 # http://www.mimediacenter.info/plugintools
 #---------------------------------------------------------------------------
 # Changelog:
@@ -35,6 +54,21 @@
 # - Added set_view function
 # 1.0.8
 # - Added selector
+# 1.0.9
+# - Added unescape and htmlclean functions
+# - Added as comments different view modes used in different skins
+# - Fix small problem in add_item, fanart were not passed as parameter to next action
+# - Added flag for disable application logs
+# 1.1.0
+# - Add slugify
+# - Add context menu options to add_item
+# - Add download function
+# - Add application log control
+# 1.1.1
+# - Added show_notification
+# - Bug fixes
+# 1.1.1x
+# - XvBMC VoOdOo [NL]
 #---------------------------------------------------------------------------
 
 import xbmc
@@ -52,6 +86,7 @@ import socket
 from StringIO import StringIO
 import gzip
 
+application_log_enabled = False
 module_log_enabled = False
 http_debug_log_enabled = False
 
@@ -62,6 +97,25 @@ TV_SHOWS = "tvshows"
 SEASONS = "seasons"
 EPISODES = "episodes"
 OTHER = "other"
+
+'''
+Known codes
+
+    Confluence
+
+        Normal
+            CommonRootView: 50 # List
+            ThumbnailView: 500 # Thumbnail
+            WideIconView: 505
+            FullWidthList: 51 # Big list
+
+        Biblioteca
+            PosterWrapView: 501 # Poster Wrap
+            PosterWrapView2_Fanart: 508 # Fanart
+            MediaListView2: 504 # Media info
+            MediaListView3: 503 # Media info 2
+            MediaListView4: 515 # Media info 3
+'''
 
 # Suggested view codes for each type from different skins (initial list thanks to xbmcswift2 library)
 ALL_VIEW_CODES = {
@@ -80,14 +134,14 @@ ALL_VIEW_CODES = {
         'skin.re-touched': 500, #Thumbnail
     },
     'movies': {
-        'skin.confluence': 500, # Thumbnail 515, # Media Info 3
+        'skin.confluence': 515, # 500 Thumbnail # 515 Media Info 3
         'skin.aeon.nox': 500, # Wall
         'skin.droid': 51, # Big icons
         'skin.quartz': 52, # Media info
         'skin.re-touched': 500, #Thumbnail
     },
     'tvshows': {
-        'skin.confluence': 500, # Thumbnail 515, # Media Info 3
+        'skin.confluence': 515, # 500 Thumbnail # 515 Media Info 3
         'skin.aeon.nox': 500, # Wall
         'skin.droid': 51, # Big icons
         'skin.quartz': 52, # Media info
@@ -110,7 +164,11 @@ ALL_VIEW_CODES = {
 }
 
 # Write something on XBMC log
-def log(msg, level=xbmc.LOGNOTICE): # used-4-addon_able.py etc.etc.etc.etc.
+# def log(message):
+#     if application_log_enabled:
+#        xbmc.log(message)
+        
+def log(msg, level=xbmc.LOGNOTICE):
     name = 'XvBMC_NOTICE'
     # override message level to force logging when addon logging turned on
     level = xbmc.LOGNOTICE
@@ -172,7 +230,7 @@ def read(url):
     
     return data
 
-def read_body_and_headers(url, post=None, headers=[], follow_redirects=False, timeout=None):
+def read_body_and_headers(url, post=None, headers=[], follow_redirects=False, timeout=30):
     _log("read_body_and_headers "+url)
 
     if post is not None:
@@ -231,7 +289,7 @@ def read_body_and_headers(url, post=None, headers=[], follow_redirects=False, ti
             # if we have a cookie file already saved
             # then load the cookies into the Cookie Jar
             try:
-                cj.load(ficherocookies)
+                cj.load(ficherocookies, ignore_discard=True)
             except:
                 _log("read_body_and_headers Wrong cookie file, deleting...")
                 os.remove(ficherocookies)
@@ -299,7 +357,7 @@ def read_body_and_headers(url, post=None, headers=[], follow_redirects=False, ti
                 _log( "%s" % line )
     
     # Actualiza el almacén de cookies
-    cj.save(ficherocookies)
+    cj.save(ficherocookies, ignore_discard=True)
 
     # Lee los datos y cierra
     if handle.info().get('Content-Encoding') == 'gzip':
@@ -374,13 +432,16 @@ def find_single_match(text,pattern):
 
     return result
 
-def add_item( action="" , title="" , plot="" , url="" , thumbnail="" , fanart="" , show="" , episode="" , extra="", page="", info_labels = None, isPlayable = False , folder=True ):
-    _log("add_item action=["+action+"] title=["+title+"] url=["+url+"] thumbnail=["+thumbnail+"] fanart=["+fanart+"] show=["+show+"] episode=["+episode+"] extra=["+extra+"] page=["+page+"] isPlayable=["+str(isPlayable)+"] folder=["+str(folder)+"]")
+def add_item( action="" , title="" , plot="" , url="" , thumbnail="" , fanart="" , show="" , episode="" , extra="", category="", page="", info_labels = None, context_menu_items = [] , isPlayable = False , folder=True ):
+    _log("add_item action=["+action+"] title=["+title+"] url=["+url+"] thumbnail=["+thumbnail+"] fanart=["+fanart+"] show=["+show+"] episode=["+episode+"] extra=["+extra+"] category=["+category+"] page=["+page+"] isPlayable=["+str(isPlayable)+"] folder=["+str(folder)+"]")
 
     listitem = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail )
     if info_labels is None:
         info_labels = { "Title" : title, "FileName" : title, "Plot" : plot }
     listitem.setInfo( "video", info_labels )
+
+    if len(context_menu_items)>0:
+        listitem.addContextMenuItems ( context_menu_items, replaceItems=False)
 
     if fanart!="":
         listitem.setProperty('fanart_image',fanart)
@@ -393,10 +454,10 @@ def add_item( action="" , title="" , plot="" , url="" , thumbnail="" , fanart=""
     elif isPlayable:
         listitem.setProperty("Video", "true")
         listitem.setProperty('IsPlayable', 'true')
-        itemurl = '%s?action=%s&title=%s&url=%s&thumbnail=%s&plot=%s&extra=%s&page=%s' % ( sys.argv[ 0 ] , action , urllib.quote_plus( title ) , urllib.quote_plus(url) , urllib.quote_plus( thumbnail ) , urllib.quote_plus( plot ) , urllib.quote_plus( extra ) , urllib.quote_plus( page ))
+        itemurl = '%s?action=%s&title=%s&url=%s&thumbnail=%s&fanart=%s&plot=%s&extra=%s&category=%s&page=%s' % ( sys.argv[ 0 ] , action , urllib.quote_plus( title ) , urllib.quote_plus(url) , urllib.quote_plus( thumbnail ) , urllib.quote_plus( fanart ) , urllib.quote_plus( plot ) , urllib.quote_plus( extra ) , urllib.quote_plus( category ) , urllib.quote_plus( page ))
         xbmcplugin.addDirectoryItem( handle=int(sys.argv[1]), url=itemurl, listitem=listitem, isFolder=folder)
     else:
-        itemurl = '%s?action=%s&title=%s&url=%s&thumbnail=%s&plot=%s&extra=%s&page=%s' % ( sys.argv[ 0 ] , action , urllib.quote_plus( title ) , urllib.quote_plus(url) , urllib.quote_plus( thumbnail ) , urllib.quote_plus( plot ) , urllib.quote_plus( extra ) , urllib.quote_plus( page ))
+        itemurl = '%s?action=%s&title=%s&url=%s&thumbnail=%s&fanart=%s&plot=%s&extra=%s&category=%s&page=%s' % ( sys.argv[ 0 ] , action , urllib.quote_plus( title ) , urllib.quote_plus(url) , urllib.quote_plus( thumbnail ) , urllib.quote_plus( fanart ) , urllib.quote_plus( plot ) , urllib.quote_plus( extra ) , urllib.quote_plus( category ) , urllib.quote_plus( page ))
         xbmcplugin.addDirectoryItem( handle=int(sys.argv[1]), url=itemurl, listitem=listitem, isFolder=folder)
 
 def close_item_list():
@@ -525,7 +586,6 @@ def keyboard_input(default_text="", title="", hidden=False):
 
 def message(text1, text2="", text3=""):
     _log("message text1='"+text1+"', text2='"+text2+"', text3='"+text3+"'")
-
     if text3=="":
         xbmcgui.Dialog().ok( text1 , text2 )
     elif text2=="":
@@ -535,14 +595,12 @@ def message(text1, text2="", text3=""):
 
 def message_yes_no(text1, text2="", text3=""):
     _log("message_yes_no text1='"+text1+"', text2='"+text2+"', text3='"+text3+"'")
-
     if text3=="":
         yes_pressed = xbmcgui.Dialog().yesno( text1 , text2 )
     elif text2=="":
         yes_pressed = xbmcgui.Dialog().yesno( "" , text1 )
     else:
         yes_pressed = xbmcgui.Dialog().yesno( text1 , text2 , text3 )
-
     return yes_pressed
 
 def selector(option_list,title="Select one"):
@@ -586,6 +644,462 @@ def set_view(view_mode, view_code=0):
             xbmc.executebuiltin("Container.SetViewMode("+str(view_code)+")")
     except:
         _log("Unable to find view code for view mode "+str(view_mode)+" and skin "+skin_name)
+
+
+def unescape(text):
+    """Removes HTML or XML character references 
+       and entities from a text string.
+       keep &amp;, &gt;, &lt; in the source code.
+    from Fredrik Lundh
+    http://effbot.org/zone/re-sub.htm#unescape-html
+    """
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":   
+                    return unichr(int(text[3:-1], 16)).encode("utf-8")
+                else:
+                    return unichr(int(text[2:-1])).encode("utf-8")
+                  
+            except ValueError:
+                logger.info("error de valor")
+                pass
+        else:
+            # named entity
+            try:
+                '''
+                if text[1:-1] == "amp":
+                    text = "&amp;amp;"
+                elif text[1:-1] == "gt":
+                    text = "&amp;gt;"
+                elif text[1:-1] == "lt":
+                    text = "&amp;lt;"
+                else:
+                    print text[1:-1]
+                    text = unichr(htmlentitydefs.name2codepoint[text[1:-1]]).encode("utf-8")
+                '''
+                import htmlentitydefs
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]]).encode("utf-8")
+            except KeyError:
+                logger.info("keyerror")
+                pass
+            except:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)
+
+def htmlclean(cadena):
+    cadena = cadena.replace("<center>","")
+    cadena = cadena.replace("</center>","")
+    cadena = cadena.replace("<cite>","")
+    cadena = cadena.replace("</cite>","")
+    cadena = cadena.replace("<em>","")
+    cadena = cadena.replace("</em>","")
+    cadena = cadena.replace("<b>","")
+    cadena = cadena.replace("</b>","")
+    cadena = cadena.replace("<u>","")
+    cadena = cadena.replace("</u>","")
+    cadena = cadena.replace("<li>","")
+    cadena = cadena.replace("</li>","")
+    cadena = cadena.replace("<tbody>","")
+    cadena = cadena.replace("</tbody>","")
+    cadena = cadena.replace("<tr>","")
+    cadena = cadena.replace("</tr>","")
+    cadena = cadena.replace("<![CDATA[","")
+    cadena = cadena.replace("<Br />","")
+    cadena = cadena.replace("<BR />","")
+    cadena = cadena.replace("<Br>","")
+
+    cadena = re.compile("<script.*?</script>",re.DOTALL).sub("",cadena)
+
+    cadena = re.compile("<option[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</option>","")
+
+    cadena = re.compile("<i[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</iframe>","")
+    cadena = cadena.replace("</i>","")
+    
+    cadena = re.compile("<table[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</table>","")
+    
+    cadena = re.compile("<td[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</td>","")
+    
+    cadena = re.compile("<div[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</div>","")
+    
+    cadena = re.compile("<dd[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</dd>","")
+
+    cadena = re.compile("<font[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</font>","")
+    
+    cadena = re.compile("<strong[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</strong>","")
+
+    cadena = re.compile("<small[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</small>","")
+
+    cadena = re.compile("<span[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</span>","")
+
+    cadena = re.compile("<a[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</a>","")
+    
+    cadena = re.compile("<p[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</p>","")
+
+    cadena = re.compile("<ul[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</ul>","")
+    
+    cadena = re.compile("<h1[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</h1>","")
+    
+    cadena = re.compile("<h2[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</h2>","")
+
+    cadena = re.compile("<h3[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</h3>","")
+
+    cadena = re.compile("<h4[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</h4>","")
+
+    cadena = re.compile("<!--[^-]+-->",re.DOTALL).sub("",cadena)
+    
+    cadena = re.compile("<img[^>]*>",re.DOTALL).sub("",cadena)
+    
+    cadena = re.compile("<br[^>]*>",re.DOTALL).sub("",cadena)
+
+    cadena = re.compile("<object[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</object>","")
+    cadena = re.compile("<param[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</param>","")
+    cadena = re.compile("<embed[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</embed>","")
+
+    cadena = re.compile("<title[^>]*>",re.DOTALL).sub("",cadena)
+    cadena = cadena.replace("</title>","")
+
+    cadena = re.compile("<link[^>]*>",re.DOTALL).sub("",cadena)
+
+    cadena = cadena.replace("\t","")
+    cadena = unescape(cadena)
+    return cadena
+
+
+def slugify(title):
+    
+    # Replace international chars
+    title = title.replace("Á","a")
+    title = title.replace("É","e")
+    title = title.replace("Í","i")
+    title = title.replace("Ó","o")
+    title = title.replace("Ú","u")
+    title = title.replace("á","a")
+    title = title.replace("é","e")
+    title = title.replace("í","i")
+    title = title.replace("ó","o")
+    title = title.replace("ú","u")
+    title = title.replace("À","a")
+    title = title.replace("È","e")
+    title = title.replace("Ì","i")
+    title = title.replace("Ò","o")
+    title = title.replace("Ù","u")
+    title = title.replace("à","a")
+    title = title.replace("è","e")
+    title = title.replace("ì","i")
+    title = title.replace("ò","o")
+    title = title.replace("ù","u")
+    title = title.replace("ç","c")
+    title = title.replace("Ç","C")
+    title = title.replace("Ñ","n")
+    title = title.replace("ñ","n")
+    title = title.replace("/","-")
+    title = title.replace("&amp;","&")
+
+    # Lowercase
+    title = title.lower().strip()
+
+    # Remove invalid chards
+    validchars = "abcdefghijklmnopqrstuvwxyz1234567890- "
+    title = ''.join(c for c in title if c in validchars)
+
+    # Replace redundant whitespaces
+    title = re.compile("\s+",re.DOTALL).sub(" ",title)
+    
+    # Replace whitespaces for minus
+    title = re.compile("\s",re.DOTALL).sub("-",title.strip())
+
+    # Replace redundant minus
+    title = re.compile("\-+",re.DOTALL).sub("-",title)
+    
+    # Fix some special cases
+    if title.startswith("-"):
+        title = title [1:]
+    
+    if title=="":
+        title = "-"+str(time.time())
+
+    return title
+
+def download(url,filename,resume_download=True):
+    _log("download url="+url+", filename="+filename)
+
+    try:
+        import xbmcgui
+    
+        # If file exists
+        if os.path.exists(filename) and resume_download:
+            f = open(filename, 'r+b')
+            existSize = os.path.getsize(filename)
+            
+            _log("download File exists, size=%d, resume download" % existSize)
+            downloaded = existSize
+            f.seek(existSize)
+
+        # File exists, skip download
+        elif os.path.exists(filename) and not resume_download:
+            _log("download File exists, skip download")
+            return
+
+        # File doesn't exists
+        else:
+            existSize = 0
+            _log("download File doesn't exists")
+            f = open(filename, 'wb')
+            downloaded = 0
+    
+        # Progress dialog
+        progress_dialog = xbmcgui.DialogProgress()
+        progress_dialog.create( "plugin" , "Descargando..." , url , os.path.basename(filename) )
+
+        # Timeout of socket to 60 secs
+        socket.setdefaulttimeout(60)
+    
+        # URL con login y password
+        if find_single_match(url,"http\://[a-z]+\:[a-z]+\@[a-z0-9\:\.]+/")!="":
+            _log("download Basic auth")
+
+            username = find_single_match(url,"http\://([a-z]+)\:[a-z]+\@[a-z0-9\:\.]+/")
+            _log("download username="+username)
+            password = find_single_match(url,"http\://[a-z]+\:([a-z]+)\@[a-z0-9\:\.]+/")
+            _log("download password="+password)
+            url = "http://"+find_single_match(url,"http\://[a-z]+\:[a-z]+\@(.*?)$")
+            _log("download url="+url)
+        else:
+            username=""
+
+        h = urllib2.HTTPHandler(debuglevel=0)
+
+        request = urllib2.Request(url)
+    
+        if existSize > 0:
+            request.add_header('Range', 'bytes=%d-' % (existSize, ))
+
+        if username!="":
+
+            user_and_pass = base64.b64encode(b""+username+":"+password+"").decode("ascii")
+            _log("download Adding Authorization header") #: Basic "+user_and_pass)
+            request.add_header('Authorization', 'Basic '+user_and_pass)
+
+        opener = urllib2.build_opener(h)
+        urllib2.install_opener(opener)
+        try:
+            connexion = opener.open(request)
+        except urllib2.HTTPError,e:
+            _log("download error %d (%s) al abrir la url %s" % (e.code,e.msg,url))
+            f.close()
+            progress_dialog.close()
+            # Error 416 means range exceed file size => download is complete
+            if e.code==416:
+                return 0
+            else:
+                return -2
+    
+        try:
+            total_size = int(connexion.headers["Content-Length"])
+        except:
+            total_size = 1
+                
+        if existSize > 0:
+            total_size = total_size + existSize
+    
+        _log("download Content-Length=%s" % total_size)
+    
+        blocksize = 100*1024
+    
+        readed_block = connexion.read(blocksize)
+        _log("download Starting download... (first block=%s bytes)" % len(readed_block))
+    
+        maxretries = 10
+        
+        while len(readed_block)>0:
+            try:
+                f.write(readed_block)
+                downloaded = downloaded + len(readed_block)
+                percent = int(float(downloaded)*100/float(total_size))
+                totalmb = float(float(total_size)/(1024*1024))
+                downloaded_mb = float(float(downloaded)/(1024*1024))
+    
+                # Read next block with retries
+                retry_count = 0
+                while retry_count <= maxretries:
+                    try:
+                        before = time.time()
+                        readed_block = connexion.read(blocksize)
+                        after = time.time()
+                        if (after - before) > 0:
+                            velocidad=len(readed_block)/((after - before))
+                            falta=total_size-downloaded
+                            if velocidad>0:
+                                tiempofalta=falta/velocidad
+                            else:
+                                tiempofalta=0
+                            #logger.info(sec_to_hms(tiempofalta))
+                            #progress_dialog.update( percent , "Descargando %.2fMB de %.2fMB (%d%%)" % ( downloaded_mb , totalmb , percent),"Falta %s - Velocidad %.2f Kb/s" % ( sec_to_hms(tiempofalta) , velocidad/1024 ), os.path.basename(filename) )
+                            progress_dialog.update( percent , "%.2fMB/%.2fMB (%d%%) %.2f Kb/s %s falta " % ( downloaded_mb , totalmb , percent , velocidad/1024 , sec_to_hms(tiempofalta)))
+                        break
+
+                        try:
+                            if xbmc.abortRequested:
+                                logger.error( "XBMC Abort requested 1" )
+                                return -1
+                        except:
+                            pass
+
+                    except:
+                        try:
+                            if xbmc.abortRequested:
+                                logger.error( "XBMC Abort requested 2" )
+                                return -1
+                        except:
+                            pass
+
+                        retry_count = retry_count + 1
+                        _log("download ERROR in block download, retry %d" % retry_count)
+                        import traceback
+                        _log("download "+traceback.format_exc())
+                
+                # Download cancelled
+                try:
+                    if progress_dialog.iscanceled():
+                        _log("download Descarga del fichero cancelada")
+                        f.close()
+                        progress_dialog.close()
+                        return -1
+                except:
+                    pass
+    
+                # Download error
+                if retry_count > maxretries:
+                    _log("download ERROR en la descarga del fichero")
+                    f.close()
+                    progress_dialog.close()
+    
+                    return -2
+    
+            except:
+                import traceback
+                _log("download "+traceback.format_exc() )
+
+                f.close()
+                progress_dialog.close()
+                
+                return -2
+
+    except:
+        import traceback
+        _log("download "+traceback.format_exc())
+
+    try:
+        f.close()
+    except:
+        pass
+
+    progress_dialog.close()
+
+    _log("download Download complete")
+    
+def sec_to_hms(seconds):
+    m,s = divmod(int(seconds), 60)
+    h,m = divmod(m, 60)
+    return ("%02d:%02d:%02d" % ( h , m ,s ))
+
+def get_safe_filename( original_filename ):
+
+    safe_filename = original_filename
+
+    # Replace international chars
+    safe_filename = safe_filename.replace("Á","A")
+    safe_filename = safe_filename.replace("É","E")
+    safe_filename = safe_filename.replace("Í","I")
+    safe_filename = safe_filename.replace("Ó","O")
+    safe_filename = safe_filename.replace("Ú","U")
+    safe_filename = safe_filename.replace("á","a")
+    safe_filename = safe_filename.replace("é","e")
+    safe_filename = safe_filename.replace("í","i")
+    safe_filename = safe_filename.replace("ó","o")
+    safe_filename = safe_filename.replace("ú","u")
+    safe_filename = safe_filename.replace("À","A")
+    safe_filename = safe_filename.replace("È","E")
+    safe_filename = safe_filename.replace("Ì","I")
+    safe_filename = safe_filename.replace("Ò","O")
+    safe_filename = safe_filename.replace("Ù","U")
+    safe_filename = safe_filename.replace("à","a")
+    safe_filename = safe_filename.replace("è","e")
+    safe_filename = safe_filename.replace("ì","i")
+    safe_filename = safe_filename.replace("ò","o")
+    safe_filename = safe_filename.replace("ù","u")
+    safe_filename = safe_filename.replace("ç","c")
+    safe_filename = safe_filename.replace("Ç","C")
+    safe_filename = safe_filename.replace("Ñ","N")
+    safe_filename = safe_filename.replace("ñ","n")
+    safe_filename = safe_filename.replace("/","-")
+    safe_filename = safe_filename.replace("&amp;","&")
+
+    # Remove invalid chards
+    validchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890- "
+    safe_filename = ''.join(c for c in safe_filename if c in validchars)
+
+    # Replace redundant whitespaces
+    safe_filename = re.compile("\s+",re.DOTALL).sub(" ",safe_filename)
+    
+    safe_filename = safe_filename.strip()
+    
+    if safe_filename=="":
+        safe_filename = "invalid"
+
+    return safe_filename
+
+#get_filename_from_url(media_url)[-4:]
+def get_filename_from_url(url):
+    
+    import urlparse
+    parsed_url = urlparse.urlparse(url)
+    try:
+        filename = parsed_url.path
+    except:
+        # Si falla es porque la implementación de parsed_url no reconoce los atributos como "path"
+        if len(parsed_url)>=4:
+            filename = parsed_url[2]
+        else:
+            filename = ""
+
+    if len(filename)>0:
+
+        # Remove trailing slash
+        if filename[-1:]=="/":
+            filename = filename[:-1]
+        
+        if "/" in filename:
+            filename = filename.split("/")[-1]
+
+    return filename
+
+def show_notification(title,message,icon=""):
+    xbmc.executebuiltin((u'XBMC.Notification("'+title+'", "'+message+'", 2000, "'+icon+'")'))
 
 f = open( os.path.join( os.path.dirname(__file__) , "addon.xml") )
 data = f.read()
