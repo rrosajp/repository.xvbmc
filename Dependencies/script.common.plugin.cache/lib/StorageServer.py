@@ -115,7 +115,7 @@ class StorageServer():
 
             self.curs = self.conn.cursor()
             return True
-        except Exception, e:
+        except Exception as e:
             self._log("Exception: " + repr(e))
             self.xbmcvfs.delete(self.path)
             return False
@@ -127,22 +127,29 @@ class StorageServer():
         else:
             return self.xbmc.abortRequested
         return False
+        
+    def _usePosixSockets(self):
+      if self.platform in ["win32", 'win10'] or xbmc.getCondVisibility('system.platform.android') or xbmc.getCondVisibility('system.platform.ios') or xbmc.getCondVisibility('system.platform.tvos'):
+        return False
+      else:
+        return True
 
     def _sock_init(self, check_stale=False):
         self._log("", 2)
         if not self.socket or check_stale:
             self._log("Checking", 4)
-            if self.platform == "win32" or xbmc.getCondVisibility('system.platform.android'):
-                self._log("Windows/Android", 4)
-                port = self.settings.getSetting("port")
-                self.socket = ("127.0.0.1", int(port))
-            else:
+
+            if self._usePosixSockets():
                 self._log("POSIX", 4)
                 self.socket = os.path.join(self.xbmc.translatePath('special://temp/').decode("utf-8"), 'commoncache.socket')
                 #self.socket = os.path.join(self.xbmc.translatePath(self.settings.getAddonInfo("profile")).decode("utf-8"), 'commoncache.socket')
                 if self.xbmcvfs.exists(self.socket) and check_stale:
                     self._log("Deleting stale socket file : " + self.socket)
                     self.xbmcvfs.delete(self.socket)
+            else:
+                self._log("Non-POSIX", 4)
+                port = self.settings.getSetting("port")
+                self.socket = ("127.0.0.1", int(port))
 
         self._log("Done: " + repr(self.socket), 2)
 
@@ -191,20 +198,20 @@ class StorageServer():
 
     def run(self):
         self.plugin = "StorageServer-" + self.version
-        #print self.plugin + " Storage Server starting " + self.path
+        #self.xbmc.log(self.plugin + " Storage Server starting " + self.path)
         self._sock_init(True)
 
         if not self._startDB():
             self._startDB()
 
-        if self.platform == "win32" or xbmc.getCondVisibility('system.platform.android'):
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        else:
+        if self._usePosixSockets():
             sock = socket.socket(socket.AF_UNIX)
+        else:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         try:
             sock.bind(self.socket)
-        except Exception, e:
+        except Exception as e:
             self._log("Exception: " + repr(e))
             self._showMessage(self.language(100), self.language(200))
 
@@ -224,7 +231,7 @@ class StorageServer():
                 if waiting == 2:
                     self._log("Waking up, slept for %s seconds." % int(time.time() - idle_since))
                 waiting = 0
-            except socket.error, e:
+            except socket.error as e:
                 if e.errno == 11 or e.errno == 10035 or e.errno == 35:
                     # There has to be a better way to accomplish this.
                     if idle_since + self.idle < time.time():
@@ -252,11 +259,11 @@ class StorageServer():
         self._log("Closing down")
         sock.close()
         # self.conn.close()
-        if not self.platform == "win32" and not xbmc.getCondVisibility('system.platform.android'):
+        if self._usePosixSockets():
             if self.xbmcvfs.exists(self.socket):
                 self._log("Deleting socket file")
                 self.xbmcvfs.delete(self.socket)
-        print self.plugin + " Closed down"
+        self.xbmc.log(self.plugin + " Closed down")
 
     def _recv(self, sock):
         data = "   "
@@ -286,7 +293,7 @@ class StorageServer():
                     recv_buffer = ""
                     self._log(u"status " + repr(not idle) + u" - " + repr(data[len(data) - 2:] != u"\r\n"), 3)
 
-            except socket.error, e:
+            except socket.error as e:
                 if not e.errno in [10035, 35]:
                     self._log(u"Except error " + repr(e))
 
@@ -333,7 +340,7 @@ class StorageServer():
 
                     self._log(u"Got response " + str(i) + u" - " + str(result) + u" == " + str(len(send_buffer)) + u" | " + str(len(data)) + u" - " + repr(send_buffer)[len(send_buffer) - 5:], 3)
 
-            except socket.error, e:
+            except socket.error as e:
                 self._log(u"Except error " + repr(e))
                 if e.errno != 10035 and e.errno != 35 and e.errno != 107 and e.errno != 32:
                     self._log(u"Except error " + repr(e))
@@ -458,7 +465,7 @@ class StorageServer():
                     self.curs.execute(sql, data)
                 else:
                     self.curs.execute(sql, (data,))
-        except sqlite3.DatabaseError, e:
+        except sqlite3.DatabaseError as e:
             if self.xbmcvfs.exists(self.path) and (str(e).find("file is encrypted") > -1 or str(e).find("not a database") > -1):
                 self._log(u"Deleting broken database file")
                 self.xbmcvfs.delete(self.path)
@@ -496,7 +503,7 @@ class StorageServer():
         keyhash = hashlib.md5()
         for params in args:
             if isinstance(params, dict):
-                for key in sorted(params.iterkeys()):
+                for key in sorted(params.keys()):
                     if key not in ["new_results_function"]:
                         keyhash.update("'%s'='%s'" % (key, params[key]))
             elif isinstance(params, list):
@@ -644,16 +651,17 @@ class StorageServer():
     def _connect(self):
         self._log("", 3)
         self._sock_init()
-        if self.platform == "win32" or xbmc.getCondVisibility('system.platform.android'):
-            self.soccon = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        else:
+
+        if self._usePosixSockets():
             self.soccon = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        else:
+            self.soccon = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         connected = False
         try:
             self.soccon.connect(self.socket)
             connected = True
-        except socket.error, e:
+        except socket.error as e:
             if e.errno in [111]:
                 self._log(u"StorageServer isn't running")
             else:
@@ -744,9 +752,9 @@ def checkInstanceMode():
     settings = xbmcaddon.Addon(id='script.common.plugin.cache')
     if settings.getSetting("autostart") == "false":
         s = StorageServer(table=False, instance=True)
-        print u" StorageServer Module loaded RUN(instance only)"
+        xbmc.log(u" StorageServer Module loaded RUN(instance only)")
 
-        print s.plugin + u" Starting server"
+        xbmc.log(s.plugin + u" Starting server")
 
         run_async(s.run)
         return True
