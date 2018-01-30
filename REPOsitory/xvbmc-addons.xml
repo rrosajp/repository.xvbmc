@@ -56,22 +56,6 @@
 	</extension>
 </addon>
 
-<addon id="repository.Agent" name=" [COLOR gold]AGENT 47[/COLOR]" version="1.0.4" provider-name="[COLOR red][B] COLD[/B][/COLOR][COLOR royalblue][B]FIRE[/B][/COLOR]">
-        <requires>
-            <import addon="xbmc.addon" version="12.0.0"/>
-        </requires>
-        <extension point="xbmc.addon.repository" name="[COLOR gold]AGENT 47[/COLOR]">
-            <info compressed="false">https://raw.githubusercontent.com/anakondascc/repo-run/master/repo/addons.xml</info>
-		    <checksum>https://raw.githubusercontent.com/anakondascc/repo-run/master/repo/addons.xml.md5</checksum>
-		    <datadir zip="true">https://raw.githubusercontent.com/anakondascc/repo-run/master/repo/zip</datadir>
-        </extension>
-        <extension point="xbmc.addon.metadata">
-            <summary>[COLOR cyan]Best of the best from C0LDFIRE[/COLOR]</summary>
-            <description>Home of [COLOR red][B]COLD[/B][/COLOR][COLOR royalblue][B]FIRE[/B][/COLOR] builds and add-ons</description>
-            <platform>all</platform>
-    </extension>
-</addon>
-
 <addon id="repository.colossus" name="[COLOR gold]Colossus Repository[/COLOR]" version="999.999.666" provider-name="Colossal STOPPED">
     <extension point="xbmc.addon.repository" name="[COLOR gold]Colossus Repository[/COLOR]">
     </extension>
@@ -316,19 +300,6 @@
     </extension>
 </addon>
 
-<addon id="repository.StreamAddons" name="[COLOR yellow]Stream Addons[/COLOR]" version="0.2" provider-name="Stream Addons // A Home For All Devs">
-	<extension point="xbmc.addon.repository" name="Stream Addons">
-		<info compressed="false">http://streamaddons.com/xmls/addons.xml</info>
-        <checksum>http://streamaddons.com/xmls/addons.xml.md5</checksum>
-        <datadir zip="true">http://streamaddons.com/zips/</datadir>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary>Stream Addons Repo</summary>
-		<description>Official Community StreamAddons.com Repo</description>
-		<platform>all</platform>
-	</extension>
-</addon>
-
 <addon id="repository.tknorris.release" name="tknorris Release Repository" version="2.0.0" provider-name="tknorris">
     <extension point="xbmc.addon.repository" name="tknorris release repository">
         <dir>
@@ -377,19 +348,6 @@ Addons Included
         <description>Unofficial Resolvers for the Kodi Media Center. Please visit www.tvaddons.co for support!</description>
         <platform>all</platform>
     </extension>
-</addon>
-
-<addon id="repository.ukturk" name="UKTurk Addon Repository" version="1.0.5" provider-name="UKTurk">
-	<extension point="xbmc.addon.repository" name="UKTurk Addon Repository">
-		<info compressed="false">https://raw.githubusercontent.com/restbite/UKT/master/addons.xml</info>
-		<checksum>https://raw.githubusercontent.com/restbite/UKT/master/addons.xml.md5</checksum>
-		<datadir zip="true">https://raw.githubusercontent.com/restbite/UKT/master/zips/</datadir>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary>Install UKTurk</summary>
-		<description>Install UKTurk</description>
-		<platform>all</platform>
-	</extension>
 </addon>
 
 <addon id="repository.x-odi.nl" name="Xodi Repo" version="1.0" provider-name="Xodi">
