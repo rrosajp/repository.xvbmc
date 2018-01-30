@@ -142,9 +142,9 @@ class Plugin:
                 from updater import Updater
                 Updater().AutoUpdate()
 
-            # check if the repository is available
-            envCtrl.IsInstallMethodValid(Config)
-            envCtrl.AreAddonsEnabled(Config)
+            # check if the repository is available -> We don't need this now.
+            # envCtrl.IsInstallMethodValid(Config)
+            # envCtrl.AreAddonsEnabled(Config)
 
             # check for cache folder
             envCtrl.CacheCheck()
@@ -1060,12 +1060,12 @@ class Plugin:
     @LockWithDialog(logger=Logger.Instance())
     def __SendLog(self):
         from helpers.logsender import LogSender
-        l = LogSender(Config.GooglApi, logger=Logger.Instance(), mode='gist')
+        logSender = LogSender(Config.GooglApi, logger=Logger.Instance(), mode='gist')
         try:
             title = LanguageHelper.GetLocalizedString(LanguageHelper.LogPostSuccessTitle)
             urlText = LanguageHelper.GetLocalizedString(LanguageHelper.LogPostLogUrl)
             filesToSend = [Logger.Instance().logFileName, Logger.Instance().logFileName.replace(".log", ".old.log")]
-            pasteUrl = l.SendFiles(Config.logFileNameAddon, filesToSend)
+            pasteUrl = logSender.SendFiles(Config.logFileNameAddon, filesToSend)
             XbmcWrapper.ShowDialog(title, urlText % (pasteUrl,))
         except Exception, e:
             Logger.Error("Error sending %s", Config.logFileNameAddon, exc_info=True)

@@ -21,7 +21,7 @@
 </addon>
 
 <addon  id="net.rieter.xot"
-        version="4.1.7~alpha2"
+        version="4.1.7~alpha3"
         name="Retrospect"
         provider-name="Bas Rieter">
 
@@ -49,7 +49,7 @@
 </addon>
 
 <addon id="net.rieter.xot.channel.be"
-       version="4.1.7.0"
+       version="4.1.7.1"
        name="Retrospect Belgium Channels"
        provider-name="Bas Rieter">
 
@@ -140,7 +140,7 @@
 </addon>
 
 <addon id="net.rieter.xot.channel.nick"
-       version="4.1.7.0"
+       version="4.1.7.1"
        name="Retrospect Nickelodeon Channels"
        provider-name="Bas Rieter">
 
@@ -186,7 +186,7 @@
 </addon>
 
 <addon id="net.rieter.xot.channel.nos"
-       version="4.1.7.0"
+       version="4.1.7.3"
        name="Retrospect Dutch NOS Channels"
        provider-name="Bas Rieter">
 
@@ -278,7 +278,7 @@
 </addon>
 
 <addon id="net.rieter.xot.channel.se"
-       version="4.1.7.0"
+       version="4.1.7.4"
        name="Retrospect Swedish Channels"
        provider-name="Bas Rieter">
 

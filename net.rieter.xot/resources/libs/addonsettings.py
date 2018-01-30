@@ -16,7 +16,7 @@ import xbmc
 # Make global object available
 #===============================================================================
 from logger import Logger                               # this has not further references
-from proxyinfo import ProxyInfo                         # this has not further references
+# from proxyinfo import ProxyInfo                         # this has not further references
 from config import Config                               # this has not further references
 # from regexer import Regexer                             # this has not further references
 from helpers.htmlentityhelper import HtmlEntityHelper   # Only has Logger as reference
@@ -600,6 +600,7 @@ class AddonSettings:
         AddonSettings.SetSetting(settingId, str(proxyIndex))
         return
 
+    # noinspection PyUnusedLocal
     @staticmethod
     def GetProxyForChannel(channelInfo):
         """ returns the proxy for a specific channel
@@ -1112,30 +1113,30 @@ class AddonSettings:
         # noinspection PyTypeChecker
         value = pattern % (value, "Show Other languages", AddonSettings.ShowChannelWithLanguage(None))
 
-        try:
-            proxies = AddonSettings.GetAvailableCountries(asCountryCodes=True)
-            # proxies = ["NL", "UK", "SE", "Other"]
-            for country in proxies:
-                if country is None:
-                    continue
-                elif country == "other":
-                    country = country.title()
-                else:
-                    country = country.upper()
-
-                value = pattern % (
-                    value, "%s Proxy" % (country, ),
-                    "%s (%s)" % (
-                        AddonSettings.GetSetting("%s_proxy_server" % (country.lower(),)) or "Not Set",
-                        AddonSettings.GetSetting("%s_proxy_type" % (country.lower(),)) or "Not Set"
-                    )
-                )
-
-                value = pattern % (value, "%s Proxy Port" % (country, ),
-                                   AddonSettings.GetSetting("%s_proxy_port" % (country.lower(),)) or 0)
-
-                value = pattern % (value, "%s Local IP" % (country, ),
-                                   AddonSettings.GetSetting("%s_local_ip" % (country.lower(),)) or 0)
-        except:
-            Logger.Error("Error", exc_info=True)
+        # try:
+        #     proxies = AddonSettings.GetAvailableCountries(asCountryCodes=True)
+        #     # proxies = ["NL", "UK", "SE", "Other"]
+        #     for country in proxies:
+        #         if country is None:
+        #             continue
+        #         elif country == "other":
+        #             country = country.title()
+        #         else:
+        #             country = country.upper()
+        #
+        #         value = pattern % (
+        #             value, "%s Proxy" % (country, ),
+        #             "%s (%s)" % (
+        #                 AddonSettings.GetSetting("%s_proxy_server" % (country.lower(),)) or "Not Set",
+        #                 AddonSettings.GetSetting("%s_proxy_type" % (country.lower(),)) or "Not Set"
+        #             )
+        #         )
+        #
+        #         value = pattern % (value, "%s Proxy Port" % (country, ),
+        #                            AddonSettings.GetSetting("%s_proxy_port" % (country.lower(),)) or 0)
+        #
+        #         value = pattern % (value, "%s Local IP" % (country, ),
+        #                            AddonSettings.GetSetting("%s_local_ip" % (country.lower(),)) or 0)
+        # except:
+        #     Logger.Error("Error", exc_info=True)
         return value
