@@ -107,19 +107,6 @@
 	</extension>
 </addon>
 
-<addon id="repository.dss" name="DSS" version="1.8.3" provider-name="DSS">
-	<extension point="xbmc.addon.repository" name=" DSS Repository">
-		<info compressed="true">https://raw.githubusercontent.com/dutchsportstreams/DSS/master/addons.xml</info>
-		<checksum>https://raw.githubusercontent.com/dutchsportstreams/DSS/master/addons.xml.md5</checksum>
-		<datadir zip="true">https://raw.githubusercontent.com/dutchsportstreams/DSS/master/repo</datadir>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary>Repository DSS</summary>
-		<description>Download and install addons from DSS[CR]</description>
-		<platform>all</platform>
-	</extension>
-</addon>
-
 <addon id="repository.elysium" version="2018.01.19" name="Elysium repository" provider-name="Elysium">
     <requires>
         <import addon="xbmc.python" version="2.19.0" />
@@ -403,6 +390,19 @@ Addons Included
 		<description>Install UKTurk</description>
 		<platform>all</platform>
 	</extension>
+</addon>
+
+<addon id="repository.x-odi.nl" name="Xodi Repo" version="1.0" provider-name="Xodi">
+    <extension point="xbmc.addon.repository" name="Xodi Repository">
+        <info compressed="true">http://repo.x-odi.nl/addons.xml</info>
+        <checksum>http://repo.x-odi.nl/addons.xml.md5</checksum>
+        <datadir zip="true">http://repo.x-odi.nl/repo</datadir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_gb">Xodirepo.</summary>
+        <description>Repo van Xodi</description>
+        <platform>all</platform>
+    </extension>
 </addon>
 
 <addon id="repository.xbmchub" name="TVADDONS.CO Add-on Repository" version="3.0.0" provider-name="tvaddons">

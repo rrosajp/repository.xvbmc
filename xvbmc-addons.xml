@@ -700,10 +700,7 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.dss"
-    name="[COLOR darkorange][B]D[/B][/COLOR][COLOR white][B]utch[/B][/COLOR] [COLOR darkorange][B]S[/B][/COLOR][COLOR white][B]tream[/B][/COLOR] [COLOR darkorange][B]S[/B][/COLOR][COLOR white][B]upport[/B][/COLOR]  "
-    version="11.0.4"
-    provider-name="DSS ADDONS">
+<addon id="plugin.video.dss" version="12.0.1" name="DSS" provider-name="DSS">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.libtorrent" optional="true"/>
@@ -713,12 +710,9 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">DSS Sport and More</summary>
-    <description lang="en">DSS Sport and More</description>
+		<description lang="en">Kindly note that DSS is not an official part of the media player you are running, and therefore not to be mentioned within official support channels, this addon has nothing to do with the media player itself, nor it’s intended use, it is simply a third party plugin which has been added to your system.</description>
     <platform>all</platform>
     <license>GNU GPL v3</license>
-    <website>http://www.dssaddons.com</website>
-    <email></email>
-    <source></source>
   </extension>
   <extension point="xbmc.service" library="library_service.py" start="login|startup">
   </extension>
