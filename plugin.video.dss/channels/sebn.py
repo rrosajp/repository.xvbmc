@@ -32,18 +32,18 @@ def isGeneric():
 def mainlist(item):
     logger.info("sebn.main_list")
     itemlist=[]
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 1" , action="play" , url="http://trgoalstv.com/se1.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 2" , action="play" , url="http://trgoalstv.com/se2.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 3" , action="play" , url="http://trgoalstv.com/se3.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 4" , action="play" , url="http://trgoalstv.com/se4.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 5" , action="play" , url="http://trgoalstv.com/se5.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 6" , action="play" , url="http://trgoalstv.com/se6.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 7" , action="play" , url="http://trgoalstv.com/se7.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 8" , action="play" , url="http://trgoalstv.com/se8.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 9" , action="play" , url="http://trgoalstv.com/se9.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 10" , action="play" , url="http://trgoalstv.com/se10.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 11" , action="play" , url="http://trgoalstv.com/se11.html",thumbnail="http://sebn.sc/images/logo.png") )
-    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 12" , action="play" , url="http://trgoalstv.com/se12.html",thumbnail="http://sebn.sc/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 1" , action="play" , url="http://trgoalstv.com/se1.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 2" , action="play" , url="http://trgoalstv.com/se2.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 3" , action="play" , url="http://trgoalstv.com/se3.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 4" , action="play" , url="http://trgoalstv.com/se4.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 5" , action="play" , url="http://trgoalstv.com/se5.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 6" , action="play" , url="http://trgoalstv.com/se6.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 7" , action="play" , url="http://trgoalstv.com/se7.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 8" , action="play" , url="http://trgoalstv.com/se8.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 9" , action="play" , url="http://trgoalstv.com/se9.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 10" , action="play" , url="http://trgoalstv.com/se10.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 11" , action="play" , url="http://trgoalstv.com/se11.html",thumbnail="http://sebn.me/images/logo.png") )
+    itemlist.append( Item(channel=CHANNELNAME, title="SEBN 12" , action="play" , url="http://trgoalstv.com/se12.html",thumbnail="http://sebn.me/images/logo.png") )
   
 
     return itemlist
