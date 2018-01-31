@@ -1,0 +1,6 @@
+epicname="Funny OR Die"
+epicurl="https://www.youtube.com/channel/UCzS3-65Y91JhOxFiM7j6grg"
+epicmodus="5"
+epicthumb="http://img.sxsw.com/2014/events/funnyordielogo.jpg"
+epicart="http://img.sxsw.com/2014/events/funnyordielogo.jpg"
+epicinfo="XvBMC Nederland"
