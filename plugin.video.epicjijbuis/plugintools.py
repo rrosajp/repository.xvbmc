@@ -68,7 +68,8 @@
 # - Added show_notification
 # - Bug fixes
 # 1.1.1x
-# - XvBMC VoOdOo [NL]
+# - XvBMC VoOdOo [NL] 2017
+# - XvBMC CodeCosmetics [Dutch] 2018
 #---------------------------------------------------------------------------
 
 import xbmc
@@ -220,7 +221,7 @@ def get_params():
     _log("get_params "+repr(commands))
     return commands
 
-# Fetch text content from an URL
+# Fetch text content from an URL (does NOT leave traces with Bit.ly)
 def read(url):
     _log("read "+url)
 
@@ -229,6 +230,19 @@ def read(url):
     f.close()
     
     return data
+
+# Request text content from an URL (DOES leave traces with Bit.ly)
+def reguest_url(url):
+    _log("reguest_url "+url)
+
+    req=urllib2.Request(url)
+    req.add_header('User-Agent', 'Mozilla/5.0 (Linux; U; Android 4.2.2; en-us; AFTB Build/JDQ39) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30')
+    response=urllib2.urlopen(req)
+    word=response.read()
+    response.close()
+#   word  = word.replace('\n','').replace('\r','').replace('\a','')
+#   match = re.compile('block="(.+?)"').findall(word)
+    return word
 
 def read_body_and_headers(url, post=None, headers=[], follow_redirects=False, timeout=30):
     _log("read_body_and_headers "+url)
