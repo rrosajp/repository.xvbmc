@@ -12,7 +12,7 @@ epicthumb="https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/
 epicart="https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/plugin.video.epicjijbuis/ART/CBS.jpg"
 epicinfo="Billboard charts"
 
-epicname="[B]MO[COLOR dimgray]'[/COLOR][/B] [COLOR white]trending[/COLOR] 'shite'[COLOR dimgray]:[/COLOR] [B]Y[/B]ou[B]T[/B]ube[COLOR dimgray]-popular,[/COLOR] [B]V[/B]evo[COLOR dimgray]'s-hottest,[/COLOR] etc[COLOR white]...[/COLOR]"
+epicname="[B]MO[COLOR dimgray]'[/COLOR][/B] [COLOR white]Trending[/COLOR] 'shite'[COLOR dimgray]:[/COLOR] [B]Y[/B]ou[B]T[/B]ube[COLOR dimgray]-popular,[/COLOR] [B]V[/B]evo[COLOR dimgray]'s-hottest,[/COLOR] etc[COLOR white]...[/COLOR]"
 epicurl="https://bit.ly/XvBMC-NL"
 epicmodus="6"
 epicthumb="https://raw.githubusercontent.com/XvBMC/repository.xvbmc/master/zips/plugin.video.epicjijbuis/ART/trendingmusic.jpg"

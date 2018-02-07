@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-#------------------------------------------------------------
-# Credits to Coldkeys for the basics (sourcecode), Thx Bro...
-#------------------------------------------------------------
-# License: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
-# Based on code from youtube addon
-#------------------------------------------------------------
-"""
 import base64,os,re,sys,time,xbmc,xbmcaddon,xbmcgui,xbmcplugin
 import plugintools
 import urllib,urllib2
@@ -34,7 +25,7 @@ xbmcartwrk=base64.b64decode('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1
 Terug="[COLOR dimgray]<<<back[/COLOR]"
 whoami="[COLOR dimgray]\[B],,[/B]/ (^_^) \[B],,[/B]/[/COLOR]    [COLOR white]EPiC[/COLOR] JijBuis [COLOR white][B]C[/B][/COLOR]an't [COLOR white][B]B[/B][/COLOR]e [COLOR white][B]S[/B][/COLOR]topped    [COLOR dimgray]\[B],,[/B]/ (^_^) \[B],,[/B]/[/COLOR]"
 textfile=base64.b64decode(epicaddBas)+epicaddDir
-word=plugintools.read(textfile)
+word=plugintools.reguest_url(textfile)
 names=re.compile('.+?picname="(.+?)"').findall(word)
 urls=re.compile('.+?picurl="(.+?)"').findall(word)
 modus=re.compile('.+?picmodus="(.+?)"').findall(word)
@@ -201,3 +192,4 @@ epicxvbmcnl()
 """
     IF you copy/paste this please keep the credits -2- XvBMC-NL (and Coldkeys), Thx.
 """
+# Created by pyminifier (https://github.com/liftoff/pyminifier)
