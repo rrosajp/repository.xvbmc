@@ -1,13 +1,16 @@
 # Config settings
 [all] 
+  force_turbo=1
+
+##gpu_freq=333
   gpu_mem=350
   gpu_mem_256=128
   gpu_mem_512=160
   gpu_mem_1024=350
   
-  over_voltage=2
-# over_voltage_sdram=4
-# sdram_schmoo=0x02000020
+##over_voltage=4
+  over_voltage_sdram=5
+  sdram_schmoo=0x02000020
   
   disable_overscan=1
 # overscan_scale=1
@@ -32,20 +35,21 @@
   
   
 [pi2]
-  
-# arm_freq=1000
-# core_freq=500
-# sdram_freq=500
-# gpu_freq=333
-# force_turbo=1
-# dtparam=sd_overclock=79
+  over_voltage=4
+  arm_freq=1064
+  gpu_freq=333
+  core_freq=560
+  sdram_freq=550
+  dtparam=sd_overclock=79
   
   
 [pi3]
-  
-# arm_freq=1300
-# core_freq=500
-# sdram_freq=500
-# gpu_freq=400
-# force_turbo=0
-# dtparam=sd_overclock=83
+  over_voltage=5
+  arm_freq=1300
+  gpu_freq=500
+  core_freq=500
+##sdram_freq=580
+  sdram_freq=500
+##v3d_freq=525
+  v3d_freq=500
+  dtparam=sd_overclock=83 
