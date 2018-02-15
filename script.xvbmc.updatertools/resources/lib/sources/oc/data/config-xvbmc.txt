@@ -5,9 +5,9 @@
   gpu_mem_512=160
   gpu_mem_1024=350
   
-  over_voltage=2
-# over_voltage_sdram=4
-# sdram_schmoo=0x02000020
+  over_voltage=3
+  over_voltage_sdram=4
+  sdram_schmoo=0x02000020
   
   disable_overscan=1
 # overscan_scale=1
@@ -34,18 +34,18 @@
 [pi2]
   
 # arm_freq=1000
-# core_freq=500
-# sdram_freq=500
+  core_freq=500
+  sdram_freq=500
 # gpu_freq=333
-# force_turbo=1
+  force_turbo=1
 # dtparam=sd_overclock=79
   
   
 [pi3]
   
 # arm_freq=1300
-# core_freq=500
-# sdram_freq=500
+  core_freq=500
+  sdram_freq=500
 # gpu_freq=400
 # force_turbo=0
 # dtparam=sd_overclock=83

@@ -20,7 +20,7 @@
   hdmi_force_hotplug=1
   hdmi_ignore_cec=0
   hdmi_ignore_cec_init=1
-  hdmi_pixel_encoding=3
+# hdmi_pixel_encoding=3
   
   disable_splash=1
   max_usb_current=1
