@@ -119,14 +119,16 @@ def mainMenu():
    addItem('%s'%updatetxt,BASEURL,4,ART+'xvbmc.png')
  elif update=="noupdaterpi":
   if xbmc.getCondVisibility('System.HasAddon("service.openelec.settings")')+xbmc.getCondVisibility('System.HasAddon("service.libreelec.settings")'):
-   updatetxt="[COLOR orange]You have the [B]latest[/B] [COLOR red]XvBMC[/COLOR] [COLOR lime][B]RPi[/B][/COLOR] forced updates [B] 3:[/B]-)[/COLOR]"
+   updatetxt="[COLOR orange]You have the [B]latest[/B] [COLOR red]XvBMC[/COLOR] [COLOR lime][B]RPi[/B][/COLOR] updates [B] 3:[/B]-)[/COLOR]"
    addItem('%s'%updatetxt,BASEURL,4,ART+'xvbmc.png')
   else:
-   updatetxt="[COLOR orange]You [B]somehow[/B] have the latest [COLOR lime]XvBMC[/COLOR] [COLOR red][B]RPi[/B][/COLOR] forced updates [B]???[/B][/COLOR]"
+   updatetxt="[COLOR orange]You [B]somehow[/B] have the latest [COLOR lime]XvBMC[/COLOR] [COLOR red][B]RPi[/B][/COLOR] updates !?! [B]WTF[/B] ?!?[/COLOR]"
    addItem('%s'%updatetxt,BASEURL,4,ART+'xvbmc.png')
  else:
   updatetxt="[COLOR orange]You have the [B]latest[/B] XvBMC updates [B] :[/B]-)[/COLOR]"
   addItem('%s'%updatetxt,BASEURL,4,ART+'xvbmc.png')
+ if xbmc.getCondVisibility('System.HasAddon("service.openelec.settings")')+xbmc.getCondVisibility('System.HasAddon("service.libreelec.settings")'):
+  addDir('[COLOR orange] [B] »--> [/B]XvBMC [B]Raspberry[/B] Pi [B]»-->[/B] Tools, DEV. [B]&[/B] Maintenance [B]»-->[/B][/COLOR]',BASEURL,30,ART+'RPi.png',FANARTsub,'')
  addItem('',BASEURL,'',ART+'xvbmc.png')
  addDir('[COLOR red]XvBMC Tools[/COLOR]',BASEURL,10,ART+'tools.png',os.path.join(mediaPath,"gereedschap.jpg"),'')
  addDir('[COLOR white]XvBMC Maintenance[/COLOR]',BASEURL,20,ART+'maint.png',os.path.join(mediaPath,"onderhoud.jpg"),'')
@@ -179,9 +181,6 @@ def mainMenu():
   except:bldversion='unknown'
   buildinfotxt='[COLOR gray][B] - [/B]your wizard build: %s [/COLOR]'%(buildversie+' [COLOR dimgray][I](online: %s)[/I][/COLOR]'%bldversion)
  addItem('%s'%buildinfotxt,BASEURL,'',os.path.join(mediaPath,"wtf.png"))
- if xbmc.getCondVisibility('System.HasAddon("service.openelec.settings")')+xbmc.getCondVisibility('System.HasAddon("service.libreelec.settings")'):
-  addItem('',BASEURL,'',ART+'xvbmc.png')
-  addDir('[COLOR orange]XvBMC Raspberry Pi [B] -[/B] Tools, DEV. & Maintenance[/COLOR]',BASEURL,30,ART+'RPi.png',FANARTsub,'')
  addItem('',BASEURL,'',ART+'xvbmc.png')
  addItem(Terug,BASEURL,3,os.path.join(mediaPath,"xvbmc.png"))
  Common.setView('movies','EPiC')
@@ -200,7 +199,6 @@ def XvBMCmaint():
  addItem(Terug,BASEURL,3,os.path.join(mediaPath,"xvbmc.png"))
  Common.setView('movies','EPiC')
 def XvBMCtools1():
- addItem('[B]C[/B]onvert physical paths (\'home\') to \'special\'',BASEURL,11,os.path.join(mediaPath,"maint.png"))
  addItem('[B]E[/B]nable Kodi Addons [COLOR dimgray](Kodi 17+ Krypton; [COLOR white]most[/COLOR] add-ons)[/COLOR]',BASEURL,12,os.path.join(mediaPath,"maint.png"))
  addItem('[B]E[/B]nable Kodi Addons [COLOR dimgray](Kodi 17+ Krypton; [COLOR white]all[/COLOR] add-ons)[/COLOR]',BASEURL,13,os.path.join(mediaPath,"maint.png"))
  addItem('[B]E[/B]nable Kodi Live Streams [COLOR dimgray](17+ Krypton; [COLOR white]RTMP[/COLOR])[/COLOR]',BASEURL,14,os.path.join(mediaPath,"maint.png"))
@@ -209,7 +207,7 @@ def XvBMCtools1():
  addItem('[B]R[/B]esolveURL  -> settings',BASEURL,8,os.path.join(mediaPath,"maint.png"))
  addItem('[B]U[/B]RLResolver -> settings',BASEURL,18,os.path.join(mediaPath,"maint.png"))
  addItem('[B][COLOR lime]X[/COLOR][/B]vBMC\'s Advancedsettings unlocker [COLOR dimgray](reset)[/COLOR]',BASEURL,19,os.path.join(mediaPath,"xvbmc.png"))
- addDir('[B][COLOR lime]X[/COLOR][/B]vBMC\'s [COLOR white][B]H[/B]idden [B]g[/B]ems[B] & [/B][B]M[/B]ore [B]t[/B]ools[/COLOR] [COLOR dimgray](TiP[B]!![/B])[/COLOR]',BASEURL,40,ART+'xvbmc.png',os.path.join(mediaPath,"gereedschap.jpg"),'')
+ addDir('[B][COLOR lime]X[/COLOR][/B]vBMC\'s [COLOR white][B]H[/B]idden [B]g[/B]ems[B] & [/B][B]M[/B]ore [B]t[/B]ools[/COLOR] [COLOR dimgray](T[COLOR dodgerblue]i[/COLOR]P[B]!![/B])[/COLOR]',BASEURL,40,ART+'xvbmc.png',os.path.join(mediaPath,"gereedschap.jpg"),'')
  addItem('',BASEURL,'',ART+'xvbmc.png')
  addItem(About,BASEURL,2,os.path.join(mediaPath,"wtf.png"))
  addItem(Terug,BASEURL,3,os.path.join(mediaPath,"xvbmc.png"))
@@ -236,7 +234,10 @@ def XvBMCtools2():
    addItem('',BASEURL,'',ART+'xvbmc.png')
    addItem('[COLOR red]\'Super Favourites\' is missing, [COLOR lime][I]click here [/I][/COLOR] to (re-)install & enable [B]18+[/B][/COLOR]',BASEURL,70,xxxIcon)
  else:
-  addItem('[B]P[/B]ush x[B]X[/B]x [COLOR dimgray](\"dirty\"-up your box with some 69 and mo\')[/COLOR]',BASEURL,46,xxxIcon)
+  addItem('[B]P[/B]ush [COLOR hotpink]x[B][COLOR pink]X[/COLOR][/B]x[/COLOR] [COLOR dimgray](\"dirty\"-up your box with some 69 and mo\')[/COLOR]',BASEURL,46,xxxIcon)
+ addItem('',BASEURL,'',ART+'xvbmc.png')
+ addItem('[B]T[/B]ool: convert physical paths (\'home\') to \'special\'',BASEURL,47,os.path.join(mediaPath,"maint.png"))
+ addItem('[B]T[/B]ool: clean-up *.pyo and *.pyc files',BASEURL,48,os.path.join(mediaPath,"maint.png"))
  addItem('',BASEURL,'',ART+'xvbmc.png')
  addItem(About,BASEURL,2,os.path.join(mediaPath,"wtf.png"))
  addItem(Terug,BASEURL,3,os.path.join(mediaPath,"xvbmc.png"))
@@ -372,7 +373,8 @@ def rejuvXvbmc():
   if keep_xvbmc:
    dir_exclude=dir_exclude+('addon_data','keymaps','media',)
    sub_dir_exclude=sub_dir_exclude+('inputstream.rtmp','keymaps','media','service.subtitles.addic7ed','service.subtitles.opensubtitles_by_opensubtitles','service.subtitles.opensubtitlesBeta','service.subtitles.podnapisi','service.subtitles.subscene',)
-   file_exclude=file_exclude+('advancedsettings.xml','favourites.xml','profiles.xml','RssFeeds.xml','sources.xml','versiebld.txt','versiesp.txt','wizbld.txt','wizsp.txt',)
+  #file_exclude    = file_exclude + ('advancedsettings.xml','favourites.xml','profiles.xml','RssFeeds.xml','sources.xml','eminence-sp.txt','noxspin-sp.txt','portable-sp.txt','rpi-sp.txt','zeitgeist-sp.txt','eminence-bld.txt','noxspin-bld.txt','portable-bld.txt','rpi-bld.txt','zeitgeist-bld.txt',)
+   file_exclude    = file_exclude + ('advancedsettings.xml','favourites.xml','profiles.xml','RssFeeds.xml','sources.xml',)
   else:
    dir_exclude=dir_exclude+('addon_data',)
    sub_dir_exclude=sub_dir_exclude+('inputstream.rtmp',)
@@ -559,8 +561,6 @@ elif mode==3:
  Common.closeandexit()
 elif mode==4:
  Common.okDialog(subtitleNope,'sorry, nothing todo...','with kind regards, team [COLOR green]XvBMC Nederland[/COLOR]')
-elif mode==11:
- nursemaid.Fix_Special(url)
 elif mode==12:
  nursemaid.AddonsEnable()
 elif mode==13:
@@ -626,6 +626,10 @@ elif mode==70:
  storeLoc=xbmc.translatePath(os.path.join('special://home/addons','packages'))
  unzipLoc=os.path.join(HOME,'addons')
  customwizard(name,url,storeLoc,unzipLoc)
+elif mode==47:
+ nursemaid.Fix_Special(url)
+elif mode==48:
+ disabled()
 elif mode==100:
  locatie=USERDATA
  name1='rpi-sp'
