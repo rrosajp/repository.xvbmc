@@ -1,3 +1,4 @@
+import re
 import struct
 from collections import defaultdict, namedtuple
 
@@ -6,9 +7,7 @@ from Crypto.Cipher import AES
 from streamlink.stream import hls_playlist
 from streamlink.stream.ffmpegmux import FFMPEGMuxer, MuxedStream
 from streamlink.stream.http import HTTPStream
-from streamlink.stream.segmented import (SegmentedStreamReader,
-                                         SegmentedStreamWriter,
-                                         SegmentedStreamWorker)
+from streamlink.stream.segmented import (SegmentedStreamReader, SegmentedStreamWriter, SegmentedStreamWorker)
 from ..exceptions import StreamError
 
 Sequence = namedtuple("Sequence", "num segment")
@@ -17,16 +16,17 @@ Sequence = namedtuple("Sequence", "num segment")
 def num_to_iv(n):
     return struct.pack(">8xq", n)
 
-def pkcs7_decode(paddedData, keySize = 16):
-        '''
-        Remove the PKCS#7 padding
-        '''
-        # Use ord + [-1:] to support both python 2 and 3
-        val = ord(paddedData[-1:])
-        if val > keySize:
-            raise StreamError("Input is not padded or padding is corrupt, got padding size of {0}".format(val))
 
-        return paddedData[:-val]
+def pkcs7_decode(paddedData, keySize=16):
+    '''
+    Remove the PKCS#7 padding
+    '''
+    # Use ord + [-1:] to support both python 2 and 3
+    val = ord(paddedData[-1:])
+    if val > keySize:
+        raise StreamError("Input is not padded or padding is corrupt, got padding size of {0}".format(val))
+
+    return paddedData[:-val]
 
 
 class HLSStreamWriter(SegmentedStreamWriter):
@@ -35,11 +35,19 @@ class HLSStreamWriter(SegmentedStreamWriter):
         kwargs["retries"] = options.get("hls-segment-attempts")
         kwargs["threads"] = options.get("hls-segment-threads")
         kwargs["timeout"] = options.get("hls-segment-timeout")
+        kwargs["ignore_names"] = options.get("hls-segment-ignore-names")
         SegmentedStreamWriter.__init__(self, reader, *args, **kwargs)
 
         self.byterange_offsets = defaultdict(int)
         self.key_data = None
         self.key_uri = None
+        if self.ignore_names:
+            # creates a regex from a list of segment names,
+            # this will be used to ignore segments.
+            self.ignore_names = list(set(self.ignore_names))
+            self.ignore_names = "|".join(list(map(re.escape, self.ignore_names)))
+            self.ignore_names_re = re.compile(r"(?:{blacklist})\.ts".format(
+                    blacklist=self.ignore_names),  re.IGNORECASE)
 
     def create_decryptor(self, key, sequence):
         if key.method != "AES-128":
@@ -86,6 +94,11 @@ class HLSStreamWriter(SegmentedStreamWriter):
 
         try:
             request_params = self.create_request_params(sequence)
+            # skip ignored segment names
+            if self.ignore_names and self.ignore_names_re.search(sequence.segment.uri):
+                self.logger.debug("Skipping segment {0}".format(sequence.num))
+                return
+
             return self.session.http.get(sequence.segment.uri,
                                          timeout=self.timeout,
                                          exception=StreamError,
