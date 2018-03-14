@@ -44,6 +44,7 @@ skin=xbmc.getSkinDir()
 USERDATA=xbmc.translatePath(os.path.join('special://home/userdata',''))
 USERADDONDATA=xbmc.translatePath(os.path.join('special://home/userdata/addon_data',''))
 xxxCheck=xbmc.translatePath(os.path.join(USERADDONDATA,'plugin.program.super.favourites','Super Favourites','xXx','favourites.xml'))
+xxxDirty='[COLOR pink]XvBMC\'s [B] [COLOR hotpink]x[COLOR deeppink]X[/COLOR]x[/COLOR] [/B] section ([COLOR hotpink]18[/COLOR][COLOR deeppink][B]+[/B][/COLOR])[/COLOR]'
 xxxIcon=base64.b64decode('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1h2Qk1DL3JlcG9zaXRvcnkueHZibWMvbWFzdGVyL3ppcHMvdHJpcGxlLXgvYWR1bHQucG5n')
 def resolveUrl_settings():
  import resolveurl
@@ -181,6 +182,13 @@ def mainMenu():
   except:bldversion='unknown'
   buildinfotxt='[COLOR gray][B] - [/B]your wizard build: %s [/COLOR]'%(buildversie+' [COLOR dimgray][I](online: %s)[/I][/COLOR]'%bldversion)
  addItem('%s'%buildinfotxt,BASEURL,'',os.path.join(mediaPath,"wtf.png"))
+ if os.path.isfile(xxxCheck):
+  if xbmc.getCondVisibility('System.HasAddon("plugin.program.super.favourites")'):
+   addItem('',BASEURL,'',ART+'xvbmc.png')
+   addItem(xxxDirty,BASEURL,69,xxxIcon)
+  else:
+   addItem('',BASEURL,'',ART+'xvbmc.png')
+   addItem('[COLOR red]\'Super Favourites\' is missing, [COLOR lime][I]click here [/I][/COLOR] to (re-)install & enable [B]18+[/B][/COLOR]',BASEURL,70,xxxIcon)
  addItem('',BASEURL,'',ART+'xvbmc.png')
  addItem(Terug,BASEURL,3,os.path.join(mediaPath,"xvbmc.png"))
  Common.setView('movies','EPiC')
@@ -229,7 +237,7 @@ def XvBMCtools2():
  if os.path.isfile(xxxCheck):
   if xbmc.getCondVisibility('System.HasAddon("plugin.program.super.favourites")'):
    addItem('',BASEURL,'',ART+'xvbmc.png')
-   addItem('[COLOR hotpink]activated: [/COLOR][COLOR pink]XvBMC\'s [B] [COLOR hotpink]x[COLOR deeppink]X[/COLOR]x[/COLOR] [/B] section ([COLOR hotpink]18[/COLOR][COLOR deeppink][B]+[/B][/COLOR])[/COLOR]',BASEURL,69,xxxIcon)
+   addItem('[COLOR hotpink]activated: [/COLOR]'+xxxDirty,BASEURL,69,xxxIcon)
   else:
    addItem('',BASEURL,'',ART+'xvbmc.png')
    addItem('[COLOR red]\'Super Favourites\' is missing, [COLOR lime][I]click here [/I][/COLOR] to (re-)install & enable [B]18+[/B][/COLOR]',BASEURL,70,xxxIcon)
@@ -244,49 +252,53 @@ def XvBMCtools2():
  Common.setView('movies','EPiC')
 def wizard(name,url):
  path=xbmc.translatePath(os.path.join('special://home/addons','packages'))
- if not os.path.exists(path):
-  os.makedirs(path)
+ if not os.path.exists(path):os.makedirs(path)
+ dp.create(MainTitle,'XvBMC-NL: pull update VoOdOo...','','Please Wait')
  lib=os.path.join(path,'default.zip')
- try:
-  os.remove(lib)
- except:
-  pass
+ try:os.remove(lib)
+ except:pass
  downloader.download(url,lib)
+ time.sleep(2)
  if os.path.exists(lib):
   addonfolder=xbmc.translatePath(os.path.join('special://','home'))
-  time.sleep(2)
-  dp.create(MainTitle,'XvBMC-NL: pull update VoOdOo...','','Please Wait')
-  dp.update(0,"","***Extract ZIP - Please Wait")
-  Common.log("==========================================================")
+  Common.log("=====================================================")
   Common.log(addonfolder)
-  Common.log("==========================================================")
+  Common.log("=====================================================")
+  dp.update(0,'','***Extract ZIP - Please Wait')
   extract.all(lib,addonfolder,dp)
-  dp.close()
+  xbmc.sleep(1000)
   try:os.remove(lib)
   except:pass
+  xbmc.executebuiltin('XBMC.UpdateLocalAddons()');Common.log("XvBMC_UpdateLocalAddons()")
+  xbmc.sleep(500)
  if int(utils.kodiver)<=16.7:
+  dp.close()
   dialog.ok(MainTitle+" : Update [COLOR green][B]finished[/B][/COLOR]",'[COLOR orange][B]!!!  HINT  !!![/B][/COLOR]','[B]Reboot[/B] Kodi to complete...','[B]Herstart[/B] Kodi ter afronding')
+  time.sleep(0.5)
   Common.forceRefresh(melding=False)
  elif int(utils.kodiver)>16.7:
-  utils.enableAddons(melding=False)
-  time.sleep(0.5)
-  choice=xbmcgui.Dialog().yesno(MainTitle+"[COLOR green][B] - success[/B][/COLOR]",' ','[B]IF[/B] add-ons do NOT work, you need to [B]reboot 1st[/B].','(een REBOOT van uw systeem is VEELAL wenselijk)',yeslabel='[COLOR lime]Reboot[/COLOR]',nolabel='[COLOR red]Continue[/COLOR]')
+  dp.close()
+  utils.enableAddons(melding=False);Common.log("XvBMC_utils.enableAddons(melding=false,UPDATE=TRUE=By_Default)")
+  xbmc.sleep(500)
+  choice=xbmcgui.Dialog().yesno(MainTitle+" : [COLOR red]add-ons[/COLOR] [COLOR green][B]enabled[/B][/COLOR]",'[COLOR orange][B]!!!  TIP  !!![/B][/COLOR]','Reboot Kodi [B]if[/B] things don\'t work, as expected... ;-p','(herstart Kodi [B]als[/B] \"dingen\" niet werken zoals verwacht)',yeslabel='[COLOR red][B]HOME[/B] Screen[/COLOR]',nolabel='[COLOR lime][B]Stay[/B] Here[/COLOR]')
   if choice==1:
-   time.sleep(1)
-   Common.killKodi()
+   xbmc.executebuiltin("XBMC.ActivateWindow(home)")
+   xbmc.sleep(500)
+   xbmc.executebuiltin('XBMC.UpdateAddonRepos');Common.log("XvBMC_UpdateAddonRepos()")
+   xbmc.sleep(500)
+   xbmc.executebuiltin('ReloadSkin()');Common.log("ReloadSkin()")
   elif choice==0:
-   if int(utils.kodiver)>16.7:
-    utils.enableAddons(melding=False)
-    time.sleep(0.5)
-    dialog.ok(MainTitle+" : [COLOR red]add-ons[/COLOR] [COLOR green][B]enabled[/B][/COLOR]",'[COLOR orange][B]!!!  TIP  !!![/B][/COLOR]','[B]Reboot[/B] Kodi to complete...','[B]Herstart[/B] Kodi ter afronding')
-    xbmc.executebuiltin('ReloadSkin()')
- xbmc.executebuiltin("Container.Refresh")
- xbmc.sleep(5000)
+   dialog.ok(MainTitle+" : [COLOR green][B]HINT![/B][/COLOR]",'DO [COLOR red][B]NOT[/B][/COLOR] \'force-close\' please[B]...[/B]','[COLOR dimgray](always use the normal Kodi shutdown)[/COLOR]','[B]NIET[/B] \'geforceerd\' afsluiten a.u.b.')
+   xbmc.sleep(500)
+   xbmc.executebuiltin("Container.Refresh");Common.log("XvBMC_Container.Refresh")
+   xbmc.sleep(500)
+   xbmc.executebuiltin('XBMC.UpdateAddonRepos');Common.log("XvBMC_UpdateAddonRepos()")
+ xbmc.sleep(1000)
 def fileexchange(url,name,locatie):
- dp.create(MainTitle,'XvBMC-NL: RPi update VoOdOo...','','Please Wait')
+ dp.create(MainTitle,'XvBMC-NL: file update VoOdOo...','','Please Wait')
  if not os.path.exists(locatie):os.makedirs(locatie)
  lib=os.path.join(locatie,name)
- dp.update(0,'','.file.VoOdOo.')
+ dp.update(0,'','file.VoOdOo')
  try:os.remove(lib)
  except:pass
  downloader.download(url+name,lib)
@@ -296,37 +308,44 @@ def fileexchange(url,name,locatie):
  xbmc.sleep(1000)
 def customwizard(name,url,storeLoc,unzipLoc):
  if not os.path.exists(storeLoc):os.makedirs(storeLoc)
+ dp.create(MainTitle,'XvBMC-NL: just doing our VoOdOo...','','Please Wait')
  lib=os.path.join(storeLoc,name)
  try:os.remove(lib)
  except:pass
  downloader.download(url+name,lib)
+ time.sleep(2)
  if os.path.exists(lib):
-  time.sleep(2)
-  dp.create(MainTitle,'XvBMC-NL: just doing our VoOdOo...','','Please Wait')
   dp.update(0,'','***Mo\' XvBMC magic...')
   Common.log(str('UNWiZ@'+unzipLoc))
   extract.all(lib,unzipLoc,dp)
-  dp.close()
+  xbmc.sleep(1000)
   try:os.remove(lib)
   except:pass
+  xbmc.executebuiltin('XBMC.UpdateLocalAddons()');Common.log("XvBMC_UpdateLocalAddons()")
+  xbmc.sleep(500)
  if int(utils.kodiver)<=16.7:
+  dp.close()
   dialog.ok(MainTitle+" : Update [COLOR green][B]finished[/B][/COLOR]",'[COLOR orange][B]!!!  HINT  !!![/B][/COLOR]','[B]Reboot[/B] Kodi to complete...','[B]Herstart[/B] Kodi ter afronding')
+  time.sleep(0.5)
   Common.forceRefresh(melding=False)
  elif int(utils.kodiver)>16.7:
-  utils.enableAddons(melding=False)
-  time.sleep(0.5)
-  choice=xbmcgui.Dialog().yesno(MainTitle+"[COLOR green][B] - success[/B][/COLOR]",' ','[B]IF[/B] add-ons do NOT work, you need to [B]reboot 1st[/B].','(een REBOOT van uw systeem is VEELAL wenselijk)',yeslabel='[COLOR lime]Reboot[/COLOR]',nolabel='[COLOR red]Continue[/COLOR]')
+  dp.close()
+  utils.enableAddons(melding=False);Common.log("XvBMC_utils.enableAddons(melding=false,UPDATE=TRUE=By_Default)")
+  xbmc.sleep(500)
+  choice=xbmcgui.Dialog().yesno(MainTitle+" : [COLOR red]add-ons[/COLOR] [COLOR green][B]enabled[/B][/COLOR]",'[COLOR orange][B]!!!  TIP  !!![/B][/COLOR]','Reboot Kodi [B]if[/B] things don\'t work, as expected... ;-p','(herstart Kodi [B]als[/B] \"dingen\" niet werken zoals verwacht)',yeslabel='[COLOR red][B]HOME[/B] Screen[/COLOR]',nolabel='[COLOR lime][B]Stay[/B] Here[/COLOR]')
   if choice==1:
-   time.sleep(1)
-   Common.killKodi()
+   xbmc.executebuiltin("XBMC.ActivateWindow(home)")
+   xbmc.sleep(500)
+   xbmc.executebuiltin('XBMC.UpdateAddonRepos');Common.log("XvBMC_UpdateAddonRepos()")
+   xbmc.sleep(500)
+   xbmc.executebuiltin('ReloadSkin()');Common.log("ReloadSkin()")
   elif choice==0:
-   if int(utils.kodiver)>16.7:
-    utils.enableAddons(melding=False)
-    time.sleep(0.5)
-    dialog.ok(MainTitle+" : [COLOR red]add-ons[/COLOR] [COLOR green][B]enabled[/B][/COLOR]",'[COLOR orange][B]!!!  TIP  !!![/B][/COLOR]','[B]Reboot[/B] Kodi to complete...','[B]Herstart[/B] Kodi ter afronding')
-    xbmc.executebuiltin('ReloadSkin()')
- xbmc.executebuiltin("Container.Refresh")
- xbmc.sleep(5000)
+   dialog.ok(MainTitle+" : [COLOR green][B]HINT![/B][/COLOR]",'DO [COLOR red][B]NOT[/B][/COLOR] \'force-close\' please[B]...[/B]','[COLOR dimgray](always use the normal Kodi shutdown)[/COLOR]','[B]NIET[/B] \'geforceerd\' afsluiten a.u.b.')
+   xbmc.sleep(500)
+   xbmc.executebuiltin("Container.Refresh");Common.log("XvBMC_Container.Refresh")
+   xbmc.sleep(500)
+   xbmc.executebuiltin('XBMC.UpdateAddonRepos');Common.log("XvBMC_UpdateAddonRepos()")
+ xbmc.sleep(1000)
 def unlocker():
  dialog.ok(MainTitle+" - unlocker",' ','unlock advancedsettings for this build','[COLOR dimgray](+reset \'advancedsettings.xml\' -use at your own risk)[/COLOR]')
  addonmappie=xbmc.translatePath(os.path.join('special://home/userdata/'))
@@ -373,8 +392,7 @@ def rejuvXvbmc():
   if keep_xvbmc:
    dir_exclude=dir_exclude+('addon_data','keymaps','media',)
    sub_dir_exclude=sub_dir_exclude+('inputstream.rtmp','keymaps','media','service.subtitles.addic7ed','service.subtitles.opensubtitles_by_opensubtitles','service.subtitles.opensubtitlesBeta','service.subtitles.podnapisi','service.subtitles.subscene',)
-  #file_exclude    = file_exclude + ('advancedsettings.xml','favourites.xml','profiles.xml','RssFeeds.xml','sources.xml','eminence-sp.txt','noxspin-sp.txt','portable-sp.txt','rpi-sp.txt','zeitgeist-sp.txt','eminence-bld.txt','noxspin-bld.txt','portable-bld.txt','rpi-bld.txt','zeitgeist-bld.txt',)
-   file_exclude    = file_exclude + ('advancedsettings.xml','favourites.xml','profiles.xml','RssFeeds.xml','sources.xml',)
+   file_exclude=file_exclude+('advancedsettings.xml','favourites.xml','profiles.xml','RssFeeds.xml','sources.xml',)
   else:
    dir_exclude=dir_exclude+('addon_data',)
    sub_dir_exclude=sub_dir_exclude+('inputstream.rtmp',)
@@ -619,7 +637,16 @@ elif mode==46:
  url=base64.b64decode(base)+'triple-x/xXxvbmc.zip'
  wizard(name,url)
 elif mode==69:
- xbmc.executebuiltin('ActivateWindow(10025,"plugin://plugin.program.super.favourites/?folder=xXx",return)')
+ if ADDON.getSetting('ask')=='false':
+  choice=xbmcgui.Dialog().yesno("[COLOR red]WARNING: Explicit adult material[/COLOR]","[COLOR white]You may enter only if you are [COLOR yellow]at least 18 years of age or [CR]at least the legal age [/COLOR][COLOR white]in the jurisdiction you reside or [CR]from which you access this content.[/COLOR]","","","Exit","Enter")
+  if choice==0:
+   ADDON.setSetting('ask','false')
+   xbmc.executebuiltin("XBMC.ActivateWindow(home)")
+  elif choice==1:
+   ADDON.setSetting('ask','true')
+   xbmc.executebuiltin('ActivateWindow(10025,"plugin://plugin.program.super.favourites/?folder=xXx",return)')
+ if not ADDON.getSetting('ask')=='false':
+  xbmc.executebuiltin('ActivateWindow(10025,"plugin://plugin.program.super.favourites/?folder=xXx",return)')
 elif mode==70:
  name='plugin.program.super.favourites-1.0.59.zip'
  url=base64.b64decode(base)+'plugin.program.super.favourites/'

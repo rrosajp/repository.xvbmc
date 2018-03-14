@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 import cookielib,os,urllib,urllib2
 import xbmc,xbmcaddon,xbmcgui,xbmcplugin
+from resources.lib.common import log
 ADDON=xbmcaddon.Addon(id='script.xvbmc.updatertools')
 USER_AGENT='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
 profileDir=ADDON.getAddonInfo('profile')
@@ -136,9 +137,10 @@ def enableAddons(melding=None,update=True):
   conn.executemany('update installed set enabled=1 WHERE addonID = (?)',((val,)for val in contents))
   conn.commit()
   if update:
-   xbmc.executebuiltin('UpdateAddonRepos()')
-   xbmc.executebuiltin('UpdateLocalAddons()')
+   xbmc.executebuiltin('UpdateAddonRepos()');log("XvBMC_UTILS.UpdateAddonRepos()")
+   xbmc.executebuiltin('UpdateLocalAddons()');log("XvBMC_UTILS.UpdateLocalAddons()")
   if melding:
    dialog.ok("[COLOR lime][B]Addons enabled[/COLOR][/B]",'[COLOR white]ALL[/COLOR] addons are [B]enabled![/B]')
  else:
   pass
+# Created by pyminifier (https://github.com/liftoff/pyminifier)
