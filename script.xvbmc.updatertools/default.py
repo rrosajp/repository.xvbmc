@@ -656,7 +656,7 @@ elif mode==70:
 elif mode==47:
  nursemaid.Fix_Special(url)
 elif mode==48:
- disabled()
+ nursemaid.purgePyoC()
 elif mode==100:
  locatie=USERDATA
  name1='rpi-sp'
